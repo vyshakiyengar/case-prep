@@ -1,0 +1,63 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function signedIn() { return request.auth != null; }
+    function isSelf(uid) { return signedIn() && request.auth.uid == uid; }
+
+    // >>> Put your own Google sign-in email here (and in VITE_ADMIN_EMAILS in .env.local) <<<
+    function isAdmin() {
+      return signedIn() && request.auth.token.email_verified == true
+        && request.auth.token.email in ['you@example.com'];
+    }
+    function isVerifiedStudent() {
+      return signedIn() && exists(/databases/$(database)/documents/students/$(request.auth.uid));
+    }
+
+    // Each user's own prep data: profile, days, cases, drills, stories
+    match /users/{uid} {
+      allow read, write: if isSelf(uid);
+      match /{collection}/{docId} {
+        allow read, write: if isSelf(uid);
+      }
+    }
+
+    // Weekly summary shared only with the people the owner lists as partners
+    match /summaries/{uid} {
+      allow read: if isSelf(uid) || (signedIn() && request.auth.uid in resource.data.partners);
+      allow write: if isSelf(uid) && request.resource.data.uid == uid;
+    }
+
+    // Partner invites: anyone with the link can read one; only the invitee can accept it, once
+    match /invites/{code} {
+      allow get: if signedIn();
+      allow list: if signedIn() && resource.data.from == request.auth.uid;
+      allow create: if signedIn() && request.resource.data.from == request.auth.uid
+        && request.resource.data.acceptedBy == null;
+      allow update: if signedIn() && resource.data.acceptedBy == null
+        && request.auth.uid != resource.data.from
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['acceptedBy', 'acceptedName'])
+        && request.resource.data.acceptedBy == request.auth.uid;
+    }
+
+    // Verified business school students. A record is only accepted if the school
+    // email has really been verified on this account (Firebase email-link sign-in),
+    // so the list can't be filled with typed-in addresses.
+    match /students/{uid} {
+      allow get: if isSelf(uid) || isAdmin();
+      allow list: if isAdmin();
+      allow create, update: if isSelf(uid)
+        && request.resource.data.uid == uid
+        && request.resource.data.schoolEmail is string
+        && ('email' in request.auth.token.firebase.identities)
+        && request.resource.data.schoolEmail in request.auth.token.firebase.identities['email'];
+      allow delete: if isSelf(uid) || isAdmin();
+    }
+
+    // Perks: visible to verified students, managed by you from /admin
+    match /perks/{id} {
+      allow read: if isVerifiedStudent() || isAdmin();
+      allow write: if isAdmin();
+    }
+  }
+}
