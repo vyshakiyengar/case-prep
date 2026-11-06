@@ -57,6 +57,16 @@ Run `npm run deploy` again whenever you change anything.
 
 ---
 
+## Deploy on Vercel (alternative to Firebase Hosting)
+
+The repo includes `vercel.json`, so Vercel needs no settings.
+
+1. Go to https://vercel.com/new, sign in with GitHub, and import **vyshakiyengar/case-prep** (allow Vercel to see that repo when GitHub asks).
+2. Before clicking **Deploy**, open **Environment Variables** and add the five values from `.env.local` (`VITE_FIREBASE_API_KEY`, `VITE_FIREBASE_AUTH_DOMAIN`, `VITE_FIREBASE_PROJECT_ID`, `VITE_FIREBASE_APP_ID`, `VITE_ADMIN_EMAILS`). Without them the site goes live in demo mode.
+3. Click **Deploy**. Every push to `main` redeploys automatically.
+4. In Firebase, go to **Authentication > Settings > Authorized domains** and add your Vercel address (e.g. `case-prep.vercel.app`) and any custom domain, or Google sign-in will be refused.
+5. Database rules still live in Firebase: deploy them once with `firebase deploy --only firestore:rules`.
+
 ## Business school verification and your student list
 
 - Students go to **Student perks**, enter their school email, school, programme and graduation year, and optionally tick a box to receive marketing emails.
