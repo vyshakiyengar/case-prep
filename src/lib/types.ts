@@ -9,6 +9,8 @@ export interface Profile {
   interviewDate?: string
   createdAt?: number
   partners?: string[]
+  learned?: string[]
+  trainer?: Record<string, { box: number; due: string }>
 }
 
 export interface DayEntry {
@@ -33,7 +35,7 @@ export interface CaseEntry {
 
 export interface DrillEntry {
   id: string
-  kind: 'structure' | 'maths'
+  kind: 'structure' | 'maths' | 'charts'
   prompt: string
   seconds: number
   score?: number // structure: self score 1-5

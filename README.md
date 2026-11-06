@@ -1,6 +1,15 @@
 # Case Prep OS: the website
 
-The interactive version of Case Prep OS: Google sign-in, a daily tracker, case log and dashboard, the 15-case casebook with a case player, timed drills, practice partners, and business-school student verification with perks and an admin list.
+The interactive version of Case Prep OS, organised the way students learn:
+
+1. **Course** (`/learn`): 11 lessons in three modules. Each lesson teaches one skill, contrasts a weak and a strong answer, has a timed "try it now" exercise, a quiz, and a link to practise.
+2. **Perfect casing** (`/perfect-casing`): the 10-stage flow of a strong case with the exact words to use, plus a phrase trainer that uses spaced repetition (cards you miss come back sooner).
+3. **Frameworks** (`/frameworks`): 16 case types, each shown as a generic skeleton next to the same skeleton tailored to a real case; 20 formulas with a test-yourself mode; a plain-English glossary.
+4. **Casebook** (`/casebook`): 15 original cases with a case player, coaching checklists at every step, links to the matching lesson and perfect-casing stage, and an interviewer mode.
+5. **Drills** (`/drills`): structuring (2 min), chart reading (90 sec), mental maths (30 sec).
+6. **My prep** (sign-in): dashboard with first steps and your weakest stage, tracker, case log, FIT stories, partners, student perks.
+
+Everything in 1-5 is open without signing in. Google sign-in, business-school verification, perks and the admin list switch on once Firebase is connected (below). Until then, signed-in progress is saved in the visitor's browser.
 
 It's a React app (Vite + TypeScript + Tailwind) that uses **Firebase** for Google sign-in, the database and hosting. Firebase's free plan is enough to launch.
 
@@ -13,7 +22,7 @@ npm install
 npm run dev
 ```
 
-Open http://localhost:5173. With no Firebase keys the app runs in **demo mode**: "Try the demo" signs you in as a demo user, data stays in your browser, and school verification is simulated. Everything else works.
+Open http://localhost:5173. With no Firebase keys, "Sign in" creates a prep space saved in your browser; partners, student perks and admin switch on once Firebase is connected.
 
 You need [Node.js](https://nodejs.org) 20 or newer.
 
@@ -102,6 +111,9 @@ npm run test:rules
 | Pages | `src/pages/` (Landing, Today, Tracker, CaseLog, Casebook, CasePlayer, Drills, Partners, Playbook, Perks, Admin…) |
 | Firebase and demo data layer | `src/lib/backend.ts` |
 | Dashboard maths | `src/lib/stats.ts` |
+| Course lessons | `src/content/course.ts`, `course1.ts`, `course2.ts` |
+| Perfect casing stages and trainer cards | `src/content/perfectCasing.ts` |
+| Glossary, frameworks | `src/content/glossary.ts`, `frameworks.ts` |
 | Cases, drills, playbook content | `src/content/*.json` (generated from the casebook and tracker) |
 | Business school domains | `src/lib/schools.ts` |
 | Colours and fonts | `src/index.css` |

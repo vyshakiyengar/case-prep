@@ -1,16 +1,6 @@
-import { useStore } from '../lib/store'
-import { GoogleMark, Logo } from '../components/ui'
-
-function SignInButton({ dark = false }: { dark?: boolean }) {
-  const { signIn, backend } = useStore()
-  return (
-    <button onClick={signIn}
-      className={`inline-flex items-center gap-3 rounded-lg px-5 py-3 text-[15px] font-medium shadow-sm transition-colors ${dark ? 'bg-white text-ink hover:bg-paper' : 'bg-ink text-white hover:bg-[#22325A]'}`}>
-      <span className="flex h-6 w-6 items-center justify-center rounded bg-white"><GoogleMark /></span>
-      {backend?.mode === 'demo' ? 'Try the demo' : 'Continue with Google'}
-    </button>
-  )
-}
+import { Link } from 'react-router-dom'
+import { Logo } from '../components/ui'
+import { MODULES, lessonBySlug, LESSONS, totalMinutes } from '../content/course'
 
 function Notepad() {
   // the case candidate's page: prompt, objective, issue tree, hypothesis
@@ -52,101 +42,98 @@ function Notepad() {
   )
 }
 
-const TRACK_A = [
-  ['Practise real cases', 'With a partner, an expert, or alone out loud.'],
-  ['Drill your weak skill', 'Structures, charts or maths, 20 focused minutes at a time.'],
-  ['Learn the building blocks', '16 case types and 20 formulas you can test yourself on.'],
-  ['Re-read your mistakes', 'Your last five fixes, shown before every case.'],
-]
-const TRACK_B = [
-  ['Speak clearly', 'Voice exercises: a calm pace and no "um" sound senior.'],
-  ['Think under pressure', 'Mind exercises, so you hold the numbers without going blank.'],
-  ['Sound like an insider', 'Business reading turns a textbook answer into an insight.'],
-  ['Have your stories ready', 'A FIT story builder for every "tell me about a time" question.'],
-]
-const FEATURES = [
-  ['Daily tracker', 'Eight habits across both halves of the interview. Tick them off in seconds.'],
-  ['Case log', 'Score six stages from 1 to 5 after every case and write the one thing to fix.'],
-  ['Dashboard', 'Finds your weakest stage and tells you what to drill next.'],
-  ['15 original cases', 'Profitability to private equity, with exhibits, a timer and model answers. Play them alone or as the interviewer.'],
-  ['Timed drills', 'Two-minute structuring drills and endless mental-maths questions.'],
-  ['Practice partners', 'Invite a partner and see each other’s week. Prep is easier when someone is watching.'],
+const PATH = [
+  { t: 'Learn the basics', d: `A ${LESSONS.length}-lesson course: how cases work, structuring, maths, charts, sizing, the recommendation, and how you come across. Each lesson ends with a timed exercise and a quiz.`, to: '/learn', cta: 'Start the course' },
+  { t: 'Learn the flow', d: 'Perfect casing: the 10 stages of a strong case with the exact words to use, plus a daily phrase trainer. And 16 frameworks, each shown generic and tailored.', to: '/perfect-casing', cta: 'Open perfect casing' },
+  { t: 'Practise full cases', d: '15 original cases with exhibits and model answers. A checklist at every step tells you what a strong answer includes before you look.', to: '/casebook', cta: 'Open the casebook' },
+  { t: 'Drill your weak spots', d: 'Two-minute structuring prompts, 90-second chart reads, and endless mental-maths questions.', to: '/drills', cta: 'Try a drill' },
+  { t: 'Track and fix one thing', d: 'Log every case against the six things interviewers score. The dashboard names your weakest stage and the lesson and drill that fix it.', to: '/signin', cta: 'Start tracking' },
 ]
 
 export default function Landing() {
   return (
     <div className="bg-white">
-      <header className="mx-auto flex max-w-6xl items-center justify-between px-5 py-5 sm:px-8">
+      <header className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-5 py-5 sm:px-8">
         <Logo />
-        <a href="#how" className="text-[14.5px] font-medium text-muted hover:text-ink">How it works</a>
+        <nav className="flex items-center gap-5 text-[14.5px] font-medium text-muted" aria-label="Main">
+          <Link to="/learn" className="hidden hover:text-ink sm:inline">Course</Link>
+          <Link to="/perfect-casing" className="hidden hover:text-ink md:inline">Perfect casing</Link>
+          <Link to="/frameworks" className="hidden hover:text-ink sm:inline">Frameworks</Link>
+          <Link to="/casebook" className="hidden hover:text-ink sm:inline">Casebook</Link>
+          <Link to="/drills" className="hidden hover:text-ink sm:inline">Drills</Link>
+          <Link to="/signin" className="rounded-lg border border-line px-3.5 py-2 text-ink hover:border-faint">Sign in</Link>
+        </nav>
       </header>
 
       <section className="mx-auto grid max-w-6xl items-center gap-12 px-5 pt-8 pb-20 sm:px-8 lg:grid-cols-[1.05fr_1fr] lg:pt-14">
         <div>
-          <h1 className="text-[40px] leading-[1.08] font-semibold tracking-[-0.01em] sm:text-[54px]">
-            Case interviews test two things. Practise both, every day.
+          <h1 className="text-[40px] leading-[1.08] font-semibold tracking-[-0.01em] sm:text-[52px]">
+            Learn case interviews properly, then practise until they feel easy.
           </h1>
           <p className="mt-5 max-w-xl text-[17.5px] leading-relaxed text-muted">
-            Solve the problem, and come across like someone a client would trust. Track your daily practice, log every case, and fix one mistake at a time.
+            A free course, a perfect-casing playbook with a phrase trainer, 16 frameworks, 15 original cases with model answers, and timed drills. Built for business school students heading into consulting interviews.
           </p>
-          <div className="mt-8 flex flex-wrap items-center gap-4">
-            <SignInButton />
-            <span className="text-[14px] text-muted">Free. Your progress is saved to your account.</span>
+          <div className="mt-8 flex flex-wrap items-center gap-3">
+            <Link to="/learn" className="rounded-lg bg-ink px-5 py-3 text-[15px] font-medium text-white shadow-sm hover:bg-[#22325A]">Start the free course</Link>
+            <Link to="/casebook" className="rounded-lg border border-line bg-white px-5 py-3 text-[15px] font-medium text-ink hover:border-faint">Browse the casebook</Link>
           </div>
+          <p className="mt-3 text-[14px] text-muted">No sign-up needed to learn. Sign in when you want to track your progress.</p>
         </div>
         <Notepad />
       </section>
 
-      <section id="how" className="border-t border-line bg-canvas">
+      <section className="border-t border-line bg-canvas">
         <div className="mx-auto max-w-6xl px-5 py-16 sm:px-8">
-          <h2 className="max-w-2xl text-[32px] leading-tight font-semibold">Interviewers judge how you solve the case, and how you come across while you do it</h2>
-          <p className="mt-3 max-w-2xl text-[16.5px] text-muted">Most candidates only practise the first. Case Prep OS gives each half its own daily habits.</p>
-          <div className="mt-10 grid gap-6 md:grid-cols-2">
-            {[{ t: 'Solve the case', q: 'Can you crack a business problem?', items: TRACK_A, c: 'teal' }, { t: 'Come across well', q: 'Would a client trust this person?', items: TRACK_B, c: 'violet' }].map((col) => (
-              <div key={col.t} className={`overflow-hidden rounded-xl border bg-white ${col.c === 'teal' ? 'border-teal' : 'border-violet'}`}>
-                <div className={`px-6 py-4 text-white ${col.c === 'teal' ? 'bg-teal' : 'bg-violet'}`}>
-                  <h3 className="text-[24px] font-semibold text-white">{col.t}</h3>
-                  <p className="font-serif italic opacity-90">{col.q}</p>
-                </div>
-                <ul>
-                  {col.items.map(([h, d]) => (
-                    <li key={h} className="border-t border-line px-6 py-3.5 first:border-t-0">
-                      <span className="font-medium text-ink">{h}.</span> <span className="text-muted">{d}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
+          <h2 className="text-[32px] font-semibold">Your path to the offer</h2>
+          <p className="mt-2 max-w-2xl text-[16.5px] text-muted">Five steps, in this order. Most candidates jump straight to cases; learning the basics first makes every case you practise count for more.</p>
+          <ol className="mt-10 grid gap-x-8 gap-y-10 md:grid-cols-2 lg:grid-cols-5">
+            {PATH.map((p, i) => (
+              <li key={p.t} className="flex flex-col border-t-2 border-ink pt-4">
+                <span className="font-serif text-[36px] leading-none font-semibold text-teal">{i + 1}</span>
+                <h3 className="mt-2 text-[20px] font-semibold">{p.t}</h3>
+                <p className="mt-1 flex-1 text-[14.5px] text-muted">{p.d}</p>
+                <Link to={p.to} className="mt-3 text-[14px] font-medium text-violet-d hover:underline">{p.cta}</Link>
+              </li>
             ))}
-          </div>
+          </ol>
         </div>
       </section>
 
       <section className="mx-auto max-w-6xl px-5 py-16 sm:px-8">
-        <h2 className="text-[32px] font-semibold">One loop, every day</h2>
-        <ol className="mt-8 grid gap-8 md:grid-cols-3">
-          {[['Practise', 'Do a case or a drill, plus ten minutes of voice and mind exercises. Tick them off in the tracker.', 'text-teal'],
-            ['Log it', 'Straight after each case, score the six stages and write the one thing you’ll do differently.', 'text-violet'],
-            ['Fix one thing', 'The dashboard spots your weakest stage. Read your fixes before the next case, and drill the weak spot.', 'text-signal']].map(([t, d, c], i) => (
-            <li key={t} className="border-t-2 border-ink pt-4">
-              <span className={`font-serif text-[40px] leading-none font-semibold ${c}`}>{i + 1}</span>
-              <h3 className="mt-2 text-[22px] font-semibold">{t}</h3>
-              <p className="mt-1 text-muted">{d}</p>
-            </li>
+        <div className="flex flex-wrap items-end justify-between gap-4">
+          <div>
+            <h2 className="text-[32px] font-semibold">The course</h2>
+            <p className="mt-1 text-muted">{LESSONS.length} lessons, about {Math.round(totalMinutes / 5) * 5} minutes. Each one teaches a skill, shows a weak and a strong answer, and makes you try it.</p>
+          </div>
+          <Link to="/learn" className="rounded-lg bg-ink px-4 py-2.5 text-[14.5px] font-medium text-white hover:bg-[#22325A]">Start lesson 1</Link>
+        </div>
+        <div className="mt-8 grid gap-8 md:grid-cols-3">
+          {MODULES.map((m, mi) => (
+            <div key={m.title}>
+              <h3 className="text-[19px] font-semibold">Module {mi + 1}: {m.title}</h3>
+              <ul className="mt-2 divide-y divide-line border-y border-line">
+                {m.slugs.map((s) => { const l = lessonBySlug(s)!; return (
+                  <li key={s}><Link to={`/learn/${s}`} className="flex justify-between gap-3 py-2.5 text-[15px] text-ink hover:text-violet-d"><span>{l.title}</span><span className="text-[13px] text-faint">{l.minutes} min</span></Link></li>
+                ) })}
+              </ul>
+            </div>
           ))}
-        </ol>
+        </div>
       </section>
 
       <section className="border-t border-line bg-canvas">
         <div className="mx-auto max-w-6xl px-5 py-16 sm:px-8">
-          <h2 className="text-[32px] font-semibold">What you get</h2>
-          <dl className="mt-8 grid gap-x-12 md:grid-cols-2">
-            {FEATURES.map(([t, d]) => (
-              <div key={t} className="border-t border-line py-5">
-                <dt className="font-serif text-[20px] font-semibold text-ink">{t}</dt>
-                <dd className="mt-1 text-muted">{d}</dd>
+          <h2 className="max-w-2xl text-[32px] leading-tight font-semibold">Coaching built into every case</h2>
+          <div className="mt-8 grid gap-8 md:grid-cols-3">
+            {[['Before you look', 'At each question, a short checklist of what a strong answer includes, so you mark your own work like an interviewer would.'],
+              ['Stuck? Go back a step', 'Every step links to the lesson that teaches that skill: structuring, maths, charts or the recommendation.'],
+              ['Swap seats', 'Switch to interviewer mode to give the case to a friend, with the facts to share only if asked and notes on where to push.']].map(([t, d]) => (
+              <div key={t} className="border-t border-line pt-4">
+                <h3 className="text-[20px] font-semibold">{t}</h3>
+                <p className="mt-1 text-muted">{d}</p>
               </div>
             ))}
-          </dl>
+          </div>
         </div>
       </section>
 
@@ -154,23 +141,23 @@ export default function Landing() {
         <div className="grid items-center gap-6 rounded-2xl border border-violet bg-violet-l/50 p-7 md:grid-cols-[1fr_auto]">
           <div>
             <h2 className="text-[26px] font-semibold">At business school?</h2>
-            <p className="mt-1 max-w-2xl text-ink-2">Verify your school email to unlock free downloads, student discounts and early access to new cases. It takes one click from your inbox.</p>
+            <p className="mt-1 max-w-2xl text-ink-2">Verify your school email to unlock free downloads, student discounts and early access to new cases.</p>
           </div>
-          <SignInButton />
+          <Link to="/signin?next=/perks" className="rounded-lg bg-ink px-5 py-3 text-[15px] font-medium text-white hover:bg-[#22325A]">Unlock student perks</Link>
         </div>
       </section>
 
       <section className="bg-ink">
         <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-6 px-5 py-14 sm:px-8">
           <div>
-            <h2 className="text-[30px] font-semibold text-white">Start with case 1 today</h2>
-            <p className="mt-1 text-[#B9C4D3]">It takes about 30 minutes. Your first log will show you exactly where to begin.</p>
+            <h2 className="text-[30px] font-semibold text-white">Start with lesson 1 today</h2>
+            <p className="mt-1 text-[#B9C4D3]">It takes eight minutes, and you'll know what interviewers are actually scoring.</p>
           </div>
-          <SignInButton dark />
+          <Link to="/learn/how-case-interviews-work" className="rounded-lg bg-white px-5 py-3 text-[15px] font-medium text-ink hover:bg-paper">Start lesson 1</Link>
         </div>
       </section>
       <footer className="mx-auto flex max-w-6xl flex-wrap justify-between gap-2 px-5 py-6 text-[13px] text-muted sm:px-8">
-        <span>© {new Date().getFullYear()} Case Prep OS</span>
+        <span>© {new Date().getFullYear()} Case Prep OS. <Link to="/privacy" className="underline">Privacy</Link></span>
         <span>All cases are original and fictional, written for practice.</span>
       </footer>
     </div>

@@ -78,7 +78,7 @@ export function streak(days: Record<string, DayEntry>) {
 }
 
 export function drillStats(drills: DrillEntry[]) {
-  const s = drills.filter((d) => d.kind === 'structure'), m = drills.filter((d) => d.kind === 'maths')
+  const s = drills.filter((d) => d.kind === 'structure' || d.kind === 'charts'), m = drills.filter((d) => d.kind === 'maths')
   const weekAgo = addDays(todayIso(), -6)
   return {
     structureCount: s.length,
@@ -89,11 +89,16 @@ export function drillStats(drills: DrillEntry[]) {
   }
 }
 
+export const LESSON_FOR: Record<StageKey, { slug: string; title: string }> = {
+  clarify: { slug: 'the-opening', title: 'The opening' }, structure: { slug: 'structuring', title: 'Structuring' }, maths: { slug: 'case-maths', title: 'Case maths' },
+  leadership: { slug: 'driving-the-case', title: 'Driving the case' }, reco: { slug: 'recommendation', title: 'The recommendation' }, comms: { slug: 'how-you-come-across', title: 'How you come across' },
+}
+
 export const SPRINT_FOR: Record<StageKey, { label: string; to: string }> = {
   clarify: { label: 'Practise case openings: recap + 3 questions', to: '/casebook' },
   structure: { label: 'Run structure drills: 2 minutes each', to: '/drills?tab=structure' },
   maths: { label: 'Run maths drills: 30 seconds each', to: '/drills?tab=maths' },
   leadership: { label: 'Do a live case and announce the next step after every answer', to: '/casebook' },
   reco: { label: 'Record yourself giving 60-second recommendations', to: '/casebook' },
-  comms: { label: 'Daily voice exercises for a week', to: '/playbook?tab=skills' },
+  comms: { label: 'Daily voice exercises for a week', to: '/learn/how-you-come-across#exercises' },
 }

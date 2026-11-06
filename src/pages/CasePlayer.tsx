@@ -9,6 +9,55 @@ import { ExhibitView, Rich, StructureTree } from '../components/CaseParts'
 import { CaseForm } from './CaseLog'
 import { Difficulty } from './Casebook'
 import { STAGES } from '../lib/types'
+import { useStore } from '../lib/store'
+import { SignInButton } from './SignIn'
+import type { CaseQuestion } from '../content'
+
+type Kind = 'clarify' | 'structure' | 'chart' | 'maths' | 'ideas' | 'reco' | 'judge' | 'sizing'
+const PC: Record<Kind, number> = { clarify: 3, structure: 4, chart: 6, maths: 7, sizing: 7, ideas: 8, judge: 5, reco: 9 }
+const COACH: Record<Kind, { checks: string[]; lesson: string; lessonTitle: string }> = {
+  clarify: { checks: ['Recapped in three sentences or fewer', 'Checked the goal and deadline', 'Asked only questions that change my structure'], lesson: 'the-opening', lessonTitle: 'The opening' },
+  structure: { checks: ['3-4 buckets with no overlaps', 'Branch names specific to this client', 'Said where I\u2019d start, and why'], lesson: 'structuring', lessonTitle: 'Structuring' },
+  chart: { checks: ['Read the title, axes, units and footnote', 'Led with one insight, with a number', 'Linked it to the client\u2019s goal', 'Said where I\u2019d go next'], lesson: 'charts-and-exhibits', lessonTitle: 'Reading charts and exhibits' },
+  maths: { checks: ['Said my approach before calculating', 'Talked through the numbers out loud', 'Sanity-checked the size of the answer', 'Said what it means for the client'], lesson: 'case-maths', lessonTitle: 'Case maths' },
+  ideas: { checks: ['Grouped ideas into 2-3 buckets', 'Gave 2-3 ideas in each bucket', 'Picked one to start with, and said why'], lesson: 'brainstorming', lessonTitle: 'Brainstorming' },
+  judge: { checks: ['Said clearly whether I agree', 'Explained the logic step by step', 'Said what it means for the decision'], lesson: 'structuring', lessonTitle: 'Structuring and hypotheses' },
+  sizing: { checks: ['Clarified units, time period and geography', 'Said a rough guess first', 'Segmented sensibly, with round numbers', 'Sanity-checked another way'], lesson: 'market-sizing', lessonTitle: 'Market sizing' },
+  reco: { checks: ['Opened with the answer', 'Gave 2-3 reasons, each with a number', 'Named the main risk', 'Gave next steps'], lesson: 'recommendation', lessonTitle: 'The recommendation' },
+}
+const kindOf = (q: CaseQuestion): Kind => {
+  const t = q.q.toLowerCase()
+  if (/do you agree/.test(t)) return 'judge'
+  if (/estimate|sanity-check this/.test(t)) return 'sizing'
+  if (/economics|which is better|fill the remaining|change the answer/.test(t)) return 'maths'
+  if (/^(what could|what else|what risks|what concerns|how would you protect|what should|brainstorm)|risks should|do instead|else should/.test(t)) return 'ideas'
+  if (/how much|how many|what ebitda|calculate|worth it|net effect|what is the prize|annual growth|growth rate|value the deal|impact|break even|when does|run out|profit is at risk|is .* worth|which price|change your answer|market share would/.test(t)) return 'maths'
+  if (q.exhibit) return 'chart'
+  return 'ideas'
+}
+
+function Coach({ kind }: { kind: Kind }) {
+  const c = COACH[kind]
+  const [on, setOn] = useState<Record<number, boolean>>({})
+  return (
+    <div className="mt-4 rounded-lg border border-line bg-canvas/60 p-4">
+      <div className="text-[13.5px] font-semibold text-ink">Before you look, did you…</div>
+      <ul className="mt-2 grid gap-1.5 sm:grid-cols-2">
+        {c.checks.map((x, k) => (
+          <li key={x}>
+            <label className="flex cursor-pointer items-start gap-2 text-[14px] text-ink-2">
+              <input type="checkbox" className="mt-1 h-4 w-4 accent-[#0E9AA7]" checked={!!on[k]} onChange={(e) => setOn((o) => ({ ...o, [k]: e.target.checked }))} />{x}
+            </label>
+          </li>
+        ))}
+      </ul>
+      <div className="mt-2 flex flex-wrap gap-x-5 gap-y-1 text-[13.5px] font-medium">
+        <Link to={`/perfect-casing?tab=flow&stage=${PC[kind]}`} className="text-teal-d hover:underline">What to say here (perfect casing)</Link>
+        <Link to={`/learn/${c.lesson}`} className="text-violet-d hover:underline">Stuck? Lesson: {c.lessonTitle}</Link>
+      </div>
+    </div>
+  )
+}
 
 type Step = { key: string; label: string }
 
@@ -32,6 +81,7 @@ export default function CasePlayer() {
   const { slug } = useParams()
   const [params, setParams] = useSearchParams()
   const nav = useNavigate()
+  const { user } = useStore()
   const interviewer = params.get('mode') === 'interviewer'
   const [cases, setCases] = useState<CaseDef[] | null>(null)
   const [i, setI] = useState(0)
@@ -65,6 +115,7 @@ export default function CasePlayer() {
           <p className="text-ink-2">{c.sub}</p>
           <div className="mt-1 flex flex-wrap items-center gap-x-4 gap-y-1 text-[13px] text-muted">
             <span>{c.type}</span><span>{c.industry}, {c.geo}</span><Difficulty d={c.diff} /><span>{c.fmt}</span>
+            <Link to="/frameworks?tab=glossary" className="text-violet-d hover:underline">Unfamiliar term? Glossary</Link>
           </div>
         </div>
         <div className="flex flex-col items-end gap-2">
@@ -108,6 +159,7 @@ export default function CasePlayer() {
           {step.key === 'clarify' && (
             <>
               <h2 className="text-[22px] font-semibold">{interviewer ? 'Give these facts only if asked' : 'Ask up to three clarifying questions'}</h2>
+              {!interviewer && <Coach key={`${c.slug}-clarify`} kind="clarify" />}
               <p className="mt-1 text-muted">{interviewer ? 'Good questions change the structure. Note which ones your candidate asks.' : 'Decide what you would ask before you look. Then open the answers to the questions you chose.'}</p>
               <ul className="mt-4 divide-y divide-line rounded-lg border border-line">
                 {c.clarify.map((f) => (
@@ -128,6 +180,7 @@ export default function CasePlayer() {
                 <>
                   <p className="mt-1 text-muted">Take up to two minutes. Aim for 3-4 buckets specific to this case, then say which one you'd start with, and why.</p>
                   <div className="mt-4"><Countdown seconds={120} label="Structuring time" /></div>
+                  {!isOpen('structure') && <Coach key={`${c.slug}-structure`} kind="structure" />}
                 </>
               )}
               <Reveal shown={isOpen('structure')} onShow={() => show('structure')} label="Compare with a strong structure">
@@ -144,7 +197,7 @@ export default function CasePlayer() {
               <>
                 <h2 className="text-[21px] leading-snug font-semibold">{q.q}</h2>
                 {q.exhibit && <ExhibitView ex={q.exhibit} />}
-                {!interviewer && <p className="mt-2 text-[14px] text-muted">Answer out loud first. Say your approach before you calculate, and finish with the so-what.</p>}
+                {!interviewer && !isOpen(step.key) && <Coach key={`${c.slug}-${step.key}`} kind={kindOf(q)} />}
                 <Reveal shown={isOpen(step.key)} onShow={() => show(step.key)} label="Show the strong answer">
                   <Answer html={q.answer} note={q.note} interviewer={interviewer} />
                 </Reveal>
@@ -157,6 +210,7 @@ export default function CasePlayer() {
               <h2 className="text-[22px] font-semibold">{interviewer ? 'Ask for the recommendation' : 'Give your recommendation'}</h2>
               <p className="mt-1 text-muted">Start with the answer. Then 2-3 reasons with numbers, the main risk, and next steps. About 60 seconds.</p>
               {!interviewer && <div className="mt-4"><Countdown seconds={60} label="Recommendation" /></div>}
+              {!interviewer && !isOpen('reco') && <Coach key={`${c.slug}-reco`} kind="reco" />}
               <Reveal shown={isOpen('reco')} onShow={() => show('reco')} label="Show the model recommendation">
                 <div className="rounded-lg bg-ink p-5 text-[15.5px] leading-relaxed text-white">{c.reco}</div>
                 <h3 className="mt-5 text-[17px] font-semibold">What separates a 5 from a 3</h3>
@@ -180,7 +234,11 @@ export default function CasePlayer() {
             <>
               <h2 className="text-[22px] font-semibold">Score yourself and pick one fix</h2>
               <p className="mt-1 mb-5 text-muted">Do it now, while the case is fresh. It goes straight into your case log.</p>
-              <CaseForm initial={{ name: c.title, source: `Casebook #${c.id}`, type: c.type, with: 'Self' }} onDone={() => nav('/cases')} />
+              {user ? <CaseForm initial={{ name: c.title, source: `Casebook #${c.id}`, type: c.type, with: 'Self' }} onDone={() => nav('/cases')} />
+                : <div className="rounded-lg border border-line bg-canvas/60 p-5">
+                    <p className="text-ink-2">Sign in to save your scores to a case log. It tracks your six stage scores across cases and tells you which one to work on next.</p>
+                    <div className="mt-4"><SignInButton label="Sign in to save this case" /></div>
+                  </div>}
             </>
           ))}
 

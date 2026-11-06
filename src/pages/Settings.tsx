@@ -34,18 +34,18 @@ export default function Settings() {
         </Section>
         <div className="space-y-5">
           <Section title="Account">
-            <p className="text-ink-2">Signed in as {user?.email || user?.name}{backend?.mode === 'demo' ? ' (demo)' : ' with Google'}.</p>
+            <p className="text-ink-2">{backend?.mode === 'demo' ? 'Your progress is saved in this browser on this device.' : `Signed in as ${user?.email || user?.name} with Google.`}</p>
             <div className="mt-4 flex flex-wrap gap-2">
               <Button variant="secondary" onClick={download}>Download my data</Button>
               <Button variant="secondary" onClick={signOut}>Sign out</Button>
-              {backend?.mode === 'demo' && <Button variant="danger" onClick={() => { resetDemo(); location.href = '/' }}>Reset demo data</Button>}
+              {backend?.mode === 'demo' && <Button variant="danger" onClick={() => { if (confirm('Delete all progress saved in this browser?')) { resetDemo(); location.href = '/' } }}>Clear my progress</Button>}
             </div>
           </Section>
           <Section title="More">
             <ul className="space-y-2 text-[15px]">
               <li><Link className="font-medium text-violet-d hover:underline" to="/perks">Student perks</Link> <span className="text-muted">Verify your business school email</span></li>
               <li><Link className="font-medium text-violet-d hover:underline" to="/partners">Practice partners</Link></li>
-              <li><Link className="font-medium text-violet-d hover:underline" to="/playbook">Playbook</Link></li>
+              <li><Link className="font-medium text-violet-d hover:underline" to="/stories">FIT stories</Link></li>
               <li><Link className="font-medium text-violet-d hover:underline" to="/privacy">Privacy notice</Link></li>
               {isAdmin && <li><Link className="font-medium text-signal-d hover:underline" to="/admin">Admin: students and perks</Link></li>}
             </ul>

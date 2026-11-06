@@ -1,5 +1,5 @@
 import type { CaseEntry, DayEntry, DrillEntry, Invite, Perk, Profile, StudentRecord, Story, Summary } from './types'
-import { addDays, todayIso, uid as newId } from './dates'
+import { uid as newId } from './dates'
 
 export interface AuthUser { uid: string; name: string; email?: string; photoURL?: string }
 export interface UserData { profile: Profile | null; days: Record<string, DayEntry>; cases: CaseEntry[]; drills: DrillEntry[]; stories: Story[] }
@@ -158,36 +158,12 @@ const DEMO_PERKS: Perk[] = [
   { id: 'casebook', title: '40% off the Casebook Vol. 1', description: '15 original cases with full solutions, as a printable PDF.', kind: 'code', code: 'STUDENT40', url: '#', order: 2 },
   { id: 'early', title: 'Early access to new cases', description: 'New cases appear here a week before anyone else gets them.', kind: 'link', url: '#', order: 3 },
 ]
-const DEMO_STUDENTS: StudentRecord[] = [
-  { uid: 'd1', name: 'Arjun Mehta', schoolEmail: 'amehta.mba2027@london.edu', domain: 'london.edu', school: 'London Business School', knownSchool: true, program: 'MBA', gradYear: '2027', marketing: true, consentAt: Date.now() - 864e5 * 3, verifiedAt: Date.now() - 864e5 * 3 },
-  { uid: 'd2', name: 'Sofia Rossi', schoolEmail: 'sofia.rossi@insead.edu', domain: 'insead.edu', school: 'INSEAD', knownSchool: true, program: 'MBA', gradYear: '2026', marketing: false, consentAt: Date.now() - 864e5, verifiedAt: Date.now() - 864e5 },
-  { uid: 'd3', name: 'James Park', schoolEmail: 'jpark@mba2027.hbs.edu', domain: 'mba2027.hbs.edu', school: 'Harvard Business School', knownSchool: true, program: 'MBA', gradYear: '2027', marketing: true, consentAt: Date.now() - 864e5 * 6, verifiedAt: Date.now() - 864e5 * 6 },
-]
-const KEY = 'cpos-demo-v1'
+
+const KEY = 'cpos-device-v2'
 type DemoState = { signedIn: boolean; data: UserData; summaries: Record<string, Summary>; invites: Record<string, Invite>; student?: StudentRecord | null; perks?: Perk[] }
 
 function seed(): DemoState {
-  const start = addDays(todayIso(), -9)
-  const days: Record<string, DayEntry> = {}
-  const pattern = [[1,1,1,1,1,1,0,0],[1,1,1,1,1,1,1,0],[0,0,0,1,1,1,0,0],[0,1,1,1,1,1,1,1],[0,0,1,1,0,1,0,0],[1,1,1,1,1,1,0,1],[1,1,1,1,1,1,0,1],[1,1,1,1,1,0,1,0],[0,1,1,1,0,1,1,1]]
-  const keys = ['live', 'self', 'drill', 'review', 'mind', 'voice', 'reading', 'fit'] as const
-  pattern.forEach((row, i) => {
-    const date = addDays(start, i)
-    days[date] = { date, habits: Object.fromEntries(keys.map((k, j) => [k, !!row[j]])) }
-  })
-  const mk = (i: number, name: string, source: string, type: string, w: CaseEntry['with'], s: number[], mistake: string, fix: string, fixed: CaseEntry['fixed']): CaseEntry => ({
-    id: `seed${i}`, date: addDays(start, i + Math.floor(i / 2)), name, source, type, with: w, mistake, fix, fixed, createdAt: i,
-    scores: { clarify: s[0], structure: s[1], maths: s[2], leadership: s[3], reco: s[4], comms: s[5] },
-  })
-  const cases = [
-    mk(0, 'Coastal Brew', 'Casebook #1', 'Profitability', 'Self', [3, 2, 3, 2, 2, 3], 'Gave a generic structure with no hypothesis', 'State a hypothesis after every structure', 'Partly'),
-    mk(1, 'Nordwind E-Bikes', 'Casebook #2', 'Market entry', 'Partner', [3, 3, 2, 2, 3, 3], 'Did the breakeven maths silently and lost the interviewer', 'Say the approach before calculating', 'Yes'),
-    mk(2, 'Meridian Hospitals', 'Casebook #3', 'Growth strategy', 'Expert', [4, 3, 3, 2, 3, 3], 'Waited for the interviewer to give me the next step', 'End every answer with where I want to go next', 'Yes'),
-    mk(3, 'Plugged In', 'Casebook #11', 'Market sizing', 'Self', [4, 3, 4, 3, 3, 4], 'No sanity check on the final number', 'Cross-check with a second method', 'Yes'),
-    mk(4, 'FreshMart', 'Casebook #7', 'Competitive response', 'Partner', [4, 4, 3, 3, 4, 3], 'Forgot to compare with doing nothing', 'Always size the do-nothing option first', ''),
-  ]
-  const partner: Summary = { uid: 'demo-partner', name: 'Arjun (demo partner)', partners: ['demo'], casesLogged: 8, avgScore: 3.4, weakestStage: 'Maths & charts', weekScore: 34, realPrepDays7: 5, lastFix: 'Write the formula before touching numbers', updatedAt: Date.now() }
-  return { signedIn: false, data: { profile: null, days, cases, drills: [], stories: [] }, summaries: { 'demo-partner': partner }, invites: {} }
+  return { signedIn: false, data: { profile: null, days: {}, cases: [], drills: [], stories: [] }, summaries: {}, invites: {} }
 }
 
 function makeDemo(): Backend {
@@ -197,7 +173,7 @@ function makeDemo(): Backend {
   }
   let state = read()
   const listeners = new Set<(u: AuthUser | null) => void>()
-  const user: AuthUser = { uid: 'demo', name: 'Demo candidate', email: 'demo@example.com' }
+  const user: AuthUser = { uid: 'device', name: 'You' }
   const write = () => { try { localStorage.setItem(KEY, JSON.stringify(state)) } catch { /* ignore */ } }
   const emit = () => listeners.forEach((l) => l(state.signedIn ? user : null))
   const upd = (f: (s: DemoState) => void) => { f(state); write(); return Promise.resolve() }
@@ -219,19 +195,14 @@ function makeDemo(): Backend {
     async createInvite(from, fromName) { const code = newId(); await upd((s) => { s.invites[code] = { code, from, fromName, createdAt: Date.now() } }); return code },
     async getInvite(code) { return state.invites[code] || null },
     acceptInvite: (code, me, name) => upd((s) => { if (s.invites[code]) { s.invites[code].acceptedBy = me; s.invites[code].acceptedName = name } }),
-    async acceptedInvites() {
-      return [{ code: 'demo', from: 'demo', fromName: 'Demo candidate', createdAt: 0, acceptedBy: 'demo-partner', acceptedName: 'Arjun (demo partner)' }]
-    },
+    async acceptedInvites() { return [] },
     async sendSchoolLink() { /* demo: no email is sent */ },
     isSchoolLink: (href) => href.includes('demoLink=1'),
     async completeSchoolLink() { /* demo: treated as verified */ },
     saveStudent: (st) => upd((s) => { s.student = st }),
     async getStudent() { return state.student || null },
     async listPerks() { return state.perks ?? DEMO_PERKS },
-    async listStudents() {
-      const mine = state.student ? [state.student] : []
-      return [...mine, ...DEMO_STUDENTS]
-    },
+    async listStudents() { return state.student ? [state.student] : [] },
     savePerk: (p) => upd((s) => { s.perks = [...(s.perks ?? DEMO_PERKS).filter((x) => x.id !== p.id), p] }),
     deletePerk: (id) => upd((s) => { s.perks = (s.perks ?? DEMO_PERKS).filter((x) => x.id !== id) }),
   }

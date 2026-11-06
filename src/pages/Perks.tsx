@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import { useStore } from '../lib/store'
 import type { Perk, StudentRecord } from '../lib/types'
 import { lookupSchool, PROGRAMS } from '../lib/schools'
@@ -64,7 +64,6 @@ function PerkItem({ p }: { p: Perk }) {
 
 export default function Perks() {
   const { backend, user } = useStore()
-  const nav = useNavigate()
   const [student, setStudent] = useState<StudentRecord | null | undefined>(undefined)
   const [perks, setPerks] = useState<Perk[]>([])
   const [sent, setSent] = useState<string | null>(readPending()?.email || null)
@@ -74,6 +73,15 @@ export default function Perks() {
     if (!backend || !user) return
     backend.getStudent(user.uid).then(async (s) => { setStudent(s); if (s) setPerks((await backend.listPerks()).sort((a, b) => (a.order ?? 99) - (b.order ?? 99))) })
   }, [backend, user])
+  if (backend?.mode === 'demo') return (
+    <>
+      <PageHeader title="Student perks" />
+      <div className="max-w-xl rounded-xl border border-line bg-white p-6">
+        <h2 className="text-[20px] font-semibold">Coming with Google sign-in</h2>
+        <p className="mt-1 text-ink-2">Verifying your business school email needs an account in the cloud, so it switches on together with Google sign-in. Everything else works now, and your progress is saved in this browser.</p>
+      </div>
+    </>
+  )
   if (student === undefined) return <Loading />
 
   const send = async (p: Pending) => {
@@ -108,7 +116,6 @@ export default function Perks() {
           {sent ? (
             <>
               <p className="text-ink-2">We sent a verification link to <b className="font-semibold">{sent}</b>. Open it on this device to finish. It can take a minute to arrive; check junk or quarantine folders too.</p>
-              {backend?.mode === 'demo' && <Button className="mt-4" onClick={() => nav('/verify-school?demoLink=1')}>Open the verification link (demo)</Button>}
               <div className="mt-4 flex gap-2">
                 <Button variant="secondary" onClick={() => send(readPending()!)} disabled={busy || !readPending()}>Send it again</Button>
                 <Button variant="quiet" onClick={() => { localStorage.removeItem(PENDING_KEY); setSent(null) }}>Use a different email</Button>

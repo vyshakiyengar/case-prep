@@ -1,6 +1,9 @@
-import { useCallback, useMemo, useRef, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { Link } from 'react-router-dom'
 import { useSearchParams } from 'react-router-dom'
-import { drills } from '../content'
+import { drills, loadCases } from '../content'
+import type { CaseDef, CaseQuestion } from '../content'
+import { ExhibitView, Rich } from '../components/CaseParts'
 import { useStore } from '../lib/store'
 import { todayIso, uid } from '../lib/dates'
 import { drillStats } from '../lib/stats'
@@ -61,6 +64,67 @@ function StructureDrill() {
             <li>End with: "I'd start with… because…"</li>
             <li>Five a day for five days fixes most structuring problems.</li>
           </ul>
+        </Section>
+      </div>
+    </div>
+  )
+}
+
+function ChartDrill() {
+  const { addDrill } = useStore()
+  const [items, setItems] = useState<{ c: CaseDef; q: CaseQuestion }[] | null>(null)
+  const [n, setN] = useState(0)
+  const [phase, setPhase] = useState<'ready' | 'running' | 'review'>('ready')
+  const [score, setScore] = useState<number>()
+  useEffect(() => {
+    loadCases().then((cs) => {
+      const all = cs.flatMap((c) => c.questions.filter((q) => q.exhibit).map((q) => ({ c, q })))
+      setItems(all.sort(() => Math.random() - 0.5))
+    })
+  }, [])
+  const end = useCallback(() => setPhase('review'), [])
+  if (!items) return <p className="text-muted">Loading exhibits…</p>
+  const it = items[n % items.length]
+  const save = async () => {
+    await addDrill({ id: uid(), kind: 'charts', prompt: `${it.c.title}: ${it.q.q}`, seconds: 90, score, date: todayIso(), createdAt: Date.now() })
+    setN((x) => x + 1); setPhase('ready'); setScore(undefined)
+  }
+  return (
+    <div className="grid gap-5 lg:grid-cols-[1.5fr_1fr]">
+      <div className="min-w-0 rounded-xl border border-line bg-white p-5">
+        <div className="text-[13px] text-muted">Exhibit {n + 1} of {items.length}, from case {it.c.id}: {it.c.title}</div>
+        {phase === 'ready' ? (
+          <p className="mt-2 font-serif text-[22px] font-semibold text-ink">Press start. You'll get one exhibit and 90 seconds to find the insight.</p>
+        ) : (
+          <>
+            <p className="mt-2 text-[15px] text-ink-2"><span className="font-medium text-ink">Context:</span> {it.c.sub} {it.q.q}</p>
+            {it.q.exhibit && <ExhibitView ex={it.q.exhibit} />}
+          </>
+        )}
+        {phase === 'review' && (
+          <div className="mt-2 rounded-lg border border-good/40 p-4">
+            <div className="mb-1 text-[13px] font-semibold text-good">Strong answer</div>
+            <Rich html={it.q.answer} />
+            <div className="mt-4 flex flex-wrap items-center gap-3">
+              <span className="text-[14px] font-medium text-ink">How did yours compare?</span>
+              <ScorePicker label="Self score" value={score} onChange={setScore} />
+            </div>
+          </div>
+        )}
+      </div>
+      <div className="space-y-4">
+        {phase === 'ready' && <Button className="w-full py-3" onClick={() => setPhase('running')}>Start a 90-second chart drill</Button>}
+        {phase === 'running' && <><Countdown seconds={90} label="Time left" autoStart onEnd={end} /><Button className="w-full" variant="secondary" onClick={() => setPhase('review')}>I'm done, compare</Button></>}
+        {phase === 'review' && <Button className="w-full py-3" disabled={!score} onClick={save}>{score ? 'Save and next exhibit' : 'Score yourself to save'}</Button>}
+        <Section title="The routine">
+          <ol className="list-decimal space-y-1 pl-5 text-[14px] text-ink-2">
+            <li>Read the title, axes, units and footnote.</li>
+            <li>Find the one thing that matters: the biggest number, the biggest change, the outlier.</li>
+            <li>Quantify it.</li>
+            <li>Link it to the client's goal.</li>
+            <li>Say where you'd go next.</li>
+          </ol>
+          <Link to="/learn/charts-and-exhibits" className="mt-3 inline-block text-[13.5px] font-medium text-violet-d hover:underline">Lesson: reading charts and exhibits</Link>
         </Section>
       </div>
     </div>
@@ -135,19 +199,21 @@ function MathsDrill() {
 export default function Drills() {
   const { data } = useStore()
   const [params, setParams] = useSearchParams()
-  const tab = (params.get('tab') as 'structure' | 'maths') || 'structure'
-  const s = drillStats(data!.drills)
+  const tab = (params.get('tab') as 'structure' | 'charts' | 'maths') || 'structure'
+  const { user } = useStore()
+  const s = drillStats(data?.drills || [])
   return (
     <>
-      <PageHeader title="Drills" intro="Short, timed reps on one skill at a time. Each drill you do counts towards the drill habit in your tracker." />
+      <PageHeader title="Drills" intro="Short, timed reps on one skill at a time: structuring, reading charts, and mental maths. 20 focused minutes on your weakest skill beats another full case." />
       <dl className="mb-6 grid grid-cols-2 gap-x-8 gap-y-3 sm:flex sm:flex-wrap">
         <div><dt className="text-[13px] text-muted">Drills this week</dt><dd className="font-serif text-[26px] font-semibold text-ink">{s.thisWeek}</dd></div>
-        <div><dt className="text-[13px] text-muted">Structure self-score</dt><dd className="font-serif text-[26px] font-semibold text-ink">{s.structureAvg?.toFixed(1) ?? '–'}</dd></div>
+        <div><dt className="text-[13px] text-muted">Structure and chart self-score</dt><dd className="font-serif text-[26px] font-semibold text-ink">{s.structureAvg?.toFixed(1) ?? '–'}</dd></div>
         <div><dt className="text-[13px] text-muted">Maths accuracy</dt><dd className="font-serif text-[26px] font-semibold text-ink">{s.mathsAccuracy === null ? '–' : `${Math.round(s.mathsAccuracy * 100)}%`}</dd></div>
         <div><dt className="text-[13px] text-muted">Total drills</dt><dd className="font-serif text-[26px] font-semibold text-ink">{s.structureCount + s.mathsCount}</dd></div>
       </dl>
-      <Tabs value={tab} onChange={(v) => setParams({ tab: v })} items={[{ value: 'structure', label: 'Structuring, 2 minutes' }, { value: 'maths', label: 'Mental maths, 30 seconds' }]} />
-      {tab === 'structure' ? <StructureDrill /> : <MathsDrill />}
+      <Tabs value={tab} onChange={(v) => setParams({ tab: v })} items={[{ value: 'structure', label: 'Structuring, 2 min' }, { value: 'charts', label: 'Charts, 90 sec' }, { value: 'maths', label: 'Mental maths, 30 sec' }]} />
+      {!user && <p className="mb-4 rounded-lg bg-canvas px-4 py-2.5 text-[14px] text-muted"><Link to="/signin?next=/drills" className="font-medium text-violet-d hover:underline">Sign in</Link> to save your drill scores and see your progress.</p>}
+      {tab === 'structure' ? <StructureDrill /> : tab === 'charts' ? <ChartDrill /> : <MathsDrill />}
     </>
   )
 }

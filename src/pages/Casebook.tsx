@@ -22,11 +22,12 @@ export default function Casebook() {
   useEffect(() => { loadCases().then(setCases) }, [])
   if (!cases) return <Loading label="Loading cases…" />
   const types = ['All', ...Array.from(new Set(cases.map((c) => c.type)))]
-  const done = new Set(data!.cases.map((c) => c.name.toLowerCase()))
+  const done = new Set((data?.cases || []).map((c) => c.name.toLowerCase()))
   const shown = cases.filter((c) => filter === 'All' || c.type === filter)
   return (
     <>
-      <PageHeader title="Casebook" intro="15 original cases with exhibits and model answers. Practise alone with a timer, or play the interviewer for a partner and then swap." />
+      <PageHeader title="Casebook" intro="15 original cases with exhibits, coaching checklists and model answers. Practise alone with a timer, or be the interviewer for a friend and then swap. New to cases? Do the course first." />
+      <p className="mb-4 rounded-lg border border-teal bg-teal-l/50 px-4 py-3 text-[14.5px] text-ink">New to cases? Do the first three lessons of the course, then start with the three easy cases: <Link to="/casebook/coastal-brew" className="font-medium underline">1</Link>, <Link to="/casebook/plugged-in" className="font-medium underline">11</Link> and <Link to="/casebook/snackco-protein-bar" className="font-medium underline">12</Link>.</p>
       <div className="mb-4 flex flex-wrap gap-1.5" role="group" aria-label="Filter by case type">
         {types.map((t) => (
           <button key={t} onClick={() => setFilter(t)} aria-pressed={filter === t}
@@ -41,6 +42,7 @@ export default function Casebook() {
               <div className="flex flex-wrap items-baseline gap-x-3">
                 <h2 className="text-[19px] font-semibold">{c.title}</h2>
                 {done.has(c.title.toLowerCase()) && <span className="rounded-full bg-good-l px-2 py-0.5 text-[12px] font-medium text-good">Logged</span>}
+                {c.diff === 1 && <span className="rounded-full bg-teal-l px-2 py-0.5 text-[12px] font-medium text-teal-d">Good first case</span>}
               </div>
               <p className="text-ink-2">{c.sub}</p>
               <div className="mt-1 flex flex-wrap items-center gap-x-4 gap-y-1 text-[13px] text-muted">

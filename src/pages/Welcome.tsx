@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useSearchParams } from 'react-router-dom'
 import { useStore } from '../lib/store'
 import { addDays, todayIso } from '../lib/dates'
 import { Button, Field, inputCls, Logo } from '../components/ui'
@@ -7,6 +7,8 @@ import { Button, Field, inputCls, Logo } from '../components/ui'
 export default function Welcome() {
   const { data, user, saveProfile } = useStore()
   const nav = useNavigate()
+  const [params] = useSearchParams()
+  const next = params.get('next')
   const [name, setName] = useState(data?.profile?.name || user?.name || '')
   const [start, setStart] = useState(data?.profile?.startDate || todayIso())
   const [iv, setIv] = useState(data?.profile?.interviewDate || addDays(todayIso(), 42))
@@ -14,7 +16,7 @@ export default function Welcome() {
   const submit = async (e: React.FormEvent) => {
     e.preventDefault(); setSaving(true)
     await saveProfile({ name: name.trim() || 'You', startDate: start, interviewDate: iv || undefined })
-    nav('/today', { replace: true })
+    nav(next && next.startsWith('/') ? next : '/today', { replace: true })
   }
   return (
     <div className="graph-paper flex min-h-screen items-center justify-center px-4 py-10">

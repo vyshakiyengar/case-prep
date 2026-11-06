@@ -48,6 +48,15 @@ export default function Partners() {
     return () => { live = false }
   }, [backend, user, partnerIds.join(',')]) // eslint-disable-line react-hooks/exhaustive-deps
 
+  if (backend?.mode === 'demo') return (
+    <>
+      <PageHeader title="Practice partners" />
+      <div className="max-w-xl rounded-xl border border-line bg-white p-6">
+        <h2 className="text-[20px] font-semibold">Coming with Google sign-in</h2>
+        <p className="mt-1 text-ink-2">Inviting a partner needs an account in the cloud, so it switches on together with Google sign-in. Everything else works now, and your progress is saved in this browser.</p>
+      </div>
+    </>
+  )
   const invite = async () => {
     const code = await backend!.createInvite(user!.uid, data!.profile?.name || user!.name)
     setLink(`${window.location.origin}/invite/${code}`)
@@ -75,7 +84,7 @@ export default function Partners() {
             <a className="inline-flex items-center rounded-lg border border-line bg-white px-4 py-2 text-[14px] font-medium text-ink hover:border-faint"
               href={`https://wa.me/?text=${encodeURIComponent(`Let's keep each other honest on case prep: ${link}`)}`} target="_blank" rel="noreferrer">Share on WhatsApp</a>
           </div>
-          <p className="mt-2 text-[13.5px] text-muted">When they sign in and accept, you'll see each other here.{backend?.mode === 'demo' ? ' In demo mode invites stay in this browser.' : ''}</p>
+          <p className="mt-2 text-[13.5px] text-muted">When they sign in and accept, you'll see each other here.</p>
         </Section>
       )}
       <div className="grid gap-4 md:grid-cols-2">

@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom'
 import { useStore } from '../lib/store'
 import { HABITS, CASE_TYPES } from '../lib/types'
 import { diffDays, todayIso, fmtShort } from '../lib/dates'
-import { byDate, caseOverall, dayScore, improvement, SPRINT_FOR, stageAverages, streak, weakestStage, weekly } from '../lib/stats'
+import { byDate, caseOverall, dayScore, improvement, LESSON_FOR, SPRINT_FOR, stageAverages, streak, weakestStage, weekly } from '../lib/stats'
 import { LinkButton, Meter, PageHeader, ScoreChip, Section } from '../components/ui'
 
 export function HabitChecklist({ date }: { date: string }) {
@@ -38,6 +38,35 @@ export function HabitChecklist({ date }: { date: string }) {
   )
 }
 
+function FirstSteps() {
+  const { data } = useStore()
+  const learned = new Set(data!.profile?.learned || [])
+  const trained = Object.keys(data!.profile?.trainer || {}).length
+  const hasCase = data!.cases.length > 0
+  const steps = [
+    { t: 'Do the first three lessons', d: 'How cases work, the opening, and structuring. About 30 minutes.', done: ['how-case-interviews-work', 'the-opening', 'structuring'].every((s) => learned.has(s)), to: '/learn' },
+    { t: 'Train your first perfect-casing phrases', d: 'A 5-minute session. Say each line out loud.', done: trained >= 5, to: '/perfect-casing?tab=train' },
+    { t: 'Do case 1 alone, with the timer', d: 'Coastal Brew, an easy profitability case. Talk out loud.', done: hasCase, to: '/casebook/coastal-brew' },
+    { t: 'Score it and write one fix', d: 'The last step of the case saves it to your case log.', done: hasCase && data!.cases.some((c) => c.fix), to: '/cases' },
+  ]
+  const n = steps.filter((s) => s.done).length
+  return (
+    <Section title="Your first steps" aside={<span className="text-[14px] text-muted tabular-nums">{n} of {steps.length} done</span>}>
+      <ol className="space-y-2">
+        {steps.map((s, i) => (
+          <li key={s.t}>
+            <Link to={s.to} className={`flex items-start gap-3 rounded-lg border px-4 py-3 ${s.done ? 'border-good/40 bg-good-l/40' : 'border-line bg-white hover:border-faint'}`}>
+              <span className={`mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-[12px] font-semibold ${s.done ? 'bg-good text-white' : 'bg-canvas text-muted'}`}>{s.done ? '✓' : i + 1}</span>
+              <span><span className={`block font-medium ${s.done ? 'text-muted line-through' : 'text-ink'}`}>{s.t}</span><span className="block text-[13.5px] text-muted">{s.d}</span></span>
+            </Link>
+          </li>
+        ))}
+      </ol>
+      <p className="mt-3 text-[13.5px] text-muted">After your first case, this space shows your weakest stage and what to do about it.</p>
+    </Section>
+  )
+}
+
 export default function Today() {
   const { data } = useStore()
   const p = data!.profile
@@ -68,26 +97,24 @@ export default function Today() {
 
       <div className="grid gap-5 lg:grid-cols-[1.6fr_1fr]">
         <div className="space-y-5">
+          {cases.length === 0 && <FirstSteps />}
           <Section title="Today's habits" aside={<span className={`text-[14px] font-semibold tabular-nums ${score >= 5 ? 'text-good' : score >= 3 ? 'text-[#8A6A00]' : 'text-muted'}`}>{score} of 8{score >= 5 ? ', a real prep day' : ''}</span>}>
             <HabitChecklist date={t} />
             <p className="mt-4 text-[13.5px] text-muted">Five or more is a real prep day. Not every day has to be.</p>
           </Section>
 
-          {weak ? (
+          {weak && (
             <section className="rounded-xl border border-signal bg-signal-l p-5">
               <h2 className="text-[19px] font-semibold text-signal-d">Next focus: {weak.label.toLowerCase()}</h2>
               <p className="mt-1 text-ink-2">It's your weakest stage so far, averaging {weak.avg?.toFixed(1)} out of 5. {weak.great}</p>
-              <LinkButton to={SPRINT_FOR[weak.key].to} variant="secondary" className="mt-3">{SPRINT_FOR[weak.key].label}</LinkButton>
-            </section>
-          ) : (
-            <section className="rounded-xl border border-dashed border-line bg-white p-5">
-              <h2 className="text-[19px] font-semibold">Your first case shows you where to start</h2>
-              <p className="mt-1 text-muted">Do case 1 from the casebook, score yourself, and this space will name your weakest stage.</p>
-              <LinkButton to="/casebook/coastal-brew" variant="secondary" className="mt-3">Open case 1: Coastal Brew</LinkButton>
+              <div className="mt-3 flex flex-wrap gap-2">
+                <LinkButton to={`/learn/${LESSON_FOR[weak.key].slug}`} variant="secondary">Re-read the lesson: {LESSON_FOR[weak.key].title}</LinkButton>
+                <LinkButton to={SPRINT_FOR[weak.key].to} variant="secondary">{SPRINT_FOR[weak.key].label}</LinkButton>
+              </div>
             </section>
           )}
 
-          <Section title="Stage scores" aside={<span className="text-[13.5px] text-muted">Average across {cases.length} case{cases.length === 1 ? '' : 's'}</span>}>
+          {cases.length > 0 && <Section title="Stage scores" aside={<span className="text-[13.5px] text-muted">Average across {cases.length} case{cases.length === 1 ? '' : 's'}</span>}>
             <ul className="space-y-3">
               {stages.map((s) => (
                 <li key={s.key} className="grid grid-cols-[150px_1fr_36px] items-center gap-3 sm:grid-cols-[190px_1fr_40px]">
@@ -97,9 +124,9 @@ export default function Today() {
                 </li>
               ))}
             </ul>
-          </Section>
+          </Section>}
 
-          <Section title="Week by week" aside={<Link to="/tracker" className="text-[13.5px] font-medium text-violet-d hover:underline">Open tracker</Link>}>
+          {weeks.some((w) => w.total > 0) && <Section title="Week by week" aside={<Link to="/tracker" className="text-[13.5px] font-medium text-violet-d hover:underline">Open tracker</Link>}>
             <div className="flex h-40 items-end gap-2" role="img" aria-label="Tracker score by week">
               {weeks.slice(0, 8).map((w) => (
                 <div key={w.week} className="flex flex-1 flex-col items-center gap-1">
@@ -110,7 +137,7 @@ export default function Today() {
               ))}
             </div>
             <p className="mt-3 text-[13.5px] text-muted">A strong week scores 35 or more: five-plus habits on most days.</p>
-          </Section>
+          </Section>}
         </div>
 
         <div className="space-y-5">
@@ -130,7 +157,7 @@ export default function Today() {
             ) : <p className="text-muted">The fixes you write in your case log appear here, so you see them right before you practise.</p>}
           </Section>
 
-          <Section title="Are you improving?">
+          {cases.length > 0 && <Section title="Are you improving?">
             <dl className="grid grid-cols-2 gap-4">
               <div><dt className="text-[13px] text-muted">First 5 cases</dt><dd className="font-serif text-[26px] font-semibold text-ink">{imp.first?.toFixed(1) ?? '–'}</dd></div>
               <div><dt className="text-[13px] text-muted">Last 5 cases</dt><dd className="font-serif text-[26px] font-semibold text-ink">{imp.last?.toFixed(1) ?? '–'}</dd></div>
@@ -138,9 +165,9 @@ export default function Today() {
               <div><dt className="text-[13px] text-muted">Fixes that stuck</dt><dd className="font-serif text-[26px] font-semibold text-ink">{imp.stuck === null ? '–' : `${Math.round(imp.stuck * 100)}%`}</dd></div>
             </dl>
             {imp.last === null && <p className="mt-3 text-[13.5px] text-muted">Log five cases to see your trend.</p>}
-          </Section>
+          </Section>}
 
-          <Section title="Case types covered">
+          {cases.length > 0 && <Section title="Case types covered">
             <ul className="flex flex-wrap gap-1.5">
               {CASE_TYPES.filter((ty) => ty !== 'Other').map((ty) => (
                 <li key={ty} className={`rounded-full px-2.5 py-1 text-[12.5px] ${typeCount[ty] ? 'bg-teal-l font-medium text-teal-d' : 'bg-canvas text-faint'}`}>
@@ -148,7 +175,7 @@ export default function Today() {
                 </li>
               ))}
             </ul>
-          </Section>
+          </Section>}
 
           {cases.length > 0 && (
             <Section title="Latest case" aside={<Link to="/cases" className="text-[13.5px] font-medium text-violet-d hover:underline">Case log</Link>}>

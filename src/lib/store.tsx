@@ -14,6 +14,7 @@ interface Store {
   signIn(): Promise<void>
   signOut(): Promise<void>
   saveProfile(p: Partial<Profile>): Promise<void>
+  markLesson(slug: string, done: boolean): Promise<void>
   toggleHabit(date: string, key: keyof DayEntry['habits']): Promise<void>
   setDayNote(date: string, note: string): Promise<void>
   saveCase(c: CaseEntry): Promise<void>
@@ -94,6 +95,14 @@ export function StoreProvider({ children }: { children: ReactNode }) {
       ready, backend, user, data, error, setError,
       signIn: async () => { if (backend) await guard(() => backend.signIn()) },
       signOut: async () => { if (backend) await backend.signOut() },
+      markLesson: async (slug, done) => {
+        if (!user) return
+        const cur = dataRef.current?.profile?.learned || []
+        const learned = done ? Array.from(new Set([...cur, slug])) : cur.filter((x) => x !== slug)
+        const next = { ...(dataRef.current?.profile || { name: user.name }), learned } as Profile
+        patch((d) => ({ ...d, profile: next }))
+        await guard(() => backend!.saveProfile(uid, next))
+      },
       saveProfile: (p) => {
         const next = { ...(dataRef.current?.profile || { name: user?.name || '' }), ...p } as Profile
         patch((d) => ({ ...d, profile: next }))
@@ -131,6 +140,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
         return guard(() => backend!.deleteCase(uid, id))
       },
       addDrill: (dr) => {
+        if (!user) return Promise.resolve()
         patch((d) => ({ ...d, drills: [...d.drills, dr] }))
         return guard(async () => {
           await backend!.saveDrill(uid, dr)
