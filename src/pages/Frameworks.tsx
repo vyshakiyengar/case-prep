@@ -37,6 +37,19 @@ export function FrameworksIndex() {
   return (
     <>
       <PageHeader title="Frameworks" intro="The building blocks for 16 kinds of case, and 20 formulas. Learn them, then build a structure that fits the client in front of you. Never recite a framework in an interview." />
+      <section className="mb-6 rounded-xl border border-line bg-white p-5">
+        <h2 className="text-[20px] font-semibold">How to learn a framework without memorising a script</h2>
+        <p className="mt-1 text-[14.5px] text-muted">A framework is a starting point, not the final answer. Your job is to create a structure that fits the client and the exact question.</p>
+        <ol className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+          {[
+            ['1. Read the question', 'What is the client trying to decide or fix? Is this a diagnosis or a decision?'],
+            ['2. Study the visual tree', 'See how a big question breaks into smaller questions that can be tested with evidence.'],
+            ['3. Make it specific', 'Rename each branch with the client, product, customer and geography in mind.'],
+            ['4. State a hypothesis', 'Explain which branch you would test first, why it matters and what data you need.'],
+          ].map(([title,detail]) => <li key={title} className="rounded-lg bg-canvas p-3"><h3 className="font-sans text-[14px] font-semibold text-ink">{title}</h3><p className="mt-1 text-[13.5px] text-muted">{detail}</p></li>)}
+        </ol>
+        <p className="mt-4 text-[14px] text-ink-2">Example: if a coffee chain's profit fell after adding delivery, don't simply list “revenue and cost.” Ask whether delivery orders are replacing profitable store sales, how commissions change profit per order and whether delivery attracts new customers. <Link to="/drills?tab=structure" className="font-medium text-violet-d hover:underline">Try a two-minute structure drill →</Link></p>
+      </section>
       <Tabs value={tab} onChange={(v) => setParams({ tab: v })} items={[{ value: 'types', label: '16 case types' }, { value: 'formulas', label: '20 formulas' }, { value: 'glossary', label: 'Glossary' }]} />
       {tab === 'glossary' ? (
         <dl className="divide-y divide-line overflow-hidden rounded-xl border border-line bg-white">

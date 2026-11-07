@@ -205,6 +205,10 @@ export default function Drills() {
   return (
     <>
       <PageHeader title="Drills" intro="Short, timed reps on one skill at a time: structuring, reading charts, and mental maths. 20 focused minutes on your weakest skill beats another full case." />
+      <section className="mb-5 flex flex-wrap items-center justify-between gap-3 rounded-xl border border-line bg-white p-4">
+        <div><h2 className="font-sans text-[16px] font-semibold text-ink">Unfamiliar graphs make you nervous?</h2><p className="mt-1 text-[14px] text-muted">Start with our separate 64-exercise chart library. Familiarise yourself with eight formats and practise saying the business insight out loud before using timed case exhibits.</p></div>
+        <Link to="/graphs" className="rounded-lg border border-line px-4 py-2 text-[14px] font-medium text-violet-d hover:border-violet">Open the graph library →</Link>
+      </section>
       <dl className="mb-6 grid grid-cols-2 gap-x-8 gap-y-3 sm:flex sm:flex-wrap">
         <div><dt className="text-[13px] text-muted">Drills this week</dt><dd className="font-serif text-[26px] font-semibold text-ink">{s.thisWeek}</dd></div>
         <div><dt className="text-[13px] text-muted">Structure and chart self-score</dt><dd className="font-serif text-[26px] font-semibold text-ink">{s.structureAvg?.toFixed(1) ?? '–'}</dd></div>

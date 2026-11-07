@@ -25,6 +25,33 @@ export default function Learn() {
         <p className="mb-6 text-[14px] text-muted"><Link to="/signin?next=/learn" className="font-medium text-violet-d hover:underline">Sign in</Link> to tick off lessons as you finish them.</p>
       )}
 
+      <section className="mb-6 rounded-xl border border-line bg-white p-5">
+        <h2 className="text-[20px] font-semibold">Not sure where to start? Follow this path.</h2>
+        <p className="mt-1 text-[14.5px] text-muted">You do not have to read every resource on day one. Use the lessons to understand the process, then do a little practice and record what needs improving.</p>
+        <ol className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+          {[
+            ['1. Learn', 'Read one course lesson and say the example answer aloud.', '/learn/how-case-interviews-work', 'Start lesson 1'],
+            ['2. See it', 'Study a visual framework and understand why each branch matters.', '/frameworks', 'Explore frameworks'],
+            ['3. Practise', 'Try a timed graph, structure or calculation and explain the insight.', '/graphs', 'Try graph exercises'],
+            ['4. Improve', 'Log a practice case. Name one mistake and what you will do differently.', '/signin?next=/cases', 'Start a case log'],
+          ].map(([title, detail, url, cta]) => <li key={title} className="rounded-lg bg-canvas p-4"><h3 className="font-sans text-[15px] font-semibold text-ink">{title}</h3><p className="mt-1 text-[13.5px] text-muted">{detail}</p><Link to={url} className="mt-3 inline-block text-[13px] font-medium text-violet-d hover:underline">{cta} →</Link></li>)}
+        </ol>
+      </section>
+      <section className="mb-8 grid gap-4 md:grid-cols-2" aria-label="The two parts of case preparation">
+        <div className="rounded-xl border border-line border-t-4 border-t-teal bg-white p-5">
+          <p className="text-[12px] font-semibold uppercase tracking-wider text-teal-d">Pillar 1 · Solve the case</p>
+          <h2 className="mt-2 text-[21px] font-semibold">Case mechanics</h2>
+          <p className="mt-2 text-[14.5px] text-muted">Start with the lessons below. Then study the 10-stage perfect-casing guide, learn to make your own framework, practise 64 original charts, and solve full cases out loud.</p>
+          <div className="mt-3 flex flex-wrap gap-3 text-[13.5px] font-medium text-violet-d"><Link to="/perfect-casing">Perfect casing →</Link><Link to="/frameworks">Frameworks →</Link><Link to="/graphs">Graph library →</Link></div>
+        </div>
+        <div className="rounded-xl border border-line border-t-4 border-t-violet bg-white p-5">
+          <p className="text-[12px] font-semibold uppercase tracking-wider text-violet-d">Pillar 2 · Perform well</p>
+          <h2 className="mt-2 text-[21px] font-semibold">Interview skills</h2>
+          <p className="mt-2 text-[14.5px] text-muted">Practise mental maths and recall, warm up your speech, learn business language and rehearse your stories. Learn exactly how Elevate, Peak, SpeechOn, Shark Tank and business books fit into a sensible routine.</p>
+          <Link to="/interview-skills" className="mt-3 inline-block text-[13.5px] font-medium text-violet-d hover:underline">Read the interview skills guide →</Link>
+        </div>
+      </section>
+
       <div className="space-y-8">
         {MODULES.map((m, mi) => (
           <section key={m.title}>

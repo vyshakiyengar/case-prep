@@ -1,13 +1,15 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { Link, NavLink, Outlet, useLocation } from 'react-router-dom'
 import { useStore } from '../lib/store'
 import { Avatar, Logo } from './ui'
 
 type Item = { to: string; label: string; icon: string }
 export const LEARN: Item[] = [
-  { to: '/learn', label: 'Course', icon: 'M12 6c-2-1.5-5-2-8-1.5v13c3-.5 6 0 8 1.5 2-1.5 5-2 8-1.5v-13c-3-.5-6 0-8 1.5zM12 6v13' },
+  { to: '/learn', label: 'Start here', icon: 'M12 6c-2-1.5-5-2-8-1.5v13c3-.5 6 0 8 1.5 2-1.5 5-2 8-1.5v-13c-3-.5-6 0-8 1.5zM12 6v13' },
   { to: '/perfect-casing', label: 'Perfect casing', icon: 'M4 17l4-4 3 3 6-7 3 3M4 20h16' },
   { to: '/frameworks', label: 'Frameworks', icon: 'M12 4v5M5 9h14M5 9v4M12 9v4M19 9v4M3 13h4v6H3zM10 13h4v6h-4zM17 13h4v6h-4z' },
+  { to: '/graphs', label: 'Graph library', icon: 'M4 20V4M4 20h16M7 16l4-6 3 3 5-8' },
+  { to: '/interview-skills', label: 'Interview skills', icon: 'M8 8a4 4 0 0 1 8 0c0 3-4 4-4 7M12 19h.01M4 21h16' },
   { to: '/casebook', label: 'Casebook', icon: 'M5 4h9a3 3 0 0 1 3 3v13H8a3 3 0 0 1-3-3zM17 7h2v13' },
   { to: '/drills', label: 'Drills', icon: 'M12 7v5l3 2M12 21a8 8 0 1 0 0-16 8 8 0 0 0 0 16zM10 2h4' },
 ]
@@ -46,14 +48,17 @@ export function SignInLink({ className = '' }: { className?: string }) {
 export default function AppShell() {
   const { user, data, error, setError } = useStore()
   const loc = useLocation()
-  useEffect(() => { if (!loc.hash) window.scrollTo(0, 0) }, [loc.pathname, loc.hash])
+  const [mobileOpen, setMobileOpen] = useState(false)
+  useEffect(() => { if (!loc.hash) window.scrollTo(0, 0); setMobileOpen(false) }, [loc.pathname, loc.hash])
   const name = data?.profile?.name || user?.name || ''
   return (
     <div className="min-h-screen lg:pl-60">
       <aside className="fixed inset-y-0 left-0 z-20 hidden w-60 flex-col overflow-y-auto border-r border-line bg-white px-4 py-5 lg:flex">
         <Link to={user ? '/today' : '/'} className="px-2"><Logo /></Link>
         <nav aria-label="Main" className="mt-2">
-          <NavGroup title="Learn and practise" items={LEARN} />
+          <NavGroup title="Start here" items={LEARN.filter((n) => n.to === '/learn')} />
+          <NavGroup title="Pillar 1 · Case mechanics" items={LEARN.filter((n) => !['/learn', '/interview-skills'].includes(n.to))} />
+          <NavGroup title="Pillar 2 · Interview skills" items={LEARN.filter((n) => n.to === '/interview-skills')} />
           <NavGroup title="My prep" items={PREP} />
         </nav>
         <div className="mt-auto pt-6">
@@ -76,7 +81,29 @@ export default function AppShell() {
 
       <header className="sticky top-0 z-20 flex items-center justify-between border-b border-line bg-white/95 px-4 py-3 backdrop-blur lg:hidden">
         <Link to={user ? '/today' : '/'}><Logo /></Link>
-        {user ? <NavLink to="/settings" aria-label="Settings"><Avatar name={name} photo={user.photoURL} /></NavLink> : <SignInLink />}
+        <div className="flex items-center gap-3">
+          <button type="button" onClick={() => setMobileOpen((o) => !o)} aria-expanded={mobileOpen} aria-controls="mobile-sections"
+            className="rounded-lg border border-line bg-white px-3 py-2 text-[13.5px] font-medium text-ink hover:border-violet">{mobileOpen ? 'Close' : 'Menu'}</button>
+          {user ? <NavLink to="/settings" aria-label="Settings"><Avatar name={name} photo={user.photoURL} /></NavLink> : <SignInLink />}
+        </div>
+        {mobileOpen && <nav id="mobile-sections" aria-label="Browse all sections" className="absolute left-3 right-3 top-full z-30 max-h-[min(75vh,620px)] overflow-y-auto rounded-b-xl border border-line bg-white p-4 shadow-xl">
+          <p className="px-2 pb-1 text-[12px] font-semibold uppercase tracking-wide text-teal-d">Start here</p>
+          <div className="grid grid-cols-2 gap-1">
+            {LEARN.filter((n) => n.to === '/learn').map((n) => <NavLink key={n.to} to={n.to} onClick={() => setMobileOpen(false)} className="rounded-lg bg-teal-l px-3 py-2.5 text-[14px] font-medium text-teal-d">{n.label}</NavLink>)}
+          </div>
+          <p className="mt-4 px-2 pb-1 text-[12px] font-semibold uppercase tracking-wide text-teal-d">Pillar 1 · Case mechanics</p>
+          <div className="grid grid-cols-2 gap-1">
+            {LEARN.filter((n) => !['/learn', '/interview-skills'].includes(n.to)).map((n) => <NavLink key={n.to} to={n.to} onClick={() => setMobileOpen(false)} className={({ isActive }) => `rounded-lg px-3 py-2.5 text-[14px] font-medium ${isActive ? 'bg-teal-l text-teal-d' : 'text-ink hover:bg-canvas'}`}>{n.label}</NavLink>)}
+          </div>
+          <p className="mt-4 px-2 pb-1 text-[12px] font-semibold uppercase tracking-wide text-violet-d">Pillar 2 · Interview skills</p>
+          <div className="grid grid-cols-2 gap-1">
+            {LEARN.filter((n) => n.to === '/interview-skills').map((n) => <NavLink key={n.to} to={n.to} onClick={() => setMobileOpen(false)} className="rounded-lg bg-violet-l px-3 py-2.5 text-[14px] font-medium text-violet-d">{n.label}</NavLink>)}
+          </div>
+          {user && <><p className="mt-4 px-2 pb-1 text-[12px] font-semibold uppercase tracking-wide text-violet-d">My prep and progress</p>
+          <div className="grid grid-cols-2 gap-1">
+            {PREP.map((n) => <NavLink key={n.to} to={n.to} onClick={() => setMobileOpen(false)} className={({ isActive }) => `rounded-lg px-3 py-2.5 text-[14px] font-medium ${isActive ? 'bg-violet-l text-violet-d' : 'text-ink hover:bg-canvas'}`}>{n.label}</NavLink>)}
+          </div></>}
+        </nav>}
       </header>
 
       {error && (
@@ -88,10 +115,10 @@ export default function AppShell() {
       <main className="mx-auto max-w-6xl px-4 pt-6 pb-28 sm:px-6 lg:px-10 lg:pt-10 lg:pb-16"><Outlet /></main>
 
       <nav aria-label="Main" className="fixed inset-x-0 bottom-0 z-20 grid grid-cols-5 border-t border-line bg-white lg:hidden">
-        {[...LEARN.filter((n) => n.to !== '/frameworks'), user ? PREP[0] : { to: '/signin', label: 'Sign in', icon: 'M15 3h4v18h-4M10 17l5-5-5-5M15 12H3' }].map((n) => (
+        {[...LEARN.filter((n) => ['/learn', '/perfect-casing', '/casebook', '/drills'].includes(n.to)), user ? PREP[0] : { to: '/signin', label: 'Sign in', icon: 'M15 3h4v18h-4M10 17l5-5-5-5M15 12H3' }].map((n) => (
           <NavLink key={n.to} to={n.to}
             className={({ isActive }) => `flex flex-col items-center gap-0.5 py-2 text-[10.5px] font-medium ${isActive ? 'text-ink' : 'text-faint'}`}>
-            <Icon d={n.icon} /><span className="truncate">{n.label}</span>
+            <Icon d={n.icon} /><span className="truncate">{n.label === "Perfect casing" ? "Case steps" : n.label}</span>
           </NavLink>
         ))}
       </nav>

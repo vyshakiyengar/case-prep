@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom'
 import { useStore } from '../lib/store'
 import { HABITS } from '../lib/types'
 import { fmtDow, fmtShort, todayIso } from '../lib/dates'
@@ -12,6 +13,15 @@ export default function Tracker() {
   return (
     <>
       <PageHeader title="Tracker" intro="Tap a square when you complete a habit. Five or more in a day is a real prep day. Past days can be filled in if you forgot." />
+      <section className="mb-5 rounded-xl border border-line bg-white p-5">
+        <h2 className="text-[20px] font-semibold">Why you are tracking two kinds of practice</h2>
+        <p className="mt-1 text-[14.5px] text-muted">A strong interview needs two things. First, you must know how to solve a case. Second, you must be able to think, speak and make business decisions clearly while someone is watching. Your tracker keeps both visible.</p>
+        <div className="mt-4 grid gap-4 sm:grid-cols-2">
+          <div className="rounded-lg bg-teal-l/60 p-4"><h3 className="font-sans font-semibold text-teal-d">Case mechanics (first 4 columns)</h3><p className="mt-1 text-[14px] text-ink-2">Live case: practise with another person. Self case: solve one alone, out loud. Drill: focus on structures, graphs or maths. Review: read the mistake you want to fix before your next case.</p><Link to="/graphs" className="mt-2 inline-block text-[13.5px] font-medium text-violet-d hover:underline">Practise graph interpretation →</Link></div>
+          <div className="rounded-lg bg-violet-l/60 p-4"><h3 className="font-sans font-semibold text-violet-d">Interview skills (last 4 columns)</h3><p className="mt-1 text-[14px] text-ink-2">Mind: practise recall or mental maths, optionally with Elevate or Peak. Voice: warm up with SpeechOn and speak a conclusion aloud. Reading: learn business ideas from books, Shark Tank or CEO interviews. FIT: practise personal stories.</p><Link to="/interview-skills" className="mt-2 inline-block text-[13.5px] font-medium text-violet-d hover:underline">Read the full routine →</Link></div>
+        </div>
+        <p className="mt-3 text-[13.5px] text-muted">Start with a realistic routine. It is better to complete a few habits consistently and reflect on mistakes than to tick every box without learning.</p>
+      </section>
       <div className="overflow-x-auto rounded-xl border border-line bg-white">
         <table className="w-full min-w-[760px] border-collapse text-[14px]">
           <thead>

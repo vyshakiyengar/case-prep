@@ -22,6 +22,8 @@ const Admin = lazy(() => import('./pages/Admin'))
 const Casebook = lazy(() => import('./pages/Casebook'))
 const CasePlayer = lazy(() => import('./pages/CasePlayer'))
 const Drills = lazy(() => import('./pages/Drills'))
+const Graphs = lazy(() => import('./pages/Graphs'))
+const InterviewSkills = lazy(() => import('./pages/InterviewSkills'))
 const Stories = lazy(() => import('./pages/Stories'))
 const PerfectCasing = lazy(() => import('./pages/PerfectCasing'))
 const FrameworksIndex = lazy(() => import('./pages/Frameworks').then((m) => ({ default: m.FrameworksIndex })))
@@ -64,6 +66,8 @@ export default function App() {
           <Route path="/perfect-casing" element={<PerfectCasing />} />
           <Route path="/frameworks" element={<FrameworksIndex />} />
           <Route path="/frameworks/:slug" element={<Framework />} />
+          <Route path="/graphs" element={<Graphs />} />
+          <Route path="/interview-skills" element={<InterviewSkills />} />
           <Route path="/casebook" element={<Casebook />} />
           <Route path="/casebook/:slug" element={<CasePlayer />} />
           <Route path="/drills" element={<Drills />} />

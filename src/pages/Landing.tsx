@@ -56,7 +56,7 @@ export default function Landing() {
       <header className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-5 py-5 sm:px-8">
         <Logo />
         <nav className="flex items-center gap-5 text-[14.5px] font-medium text-muted" aria-label="Main">
-          <Link to="/learn" className="hidden hover:text-ink sm:inline">Course</Link>
+          <Link to="/learn" className="hidden hover:text-ink sm:inline">Start here</Link>
           <Link to="/perfect-casing" className="hidden hover:text-ink md:inline">Perfect casing</Link>
           <Link to="/frameworks" className="hidden hover:text-ink sm:inline">Frameworks</Link>
           <Link to="/casebook" className="hidden hover:text-ink sm:inline">Casebook</Link>
@@ -71,7 +71,7 @@ export default function Landing() {
             Learn case interviews properly, then practise until they feel easy.
           </h1>
           <p className="mt-5 max-w-xl text-[17.5px] leading-relaxed text-muted">
-            A free course, a perfect-casing playbook with a phrase trainer, 16 frameworks, 15 original cases with model answers, and timed drills. Built for business school students heading into consulting interviews.
+            A free course, a perfect-casing playbook with a phrase trainer, 16 visual frameworks, 15 original cases, 64 graph-reading exercises, timed drills, and daily habits for clearer thinking and communication. Built for business school students heading into consulting interviews.
           </p>
           <div className="mt-8 flex flex-wrap items-center gap-3">
             <Link to="/learn" className="rounded-lg bg-ink px-5 py-3 text-[15px] font-medium text-white shadow-sm hover:bg-[#22325A]">Start the free course</Link>
@@ -80,6 +80,28 @@ export default function Landing() {
           <p className="mt-3 text-[14px] text-muted">No sign-up needed to learn. Sign in when you want to track your progress.</p>
         </div>
         <Notepad />
+      </section>
+
+      <section className="border-t border-line bg-canvas">
+        <div className="mx-auto max-w-6xl px-5 py-14 sm:px-8">
+          <p className="text-[13px] font-semibold uppercase tracking-wide text-violet-d">The method behind this website</p>
+          <h2 className="mt-2 text-[32px] font-semibold">Case preparation is two different jobs.</h2>
+          <p className="mt-2 max-w-3xl text-[16px] text-muted">First, learn how to solve business cases. Second, build the thinking, communication and business judgement that help you perform well in the interview. You need both. This programme gives you a way to practise each one.</p>
+          <div className="mt-7 grid gap-4 md:grid-cols-2">
+            <div className="rounded-xl border border-line border-t-4 border-t-teal bg-white p-6">
+              <span className="text-[13px] font-semibold text-teal-d">PILLAR 1</span>
+              <h3 className="mt-2 text-[24px] font-semibold">Master case mechanics</h3>
+              <p className="mt-2 text-[15px] text-muted">Learn how to open a case, ask good questions, build a tailored structure, read graphs, calculate quickly and make a recommendation. Then practise full cases and learn from every mistake.</p>
+              <div className="mt-4 flex flex-wrap gap-3 text-[14px] font-medium text-violet-d"><Link to="/perfect-casing" className="hover:underline">Perfect casing →</Link><Link to="/frameworks" className="hover:underline">Frameworks →</Link><Link to="/graphs" className="hover:underline">64 graph exercises →</Link></div>
+            </div>
+            <div className="rounded-xl border border-line border-t-4 border-t-violet bg-white p-6">
+              <span className="text-[13px] font-semibold text-violet-d">PILLAR 2</span>
+              <h3 className="mt-2 text-[24px] font-semibold">Master interview skills</h3>
+              <p className="mt-2 text-[15px] text-muted">Improve your ability to recall information, speak clearly and think commercially. Use practical exercises, SpeechOn, optional brain games, CEO interviews, Shark Tank and business books to prepare.</p>
+              <Link to="/interview-skills" className="mt-4 inline-block text-[14px] font-medium text-violet-d hover:underline">See the complete daily routine →</Link>
+            </div>
+          </div>
+        </div>
       </section>
 
       <section className="border-t border-line bg-canvas">
