@@ -1,3 +1,4 @@
+import { ICON_P, WORDMARK } from './brand'
 import type { ButtonHTMLAttributes, ReactNode } from 'react'
 import { Link } from 'react-router-dom'
 
@@ -114,25 +115,26 @@ export function Avatar({ name, photo, size = 32 }: { name: string; photo?: strin
     : <span className="inline-flex items-center justify-center rounded-full bg-teal-l font-semibold text-teal-d" style={{ width: size, height: size, fontSize: size * 0.38 }}>{initials}</span>
 }
 
-/** The PrepForCase mark: an issue tree (question → three branches). */
-export function LogoMark({ size = 28, light = false }: { size?: number; light?: boolean }) {
-  const bg = light ? '#FBFCFE' : '#14213D', fg = light ? '#14213D' : '#FBFCFE'
+/** The PrepForCase app icon: a serif P with a teal rule. */
+export function LogoMark({ size = 28 }: { size?: number }) {
   return (
     <svg width={size} height={size} viewBox="0 0 48 48" aria-hidden>
-      <rect width="48" height="48" rx="11" fill={bg} />
-      <rect x="17" y="9" width="14" height="9" rx="2.5" fill={fg} />
-      <path d="M24 18v5M12 23h24M12 23v6M24 23v6M36 23v6" stroke={fg} strokeWidth="2.6" fill="none" strokeLinecap="round" strokeLinejoin="round" />
-      <circle cx="12" cy="34" r="4" fill="#0E9AA7" /><circle cx="24" cy="34" r="4" fill="#6C5CE7" /><circle cx="36" cy="34" r="4" fill="#E8505B" />
+      <rect width="48" height="48" rx="10" fill="#14213D" />
+      <path d={ICON_P.d} transform={ICON_P.transform} fill="#FBFCFE" />
+      <rect x="14" y="37" width="20" height="2" fill="#5ED3DC" />
     </svg>
   )
 }
 
-export function Logo({ light = false }: { light?: boolean }) {
+/** The PrepForCase wordmark: Prep *for* Case with a teal underline. */
+export function Logo({ light = false, height = 30 }: { light?: boolean; height?: number }) {
+  const [, , w, h] = WORDMARK.viewBox.split(' ').map(Number)
+  const u = WORDMARK.underline
   return (
-    <span className="inline-flex items-center gap-2.5" aria-label="PrepForCase">
-      <LogoMark light={light} />
-      <span aria-hidden className={`font-serif text-[20px] font-semibold tracking-[-0.2px] ${light ? 'text-white' : 'text-ink'}`}>Prep<span className="text-teal">For</span>Case</span>
-    </span>
+    <svg role="img" aria-label="PrepForCase" height={height} width={(height * w) / h} viewBox={WORDMARK.viewBox} className="block">
+      <path d={WORDMARK.d} fill={light ? '#FFFFFF' : '#14213D'} />
+      <rect x={u.x} y={u.y} width={u.w} height={u.h} fill={light ? '#5ED3DC' : '#0E9AA7'} />
+    </svg>
   )
 }
 
