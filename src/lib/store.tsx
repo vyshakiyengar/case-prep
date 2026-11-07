@@ -22,6 +22,7 @@ interface Store {
   refreshUser(): Promise<void>
   saveProfile(p: Partial<Profile>): Promise<void>
   markLesson(slug: string, done: boolean): Promise<void>
+  markCase(slug: string, done: boolean): Promise<void>
   saveNote(pageId: string, text: string): Promise<void>
   toggleHabit(date: string, key: keyof DayEntry['habits']): Promise<void>
   setDayNote(date: string, note: string): Promise<void>
@@ -128,7 +129,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
         habitDays: Object.values(data.days).filter((d) => Object.values(d.habits).some(Boolean)).length,
         interviewDate: p.interviewDate, updatedAt: Date.now(),
         provider: user.provider, emailVerified: user.emailVerified,
-        notes: Object.values(p.notes || {}).filter((n) => n.text.trim()).length,
+        notes: Object.values(p.notes || {}).filter((n) => n.text.trim()).length, practised: (p.practised || []).length,
         ...(user.provider === 'password' && user.email ? { schoolDomain: user.email.split('@')[1]?.toLowerCase() } : {}),
       }
       backend.saveStats(stats).catch(() => {})
@@ -170,6 +171,15 @@ export function StoreProvider({ children }: { children: ReactNode }) {
         const cur = dataRef.current?.profile?.learned || []
         const learned = done ? Array.from(new Set([...cur, slug])) : cur.filter((x) => x !== slug)
         const next = { ...(dataRef.current?.profile || { name: user.name }), learned } as Profile
+        patch((d) => ({ ...d, profile: next }))
+        await guard(() => backend!.saveProfile(uid, next))
+      },
+      markCase: async (slug, done) => {
+        if (!user) return
+        const cur = dataRef.current?.profile?.practised || []
+        if (done === cur.includes(slug)) return
+        const practised = done ? [...cur, slug] : cur.filter((x) => x !== slug)
+        const next = { ...(dataRef.current?.profile || { name: user.name }), practised } as Profile
         patch((d) => ({ ...d, profile: next }))
         await guard(() => backend!.saveProfile(uid, next))
       },

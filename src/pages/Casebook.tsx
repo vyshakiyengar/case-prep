@@ -6,56 +6,112 @@ import { useStore } from '../lib/store'
 import { PageHeader } from '../components/ui'
 import { Loading } from '../App'
 
+const DIFF_TONE = { 1: 'bg-teal-l text-teal-d', 2: 'bg-marker-l text-[#8A6A12]', 3: 'bg-signal-l text-signal-d' } as const
+
+/** Difficulty as a small coloured tag: Easy, Medium or Hard. */
 export function Difficulty({ d }: { d: 1 | 2 | 3 }) {
   return (
-    <span className="inline-flex items-center gap-1.5 text-[13px] text-muted" title={DIFF_LABEL[d]}>
-      <span className="flex gap-0.5" aria-hidden>{[1, 2, 3].map((i) => <span key={i} className={`h-2 w-2 rounded-full ${i <= d ? 'bg-ink' : 'bg-line'}`} />)}</span>
+    <span className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[12px] font-medium ${DIFF_TONE[d]}`}>
+      <span className="flex gap-[2px]" aria-hidden>{[1, 2, 3].map((i) => <span key={i} className={`h-1.5 w-1.5 rounded-full ${i <= d ? 'bg-current' : 'bg-current opacity-25'}`} />)}</span>
       {DIFF_LABEL[d]}
     </span>
   )
 }
 
+function Chips<T extends string | number>({ label, value, options, onChange }: { label: string; value: T; options: { v: T; label: string; n?: number }[]; onChange: (v: T) => void }) {
+  return (
+    <div className="flex flex-wrap items-center gap-1.5" role="group" aria-label={label}>
+      <span className="mr-1 text-[13px] text-muted">{label}</span>
+      {options.map((o) => (
+        <button key={String(o.v)} onClick={() => onChange(o.v)} aria-pressed={value === o.v}
+          className={`rounded-full border px-3 py-1 text-[13px] transition-colors ${value === o.v ? 'border-ink bg-ink text-white' : 'border-line bg-white text-ink-2 hover:border-faint'}`}>
+          {o.label}{o.n !== undefined && <span className={`ml-1.5 tabular-nums ${value === o.v ? 'text-white/70' : 'text-faint'}`}>{o.n}</span>}
+        </button>
+      ))}
+    </div>
+  )
+}
+
+type Diff = 0 | 1 | 2 | 3
+type Status = 'all' | 'todo' | 'done'
+
 export default function Casebook() {
-  const { data } = useStore()
+  const { data, user, markCase } = useStore()
   const [cases, setCases] = useState<CaseDef[] | null>(null)
-  const [filter, setFilter] = useState('All')
+  const [type, setType] = useState('All')
+  const [diff, setDiff] = useState<Diff>(0)
+  const [status, setStatus] = useState<Status>('all')
+  const [q, setQ] = useState('')
   useEffect(() => { loadCases().then(setCases) }, [])
   if (!cases) return <Loading label="Loading cases…" />
-  const types = ['All', ...Array.from(new Set(cases.map((c) => c.type)))]
-  const done = new Set((data?.cases || []).map((c) => c.name.toLowerCase()))
-  const shown = cases.filter((c) => filter === 'All' || c.type === filter)
+  const logged = new Set((data?.cases || []).map((c) => c.name.toLowerCase()))
+  const marked = new Set(data?.profile?.practised || [])
+  const isDone = (c: CaseDef) => marked.has(c.slug) || logged.has(c.title.toLowerCase())
+  const types = ['All', ...Array.from(new Set(cases.map((c) => c.type))).sort()]
+  const match = (c: CaseDef, ignore?: 'diff' | 'status') =>
+    (type === 'All' || c.type === type) && (ignore === 'diff' || !diff || c.diff === diff) &&
+    (ignore === 'status' || status === 'all' || (status === 'done') === isDone(c)) &&
+    (!q || `${c.title} ${c.sub} ${c.industry} ${c.geo}`.toLowerCase().includes(q.toLowerCase()))
+  const shown = cases.filter((c) => match(c))
+  const doneCount = cases.filter(isDone).length
   return (
     <>
-      <PageHeader title="Casebook" intro="15 practice cases. Do one alone with the timer, or give one to a friend and swap." />
-      <p className="mb-4 rounded-lg border border-teal bg-teal-l/50 px-4 py-3 text-[14.5px] text-ink">New to cases? Do the first three lessons of the course, then start with the three easy cases: <Link to="/casebook/coastal-brew" className="font-medium underline">1</Link>, <Link to="/casebook/plugged-in" className="font-medium underline">11</Link> and <Link to="/casebook/snackco-protein-bar" className="font-medium underline">12</Link>.</p>
-      <div className="mb-4 flex flex-wrap gap-1.5" role="group" aria-label="Filter by case type">
-        {types.map((t) => (
-          <button key={t} onClick={() => setFilter(t)} aria-pressed={filter === t}
-            className={`rounded-full border px-3 py-1 text-[13px] ${filter === t ? 'border-ink bg-ink text-white' : 'border-line bg-white text-muted hover:text-ink'}`}>{t}</button>
-        ))}
+      <PageHeader title="Casebook" intro={`${cases.length} original practice cases. Do one alone with the timer, or give one to a friend and swap.`}
+        action={user ? <span className="text-[14px] text-muted"><b className="font-serif text-[22px] font-normal text-ink">{doneCount}</b> of {cases.length} practised</span> : undefined} />
+      <p className="mb-5 rounded-lg border border-teal bg-teal-l/50 px-4 py-3 text-[14.5px] text-ink">New to cases? Do the first three lessons of the course, then pick an <button onClick={() => { setDiff(1); setStatus('todo') }} className="font-medium underline">easy case you haven't done</button>.</p>
+
+      <div className="mb-5 space-y-3 rounded-xl border border-line bg-white p-4">
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <Chips label="Level" value={diff} onChange={setDiff} options={[
+            { v: 0, label: 'All' }, ...([1, 2, 3] as const).map((d) => ({ v: d as Diff, label: DIFF_LABEL[d], n: cases.filter((c) => c.diff === d && match(c, 'diff')).length }))]} />
+          <input value={q} onChange={(e) => setQ(e.target.value)} placeholder="Search company or industry" aria-label="Search cases"
+            className="w-full max-w-60 rounded-lg border border-line bg-white px-3 py-1.5 text-[14px] focus:border-teal focus:outline-none focus:ring-2 focus:ring-teal/15" />
+        </div>
+        {user && <Chips label="Status" value={status} onChange={setStatus} options={[
+          { v: 'all', label: 'All' }, { v: 'todo', label: 'Not practised', n: cases.filter((c) => !isDone(c) && match(c, 'status')).length },
+          { v: 'done', label: 'Practised', n: cases.filter((c) => isDone(c) && match(c, 'status')).length }]} />}
+        <div className="flex flex-wrap items-center gap-2">
+          <label htmlFor="case-type" className="text-[13px] text-muted">Type</label>
+          <select id="case-type" value={type} onChange={(e) => setType(e.target.value)} className="rounded-lg border border-line bg-white px-2.5 py-1.5 text-[14px] text-ink">
+            {types.map((t) => <option key={t} value={t}>{t === 'All' ? 'All types' : `${t} (${cases.filter((c) => c.type === t).length})`}</option>)}
+          </select>
+          {(type !== 'All' || diff || status !== 'all' || q) ? <button onClick={() => { setType('All'); setDiff(0); setStatus('all'); setQ('') }} className="text-[13px] text-muted underline hover:text-ink">Clear filters</button> : null}
+          <span className="ml-auto text-[13px] text-muted">{shown.length} case{shown.length === 1 ? '' : 's'}</span>
+        </div>
       </div>
+
       <ol className="divide-y divide-line overflow-hidden rounded-xl border border-line bg-white">
-        {shown.map((c) => (
-          <li key={c.slug} className="grid gap-3 px-5 py-4 sm:grid-cols-[44px_1fr_auto] sm:items-center">
-            <span className="font-serif text-[22px] font-semibold text-faint tabular-nums">{c.id}</span>
-            <div className="min-w-0">
-              <div className="flex flex-wrap items-baseline gap-x-3">
-                <h2 className="text-[19px] font-semibold">{c.title}</h2>
-                {done.has(c.title.toLowerCase()) && <span className="rounded-full bg-good-l px-2 py-0.5 text-[12px] font-medium text-good">Logged</span>}
-                {c.diff === 1 && <span className="rounded-full bg-teal-l px-2 py-0.5 text-[12px] font-medium text-teal-d">Good first case</span>}
+        {shown.map((c) => {
+          const done = isDone(c)
+          return (
+            <li key={c.slug} className="grid gap-3 px-5 py-4 sm:grid-cols-[44px_1fr_auto] sm:items-center">
+              {user ? (
+                <button onClick={() => markCase(c.slug, !marked.has(c.slug))} aria-pressed={done} aria-label={done ? `${c.title}: practised (click to unmark)` : `Mark ${c.title} as practised`} title={done ? 'Practised. Click to unmark.' : 'Mark as practised'}
+                  className={`flex h-9 w-9 items-center justify-center rounded-full border transition-colors ${done ? 'border-good bg-good text-white' : 'border-line text-faint hover:border-good hover:text-good'}`}>
+                  {done ? <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden><path d="m5 12 5 5 9-10" /></svg>
+                    : <span className="font-serif text-[15px] tabular-nums">{c.id}</span>}
+                </button>
+              ) : <span className="font-serif text-[22px] text-faint tabular-nums">{c.id}</span>}
+              <div className="min-w-0">
+                <div className="flex flex-wrap items-center gap-x-2.5 gap-y-1">
+                  <h2 className="text-[19px]">{c.title}</h2>
+                  <Difficulty d={c.diff} />
+                  {done && <span className="rounded-full bg-good-l px-2 py-0.5 text-[12px] font-medium text-good">Practised</span>}
+                </div>
+                <p className="text-ink-2">{c.sub}</p>
+                <div className="mt-1 flex flex-wrap items-center gap-x-4 gap-y-1 text-[13px] text-muted">
+                  <span>{c.type}</span><span>{c.industry}</span><span>{c.geo}</span><span>{c.time}</span>
+                </div>
               </div>
-              <p className="text-ink-2">{c.sub}</p>
-              <div className="mt-1 flex flex-wrap items-center gap-x-4 gap-y-1 text-[13px] text-muted">
-                <span>{c.type}</span><span>{c.industry}</span><Difficulty d={c.diff} /><span>{c.time}</span>
+              <div className="flex gap-2">
+                <Link to={`/casebook/${c.slug}`} className="btn-primary rounded-lg px-3.5 py-2 text-[14px] font-medium text-white">Practice</Link>
+                <Link to={`/casebook/${c.slug}?mode=interviewer`} className="rounded-lg border border-line bg-white px-3.5 py-2 text-[14px] font-medium text-ink hover:border-faint">Be the interviewer</Link>
               </div>
-            </div>
-            <div className="flex gap-2">
-              <Link to={`/casebook/${c.slug}`} className="rounded-lg bg-ink px-3.5 py-2 text-[14px] font-medium text-white hover:bg-[#22325A]">Practice</Link>
-              <Link to={`/casebook/${c.slug}?mode=interviewer`} className="rounded-lg border border-line bg-white px-3.5 py-2 text-[14px] font-medium text-ink hover:border-faint">Be the interviewer</Link>
-            </div>
-          </li>
-        ))}
+            </li>
+          )
+        })}
       </ol>
+      {!shown.length && <p className="mt-4 text-muted">No cases match. <button className="underline" onClick={() => { setType('All'); setDiff(0); setStatus('all'); setQ('') }}>Clear filters</button></p>}
     </>
   )
 }

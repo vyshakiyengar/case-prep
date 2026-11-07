@@ -31,7 +31,7 @@ export default function About() {
       <div className="mt-7 space-y-5 font-serif text-[19px] leading-[1.65] text-ink">
         <p>
           Hi, I'm Vyshak. I'm an alum of London Business School and BCG, and I recently led product strategy for a multi-billion-dollar ads product at Meta.
-          Before business school I spent five years at Accenture Strategy.
+         
         </p>
         <p>
           Very little here is mine alone. It was gathered from a lot of kind people: classmates who cased with me late into the evening,

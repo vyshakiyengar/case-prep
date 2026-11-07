@@ -81,7 +81,7 @@ export default function CasePlayer() {
   const { slug } = useParams()
   const [params, setParams] = useSearchParams()
   const nav = useNavigate()
-  const { user } = useStore()
+  const { user, markCase } = useStore()
   const interviewer = params.get('mode') === 'interviewer'
   const [cases, setCases] = useState<CaseDef[] | null>(null)
   const [i, setI] = useState(0)
@@ -102,7 +102,7 @@ export default function CasePlayer() {
     { key: 'score', label: interviewer ? 'Give feedback' : 'Score yourself' },
   ]
   const step = steps[i]
-  const show = (k: string) => setRevealed((r) => ({ ...r, [k]: true }))
+  const show = (k: string) => { setRevealed((r) => ({ ...r, [k]: true })); if (k === 'reco' && user && slug) markCase(slug, true) }
   const isOpen = (k: string) => interviewer || !!revealed[k]
   const go = (n: number) => { setI(n); window.scrollTo({ top: 0, behavior: 'smooth' }) }
 

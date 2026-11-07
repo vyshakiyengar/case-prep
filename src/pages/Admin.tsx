@@ -209,6 +209,7 @@ function Analytics({ stats, students, updated }: { stats: UserStats[]; students:
     { label: 'Finished the course', v: stats.filter((s) => s.lessons >= LESSONS.length).length, of: n },
     { label: 'Took notes', v: stats.filter((s) => (s.notes || 0) > 0).length, of: n },
     { label: 'Trained phrases', v: stats.filter((s) => s.trainerCards > 0).length, of: n },
+    { label: 'Practised a casebook case', v: stats.filter((s) => (s.practised || 0) >= 1).length, of: n },
     { label: 'Logged a case', v: stats.filter((s) => s.cases >= 1).length, of: n },
     { label: 'Came back on 3+ days', v: stats.filter((s) => (s.activeDays?.length || 0) >= 3).length, of: n },
   ]

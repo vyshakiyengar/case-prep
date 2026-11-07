@@ -10,6 +10,7 @@ export interface Profile {
   createdAt?: number
   partners?: string[]
   learned?: string[]
+  practised?: string[] // casebook slugs the person has worked through
   trainer?: Record<string, { box: number; due: string }>
   /** Personal notes, keyed by course page id ('case-map', a lesson slug, 'whats-next', 'general'). */
   notes?: Record<string, { text: string; updatedAt: number }>
@@ -156,6 +157,7 @@ export interface UserStats {
   minutes?: number // engaged minutes: tab visible and used in that minute
   views?: Record<string, number> // page views by section, e.g. learn, casebook
   notes?: number
+  practised?: number // casebook cases worked through
   lastPath?: string
   device?: 'mobile' | 'desktop'
   tz?: string
