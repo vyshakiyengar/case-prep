@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from 'react'
+import { useSearchParams } from 'react-router-dom'
 import type { ReactNode } from 'react'
 import { Button, PageHeader, inputCls } from '../components/ui'
 
@@ -81,12 +82,13 @@ function makeExercises(): Exercise[] {
   return out
 }
 const EXERCISES = makeExercises()
-const COLORS = ['#0E9AA7', '#6C5CE7', '#E8505B', '#E4AF31', '#3977A4']
+// Validated categorical palette (teal, burnt orange, blue, amber, ink), shared with case exhibits
+const COLORS = ['#0A8F9C', '#C2410C', '#3B5BDB', '#B7791F', '#0F1B33']
 const txt = { fontFamily: 'IBM Plex Sans, sans-serif', fill: '#5F6B7D', fontSize: 12 }
 function Graph({ e }: { e: Exercise }) {
   const bottom = 270, top = 34, left = 57, right = 682, height = bottom - top, width = right - left
   const chartMax = e.family === 'Bar' ? Math.max(...e.values) * 1.17 : e.family === 'Line' ? 220 : e.family === 'Scatter' ? 95 : e.family === 'Bubble' ? 40 : e.family === 'Bar + Line' ? 230 : e.family === 'Waterfall' ? Math.max(e.values[0], e.values[e.values.length - 1], e.values[0] + e.values.slice(1, -1).filter((v) => v > 0).reduce((a,b) => a+b,0)) * 1.17 : e.family === 'Bar Mekko' ? 40 : 100
-  const grid = [0, 1, 2, 3, 4].map((i) => <g key={i}><line x1={left} x2={right} y1={bottom - i * height / 4} y2={bottom - i * height / 4} stroke="#E3EAF3" /><text x={left - 8} y={bottom - i * height / 4 + 4} textAnchor="end" style={{ fontSize: 11, fill: '#718096' }}>{e.family === 'Marimekko' || e.family === 'Bar Mekko' ? Math.round(i * chartMax / 4) + '%' : Math.round(i * chartMax / 4)}</text>{e.family === 'Bar + Line' && <text x={right + 8} y={bottom - i * height / 4 + 4} textAnchor="start" style={{ fontSize: 11, fill: '#E8505B' }}>{fmt(i * 9 / 4)}%</text>}</g>)
+  const grid = [0, 1, 2, 3, 4].map((i) => <g key={i}><line x1={left} x2={right} y1={bottom - i * height / 4} y2={bottom - i * height / 4} stroke="#E3EAF3" /><text x={left - 8} y={bottom - i * height / 4 + 4} textAnchor="end" style={{ fontSize: 11, fill: '#718096' }}>{e.family === 'Marimekko' || e.family === 'Bar Mekko' ? Math.round(i * chartMax / 4) + '%' : Math.round(i * chartMax / 4)}</text>{e.family === 'Bar + Line' && <text x={right + 8} y={bottom - i * height / 4 + 4} textAnchor="start" style={{ fontSize: 11, fill: '#C2410C' }}>{fmt(i * 9 / 4)}%</text>}</g>)
   const scale = (v: number, max: number) => bottom - v / max * height
   const label = (name: string, x: number, y = 292) => <text x={x} y={y} textAnchor="middle" style={txt}>{name}</text>
   let marks: ReactNode
@@ -109,7 +111,7 @@ function Graph({ e }: { e: Exercise }) {
     const rates = e.second || []
     const X = (i: number) => left + 45 + i * (width - 80) / 6
     const P = (i: number) => X(i) + 22
-    marks = <g>{e.values.map((v, i) => <g key={i}><rect x={X(i)} y={scale(v, 230)} width={44} height={bottom - scale(v, 230)} fill="#0E9AA7" opacity={.72} rx={3} />{label(e.labels[i], P(i))}</g>)}<polyline points={rates.map((v, i) => P(i) + ',' + scale(v, 9)).join(' ')} fill="none" stroke="#E8505B" strokeWidth={3} />{rates.map((v, i) => <circle key={i} cx={P(i)} cy={scale(v, 9)} r={4} fill="#E8505B" />)}<rect x={left + 3} y={308} width={10} height={10} fill="#0E9AA7" /><text x={left + 19} y={318} style={txt}>Leads (thousand), left scale</text><rect x={left + 255} y={308} width={10} height={10} fill="#E8505B" /><text x={left + 270} y={318} style={txt}>Conversion (%), right scale</text></g>
+    marks = <g>{e.values.map((v, i) => <g key={i}><rect x={X(i)} y={scale(v, 230)} width={44} height={bottom - scale(v, 230)} fill="#0A8F9C" opacity={.72} rx={3} />{label(e.labels[i], P(i))}</g>)}<polyline points={rates.map((v, i) => P(i) + ',' + scale(v, 9)).join(' ')} fill="none" stroke="#C2410C" strokeWidth={3} />{rates.map((v, i) => <circle key={i} cx={P(i)} cy={scale(v, 9)} r={4} fill="#C2410C" />)}<rect x={left + 3} y={308} width={10} height={10} fill="#0A8F9C" /><text x={left + 19} y={318} style={txt}>Leads (thousand), left scale</text><rect x={left + 255} y={308} width={10} height={10} fill="#C2410C" /><text x={left + 270} y={318} style={txt}>Conversion (%), right scale</text></g>
     note = 'Two axes: lead volume (bars) and conversion rate (line)'
   } else if (e.family === 'Waterfall') {
     const max = Math.max(e.values[0], e.values[e.values.length - 1], e.values[0] + e.values.slice(1, -1).filter((x) => x > 0).reduce((a, b) => a + b, 0)) * 1.17
@@ -118,8 +120,8 @@ function Graph({ e }: { e: Exercise }) {
     marks = e.values.map((v, i) => {
       const x = X(i), bw = 52
       let low, high, color
-      if (i === 0 || i === e.values.length - 1) { low = 0; high = v; color = '#14213D' }
-      else { const next = current + v; low = Math.min(current, next); high = Math.max(current, next); color = v >= 0 ? '#0E9AA7' : '#E8505B'; current = next }
+      if (i === 0 || i === e.values.length - 1) { low = 0; high = v; color = '#0F1B33' }
+      else { const next = current + v; low = Math.min(current, next); high = Math.max(current, next); color = v >= 0 ? '#0A8F9C' : '#C2410C'; current = next }
       return <g key={i}><rect x={x} y={scale(high, max)} width={bw} height={Math.max(2, scale(low, max) - scale(high, max))} fill={color} rx={2} /><text x={x + bw / 2} y={scale(high, max) - 8} textAnchor="middle" style={txt}>{i === 0 || i === e.values.length - 1 ? '£' + v : (v >= 0 ? '+' : '') + v}</text><text x={x + bw / 2} y={290} textAnchor="middle" style={{ ...txt, fontSize: 10.5 }}>{e.labels[i]}</text></g>
     })
     note = 'EBITDA bridge (£m): green adds, red subtracts'
@@ -135,7 +137,7 @@ function Graph({ e }: { e: Exercise }) {
     marks = <g>{marks}{[['Direct',COLORS[0]], ['Partner',COLORS[1]], ['Other',COLORS[2]]].map(([name,color],k) => <g key={name}><rect x={left + 160*k} y={308} width={10} height={10} fill={color} /><text x={left + 15 + 160*k} y={318} style={txt}>{name}</text></g>)}</g>
     note = 'Width: group demand (£m) · Height: channel share (%) · Area: value'
   }
-  return <div className="overflow-x-auto rounded-xl border border-line bg-white p-2 sm:p-4"><svg viewBox="0 0 720 345" className="w-full min-w-[560px]" role="img" aria-label={e.family + ' chart for ' + e.title}><rect x={0} y={0} width={720} height={345} fill="white" />{grid}<line x1={left} y1={top} x2={left} y2={bottom} stroke="#94A0B2" /><line x1={left} y1={bottom} x2={right} y2={bottom} stroke="#94A0B2" />{marks}<text x={left} y={16} style={{ ...txt, fontSize: 12, fill: '#14213D' }}>{note}</text></svg><p className="mt-1 text-[12.5px] text-muted">Fictional practice data.</p></div>
+  return <div className="overflow-x-auto rounded-xl border border-line bg-white p-2 sm:p-4"><svg viewBox="0 0 720 345" className="w-full min-w-[560px]" role="img" aria-label={e.family + ' chart for ' + e.title}><rect x={0} y={0} width={720} height={345} fill="white" />{grid}<line x1={left} y1={top} x2={left} y2={bottom} stroke="#94A0B2" /><line x1={left} y1={bottom} x2={right} y2={bottom} stroke="#94A0B2" />{marks}<text x={left} y={16} style={{ ...txt, fontSize: 12, fill: '#0F1B33' }}>{note}</text></svg><p className="mt-1 text-[12.5px] text-muted">Fictional practice data.</p></div>
 }
 
 function DataTable({ e }: { e: Exercise }) {
@@ -158,6 +160,37 @@ const GUIDE = [
   ['5 · Say it clearly', 'State the main finding aloud in 20–30 seconds: “The key insight is X, supported by Y, so I would investigate Z.”'],
 ]
 const STORAGE = 'case-prep-graph-library-v1'
+function ModeCard({ active, onClick, title, body, icon }: { active: boolean; onClick: () => void; title: string; body: string; icon: ReactNode }) {
+  return (
+    <button onClick={onClick} aria-pressed={active}
+      className={`flex flex-1 items-start gap-3 rounded-xl border p-4 text-left transition-[border-color,box-shadow] duration-200 ${active ? 'border-ink bg-white shadow-[0_0_0_1px_#0F1B33]' : 'border-line bg-white hover:border-faint'}`}>
+      <span className={`mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-lg ${active ? 'bg-ink text-white' : 'bg-canvas text-ink-2'}`}>{icon}</span>
+      <span><span className="block font-medium text-ink">{title}</span><span className="mt-0.5 block text-[14px] text-muted">{body}</span></span>
+    </button>
+  )
+}
+
+/** Every chart in one scroll, to get familiar with the formats. */
+function Gallery({ items }: { items: Exercise[] }) {
+  return (
+    <div className="space-y-10">
+      {items.map((e, i) => (
+        <article key={e.id} className="max-w-4xl">
+          <p className="text-[13px] text-muted">{i + 1} of {items.length} · {e.family} chart</p>
+          <h2 className="text-[21px]">{e.title.split(' · ')[0]}</h2>
+          <p className="mt-1 mb-3 text-[14px] text-ink-2"><b className="font-medium text-ink">How to read it:</b> {FAMILY_GUIDES[e.family].meaning}</p>
+          <Graph e={e} />
+          <details className="mt-3 rounded-lg border border-line bg-white px-4 py-3">
+            <summary className="cursor-pointer text-[14px] font-medium text-violet-d">The question and the insight</summary>
+            <p className="mt-2 text-[14.5px] font-medium text-ink">{e.question}</p>
+            <p className="mt-2 text-[14.5px] text-ink-2">{e.answer}</p>
+          </details>
+        </article>
+      ))}
+    </div>
+  )
+}
+
 export default function Graphs() {
   const all = useMemo(() => EXERCISES, [])
   const [family, setFamily] = useState<string>('All')
@@ -165,6 +198,9 @@ export default function Graphs() {
   const [done, setDone] = useState<string[]>([])
   const [show, setShow] = useState(false)
   const [notes, setNotes] = useState('')
+  const [params, setParams] = useSearchParams()
+  const browse = params.get('view') === 'all'
+  const setBrowse = (b: boolean) => { const p = new URLSearchParams(params); if (b) p.set('view', 'all'); else p.delete('view'); setParams(p, { replace: true }) }
   useEffect(() => { try { const saved = JSON.parse(window.localStorage.getItem(STORAGE) || '[]'); if (Array.isArray(saved)) setDone(saved.filter((s): s is string => typeof s === 'string')) } catch { /* browser storage is optional */ } }, [])
   const visible = family === 'All' ? all : all.filter((e) => e.family === family)
   const current = all.find((e) => e.id === active) || all[0]
@@ -176,13 +212,22 @@ export default function Graphs() {
     setDone(next); try { window.localStorage.setItem(STORAGE, JSON.stringify(next)) } catch { /* optional */ }
   }
   return <>
-    <PageHeader title="Graph library" intro="64 practice charts in eight types. Do one or two a day: read the chart, find the insight, say what it means." action={<span className="rounded-lg bg-teal-l px-3 py-2 text-[14px] font-medium text-teal-d">{done.length} of 64 done</span>} />
+    <PageHeader title="Graph library" intro={`${all.length} practice charts in ${FAMILIES.length} types: the formats you'll meet in case exhibits. Practise them one at a time, or browse them all first to get familiar.`}
+      action={<span className="rounded-lg bg-teal-l px-3 py-2 text-[14px] font-medium text-teal-d">{done.length} of {all.length} practised</span>} />
+    <div className="mb-6 flex flex-col gap-3 sm:flex-row" role="group" aria-label="How do you want to use the library?">
+      <ModeCard active={!browse} onClick={() => setBrowse(false)} title="Practise one at a time"
+        body="Read a chart, say the insight in 90 seconds, then check the answer."
+        icon={<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" aria-hidden><circle cx="12" cy="12" r="8" /><path d="M12 8v4l3 2" /></svg>} />
+      <ModeCard active={browse} onClick={() => setBrowse(true)} title="View all graphs"
+        body="Every chart in one scroll, with the insight a tap away. Good for a first look."
+        icon={<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" aria-hidden><rect x="4" y="4" width="7" height="7" rx="1" /><rect x="13" y="4" width="7" height="7" rx="1" /><rect x="4" y="13" width="7" height="7" rx="1" /><rect x="13" y="13" width="7" height="7" rx="1" /></svg>} />
+    </div>
     <details className="mb-5 rounded-xl border border-line bg-white px-5 py-3">
       <summary className="cursor-pointer text-[15px] font-medium text-ink">How to read any chart (5 steps)</summary>
       <ol className="mt-3 space-y-1.5 pb-2 text-[14.5px] text-ink-2">{GUIDE.map(([title, desc]) => <li key={title}><b className="font-semibold text-ink">{title.replace(/^\d · /, '')}:</b> {desc}</li>)}</ol>
     </details>
     <div className="mb-5 flex flex-wrap gap-2" role="group" aria-label="Chart type">{['All', ...FAMILIES].map((f) => <button key={f} onClick={() => chooseFamily(f)} aria-pressed={family === f} className={'rounded-full border px-3.5 py-1.5 text-[13.5px] font-medium transition-colors ' + (family === f ? 'border-ink bg-ink text-white' : 'border-line bg-white text-muted hover:border-faint hover:text-ink')}>{f}</button>)}</div>
-    <article className="min-w-0 max-w-4xl">
+    {browse ? <Gallery items={visible} /> : <article className="min-w-0 max-w-4xl">
       <p className="text-[13.5px] text-muted">Chart {selectedIndex + 1} of {visible.length}{done.includes(current.id) ? ' · done ✓' : ''}</p>
       <h2 className="text-[24px] font-semibold">{current.title.split(' · ')[0]} <span className="font-sans text-[16px] font-normal text-muted">{current.family} chart</span></h2>
       <p className="mt-1 mb-3 text-[14.5px] text-ink-2"><b className="font-semibold text-ink">How to read it:</b> {FAMILY_GUIDES[current.family].meaning}</p>
@@ -193,6 +238,6 @@ export default function Graphs() {
         {show && <div className="mt-4 rounded-lg bg-good-l/60 p-4"><p className="text-[15px] text-ink">{current.answer}</p><p className="mt-2 text-[14.5px] text-ink-2"><b className="font-semibold">Next, I would:</b> {current.followUp.charAt(0).toLowerCase() + current.followUp.slice(1)}</p><p className="mt-2 text-[13.5px] text-muted"><b className="font-semibold text-ink">Watch out:</b> {FAMILY_GUIDES[current.family].caution}</p></div>}
       </section>
       <div className="mt-4 flex flex-wrap justify-between gap-3"><Button variant="secondary" disabled={selectedIndex <= 0} onClick={() => pick(visible[selectedIndex - 1])}>Previous chart</Button><Button disabled={selectedIndex >= visible.length - 1} onClick={() => pick(visible[selectedIndex + 1])}>Next chart</Button></div>
-    </article>
+    </article>}
   </>
 }

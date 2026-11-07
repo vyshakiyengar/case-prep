@@ -68,11 +68,12 @@ export default function Landing() {
         <section className="relative mx-auto grid max-w-6xl items-center gap-14 px-5 pt-10 pb-24 sm:px-8 lg:grid-cols-[1.1fr_1fr] lg:pt-16 lg:pb-28">
           <div>
             <h1 className="text-[44px] leading-[1.04] text-white sm:text-[64px]" style={{ fontWeight: 400 }}>
-              Learn case interviews properly, then practise until they feel easy.
+              Know the case interview before you walk in.
             </h1>
             <span aria-hidden className="mt-7 block h-[2px] w-16 bg-teal" />
             <p className="mt-6 max-w-lg text-[18px] leading-relaxed text-[#C9D2E0]">
-              A free course and practice kit for consulting interviews, built for business school students.
+              A free course, a casebook of practice cases and daily drills for consulting interviews.
+              Made by a London Business School alum who went through BCG's case rounds.
             </p>
             <div className="mt-9 flex flex-wrap items-center gap-3">
               <Link to="/learn" className="rounded-lg bg-white px-5 py-3 text-[15px] font-medium text-ink hover:bg-teal-l">Start the free course</Link>
