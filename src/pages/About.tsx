@@ -1,6 +1,14 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { LinkButton } from '../components/ui'
+
+/** Photo if /vyshak.jpg is present, otherwise initials. */
+function Portrait() {
+  const [ok, setOk] = useState(true)
+  return ok
+    ? <img src="/vyshak.jpg" alt="Vyshak K Iyengar" width={52} height={52} onError={() => setOk(false)} className="h-[52px] w-[52px] rounded-full object-cover ring-2 ring-teal/30 ring-offset-2 ring-offset-canvas" />
+    : <span aria-hidden className="flex h-[52px] w-[52px] items-center justify-center rounded-full bg-ink font-serif text-[19px] text-white ring-2 ring-teal/30 ring-offset-2 ring-offset-canvas">VI</span>
+}
 
 export default function About() {
   useEffect(() => {
@@ -12,12 +20,17 @@ export default function About() {
     <article className="rise mx-auto max-w-[640px] pt-2 pb-8">
       <p className="text-[14px] font-medium text-teal-d">About PrepForCase</p>
       <h1 className="mt-2 text-[36px] leading-[1.1] sm:text-[44px]">Built from what helped me, so it can help you</h1>
-      <span aria-hidden className="mt-5 block h-[2px] w-14 bg-teal" />
+      <a href="https://vyshak.me" target="_blank" rel="noopener noreferrer me" className="group mt-6 flex w-fit items-center gap-3">
+        <Portrait />
+        <span>
+          <span className="block text-[15px] font-medium text-ink group-hover:underline">Vyshak K Iyengar</span>
+          <span className="block text-[13.5px] text-muted">London · vyshak.me</span>
+        </span>
+      </a>
 
       <div className="mt-7 space-y-5 font-serif text-[19px] leading-[1.65] text-ink">
         <p>
-          Hi, I'm <a href="https://vyshak.me" target="_blank" rel="noopener noreferrer me" className="underline decoration-teal decoration-2 underline-offset-4 hover:text-teal-d">Vyshak K Iyengar</a>.
-          I did my MBA at London Business School, made it through BCG's case interviews, and later worked on product strategy at Meta.
+          Hi, I'm Vyshak. I'm an alum of London Business School and BCG, and I recently led product strategy for a multi-billion-dollar ads product at Meta.
           Before business school I spent five years at Accenture Strategy.
         </p>
         <p>
@@ -49,10 +62,7 @@ export default function About() {
         London Business School or any other firm or school. See the <Link to="/privacy" className="underline hover:text-ink">privacy policy</Link> for how your data is handled.
       </p>
 
-      <div className="mt-8 flex flex-wrap items-center justify-between gap-4">
-        <LinkButton to="/learn">Start the course</LinkButton>
-        <p className="text-[14px] text-muted">Made by <a href="https://vyshak.me" target="_blank" rel="noopener noreferrer me" className="font-medium text-ink hover:underline">Vyshak K Iyengar</a>, London</p>
-      </div>
+      <div className="mt-8"><LinkButton to="/learn">Start the course</LinkButton></div>
     </article>
   )
 }
