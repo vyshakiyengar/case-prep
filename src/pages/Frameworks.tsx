@@ -7,38 +7,21 @@ import { LinkButton, PageHeader } from '../components/ui'
 import { useStore } from '../lib/store'
 import { CORE, OTHER } from '../content/frameworkTrees'
 import { CoreBlock, DriversGrid, OtherCard } from '../components/FrameworkTree'
-import { Gate, StickyNav, useScrollToTarget } from '../components/Learning'
+import { Gate, JumpBar, useScrollToTarget } from '../components/Learning'
 import { StructureTree } from '../components/CaseParts'
-
-const GUIDE = [
-  ['Read the question', 'Is the client trying to fix something or decide something?'],
-  ['Pick the closest tree', 'Use it as a starting point, not a script.'],
-  ['Make it specific', 'Rename every branch for this client, product and market.'],
-  ['Say where you\'d start', 'Name the branch you\'d test first, and why.'],
-]
-
-const SHORT = ['Profits', 'Growth', 'Costs', 'Market entry', 'Product launch', 'Pricing', 'Acquisition', 'Investment', 'Competitive threat', 'Process']
 
 export function FrameworksIndex() {
   const { user } = useStore()
   useScrollToTarget()
   const nav = [
-    ...CORE.map((t, i) => ({ id: t.id, label: `${i + 1}. ${SHORT[i]}`, locked: !user && i >= 2 })),
+    ...CORE.map((t, i) => ({ id: t.id, label: `${i + 1}. ${t.title}${!user && i >= 2 ? ' (sign in)' : ''}`, locked: !user && i >= 2 })),
     { id: 'drivers', label: 'Second-order drivers' }, { id: 'other', label: 'Other frameworks' },
   ]
   return (
     <>
-      <PageHeader title="Frameworks" intro="Start with the ten core frameworks: between them they cover most cases you will get. Then learn the drivers to dig into inside each branch, and a handful of other frameworks worth remembering. Learn the shapes, then build your own version for each client. Never recite one word for word." />
-      <ol className="mb-5 grid gap-2 sm:grid-cols-2 lg:grid-cols-4">
-        {GUIDE.map(([t, d], i) => (
-          <li key={t} className="rounded-lg border border-line bg-white px-4 py-3">
-            <div className="text-[14px] font-semibold text-ink"><span className="mr-1.5 text-teal-d">{i + 1}</span>{t}</div>
-            <p className="mt-0.5 text-[13.5px] text-muted">{d}</p>
-          </li>
-        ))}
-      </ol>
-      <p className="mb-5 text-[14.5px] text-ink-2">New to structuring? Read the <Link to="/learn/structuring" className="font-medium text-violet-d hover:underline">structuring lesson</Link> first: it explains how to use these trees in an interview.</p>
-      <StickyNav items={nav} gateId="frameworks-gate" />
+      <PageHeader title="Frameworks" intro="Ten core frameworks cover most cases you will get. Learn these first; the rest of the page is for later." />
+      <p className="mb-5 max-w-2xl text-[15.5px] text-ink-2">How to use them: pick the tree closest to the question, rename every branch for your client, and say which branch you would test first. New to this? Read the <Link to="/learn/structuring" className="font-medium text-violet-d hover:underline">structuring lesson</Link> first.</p>
+      <JumpBar items={nav} label="Jump to" />
       <div className="space-y-14">
         <div>
           <h2 className="text-[28px] font-semibold">Core frameworks to learn</h2>

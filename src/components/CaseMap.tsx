@@ -21,35 +21,20 @@ export const CASE_FLOW: Stage[] = [
 
 export function CaseMap() {
   return (
-    <div>
-      <ol className="mb-5 grid grid-cols-2 gap-1.5 sm:grid-cols-3 xl:grid-cols-6" aria-label="The flow of a case interview">
-        {CASE_FLOW.map((s, i) => (
-          <li key={s.n}>
-            <a href={`#map-${s.n}`} onClick={(e) => { e.preventDefault(); document.getElementById(`map-${s.n}`)?.scrollIntoView({ behavior: 'smooth', block: 'center' }) }}
-              className={`flex h-full flex-col rounded-lg px-3 py-2.5 text-white hover:opacity-90 ${i === CASE_FLOW.length - 1 ? 'bg-signal' : i === 0 ? 'bg-ink' : 'bg-teal'} ${i < CASE_FLOW.length - 1 ? 'xl:[clip-path:polygon(0_0,calc(100%-10px)_0,100%_50%,calc(100%-10px)_100%,0_100%)] xl:pr-5' : ''}`}>
-              <span className="text-[14px] leading-tight font-semibold">{s.n}. {s.short}</span>
-              <span className="text-[12px] text-white/80">{s.time}</span>
-            </a>
-          </li>
-        ))}
-      </ol>
-      <p className="mb-4 text-[14.5px] text-muted">Throughout: keep it a conversation, think out loud, and link every finding back to the goal. <Link to="/learn/how-you-come-across" className="font-medium text-violet-d hover:underline">How you come across</Link> · <Link to="/interview-skills" className="font-medium text-violet-d hover:underline">Interview skills</Link></p>
-      <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-3">
-        {CASE_FLOW.map((s) => (
-          <article key={s.n} id={`map-${s.n}`} className="flex flex-col rounded-xl border border-line bg-white p-4">
-            <div className="flex items-baseline justify-between gap-2">
-              <h3 className="font-sans text-[16px] font-semibold text-ink"><span className="mr-1.5 text-teal-d">{s.n}</span>{s.name}</h3>
-              <span className="shrink-0 text-[12.5px] text-muted">{s.time}</span>
+    <ol className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
+      {CASE_FLOW.map((s, i) => (
+        <li key={s.n} className="flex gap-3 rounded-xl border border-line bg-white p-4">
+          <span className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full font-serif text-[15px] font-semibold text-white ${i === CASE_FLOW.length - 1 ? 'bg-signal' : i === 0 ? 'bg-ink' : 'bg-teal'}`}>{s.n}</span>
+          <div className="min-w-0">
+            <div className="flex flex-wrap items-baseline gap-x-2">
+              <h3 className="font-sans text-[16px] font-semibold text-ink">{s.short}</h3>
+              <span className="text-[12.5px] text-muted">{s.time}</span>
             </div>
-            <p className="mt-1 text-[14.5px] text-ink-2">{s.what}</p>
-            <p className="mt-2 rounded-md bg-teal-l/50 px-3 py-2 text-[14px] text-ink"><b className="font-semibold text-teal-d">Good looks like: </b>{s.good}</p>
-            <div className="mt-auto pt-3 text-[13.5px]">
-              <p><span className="text-muted">Learn: </span>{s.learn.map((l, i) => <span key={l.to}>{i > 0 && ' · '}<Link to={l.to} className="font-medium text-violet-d hover:underline">{l.label}</Link></span>)}</p>
-              <p className="mt-0.5"><span className="text-muted">Practise: </span>{s.practise.map((l, i) => <span key={l.label}>{i > 0 && ' · '}<Link to={l.to} className="font-medium text-violet-d hover:underline">{l.label}</Link></span>)}</p>
-            </div>
-          </article>
-        ))}
-      </div>
-    </div>
+            <p className="mt-0.5 text-[14.5px] text-ink-2">{s.what}</p>
+            <Link to={s.learn[0].to} className="mt-1 inline-block text-[13.5px] font-medium text-violet-d hover:underline">{s.learn[0].label.replace('Lesson: ', 'Lesson: ')} →</Link>
+          </div>
+        </li>
+      ))}
+    </ol>
   )
 }

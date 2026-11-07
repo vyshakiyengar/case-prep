@@ -6,7 +6,7 @@ import { lessonBySlug } from '../content/course'
 import { useStore } from '../lib/store'
 import { addDays, todayIso } from '../lib/dates'
 import { Button, Meter, PageHeader, Section } from '../components/ui'
-import { Gate, StickyNav, useScrollToTarget } from '../components/Learning'
+import { Gate, JumpBar, useScrollToTarget } from '../components/Learning'
 import { SignInButton } from './SignIn'
 import { Countdown } from '../components/Timer'
 
@@ -163,30 +163,17 @@ function Trainer({ stage }: { stage: number | null }) {
   )
 }
 
-const HOW = [
-  ['Read the flow', 'Ten stages, in the order they happen in a real interview. Each has the exact words to use.'],
-  ['Say the lines out loud', 'Reading isn\'t enough. Under pressure you only say what you\'ve already said many times.'],
-  ['Train for 5 minutes a day', 'The trainer at the bottom tests you on the phrases. Ones you miss come back sooner.'],
-]
-
 export default function PerfectCasing() {
   const { user } = useStore()
   const [stage, setStage] = useState<number | null>(null)
   useScrollToTarget()
   const train = (n: number | null) => { setStage(n); setTimeout(() => document.getElementById('trainer')?.scrollIntoView({ behavior: 'smooth' }), 30) }
-  const nav = [...STAGES_PC.map((x) => ({ id: `stage-${x.n}`, label: `${x.n}. ${x.title.replace(/ \(.*\)/, "")}`, locked: !user && x.n > 2 })), { id: 'trainer', label: 'Phrase trainer', locked: !user }]
+  const nav = [...STAGES_PC.map((x) => ({ id: `stage-${x.n}`, label: `Stage ${x.n}: ${x.title.replace(/ \(.*\)/, "")}${!user && x.n > 2 ? ' (sign in)' : ''}`, locked: !user && x.n > 2 })), { id: 'trainer', label: 'Phrase trainer', locked: !user }]
   return (
     <>
       <PageHeader title="Perfect casing" intro="The choreography of a strong case, from the first sentence to the recommendation, with the exact words to use at each moment. Read it top to bottom once, then train the phrases daily until they come out on their own." />
-      <ol className="mb-5 grid gap-2 sm:grid-cols-3">
-        {HOW.map(([t, d], i) => (
-          <li key={t} className="rounded-lg border border-line bg-white px-4 py-3">
-            <div className="text-[14px] font-semibold text-ink"><span className="mr-1.5 text-teal-d">{i + 1}</span>{t}</div>
-            <p className="mt-0.5 text-[13.5px] text-muted">{d}</p>
-          </li>
-        ))}
-      </ol>
-      <StickyNav items={nav} gateId="pc-gate" />
+      <p className="mb-5 max-w-2xl text-[15.5px] text-ink-2">How to use it: read it once from top to bottom. Then say the lines out loud, and use the trainer at the bottom for five minutes a day.</p>
+      <JumpBar items={nav} label="Jump to" />
       <div className="space-y-6">
         {STAGES_PC.slice(0, 2).map((s) => <Stage key={s.n} s={s} onTrain={train} />)}
         <Gate id="pc-gate" title="Sign in to see all 10 stages" body="Stages 3 to 10 cover clarifying, structuring, driving the case, charts, maths, brainstorming, the recommendation, and habits that matter throughout. Free.">

@@ -31,6 +31,7 @@ const CaseTypes = lazy(() => import('./pages/Reference').then((m) => ({ default:
 const Formulas = lazy(() => import('./pages/Reference').then((m) => ({ default: m.Formulas })))
 const Glossary = lazy(() => import('./pages/Reference').then((m) => ({ default: m.Glossary })))
 const Interviewer = lazy(() => import('./pages/Interviewer'))
+const SiteHome = lazy(() => import('./pages/Home'))
 
 export function Loading({ label = 'Loading…' }: { label?: string }) {
   return <div className="flex min-h-[40vh] items-center justify-center text-muted" role="status">{label}</div>
@@ -48,7 +49,7 @@ function RequireUser({ children }: { children: ReactNode }) {
 function Home() {
   const { ready, user, data } = useStore()
   if (!ready || (user && !data)) return <Loading />
-  if (user) return <Navigate to="/today" replace />
+  if (user) return <Navigate to="/home" replace />
   return <Landing />
 }
 
@@ -70,6 +71,7 @@ export default function App() {
           <Route path="/frameworks" element={<FrameworksIndex />} />
           <Route path="/frameworks/:slug" element={<Framework />} />
           <Route path="/graphs" element={<Graphs />} />
+          <Route path="/home" element={<SiteHome />} />
           <Route path="/case-types" element={<CaseTypes />} />
           <Route path="/formulas" element={<Formulas />} />
           <Route path="/glossary" element={<Glossary />} />

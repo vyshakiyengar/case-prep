@@ -5,6 +5,7 @@ import { Avatar, Logo } from './ui'
 import { useIsAdmin } from '../lib/admin'
 
 type Item = { to: string; label: string; icon: string }
+export const HOME: Item = { to: '/home', label: 'Home', icon: 'M3 11l9-7 9 7M5 10v10h5v-6h4v6h5V10' }
 export const LEARN: Item[] = [
   { to: '/learn', label: 'Course', icon: 'M12 6c-2-1.5-5-2-8-1.5v13c3-.5 6 0 8 1.5 2-1.5 5-2 8-1.5v-13c-3-.5-6 0-8 1.5zM12 6v13' },
   { to: '/perfect-casing', label: 'Perfect casing', icon: 'M4 17l4-4 3 3 6-7 3 3M4 20h16' },
@@ -32,14 +33,14 @@ export const PREP: Item[] = [
   { to: '/perks', label: 'Student perks', icon: 'M3 9l9-5 9 5-9 5-9-5zM7 11.5V16c0 1.5 2.5 3 5 3s5-1.5 5-3v-4.5M21 9v6' },
 ]
 
-function Icon({ d }: { d: string }) {
+export function Icon({ d }: { d: string }) {
   return <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" aria-hidden><path d={d} /></svg>
 }
 
 function NavGroup({ title, items }: { title: string; items: Item[] }) {
   return (
-    <div className="mt-6">
-      <div className="px-3 pb-1 text-[12.5px] font-medium text-faint">{title}</div>
+    <div className={title ? 'mt-6' : 'mt-4'}>
+      {title && <div className="px-3 pb-1 text-[12.5px] font-medium text-faint">{title}</div>}
       {items.map((n) => (
         <NavLink key={n.to} to={n.to}
           className={({ isActive }) => `flex items-center gap-3 rounded-lg px-3 py-2 text-[14.5px] font-medium ${isActive ? 'bg-canvas text-ink' : 'text-muted hover:bg-canvas hover:text-ink'}`}>
@@ -65,8 +66,9 @@ export default function AppShell() {
   return (
     <div className="min-h-screen lg:pl-60">
       <aside className="fixed inset-y-0 left-0 z-20 hidden w-60 flex-col overflow-y-auto border-r border-line bg-white px-4 py-5 lg:flex">
-        <Link to={user ? '/today' : '/'} className="px-2"><Logo /></Link>
+        <Link to="/home" className="px-2"><Logo /></Link>
         <nav aria-label="Main" className="mt-2">
+          <NavGroup title="" items={[HOME]} />
           <NavGroup title="Learn" items={LEARN} />
           <NavGroup title="Practise" items={PRACTISE} />
           <NavGroup title="Reference" items={REFERENCE} />
@@ -91,13 +93,14 @@ export default function AppShell() {
       </aside>
 
       <header className="sticky top-0 z-20 flex items-center justify-between border-b border-line bg-white/95 px-4 py-3 backdrop-blur lg:hidden">
-        <Link to={user ? '/today' : '/'}><Logo /></Link>
+        <Link to="/home"><Logo /></Link>
         <div className="flex items-center gap-3">
           <button type="button" onClick={() => setMobileOpen((o) => !o)} aria-expanded={mobileOpen} aria-controls="mobile-sections"
             className="rounded-lg border border-line bg-white px-3 py-2 text-[13.5px] font-medium text-ink hover:border-violet">{mobileOpen ? 'Close' : 'Menu'}</button>
           {user ? <NavLink to="/settings" aria-label="Settings"><Avatar name={name} photo={user.photoURL} /></NavLink> : <SignInLink />}
         </div>
         {mobileOpen && <nav id="mobile-sections" aria-label="Browse all sections" className="absolute left-3 right-3 top-full z-30 max-h-[min(75vh,620px)] overflow-y-auto rounded-b-xl border border-line bg-white p-4 shadow-xl">
+          <NavLink to="/home" onClick={() => setMobileOpen(false)} className="mb-3 block rounded-lg bg-canvas px-3 py-2.5 text-[14px] font-semibold text-ink">Home: site map</NavLink>
           {[['Learn', LEARN], ['Practise', PRACTISE], ['Reference', REFERENCE], ...(user ? [['My prep', isAdmin ? [...PREP, ADMIN] : PREP]] : [])].map(([title, items], gi) => (
             <div key={title as string} className={gi ? 'mt-4' : ''}>
               <p className="px-2 pb-1 text-[12.5px] font-medium text-faint">{title as string}</p>

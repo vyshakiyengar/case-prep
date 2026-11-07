@@ -125,3 +125,29 @@ export function useScrollToTarget(id?: string) {
     return () => clearTimeout(t)
   }, [id])
 }
+
+/** One quiet sticky bar: a "jump to" menu that follows your scroll, plus optional progress text. */
+export function JumpBar({ items, label = 'Jump to', right }: { items: NavItem[]; label?: string; right?: ReactNode }) {
+  const [active, setActive] = useState(items[0]?.id ?? '')
+  useEffect(() => {
+    const els = items.map((i) => document.getElementById(i.id)).filter((e): e is HTMLElement => !!e)
+    const io = new IntersectionObserver((entries) => {
+      const vis = entries.filter((e) => e.isIntersecting).sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top)
+      if (vis[0]) setActive(vis[0].target.id)
+    }, { rootMargin: '-120px 0px -70% 0px' })
+    els.forEach((e) => io.observe(e))
+    return () => io.disconnect()
+  }, [items])
+  return (
+    <nav aria-label="On this page" className="sticky top-[57px] z-10 -mx-4 mb-6 flex items-center justify-between gap-3 border-b border-line bg-canvas/95 px-4 py-2 backdrop-blur sm:-mx-6 sm:px-6 lg:top-0 lg:-mx-10 lg:px-10">
+      <label className="flex min-w-0 items-center gap-2 text-[14px] text-muted">
+        <span className="shrink-0">{label}</span>
+        <select value={active} onChange={(e) => { const id = e.target.value; document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' }); history.replaceState(null, '', `${location.pathname}#${id}`) }}
+          className="min-w-0 max-w-[16rem] truncate rounded-lg border border-line bg-white px-2.5 py-1.5 text-[14px] font-medium text-ink sm:max-w-sm">
+          {items.map((i) => <option key={i.id} value={i.id}>{i.label}</option>)}
+        </select>
+      </label>
+      {right && <span className="shrink-0 text-[13.5px] text-muted">{right}</span>}
+    </nav>
+  )
+}
