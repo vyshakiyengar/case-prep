@@ -1,3 +1,4 @@
+import { CASE_COUNT } from '../content/caseCount'
 import { Link } from 'react-router-dom'
 import { useStore } from '../lib/store'
 import { LEARN, PRACTISE, REFERENCE, PREP, Icon } from '../components/AppShell'
@@ -39,7 +40,7 @@ export default function Home() {
   const boxes = Object.values(data?.profile?.trainer || {})
   const mastered = boxes.filter((b) => b.box >= 3).length
   const cases = data?.cases || []
-  const casebookDone = new Set(cases.filter((c) => /^Casebook #/.test(c.source)).map((c) => c.source)).size
+  const casebookDone = Math.max(new Set(cases.filter((c) => /^Casebook #/.test(c.source)).map((c) => c.source)).size, (data?.profile?.practised || []).length)
   const today = data ? dayScore(data.days[todayIso()]) : 0
   const st = data ? streak(data.days) : 0
   const g = graphsDone()
@@ -47,7 +48,7 @@ export default function Home() {
   const progress: Record<string, { v: number; max?: number; text: string } | undefined> = user ? {
     '/learn': { v: lessonsDone, max: LESSONS.length, text: `${lessonsDone} of ${LESSONS.length} lessons` },
     '/perfect-casing': { v: mastered, max: CARDS.length, text: `${mastered} of ${CARDS.length} phrases mastered` },
-    '/casebook': { v: casebookDone, max: 15, text: `${casebookDone} of 15 cases done` },
+    '/casebook': { v: casebookDone, max: CASE_COUNT, text: `${casebookDone} of ${CASE_COUNT} cases practised` },
     '/graphs': { v: g, max: 64, text: `${g} of 64 charts done` },
     '/drills': { v: data?.drills.length || 0, text: `${data?.drills.length || 0} drills done` },
     '/today': { v: today, max: 8, text: `${today} of 8 habits today${st > 1 ? `, ${st}-day streak` : ''}` },

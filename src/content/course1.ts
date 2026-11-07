@@ -50,7 +50,7 @@ export const LESSONS_1: Lesson[] = [
     sections: [
       {
         h: 'Take notes that you can use',
-        body: `<p>Split your page. Write the <b>client's goal at the top</b>, in a box, with any number and deadline attached ("£10M profit in 2 years"). Every answer you give later should connect back to that box. Put facts from the prompt on the left in shorthand, and leave the right side for your structure.</p>
+        body: `<p>Split your page. Write the <b>client's goal at the top</b>, in a box, with any number and deadline attached ("$10M profit in 2 years"). Every answer you give later should connect back to that box. Put facts from the prompt on the left in shorthand, and leave the right side for your structure.</p>
 <p>If you don't understand something, say so straight away: "Sorry, when you say margin, do you mean gross margin?" Faking understanding costs far more ten minutes later.</p>`,
       },
       {
@@ -145,7 +145,7 @@ export const LESSONS_1: Lesson[] = [
       },
       {
         h: 'Talk while you calculate, then sanity-check',
-        body: `<p>Calculate out loud so the interviewer can follow, and catch slips together. After every result, check the size makes sense: "So about £1.5M a year. That's roughly 15% of their profit, which sounds plausible for a price change." Finally, say what the number means for the client. A number without a so-what is half an answer.</p>`,
+        body: `<p>Calculate out loud so the interviewer can follow, and catch slips together. After every result, check the size makes sense: "So about $1.5M a year. That's roughly 15% of their profit, which sounds plausible for a price change." Finally, say what the number means for the client. A number without a so-what is half an answer.</p>`,
       },
       {
         h: 'Formulas you must know cold',

@@ -17,7 +17,7 @@ export const LESSONS_2: Lesson[] = [
       },
       {
         h: 'Link every finding to the goal',
-        body: `<p>Finish each finding with why it matters for the client: "...which matters because our goal is to get back to £10M." If you can’t link a finding to the goal, it probably isn’t important.</p>`,
+        body: `<p>Finish each finding with why it matters for the client: "...which matters because our goal is to get back to $10M." If you can’t link a finding to the goal, it probably isn’t important.</p>`,
       },
       {
         h: 'When you get lost',
@@ -60,7 +60,7 @@ export const LESSONS_2: Lesson[] = [
     ],
     example: {
       title: 'A clean top-down estimate',
-      body: `<p>"New cars sold per year, about 1.9M; about a quarter fully electric, so ~475k. Around 60% have off-street parking → ~285k, and most of those, say 80%, install a charger → ~230k. Add first-time EV owners buying used, roughly 60k. So about 290k units a year; at ~£1,000 installed, roughly £300M. The limit isn't demand, it's how many people have a driveway."</p>
+      body: `<p>"New cars sold per year, about 1.9M; about a quarter fully electric, so ~475k. Around 60% have off-street parking → ~285k, and most of those, say 80%, install a charger → ~230k. Add first-time EV owners buying used, roughly 60k. So about 290k units a year; at ~$1,000 installed, roughly $300M. The limit isn't demand, it's how many people have a driveway."</p>
 <p><i>These are illustrative assumptions for practice, not real statistics.</i></p>`,
     },
     takeaways: ['Clarify units, time period and geography first.', 'State a rough guess before calculating.', 'Segment sensibly, round numbers, sanity-check, name the limiting factor.'],
@@ -118,7 +118,7 @@ export const LESSONS_2: Lesson[] = [
     ],
     example: {
       title: 'A 60-second recommendation',
-      body: `<p>"I recommend PackRight buys RePlast, but not at a flat €180M. Two reasons: recycled plastic becomes scarce from 2028, and RePlast covers two-thirds of what PackRight legally needs by 2030. With all synergies it's worth about €215M to us, but without the uncertain green premium only €155M. So I'd offer around €160M plus an earn-out tied to signed premium contracts. The key risk is food-grade quality, so next steps are technical due diligence and talks with three anchor customers."</p>`,
+      body: `<p>"I recommend PackRight buys RePlast, but not at a flat $180M. Two reasons: recycled plastic becomes scarce from 2028, and RePlast covers two-thirds of what PackRight legally needs by 2030. With all synergies it's worth about $215M to us, but without the uncertain green premium only $155M. So I'd offer around $160M plus an earn-out tied to signed premium contracts. The key risk is food-grade quality, so next steps are technical due diligence and talks with three anchor customers."</p>`,
     },
     takeaways: ['Start with the answer.', 'Each reason gets a number from the case.', 'Risks and next steps show you see the whole picture.'],
     quiz: [

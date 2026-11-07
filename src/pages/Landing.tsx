@@ -1,3 +1,4 @@
+import { CASE_COUNT } from '../content/caseCount'
 import { Link } from 'react-router-dom'
 import { Logo } from '../components/ui'
 import { MODULES, lessonBySlug, LESSONS, totalMinutes } from '../content/course'
@@ -15,9 +16,9 @@ function Notepad() {
   return (
     <div className="relative">
       <p className="font-serif text-[18px] italic leading-relaxed text-[#D5DCE7]">
-        "Our client runs 120 coffee shops. Revenue grew slightly, but operating profit fell from £12M to £4.5M in two years. Why, and what should they do?"
+        "Our client runs 120 coffee shops. Revenue grew slightly, but operating profit fell from $12M to $4.5M in two years. Why, and what should they do?"
       </p>
-      <p className="mt-3 text-[13.5px] text-[#8C98AE]">Objective: back to £10M profit within two years</p>
+      <p className="mt-3 text-[13.5px] text-[#8C98AE]">Objective: back to $10M profit within two years</p>
       <svg viewBox="0 0 480 250" className="mt-6 w-full" role="img" aria-label="An issue tree: profit decline split into revenue, costs and market, with app commissions under costs marked as the place to start">
         {N(150, 6, 160, 'Why is profit down?', 0.15, 'root')}
         {L('M230 40 V62 M70 62 H390 M70 62 V80 M230 62 V80 M390 62 V80', 520, 0.45)}
@@ -44,7 +45,7 @@ function Notepad() {
 
 const PATH = [
   { t: 'Learn', d: 'The map of a case, 11 short lessons, perfect casing and 11 core frameworks.', to: '/learn', cta: 'Start the course' },
-  { t: 'Practise', d: '15 cases, 64 charts, timed drills, and cases to give a friend.', to: '/casebook', cta: 'Open the casebook' },
+  { t: 'Practise', d: `${CASE_COUNT} cases, 64 charts, timed drills, and cases to give a friend.`, to: '/casebook', cta: 'Open the casebook' },
   { t: 'Look things up', d: 'Case types, formulas and a plain-English glossary.', to: '/glossary', cta: 'Open the glossary' },
   { t: 'Track and improve', d: 'Log each case, find your weakest stage, fix one thing at a time.', to: '/signin', cta: 'Start tracking' },
 ]

@@ -37,19 +37,19 @@ function makeExercises(): Exercise[] {
         const third = [35, 25, 40, 30]
         const calc = values.map((v, j) => v * second[j] / 100), win = maxIndex(calc)
         const labels = ['Small firms', 'Mid-size', 'Enterprise', 'Public sector']
-        out.push({ ...base, values, second, third, labels, question: 'Which customer group produces the most direct-channel revenue? Explain why the tallest section might not be the largest opportunity.', answer: labels[win] + ' leads: ' + values[win] + ' × ' + second[win] + '% = £' + fmt(calc[win]) + 'm. In a Marimekko chart, the area of each rectangle represents the absolute amount, not its height alone.', followUp: 'Check profit margin by customer group before choosing where to invest.' })
+        out.push({ ...base, values, second, third, labels, question: 'Which customer group produces the most direct-channel revenue? Explain why the tallest section might not be the largest opportunity.', answer: labels[win] + ' leads: ' + values[win] + ' × ' + second[win] + '% = $' + fmt(calc[win]) + 'm. In a Marimekko chart, the area of each rectangle represents the absolute amount, not its height alone.', followUp: 'Check profit margin by customer group before choosing where to invest.' })
       } else if (f === 1) {
         const values = [2.1 + .1 * i, 1.2 + .15 * i, 1.6 + .09 * i, 2.3 + .05 * i, 1.1 + .12 * i].map((x) => Math.round(x * 100) / 100)
         const second = [12 + i, 26 + i % 3, 20 + i % 4, 18 + i % 4, 32 - i]
         const calc = values.map((v, j) => v * second[j] / 100), win = maxIndex(calc)
         const labels = ['Core', 'Premium', 'Digital', 'Managed', 'Custom']
-        out.push({ ...base, values, second, labels, question: 'Which service line creates the largest operating profit, considering both its size and margin?', answer: labels[win] + ' creates about £' + fmt(calc[win]) + 'bn in operating profit (£' + fmt(values[win]) + 'bn revenue × ' + second[win] + '% margin). Width measures revenue; height measures margin.', followUp: 'Ask how reliably each service line can sustain its margin and growth.' })
+        out.push({ ...base, values, second, labels, question: 'Which service line creates the largest operating profit, considering both its size and margin?', answer: labels[win] + ' creates about $' + fmt(calc[win]) + 'bn in operating profit ($' + fmt(values[win]) + 'bn revenue × ' + second[win] + '% margin). Width measures revenue; height measures margin.', followUp: 'Ask how reliably each service line can sustain its margin and growth.' })
       } else if (f === 2) {
         const start = 80 + i * 11, changes = [14 + i, -10 - i * 2, 7 + i % 3, -15 - i, 9 + i]
         const end = start + changes.reduce((a, b) => a + b, 0)
         const labels = ['Start', 'New clients', 'Discounts', 'Efficiency', 'Staff', 'Cross-sell', 'End']
         const negatives = changes.map((v, k) => ({ v, k })).filter((x) => x.v < 0).sort((a, b) => a.v - b.v)
-        out.push({ ...base, values: [start, ...changes, end], labels, question: 'What is the largest cause of profit erosion, and what is the net change in EBITDA?', answer: labels[negatives[0].k + 1] + ' is the largest drag (£' + Math.abs(negatives[0].v) + 'm). EBITDA changes by £' + (end - start) + 'm, from £' + start + 'm to £' + end + 'm. Positive bars add profit and negative bars remove it.', followUp: 'Investigate which negative drivers can be reversed without hurting customers.' })
+        out.push({ ...base, values: [start, ...changes, end], labels, question: 'What is the largest cause of profit erosion, and what is the net change in EBITDA?', answer: labels[negatives[0].k + 1] + ' is the largest drag ($' + Math.abs(negatives[0].v) + 'm). EBITDA changes by $' + (end - start) + 'm, from $' + start + 'm to $' + end + 'm. Positive bars add profit and negative bars remove it.', followUp: 'Investigate which negative drivers can be reversed without hurting customers.' })
       } else if (f === 3) {
         const values = [25 + i, 55 - i, 43 + i, 31 + i, 65 - i]
         const second = [15, 12 + i, 22, 28 - i, 16 + i]
@@ -60,7 +60,7 @@ function makeExercises(): Exercise[] {
       } else if (f === 4) {
         const values = [42 + i * 5, 67 + i * 3, 55 + i * 7, 78 - i * 2, 60 + i * 4]
         const labels = ['North', 'South', 'East', 'West', 'Central'], hi = maxIndex(values), lo = values.indexOf(Math.min(...values))
-        out.push({ ...base, values, labels, question: 'Which region has the highest gross profit per sale and how much higher is it than the lowest?', answer: labels[hi] + ' leads at £' + values[hi] + ' per sale; ' + labels[lo] + ' is lowest at £' + values[lo] + '. The difference is £' + (values[hi] - values[lo]) + ' per sale.', followUp: 'Separate changes in pricing, customer mix, and cost-to-serve before copying the top performer.' })
+        out.push({ ...base, values, labels, question: 'Which region has the highest gross profit per sale and how much higher is it than the lowest?', answer: labels[hi] + ' leads at $' + values[hi] + ' per sale; ' + labels[lo] + ' is lowest at $' + values[lo] + '. The difference is $' + (values[hi] - values[lo]) + ' per sale.', followUp: 'Separate changes in pricing, customer mix, and cost-to-serve before copying the top performer.' })
       } else if (f === 5) {
         const values = [80 + i * 8, 95 + i * 6, 110 + i * 5, 125 + i * 7, 100 + i * 9, 150 + i * 5]
         const second = [5 + i * .15, 6.2, 4.5 + i * .1, 5.4, 6 + i * .05, 5.3 + i * .15].map((x) => Math.round(x * 100) / 100)
@@ -95,8 +95,8 @@ function Graph({ e }: { e: Exercise }) {
   let note = ''
   if (e.family === 'Bar') {
     const max = Math.max(...e.values) * 1.17
-    marks = e.values.map((v, i) => { const x = left + 38 + i * (width - 48) / e.values.length; const bw = 66; return <g key={i}><rect x={x} y={scale(v, max)} width={bw} height={bottom - scale(v, max)} rx={3} fill={COLORS[i % COLORS.length]} />{label(e.labels[i], x + bw / 2)}<text x={x + bw / 2} y={scale(v, max) - 9} textAnchor="middle" style={txt}>£{v}</text></g> })
-    note = 'Gross profit (£) per sale'
+    marks = e.values.map((v, i) => { const x = left + 38 + i * (width - 48) / e.values.length; const bw = 66; return <g key={i}><rect x={x} y={scale(v, max)} width={bw} height={bottom - scale(v, max)} rx={3} fill={COLORS[i % COLORS.length]} />{label(e.labels[i], x + bw / 2)}<text x={x + bw / 2} y={scale(v, max) - 9} textAnchor="middle" style={txt}>${v}</text></g> })
+    note = 'Gross profit ($) per sale'
   } else if (e.family === 'Line') {
     const series = [e.values, e.second || [], e.third || []]
     const X = (j: number) => left + 20 + j * (width - 40) / 5
@@ -122,30 +122,30 @@ function Graph({ e }: { e: Exercise }) {
       let low, high, color
       if (i === 0 || i === e.values.length - 1) { low = 0; high = v; color = '#0F1B33' }
       else { const next = current + v; low = Math.min(current, next); high = Math.max(current, next); color = v >= 0 ? '#0A8F9C' : '#C2410C'; current = next }
-      return <g key={i}><rect x={x} y={scale(high, max)} width={bw} height={Math.max(2, scale(low, max) - scale(high, max))} fill={color} rx={2} /><text x={x + bw / 2} y={scale(high, max) - 8} textAnchor="middle" style={txt}>{i === 0 || i === e.values.length - 1 ? '£' + v : (v >= 0 ? '+' : '') + v}</text><text x={x + bw / 2} y={290} textAnchor="middle" style={{ ...txt, fontSize: 10.5 }}>{e.labels[i]}</text></g>
+      return <g key={i}><rect x={x} y={scale(high, max)} width={bw} height={Math.max(2, scale(low, max) - scale(high, max))} fill={color} rx={2} /><text x={x + bw / 2} y={scale(high, max) - 8} textAnchor="middle" style={txt}>{i === 0 || i === e.values.length - 1 ? '$' + v : (v >= 0 ? '+' : '') + v}</text><text x={x + bw / 2} y={290} textAnchor="middle" style={{ ...txt, fontSize: 10.5 }}>{e.labels[i]}</text></g>
     })
-    note = 'EBITDA bridge (£m): green adds, red subtracts'
+    note = 'EBITDA bridge ($m): green adds, red subtracts'
   } else if (e.family === 'Bar Mekko') {
     const maxWidth = e.values.reduce((a, b) => a + b, 0)
     let offset = left
     marks = e.values.map((v, i) => { const w = width * v / maxWidth; const h = (e.second || [])[i] / 40 * height; const x = offset; offset += w; return <g key={i}><rect x={x} y={bottom - h} width={w - 2} height={h} fill={COLORS[i]} rx={2} /><text x={x + w / 2} y={bottom - h - 9} textAnchor="middle" style={txt}>{(e.second || [])[i]}%</text><text x={x + w / 2} y={291} textAnchor="middle" style={{ ...txt, fontSize: 11 }}>{e.labels[i]}</text></g> })
-    note = 'Width: revenue (£bn) · Height: operating margin (%) · Area: operating profit'
+    note = 'Width: revenue ($bn) · Height: operating margin (%) · Area: operating profit'
   } else {
     const total = e.values.reduce((a, b) => a + b, 0)
     let offset = left
     marks = e.values.map((v, i) => { const w = width * v / total; const s1 = (e.second || [])[i]; const s2 = (e.third || [])[i]; const s3 = 100 - s1 - s2; const x = offset; offset += w; const vals = [s1, s2, s3]; let y = bottom; return <g key={i}>{vals.map((s, j) => { const h = s / 100 * height; y -= h; return <g key={j}><rect x={x + 1} y={y} width={w - 2} height={h - 1} fill={COLORS[j]} /><text x={x + w / 2} y={y + h / 2 + 4} textAnchor="middle" style={{ ...txt, fill: '#fff', fontSize: 11 }}>{s}%</text></g> })}<text x={x + w / 2} y={290} textAnchor="middle" style={{ ...txt, fontSize: 11 }}>{e.labels[i]}</text></g> })
     marks = <g>{marks}{[['Direct',COLORS[0]], ['Partner',COLORS[1]], ['Other',COLORS[2]]].map(([name,color],k) => <g key={name}><rect x={left + 160*k} y={308} width={10} height={10} fill={color} /><text x={left + 15 + 160*k} y={318} style={txt}>{name}</text></g>)}</g>
-    note = 'Width: group demand (£m) · Height: channel share (%) · Area: value'
+    note = 'Width: group demand ($m) · Height: channel share (%) · Area: value'
   }
   return <div className="overflow-x-auto rounded-xl border border-line bg-white p-2 sm:p-4"><svg viewBox="0 0 720 345" className="w-full min-w-[560px]" role="img" aria-label={e.family + ' chart for ' + e.title}><rect x={0} y={0} width={720} height={345} fill="white" />{grid}<line x1={left} y1={top} x2={left} y2={bottom} stroke="#94A0B2" /><line x1={left} y1={bottom} x2={right} y2={bottom} stroke="#94A0B2" />{marks}<text x={left} y={16} style={{ ...txt, fontSize: 12, fill: '#0F1B33' }}>{note}</text></svg><p className="mt-1 text-[12.5px] text-muted">Fictional practice data.</p></div>
 }
 
 function DataTable({ e }: { e: Exercise }) {
-  const columns: [string, number[]][] = e.family === 'Marimekko' ? [['Segment demand (£m)',e.values], ['Direct (%)',e.second || []], ['Partner (%)',e.third || []]]
-    : e.family === 'Bar Mekko' ? [['Revenue (£bn)',e.values], ['Operating margin (%)',e.second || []]]
-    : e.family === 'Waterfall' ? [['EBITDA movement (£m)',e.values]]
+  const columns: [string, number[]][] = e.family === 'Marimekko' ? [['Segment demand ($m)',e.values], ['Direct (%)',e.second || []], ['Partner (%)',e.third || []]]
+    : e.family === 'Bar Mekko' ? [['Revenue ($bn)',e.values], ['Operating margin (%)',e.second || []]]
+    : e.family === 'Waterfall' ? [['EBITDA movement ($m)',e.values]]
     : e.family === 'Bubble' ? [['Adoption index',e.values], ['Operating margin (%)',e.second || []], ['Demand index (bubble area)',e.third || []]]
-    : e.family === 'Bar' ? [['Gross profit (£/sale)',e.values]]
+    : e.family === 'Bar' ? [['Gross profit ($/sale)',e.values]]
     : e.family === 'Bar + Line' ? [['Leads (thousands)',e.values], ['Conversion rate (%)',e.second || []]]
     : e.family === 'Line' ? [['Core (indexed)',e.values], ['Premium (indexed)',e.second || []], ['New ventures (indexed)',e.third || []]]
     : [['Training hours',e.values], ['Satisfaction index',e.second || []]]
