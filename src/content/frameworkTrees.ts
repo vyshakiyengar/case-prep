@@ -1,197 +1,267 @@
-// Visual framework trees. Standard consulting structures, written in our own words.
-export type TreeNode = string | { t: string; c: string[] }
-export interface Branch { head: string; c: TreeNode[] }
-export interface FrameworkTree {
+// Framework content. Standard consulting structures, drawn in our own design with our own examples.
+
+/** A node in a left-to-right issue tree. `note` is a side comment or example. */
+export interface CNode { t: string; c?: CNode[]; note?: string }
+
+export interface CoreFramework {
   id: string
-  title: string
-  question: string
+  title: string // the question the tree answers
+  when: string
   ask: string
-  formula?: string
-  steps?: string[]
-  branches: Branch[]
-  matrix?: { x: [string, string]; y: [string, string]; cells: { tag: string; title: string; c: string[] }[]; note: string }
+  branches: CNode[]
   tip: string
-  trap: string
+  example?: string
   practice: { label: string; to: string }[]
 }
 
-export const TREES: FrameworkTree[] = [
+export const CORE: CoreFramework[] = [
   {
-    id: 'profitability', title: 'Profitability', question: 'Profits are falling. Why, and what should the client do?',
-    ask: 'Is the whole industry suffering, or just our client?', formula: 'Profit = Revenue − Costs',
+    id: 'improve-profits', title: 'How to improve profits?',
+    when: 'Profits are falling, or the client wants them higher.',
+    ask: 'Is the drop driven by revenue, by costs, or both? Is the whole industry affected?',
     branches: [
-      { head: 'Revenue', c: [
-        { t: 'Price', c: ['vs competitors', 'discounting', 'willingness to pay'] },
-        { t: 'Volume', c: ['customers × how often they buy', 'market share trend'] },
-        { t: 'Mix', c: ['by product', 'by customer segment', 'by channel'] },
+      { t: 'Revenue', c: [{ t: 'Volume' }, { t: 'Price' }] },
+      { t: 'Costs', c: [{ t: 'Fixed costs' }, { t: 'Variable costs' }] },
+    ],
+    tip: 'Go one level deeper for the client: volume = number of customers × how often they buy; split costs into the three or four biggest lines.',
+    practice: [{ label: 'Coastal Brew', to: '/casebook/coastal-brew' }, { label: 'Vertex Mobile', to: '/casebook/vertex-mobile' }],
+  },
+  {
+    id: 'grow-business', title: 'How to grow the business?',
+    when: 'The client wants more revenue and is open to options.',
+    ask: 'How much growth, by when, and is anything off the table?',
+    example: 'Example: a coffee chain',
+    branches: [
+      { t: 'Grow the core business', c: [
+        { t: 'Grow within current segments', note: 'new drinks · loyalty app · sharper prices' },
+        { t: 'Focus on the fastest-growing segments', note: 'cold drinks · drive-throughs · travel hubs' },
       ] },
-      { head: 'Costs', c: [
-        { t: 'Variable', c: ['materials and inputs', 'direct labour', 'delivery and commissions'] },
-        { t: 'Fixed', c: ['rent and depreciation', 'overheads (SG&A)', 'R&D'] },
-        { t: 'Compare', c: ['vs last year', 'vs competitors', 'vs other business units'] },
-      ] },
-      { head: 'Market', c: [
-        { t: 'Industry', c: ['size and growth', 'shifting customer needs'] },
-        { t: 'Competitors', c: ['share gains and losses', 'new entrants', 'price moves'] },
-        { t: 'Outside forces', c: ['regulation', 'technology', 'input prices'] },
+      { t: 'Grow outside the core business', c: [
+        { t: 'Sell new products to existing customers', note: 'beans and pods for home · subscriptions · catering' },
+        { t: 'Use our capabilities to enter new businesses', note: 'bottled drinks in supermarkets · franchising abroad' },
       ] },
     ],
-    tip: 'Split revenue by product, region or channel before you diagnose anything. The problem usually sits in one slice.',
-    trap: 'Saying "revenue and costs" with nothing specific to this client.',
-    practice: [{ label: 'Case 1: Coastal Brew', to: '/casebook/coastal-brew' }, { label: 'Case: Vertex Mobile', to: '/casebook/vertex-mobile' }],
+    tip: 'Start with the core: it is cheaper and less risky. Then size each option before recommending one.',
+    practice: [{ label: 'Meridian Hospitals', to: '/casebook/meridian-hospitals' }],
   },
   {
-    id: 'growth', title: 'Growth strategy', question: 'How can the client grow revenue?',
-    ask: 'How much growth, by when, and does profit matter as much as revenue?',
-    branches: [],
-    matrix: {
-      x: ['Existing products', 'New products'], y: ['Existing markets', 'New markets'],
-      cells: [
-        { tag: 'A', title: 'Sell more of what we have', c: ['change or restructure prices', 'win share with sales and marketing', 'bundles, loyalty, upselling'] },
-        { tag: 'C', title: 'New products for current customers', c: ['line extensions or R&D', 'cross-sell to the base', 'watch for cannibalisation'] },
-        { tag: 'B', title: 'Take products to new places', c: ['new regions', 'new customer segments', 'new channels (online, partners)'] },
-        { tag: 'D', title: 'Diversify', c: ['new products in new markets', 'highest risk', 'usually via acquisition or joint venture'] },
-      ],
-      note: 'Work from A to D: start where risk is lowest. For each option, ask how to get there (build, partner or buy) and what it would earn.',
-    },
-    tip: 'Size each box before you recommend one. "How much revenue could this add, and how fast?"',
-    trap: 'Jumping to diversification before you have exhausted the core business.',
-    practice: [{ label: 'Case: Meridian Hospitals', to: '/casebook/meridian-hospitals' }],
+    id: 'reduce-costs', title: 'How to reduce costs?',
+    when: 'The client needs to cut costs, often by a target percentage.',
+    ask: 'Which costs are in scope, and what must not suffer (quality, safety, service)?',
+    branches: [
+      { t: 'Reduce the need', c: [
+        { t: 'Eliminate the need entirely', note: 'close a branch · move to self-service' },
+        { t: 'Reduce the service level', note: 'drop a free extra, like free delivery' },
+      ] },
+      { t: 'Meet the need with fewer resources', c: [{ t: 'Eliminate waste' }, { t: 'Improve productivity' }] },
+      { t: 'Reduce the cost of resources', c: [
+        { t: 'Find cheaper alternatives', note: 'rail instead of air freight' },
+        { t: 'Renegotiate costs' },
+      ] },
+    ],
+    tip: 'Before using the tree, find where the money goes: the biggest cost lines deserve the most attention.',
+    practice: [{ label: 'SkyLine MRO', to: '/casebook/skyline-mro' }],
   },
   {
-    id: 'market-entry', title: 'Market entry', question: 'Should the client enter this market?',
+    id: 'enter-market', title: 'Whether to enter a new market?',
+    when: 'A new country, customer segment or product category.',
     ask: 'Why this market, and what would success look like, by when?',
     branches: [
-      { head: 'The market', c: ['size and growth', 'profit pool and margins', 'customer segments and needs', 'regulation'] },
-      { head: 'Competition', c: ['number of players and concentration', 'their share and strengths', 'barriers to entry', 'how they will react to us'] },
-      { head: 'Can we win?', c: ['capabilities and brand fit', 'cost position vs rivals', 'access to channels'] },
-      { head: 'Economics', c: ['investment needed', 'revenue ramp-up', 'breakeven point', 'return vs other uses of the money'] },
-      { head: 'How to enter', c: ['build, partner or buy', 'pilot small or go big', 'timing and key risks'] },
+      { t: 'Market opportunity', c: [{ t: 'Market size' }, { t: 'Market growth' }] },
+      { t: 'Potential share', c: [{ t: 'Competitors' }, { t: 'Customer needs' }, { t: 'Our offering' }] },
+      { t: 'Potential profit', c: [{ t: 'Investment' }, { t: 'Running costs' }, { t: 'Revenue' }] },
+      { t: 'Capabilities and risks' },
     ],
-    tip: 'End with a clear yes or no, the entry mode, and the first step (often a pilot).',
-    trap: 'Saying yes without the economics, or forgetting how the client would actually enter.',
-    practice: [{ label: 'Case: Nordwind e-bikes', to: '/casebook/nordwind-e-bikes' }, { label: 'Case: SnackCo protein bar', to: '/casebook/snackco-protein-bar' }],
+    tip: 'Market size × the share you can win × margin gives the prize. Compare it with the investment.',
+    practice: [{ label: 'Nordwind E-Bikes', to: '/casebook/nordwind-e-bikes' }, { label: 'SnackCo Protein Bar', to: '/casebook/snackco-protein-bar' }],
   },
   {
-    id: 'new-product', title: 'New product launch', question: 'Should the client launch this product?',
-    ask: 'What is the launch meant to achieve: revenue, market share, or defending against a rival?',
+    id: 'launch-product', title: 'How to launch a new product?',
+    when: 'The decision to launch is made; the question is how.',
+    ask: 'Who is it for, and what does the launch need to achieve?',
     branches: [
-      { head: 'Customers and market', c: ['who needs it, and how badly', 'market size and growth', 'how fast people will adopt it'] },
-      { head: 'The product', c: ['what makes it different', 'substitutes', 'patents and protection'] },
-      { head: 'Economics', c: [
-        { t: 'Revenue', c: ['price', 'units', 'cannibalised current sales'] },
-        { t: 'Costs', c: ['variable and fixed', 'upfront investment', 'payback period'] },
-      ] },
-      { head: 'Can we deliver?', c: ['make it: capacity, make or buy', 'sell it: channels, sales force', 'brand fit'] },
-      { head: 'Risks', c: ['competitor response', 'execution', 'regulation'] },
+      { t: 'Choose target segments', c: [{ t: 'Size and growth' }, { t: 'Competition' }, { t: 'Customer needs' }] },
+      { t: 'Define our strategy', c: [{ t: 'Product' }, { t: 'Price' }, { t: 'Distribution' }, { t: 'Brand and advertising' }] },
+      { t: 'Implementation' },
     ],
-    tip: 'Net out cannibalisation: the real gain is new revenue minus the sales the product takes from the client\'s own range.',
-    trap: 'Valuing the launch on its own revenue without subtracting what it steals from existing products.',
-    practice: [{ label: 'Case: SnackCo protein bar', to: '/casebook/snackco-protein-bar' }],
+    tip: 'Pick the segment first: product, price, channel and message all follow from who you are selling to.',
+    practice: [{ label: 'SnackCo Protein Bar', to: '/casebook/snackco-protein-bar' }, { label: 'LinguaLeap', to: '/casebook/lingualeap' }],
   },
   {
-    id: 'acquisition', title: 'Acquisition (M&A and private equity)', question: 'Should the client buy this company?',
-    ask: 'Why buy: growth, new capabilities, cost savings, or a financial return?',
-    branches: [
-      { head: 'Target\'s market', c: ['size and growth', 'trends', 'competition'] },
-      { head: 'The target itself', c: ['revenue and profit trend', 'customers and products', 'management and capabilities'] },
-      { head: 'Synergies', c: [
-        { t: 'Revenue', c: ['cross-selling', 'new customers or regions'] },
-        { t: 'Cost', c: ['shared overheads', 'buying power and scale'] },
-        'overlap and cannibalisation',
-      ] },
-      { head: 'Deal economics', c: ['value of target + synergies vs price', 'financing', 'return vs hurdle rate', 'exit route (for funds)'] },
-      { head: 'Risks and integration', c: ['culture fit', 'integration cost and time', 'antitrust and regulation'] },
-    ],
-    tip: 'A company buying a company cares about synergies. A private equity fund cares about standalone returns and the exit.',
-    trap: 'Saying "buy" without comparing the price to what the target is worth to this buyer.',
-    practice: [{ label: 'Case: PackRight', to: '/casebook/packright' }, { label: 'Case: FitHub gyms', to: '/casebook/fithub-gyms' }],
-  },
-  {
-    id: 'competitive-response', title: 'Competitive response', question: 'A rival has just made a move. How should the client react?',
-    ask: 'What exactly did the rival do, and how much of our revenue is at risk?',
-    branches: [
-      { head: 'Understand the move', c: ['what changed: price, product, channel', 'why they did it', 'which customers it targets'] },
-      { head: 'Size the threat', c: ['revenue and share at risk', 'short term vs long term', 'effect on the whole industry'] },
-      { head: 'Options', c: [
-        { t: 'Match', c: ['protects share', 'costs margin'] },
-        { t: 'Don\'t match', c: ['protects margin', 'risks share'] },
-        { t: 'Differentiate', c: ['service, quality, bundles, loyalty'] },
-        { t: 'Change the game', c: ['partner, acquire, lock up channels'] },
-      ] },
-      { head: 'Choose', c: ['profit impact of each option', 'our strengths vs theirs', 'how long they can keep it up'] },
-    ],
-    tip: 'Quantify before reacting. A loud move that touches 3% of revenue may not deserve a price war.',
-    trap: 'Matching the rival by reflex without working out what it costs.',
-    practice: [{ label: 'Case: FreshMart', to: '/casebook/freshmart' }],
-  },
-  {
-    id: 'cost-reduction', title: 'Cost reduction', question: 'The client needs to cut costs by 15%.',
-    ask: 'Which costs are in scope, and what must not suffer (quality, service, safety)?',
-    steps: ['Map the costs: fixed vs variable, and how big each bucket is', 'Benchmark: vs the past, competitors and other units', 'Work on the biggest gaps using the levers below'],
-    branches: [
-      { head: 'Inputs', c: ['renegotiate or switch suppliers', 'buy in bulk or jointly', 'redesign the input', 'hedge commodity prices'] },
-      { head: 'Operations', c: ['automate', 'cut waste and rework', 'fix bottlenecks', 'make vs outsource'] },
-      { head: 'People', c: ['flexible staffing', 'less overtime', 'cross-training', 'fewer management layers'] },
-      { head: 'Sales and marketing', c: ['cut low-return spend', 'shift channel mix', 'rethink incentives'] },
-      { head: 'Distribution', c: ['optimise routes and network', 'renegotiate logistics', 'move sales online'] },
-      { head: 'Overheads', c: ['centralise shared services', 'travel and policies', 'property'] },
-    ],
-    tip: 'Split quick wins (next three months) from structural changes, and show how each adds up towards the 15%.',
-    trap: 'A long list of levers with no sense of which costs are actually big.',
-    practice: [{ label: 'Case: Skyline MRO', to: '/casebook/skyline-mro' }],
-  },
-  {
-    id: 'pricing', title: 'Pricing', question: 'What should the client charge?',
+    id: 'price-product', title: 'How to price a new product?',
+    when: 'Setting or changing a price.',
     ask: 'What is the goal: profit, market share, or getting in fast?',
     branches: [
-      { head: 'Cost (the floor)', c: ['unit cost + target margin', 'breakeven volume'] },
-      { head: 'Competitors (the reference)', c: ['rival prices', 'substitutes', 'our position vs theirs'] },
-      { head: 'Customer value (the ceiling)', c: ['value delivered: savings or gains', 'willingness to pay (surveys, tests)', 'price sensitivity'] },
-      { head: 'Strategy', c: ['skim high or penetrate low', 'tiers and bundles', 'different prices by segment'] },
-      { head: 'Constraints', c: ['buyer power', 'brand', 'regulation', 'rival reaction'] },
+      { t: 'Costs', c: [{ t: 'Variable costs' }, { t: 'Investment costs' }, { t: 'Fixed costs' }], note: 'the price needs enough margin to cover investment and fixed costs' },
+      { t: 'Customers\' willingness to pay' },
+      { t: 'Competitors or substitutes', note: 'price above or below them?' },
     ],
-    tip: 'Price sits between the floor (cost) and the ceiling (value to the customer). Competitors tell you where in that range.',
-    trap: 'Pricing on cost alone when the product saves the customer far more than it costs to make.',
-    practice: [{ label: 'Case: CloudLedger', to: '/casebook/cloudledger' }],
+    tip: 'Cost sets the floor, value to the customer sets the ceiling, competitors tell you where to land in between.',
+    practice: [{ label: 'CloudLedger', to: '/casebook/cloudledger' }],
   },
   {
-    id: 'investment', title: 'Investment and capacity', question: 'Should the client build a new plant or add capacity?',
-    ask: 'Is the demand real, and could existing capacity be used better first?',
+    id: 'acquire-business', title: 'Whether to acquire a new business?',
+    when: 'Mergers, acquisitions and private equity deals.',
+    ask: 'Why buy: growth, capabilities, cost savings, or a financial return?',
     branches: [
-      { head: 'Demand', c: ['current utilisation', 'forecast growth', 'how certain it is'] },
-      { head: 'Alternatives', c: ['squeeze existing capacity', 'outsource or rent', 'buy a competitor'] },
-      { head: 'Economics', c: ['upfront cost', 'extra profit per year', 'payback and NPV'] },
-      { head: 'Risks', c: ['demand falls short', 'build delays', 'rivals add capacity too'] },
+      { t: 'Standalone value', c: [{ t: 'Future revenue' }, { t: 'Future costs' }, { t: 'Valuation multiples' }], note: 'value = today\'s worth of future cash flows (NPV)' },
+      { t: 'Synergies', c: [{ t: 'Revenue growth' }, { t: 'Cost reduction' }] },
+      { t: 'Capabilities and risks' },
     ],
-    tip: 'Always compare against the cheapest alternative, not against doing nothing.',
-    trap: 'Approving the build before checking whether existing capacity is fully used.',
-    practice: [{ label: 'Case: Desert Dairy', to: '/casebook/desert-dairy' }],
+    tip: 'Buy only if standalone value + synergies is more than the price. A fund cares most about standalone value and the exit.',
+    practice: [{ label: 'PackRight', to: '/casebook/packright' }, { label: 'FitHub Gyms', to: '/casebook/fithub-gyms' }],
   },
   {
-    id: 'market-sizing', title: 'Market sizing', question: 'How big is the market for this?',
-    ask: 'Units or value? Which geography, and which year?',
+    id: 'make-investment', title: 'Whether to make an investment?',
+    when: 'A new plant, system, store or piece of equipment.',
+    ask: 'What does it cost upfront, and what does it change: revenue, costs, or both?',
     branches: [
-      { head: 'Top-down (start from people)', c: ['population', '× share in the target segment', '× share who buy', '× units a year', '× price'] },
-      { head: 'Bottom-up (start from supply)', c: ['number of sellers or locations', '× sales or capacity each', '× price'] },
+      { t: 'Impact on costs' },
+      { t: 'Impact on revenue', note: 'how long until it breaks even?' },
+      { t: 'Implementation' },
+    ],
+    tip: 'Payback = upfront cost ÷ yearly gain. Compare it with how long the asset lasts and with cheaper alternatives.',
+    practice: [{ label: 'Desert Dairy', to: '/casebook/desert-dairy' }],
+  },
+  {
+    id: 'competitive-threat', title: 'How to respond to a competitive threat?',
+    when: 'A rival cuts prices, launches a product or enters the market.',
+    ask: 'What exactly did they do, and which of our customers does it touch?',
+    branches: [
+      { t: 'Potential impact on us', c: [{ t: 'Segment affected' }, { t: 'Estimated loss' }], note: 'how much could we lose?' },
+      { t: 'Opportunity the rival is chasing', c: [{ t: 'Size' }, { t: 'Profitability' }], note: 'is it worth them pursuing?' },
+      { t: 'Possible responses', c: [
+        { t: 'Do nothing' }, { t: 'Mitigate', note: 'keep our customers' }, { t: 'Align', note: 'lower our prices' },
+        { t: 'Replicate', note: 'launch a competing offer' }, { t: 'Collaborate' },
+      ] },
+    ],
+    tip: 'Size the threat before choosing a response. Doing nothing is a real option when little revenue is at risk.',
+    practice: [{ label: 'FreshMart', to: '/casebook/freshmart' }],
+  },
+  {
+    id: 'optimise-process', title: 'How to optimise a process?',
+    when: 'Operations cases: something is slow, costly or error-prone.',
+    ask: 'Which outcome matters most: cost, speed or quality?',
+    branches: [
+      { t: 'Map out the current process', note: 'capacity? utilisation? bottleneck?' },
+      { t: 'Look into each step', c: [{ t: 'Eliminate' }, { t: 'Reduce cost' }, { t: 'Increase speed' }, { t: 'Increase quality' }, { t: 'Anticipate' }] },
+      { t: 'Estimate the gains' },
+    ],
+    tip: 'The slowest step (the bottleneck) sets the speed of the whole process. Fix it first.',
+    practice: [{ label: 'SkyLine MRO', to: '/casebook/skyline-mro' }, { label: 'RideNow Drivers', to: '/casebook/ridenow-drivers' }],
+  },
+]
+
+/** Second-order drivers: what to dig into once you are inside a branch. */
+export const DRIVERS: { head: string; c: string[] }[] = [
+  { head: 'Market', c: ['Size and growth', 'Geographies', 'Customer segments', 'Distribution channels'] },
+  { head: 'Customers', c: ['Segments', 'Preferences', 'How they decide to buy'] },
+  { head: 'Competition', c: ['Market shares', 'New entrants', 'Substitutes'] },
+  { head: 'Industry', c: ['Competitors', 'Profitability', 'Key success factors', 'Barriers to entry'] },
+  { head: 'Execution', c: ['Skills', 'Capital', 'Brand', 'Partners'] },
+  { head: 'Macro', c: ['Regulation', 'Unions', 'Technology', 'Economy', 'Politics'] },
+]
+
+export type OtherFramework =
+  | { id: string; title: string; when: string; kind: 'groups'; groups: { head: string; c: string[] }[] }
+  | { id: string; title: string; when: string; kind: 'matrix'; x: [string, string]; y: [string, string]; cells: { tag: string; title: string; c: string[] }[]; note: string }
+  | { id: string; title: string; when: string; kind: 'table'; cols: string[]; rows: string[][] }
+  | { id: string; title: string; when: string; kind: 'chips'; c: string[] }
+
+export const OTHER: OtherFramework[] = [
+  {
+    id: 'growth-matrix', title: 'Growth matrix (Ansoff)', kind: 'matrix', when: 'A second way to lay out growth options, by product and by market.',
+    x: ['Existing products', 'New products'], y: ['Existing markets', 'New markets'],
+    cells: [
+      { tag: 'A', title: 'Sell more of what we have', c: ['prices, marketing, bundles, loyalty'] },
+      { tag: 'C', title: 'New products, same customers', c: ['line extensions, cross-selling'] },
+      { tag: 'B', title: 'Same products, new markets', c: ['new regions, segments, channels'] },
+      { tag: 'D', title: 'Diversify', c: ['highest risk; often via acquisition'] },
+    ],
+    note: 'Risk rises from A to D. Most answers start in A.',
+  },
+  {
+    id: 'market-sizing', title: 'Market sizing', kind: 'groups', when: '"How big is the market for X?" Say your approach before any maths.',
+    groups: [
+      { head: 'Top-down (start from people)', c: ['population', '× share in target segment', '× share who buy', '× units a year', '× price'] },
+      { head: 'Bottom-up (start from supply)', c: ['number of sellers or sites', '× sales or capacity each', '× price'] },
       { head: 'Sanity check', c: ['compare with a number you know', 'does the per-person figure feel right?'] },
     ],
-    tip: 'Say your approach before any maths, round hard, and state each assumption out loud.',
-    trap: 'Diving into numbers without first saying how you will build the estimate.',
-    practice: [{ label: 'Case: Plugged In', to: '/casebook/plugged-in' }, { label: 'Market sizing lesson', to: '/learn/market-sizing' }],
   },
-]
-
-export const SPLITS = ['Internal vs external', 'Short term vs long term', 'Revenue vs costs', 'Supply vs demand', 'Customers, company, competitors', 'Quantitative vs qualitative', 'Pros vs cons', 'Organic vs inorganic', 'Direct vs indirect', 'Financial vs non-financial']
-
-export const FIND_OUT = [
-  { head: 'Ask customers', c: ['surveys', 'focus groups', 'pilots and test markets', 'A/B tests'] },
-  { head: 'Ask experts', c: ['internal specialists', 'industry experts', 'academics'] },
-  { head: 'Use data', c: ['industry reports', 'historical trends', 'the client\'s own data'] },
-]
-
-export const BUILD_PARTNER_BUY = [
-  { way: 'Build (organic)', pros: 'Full control; no integration or culture clash', cons: 'Slow; needs skills the client may not have; strains capital' },
-  { way: 'Partner (JV, alliance)', pros: 'Shared risk and cost; fast access to skills or markets', cons: 'Shared control and profit; partners can fall out' },
-  { way: 'Buy (acquire)', pros: 'Fastest; brings customers, skills and brand', cons: 'Expensive; integration cost; culture and antitrust risk' },
+  {
+    id: 'cost-levers', title: 'Where costs hide (value chain)', kind: 'groups', when: 'Use with "How to reduce costs?" to find specific levers in each part of the business.',
+    groups: [
+      { head: 'Inputs', c: ['renegotiate or switch suppliers', 'buy in bulk or jointly', 'redesign the input'] },
+      { head: 'Operations', c: ['automate', 'cut waste and rework', 'make vs outsource'] },
+      { head: 'People', c: ['flexible staffing', 'less overtime', 'fewer management layers'] },
+      { head: 'Sales and marketing', c: ['cut low-return spend', 'shift channel mix'] },
+      { head: 'Distribution', c: ['optimise routes', 'renegotiate logistics'] },
+      { head: 'Overheads', c: ['centralise shared services', 'property, travel'] },
+    ],
+  },
+  {
+    id: 'three-cs', title: 'The 3Cs', kind: 'groups', when: 'A quick strategic scan when you need a starting structure for an open question.',
+    groups: [
+      { head: 'Customers', c: ['who they are', 'what they need', 'how they buy'] },
+      { head: 'Company', c: ['strengths and gaps', 'costs and capacity', 'brand'] },
+      { head: 'Competitors', c: ['who they are', 'their share and moves', 'their advantages'] },
+    ],
+  },
+  {
+    id: 'five-forces', title: 'Five forces (Porter)', kind: 'groups', when: 'How attractive is this industry? Useful inside market entry and acquisitions.',
+    groups: [
+      { head: 'Rivalry', c: ['number and size of competitors', 'price wars'] },
+      { head: 'New entrants', c: ['barriers to entry', 'capital needed'] },
+      { head: 'Substitutes', c: ['other ways to meet the need'] },
+      { head: 'Buyer power', c: ['few big customers?', 'switching costs'] },
+      { head: 'Supplier power', c: ['few suppliers?', 'unique inputs'] },
+    ],
+  },
+  {
+    id: 'four-ps', title: 'The 4Ps (marketing mix)', kind: 'groups', when: 'The "Define our strategy" branch of a product launch.',
+    groups: [
+      { head: 'Product', c: ['features', 'range', 'quality'] },
+      { head: 'Price', c: ['level', 'discounts', 'tiers'] },
+      { head: 'Place', c: ['channels', 'coverage'] },
+      { head: 'Promotion', c: ['advertising', 'sales force', 'offers'] },
+    ],
+  },
+  {
+    id: 'pricing-methods', title: 'Pricing methods', kind: 'groups', when: 'Ways to set a price once you know the floor and the ceiling.',
+    groups: [
+      { head: 'Cost-plus', c: ['unit cost + target margin'] },
+      { head: 'Competitor-based', c: ['match, undercut or charge a premium'] },
+      { head: 'Value-based', c: ['share of the value the customer gets'] },
+      { head: 'Launch strategy', c: ['skim: start high', 'penetrate: start low'] },
+    ],
+  },
+  {
+    id: 'build-partner-buy', title: 'Build, partner or buy?', kind: 'table', when: 'How to get into a new market or capability.',
+    cols: ['Route', 'Good because', 'Watch out for'],
+    rows: [
+      ['Build (organic)', 'Full control; no integration or culture clash', 'Slow; needs skills the client may not have'],
+      ['Partner (JV, alliance)', 'Shared risk and cost; fast access', 'Shared control and profit'],
+      ['Buy (acquire)', 'Fastest; brings customers and skills', 'Expensive; integration and culture risk'],
+    ],
+  },
+  {
+    id: 'outsourcing', title: 'Outsource or keep in-house?', kind: 'table', when: 'Make-or-buy questions in operations and cost cases.',
+    cols: ['', 'For', 'Against'],
+    rows: [
+      ['Outsource', 'Lower cost; focus on the core; less risk if volumes fall', 'Less control over quality; reliance on others; brand risk'],
+      ['Keep in-house', 'Control over process and quality; keeps know-how', 'Higher fixed costs; capacity tied up'],
+    ],
+  },
+  {
+    id: 'find-out', title: '"How would you find that out?"', kind: 'groups', when: 'When the interviewer asks how you would get data.',
+    groups: [
+      { head: 'Ask customers', c: ['surveys', 'focus groups', 'pilots and A/B tests'] },
+      { head: 'Ask experts', c: ['internal specialists', 'industry experts'] },
+      { head: 'Use data', c: ['industry reports', 'historical trends', 'the client\'s own data'] },
+    ],
+  },
+  {
+    id: 'simple-splits', title: 'Simple splits for brainstorming', kind: 'chips', when: 'When you need buckets fast for "What else could they do?"',
+    c: ['Internal vs external', 'Short term vs long term', 'Revenue vs costs', 'Supply vs demand', 'Quantitative vs qualitative', 'Pros vs cons', 'Organic vs inorganic', 'Direct vs indirect', 'Financial vs non-financial'],
+  },
 ]

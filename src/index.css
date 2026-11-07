@@ -60,3 +60,14 @@
 @media (prefers-reduced-motion: reduce) {
   .tree-line, .tree-node { animation: none; }
 }
+
+/* Left-to-right issue tree with bracket connectors */
+.htree-node { display: flex; align-items: center; }
+.htree-kids { position: relative; display: flex; flex-direction: column; justify-content: center; gap: 8px; padding-left: 28px; }
+.htree-kids::before { content: ''; position: absolute; left: 0; top: 50%; width: 14px; border-top: 1.5px solid #9AA6B8; }
+.htree-kid { position: relative; }
+.htree-kid::before { content: ''; position: absolute; left: -14px; top: 50%; width: 14px; border-top: 1.5px solid #9AA6B8; }
+.htree-kid::after { content: ''; position: absolute; left: -14px; top: -4px; bottom: -4px; border-left: 1.5px solid #9AA6B8; }
+.htree-kid:first-child::after { top: 50%; }
+.htree-kid:last-child::after { bottom: 50%; }
+.htree-kid:only-child::after { display: none; }

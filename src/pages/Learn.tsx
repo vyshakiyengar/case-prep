@@ -6,6 +6,23 @@ import { useStore } from '../lib/store'
 import { Button, LinkButton, Meter, PageHeader, Section } from '../components/ui'
 import { Rich, StructureTree } from '../components/CaseParts'
 import { Gate, Quiz, StickyNav, TryIt, useScrollToTarget } from '../components/Learning'
+import { CoreFrameworksMini } from '../components/FrameworkTree'
+import { CORE } from '../content/frameworkTrees'
+
+type L = { label: string; to: string }
+const MORE: Record<string, L[]> = {
+  'how-case-interviews-work': [{ label: 'Perfect casing: the 10-stage flow', to: '/perfect-casing' }, { label: 'Casebook', to: '/casebook' }],
+  'the-opening': [{ label: 'Perfect casing: stages 1-3', to: '/perfect-casing#stage-1' }],
+  structuring: [{ label: 'All core frameworks', to: '/frameworks' }, { label: 'Second-order drivers', to: '/frameworks#drivers' }, { label: 'Perfect casing: structure', to: '/perfect-casing#stage-4' }],
+  'driving-the-case': [{ label: 'Perfect casing: lead the case', to: '/perfect-casing#stage-5' }],
+  'case-maths': [{ label: 'Formulas to know', to: '/frameworks#formulas' }, { label: 'Perfect casing: maths', to: '/perfect-casing#stage-7' }],
+  'charts-and-exhibits': [{ label: 'Chart drill (90 sec)', to: '/drills?tab=charts' }, { label: 'Perfect casing: charts', to: '/perfect-casing#stage-6' }],
+  'market-sizing': [{ label: 'Market sizing framework', to: '/frameworks#market-sizing' }, { label: 'Perfect casing: maths', to: '/perfect-casing#stage-7' }],
+  brainstorming: [{ label: 'Brainstorming frameworks', to: '/frameworks#other' }, { label: 'Perfect casing: brainstorm', to: '/perfect-casing#stage-8' }],
+  recommendation: [{ label: 'Perfect casing: recommendation', to: '/perfect-casing#stage-9' }],
+  'how-you-come-across': [{ label: 'Perfect casing: throughout the case', to: '/perfect-casing#stage-10' }],
+  'fit-interview': [{ label: 'Interview skills', to: '/interview-skills' }],
+}
 
 const STEPS = [
   ['Learn', 'One idea, in plain English.'],
@@ -47,6 +64,25 @@ function LessonChapter({ l, n }: { l: Lesson; n: number }) {
               </section>
             )}
 
+            {l.slug === 'structuring' && (
+              <section id="core-frameworks" className="scroll-mt-32">
+                <h3 className="text-[21px] font-semibold">The ten core frameworks</h3>
+                <p className="mt-1 mb-3 text-[16px] leading-relaxed text-ink-2">These ten trees cover most cases you will get. Here is the first level of each. Learn them well enough to sketch from memory, then always rename the branches for your client. Each opens as a full tree on the frameworks page.</p>
+                <CoreFrameworksMini items={CORE} />
+                <p className="mt-3 text-[14.5px] text-ink-2">Inside any branch, dig into the <Link to="/frameworks#drivers" className="font-medium text-violet-d hover:underline">second-order drivers</Link> (market, customers, competition, industry, execution, macro).</p>
+              </section>
+            )}
+
+            {l.slug === 'charts-and-exhibits' && (
+              <section className="flex flex-wrap items-center justify-between gap-4 rounded-xl border-2 border-violet bg-white p-5">
+                <div className="max-w-xl">
+                  <h3 className="text-[19px] font-semibold">Practise on 64 charts</h3>
+                  <p className="mt-1 text-ink-2">The graph library has bar, line, waterfall, scatter, Marimekko and more, each with a question, a model answer and the "so what". Do one of each type first.</p>
+                </div>
+                <LinkButton to="/graphs">Open the graph library</LinkButton>
+              </section>
+            )}
+
             {l.slug === 'how-you-come-across' && (
               <section id="exercises" className="scroll-mt-32">
                 <h3 className="text-[21px] font-semibold">The daily exercise menu</h3>
@@ -81,6 +117,9 @@ function LessonChapter({ l, n }: { l: Lesson; n: number }) {
               <LinkButton to={l.practice.to}>{l.practice.label}</LinkButton>
               {user && <Button variant="secondary" onClick={() => markLesson(l.slug, !done)}>{done ? 'Completed ✓' : 'Mark as complete'}</Button>}
             </div>
+            {MORE[l.slug] && (
+              <p className="flex flex-wrap gap-x-4 gap-y-1 text-[14px]"><span className="text-muted">Go further:</span>{MORE[l.slug].map((m) => <Link key={m.to} to={m.to} className="font-medium text-violet-d hover:underline">{m.label} →</Link>)}</p>
+            )}
           </div>
         </Gate>
       </div>

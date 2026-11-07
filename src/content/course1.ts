@@ -193,6 +193,6 @@ export const LESSONS_1: Lesson[] = [
       { q: 'What should you read before drawing any conclusion from a chart?', options: ['Only the biggest bar', 'Title, axes, units, legend and footnote', 'Nothing: speed matters most'], answer: 1, why: 'Units and footnotes change the meaning of a chart more often than you’d think.' },
       { q: 'Which is an insight rather than a description?', options: ['"The chart shows sales by region."', '"Sales fell in every region."', '"Two-thirds of the drop comes from one region, the North."'], answer: 2, why: 'It locates the problem and tells you where to dig next.' },
     ],
-    practice: { label: 'Do chart drills', to: '/drills?tab=charts' },
+    practice: { label: 'Practise in the graph library', to: '/graphs' },
   },
 ]

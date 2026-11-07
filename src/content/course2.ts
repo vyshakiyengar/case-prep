@@ -162,7 +162,7 @@ export const LESSONS_2: Lesson[] = [
     quiz: [
       { q: 'What is the best replacement for a filler word like "um"?', options: ['Speaking faster', 'A short silent pause', 'Saying "basically"'], answer: 1, why: 'Pauses read as confidence and give you thinking time.' },
     ],
-    practice: { label: 'Open the voice and mind exercises', to: '/learn/how-you-come-across#exercises' },
+    practice: { label: 'Open the interview skills routine', to: '/interview-skills' },
   },
   {
     slug: 'fit-interview',

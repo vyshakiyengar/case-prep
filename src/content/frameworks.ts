@@ -10,6 +10,7 @@ export interface Framework {
   steps: string[]
   cases: string[] // casebook slugs that use this case type
   when: string
+  core?: string // id of the matching core framework tree
 }
 
 const slugify = (s: string) => s.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '')
@@ -55,7 +56,12 @@ function parse(build: string): Pick<Framework, 'mode' | 'branches' | 'steps'> {
   return { mode: 'branches', branches, steps: [] }
 }
 
+const CORE_FOR: Record<string, string> = {
+  'Profitability': 'improve-profits', 'Revenue drop': 'improve-profits', 'Market entry': 'enter-market', 'Growth strategy': 'grow-business',
+  'M&A': 'acquire-business', 'Private equity': 'acquire-business', 'Pricing': 'price-product', 'Competitive response': 'competitive-threat',
+  'Capacity / investment': 'make-investment', 'Cost & operations': 'reduce-costs', 'Valuation': 'acquire-business', 'Product: improve / grow': 'grow-business',
+}
 export const FRAMEWORKS: Framework[] = playbook.frameworks.map((f) => ({
-  slug: slugify(f.type), type: f.type, ask: f.ask, trap: f.trap, ...parse(f.build), cases: CASES[f.type] || [], when: WHEN[f.type] || '',
+  slug: slugify(f.type), type: f.type, ask: f.ask, trap: f.trap, ...parse(f.build), cases: CASES[f.type] || [], when: WHEN[f.type] || '', core: CORE_FOR[f.type],
 }))
 export const frameworkBySlug = (s: string) => FRAMEWORKS.find((f) => f.slug === s)
