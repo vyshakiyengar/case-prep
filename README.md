@@ -2,14 +2,18 @@
 
 The interactive version of Case Prep OS, organised the way students learn:
 
-1. **Course** (`/learn`): 11 lessons in three modules. Each lesson teaches one skill, contrasts a weak and a strong answer, has a timed "try it now" exercise, a quiz, and a link to practise.
-2. **Perfect casing** (`/perfect-casing`): the 10-stage flow of a strong case with the exact words to use, plus a phrase trainer that uses spaced repetition (cards you miss come back sooner).
-3. **Frameworks** (`/frameworks`): 16 case types, each shown as a generic skeleton next to the same skeleton tailored to a real case; 20 formulas with a test-yourself mode; a plain-English glossary.
-4. **Casebook** (`/casebook`): 15 original cases with a case player, coaching checklists at every step, links to the matching lesson and perfect-casing stage, and an interviewer mode.
-5. **Drills** (`/drills`): structuring (2 min), chart reading (90 sec), mental maths (30 sec).
-6. **My prep** (sign-in): dashboard with first steps and your weakest stage, tracker, case log, FIT stories, partners, student perks.
+**Learn**
+1. **Course** (`/learn`): 11 lessons on one scrolling page. Signed-out visitors see the first part of each lesson; the rest unlocks on sign-in.
+2. **Perfect casing** (`/perfect-casing`): the 10-stage flow on one page (stages 1-2 open), plus a spaced-repetition phrase trainer (sign-in).
+3. **Frameworks** (`/frameworks`): ten tree diagrams (two open), a brainstorming toolkit, 16 case-type pages, formulas and a glossary.
 
-Everything in 1-5 is open without signing in. Google sign-in, business-school verification, perks and the admin list switch on once Firebase is connected (below). Until then, signed-in progress is saved in the visitor's browser.
+**Practise**: Casebook (`/casebook`), Graph library (`/graphs`, 64 synthetic chart exercises), Drills (`/drills`), Interview skills (`/interview-skills`).
+
+**My prep** (sign-in): dashboard, tracker, case log, FIT stories, partners, student perks.
+
+**Admin** (`/admin`, vyshakiyengar@gmail.com only, once Firebase is connected): users, sign-ups and active users per day, activation funnel, lesson completion, user list with CSV export, verified students and perks. Each signed-in user writes a small `stats/{uid}` record (counts only, no case notes) that only the admin can read. Page views for all visitors come from Vercel Web Analytics (switch it on in the Vercel project's Analytics tab).
+
+Google sign-in, business-school verification, perks and admin switch on once Firebase is connected (below). Until then, sign-in saves progress in the visitor's browser.
 
 It's a React app (Vite + TypeScript + Tailwind) that uses **Firebase** for Google sign-in, the database and hosting. Firebase's free plan is enough to launch.
 
@@ -51,7 +55,7 @@ You need [Node.js](https://nodejs.org) 20 or newer.
 **Build → Firestore Database → Create database**. Choose **production mode** and a region close to your users (e.g. `europe-west2`, London). You can't change the region later.
 
 ### 4. Make yourself the admin
-Open `firestore.rules` and replace `you@example.com` in `isAdmin()` with the same email you put in `VITE_ADMIN_EMAILS`.
+The admin email (vyshakiyengar@gmail.com) is set in `firestore.rules` and `src/lib/admin.ts`. Change both if it ever changes.
 
 ### 5. Deploy
 ```bash
@@ -111,6 +115,8 @@ npm run test:rules
 | Pages | `src/pages/` (Landing, Today, Tracker, CaseLog, Casebook, CasePlayer, Drills, Partners, Playbook, Perks, Admin…) |
 | Firebase and demo data layer | `src/lib/backend.ts` |
 | Dashboard maths | `src/lib/stats.ts` |
+| Framework trees | `src/content/frameworkTrees.ts` |
+| Firebase web config | `src/lib/firebaseConfig.ts` (or `VITE_FIREBASE_*` env vars) |
 | Course lessons | `src/content/course.ts`, `course1.ts`, `course2.ts` |
 | Perfect casing stages and trainer cards | `src/content/perfectCasing.ts` |
 | Glossary, frameworks | `src/content/glossary.ts`, `frameworks.ts` |

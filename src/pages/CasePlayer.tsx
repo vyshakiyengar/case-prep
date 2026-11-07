@@ -52,7 +52,7 @@ function Coach({ kind }: { kind: Kind }) {
         ))}
       </ul>
       <div className="mt-2 flex flex-wrap gap-x-5 gap-y-1 text-[13.5px] font-medium">
-        <Link to={`/perfect-casing?tab=flow&stage=${PC[kind]}`} className="text-teal-d hover:underline">What to say here (perfect casing)</Link>
+        <Link to={`/perfect-casing#stage-${PC[kind]}`} className="text-teal-d hover:underline">What to say here (perfect casing)</Link>
         <Link to={`/learn/${c.lesson}`} className="text-violet-d hover:underline">Stuck? Lesson: {c.lessonTitle}</Link>
       </div>
     </div>
@@ -115,7 +115,7 @@ export default function CasePlayer() {
           <p className="text-ink-2">{c.sub}</p>
           <div className="mt-1 flex flex-wrap items-center gap-x-4 gap-y-1 text-[13px] text-muted">
             <span>{c.type}</span><span>{c.industry}, {c.geo}</span><Difficulty d={c.diff} /><span>{c.fmt}</span>
-            <Link to="/frameworks?tab=glossary" className="text-violet-d hover:underline">Unfamiliar term? Glossary</Link>
+            <Link to="/frameworks#glossary" className="text-violet-d hover:underline">Unfamiliar term? Glossary</Link>
           </div>
         </div>
         <div className="flex flex-col items-end gap-2">

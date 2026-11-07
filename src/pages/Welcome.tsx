@@ -9,7 +9,7 @@ export default function Welcome() {
   const nav = useNavigate()
   const [params] = useSearchParams()
   const next = params.get('next')
-  const [name, setName] = useState(data?.profile?.name || user?.name || '')
+  const [name, setName] = useState((n => n === 'You' ? '' : n)(data?.profile?.name || user?.name || ''))
   const [start, setStart] = useState(data?.profile?.startDate || todayIso())
   const [iv, setIv] = useState(data?.profile?.interviewDate || addDays(todayIso(), 42))
   const [saving, setSaving] = useState(false)

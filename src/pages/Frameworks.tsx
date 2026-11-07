@@ -1,9 +1,13 @@
 import { useEffect, useState } from 'react'
-import { Link, Navigate, useParams, useSearchParams } from 'react-router-dom'
+import { Link, Navigate, useParams } from 'react-router-dom'
 import { FRAMEWORKS, frameworkBySlug } from '../content/frameworks'
 import { loadCases, playbook } from '../content'
 import type { CaseDef } from '../content'
-import { Button, LinkButton, PageHeader, Tabs } from '../components/ui'
+import { Button, LinkButton, PageHeader } from '../components/ui'
+import { useStore } from '../lib/store'
+import { TREES, SPLITS, FIND_OUT, BUILD_PARTNER_BUY } from '../content/frameworkTrees'
+import { FrameworkBlock } from '../components/FrameworkTree'
+import { Gate, StickyNav, useScrollToTarget } from '../components/Learning'
 import { StructureTree } from '../components/CaseParts'
 import { GLOSSARY } from '../content/glossary'
 
@@ -31,48 +35,95 @@ function Formulas() {
   )
 }
 
+const GUIDE = [
+  ['Read the question', 'Is the client trying to fix something or decide something?'],
+  ['Pick the closest tree', 'Use it as a starting point, not a script.'],
+  ['Make it specific', 'Rename every branch for this client, product and market.'],
+  ['Say where you\'d start', 'Name the branch you\'d test first, and why.'],
+]
+
 export function FrameworksIndex() {
-  const [params, setParams] = useSearchParams()
-  const tab = (params.get('tab') as 'types' | 'formulas' | 'glossary') || 'types'
+  const { user } = useStore()
+  useScrollToTarget()
+  const free = TREES.slice(0, 2), locked = TREES.slice(2)
+  const nav = [
+    ...TREES.map((t, i) => ({ id: t.id, label: t.title.replace(/ \(.*\)/, ''), locked: !user && i >= 2 })),
+    { id: 'toolkit', label: 'Brainstorming toolkit' }, { id: 'case-types', label: 'All 16 case types' },
+    { id: 'formulas', label: 'Formulas' }, { id: 'glossary', label: 'Glossary' },
+  ]
   return (
     <>
-      <PageHeader title="Frameworks" intro="The building blocks for 16 kinds of case, and 20 formulas. Learn them, then build a structure that fits the client in front of you. Never recite a framework in an interview." />
-      <section className="mb-6 rounded-xl border border-line bg-white p-5">
-        <h2 className="text-[20px] font-semibold">How to learn a framework without memorising a script</h2>
-        <p className="mt-1 text-[14.5px] text-muted">A framework is a starting point, not the final answer. Your job is to create a structure that fits the client and the exact question.</p>
-        <ol className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-          {[
-            ['1. Read the question', 'What is the client trying to decide or fix? Is this a diagnosis or a decision?'],
-            ['2. Study the visual tree', 'See how a big question breaks into smaller questions that can be tested with evidence.'],
-            ['3. Make it specific', 'Rename each branch with the client, product, customer and geography in mind.'],
-            ['4. State a hypothesis', 'Explain which branch you would test first, why it matters and what data you need.'],
-          ].map(([title,detail]) => <li key={title} className="rounded-lg bg-canvas p-3"><h3 className="font-sans text-[14px] font-semibold text-ink">{title}</h3><p className="mt-1 text-[13.5px] text-muted">{detail}</p></li>)}
-        </ol>
-        <p className="mt-4 text-[14px] text-ink-2">Example: if a coffee chain's profit fell after adding delivery, don't simply list “revenue and cost.” Ask whether delivery orders are replacing profitable store sales, how commissions change profit per order and whether delivery attracts new customers. <Link to="/drills?tab=structure" className="font-medium text-violet-d hover:underline">Try a two-minute structure drill →</Link></p>
-      </section>
-      <Tabs value={tab} onChange={(v) => setParams({ tab: v })} items={[{ value: 'types', label: '16 case types' }, { value: 'formulas', label: '20 formulas' }, { value: 'glossary', label: 'Glossary' }]} />
-      {tab === 'glossary' ? (
-        <dl className="divide-y divide-line overflow-hidden rounded-xl border border-line bg-white">
-          {GLOSSARY.map((g) => (
-            <div key={g.term} className="grid gap-1 px-5 py-3.5 sm:grid-cols-[190px_1fr] sm:gap-4">
-              <dt className="font-serif text-[17px] font-semibold text-ink">{g.term}</dt>
-              <dd><span className="text-ink-2">{g.plain}</span> <span className="block text-[14px] text-muted">For example: {g.example}</span></dd>
-            </div>
-          ))}
-        </dl>
-      ) : tab === 'formulas' ? <Formulas /> : (
-        <ul className="grid gap-3 md:grid-cols-2">
-          {FRAMEWORKS.map((f) => (
-            <li key={f.slug}>
-              <Link to={`/frameworks/${f.slug}`} className="block h-full rounded-xl border border-line bg-white p-5 hover:border-faint">
-                <h2 className="text-[19px] font-semibold">{f.type}</h2>
-                <p className="mt-1 text-[14.5px] text-muted">{f.when}</p>
-                <p className="mt-2 text-[14px] text-ink-2"><span className="text-muted">Ask first:</span> {f.ask}</p>
-              </Link>
-            </li>
-          ))}
-        </ul>
-      )}
+      <PageHeader title="Frameworks" intro="Ten tree diagrams for the cases you'll meet most, then a brainstorming toolkit, the formulas and a glossary. Learn the shape of each tree, then build your own version for the client in front of you. Never recite one word for word." />
+      <ol className="mb-5 grid gap-2 sm:grid-cols-2 lg:grid-cols-4">
+        {GUIDE.map(([t, d], i) => (
+          <li key={t} className="rounded-lg border border-line bg-white px-4 py-3">
+            <div className="text-[14px] font-semibold text-ink"><span className="mr-1.5 text-teal-d">{i + 1}</span>{t}</div>
+            <p className="mt-0.5 text-[13.5px] text-muted">{d}</p>
+          </li>
+        ))}
+      </ol>
+      <StickyNav items={nav} gateId="frameworks-gate" />
+      <div className="space-y-14">
+        {free.map((f, i) => <FrameworkBlock key={f.id} f={f} n={i + 1} />)}
+        <Gate id="frameworks-gate" title="Sign in to see all ten trees" body="Market entry, new products, acquisitions, competitive response, cost reduction, pricing, investment and market sizing. Free.">
+          <div className="space-y-14">{locked.map((f, i) => <FrameworkBlock key={f.id} f={f} n={i + 3} />)}</div>
+        </Gate>
+
+        <section id="toolkit" className="scroll-mt-32">
+          <h2 className="text-[26px] font-semibold">Brainstorming toolkit</h2>
+          <p className="mt-1 text-muted">When the interviewer asks "what else could they do?", you still need buckets. These simple splits work for almost any question.</p>
+          <ul className="mt-4 flex flex-wrap gap-2">{SPLITS.map((s) => <li key={s} className="rounded-full border border-teal bg-white px-3 py-1.5 text-[14px] text-ink">{s}</li>)}</ul>
+          <h3 className="mt-7 text-[19px] font-semibold">"How would you find that out?"</h3>
+          <div className="mt-3 grid gap-3 sm:grid-cols-3">
+            {FIND_OUT.map((b) => (
+              <div key={b.head} className="rounded-lg border border-line bg-white p-4">
+                <div className="text-[14.5px] font-semibold text-ink">{b.head}</div>
+                <ul className="mt-1.5 list-disc space-y-0.5 pl-5 text-[14px] text-ink-2">{b.c.map((x) => <li key={x}>{x}</li>)}</ul>
+              </div>
+            ))}
+          </div>
+          <h3 className="mt-7 text-[19px] font-semibold">Build, partner or buy?</h3>
+          <div className="mt-3 overflow-x-auto rounded-xl border border-line bg-white">
+            <table className="w-full min-w-[560px] text-left text-[14px]">
+              <thead><tr className="border-b border-line text-[12.5px] text-muted"><th className="px-4 py-2 font-medium">Route</th><th className="px-4 py-2 font-medium">Good because</th><th className="px-4 py-2 font-medium">Watch out for</th></tr></thead>
+              <tbody>{BUILD_PARTNER_BUY.map((r) => <tr key={r.way} className="border-b border-line last:border-0"><td className="px-4 py-2.5 font-semibold text-ink">{r.way}</td><td className="px-4 py-2.5 text-ink-2">{r.pros}</td><td className="px-4 py-2.5 text-ink-2">{r.cons}</td></tr>)}</tbody>
+            </table>
+          </div>
+        </section>
+
+        <section id="case-types" className="scroll-mt-32">
+          <h2 className="text-[26px] font-semibold">All 16 case types: what to ask first</h2>
+          <p className="mt-1 mb-4 text-muted">Open any one for its skeleton, the same skeleton tailored to a real case, and the trap to avoid.</p>
+          <ul className="grid gap-3 md:grid-cols-2">
+            {FRAMEWORKS.map((f) => (
+              <li key={f.slug}>
+                <Link to={`/frameworks/${f.slug}`} className="block h-full rounded-xl border border-line bg-white p-4 hover:border-faint">
+                  <h3 className="font-sans text-[16px] font-semibold text-ink">{f.type}</h3>
+                  <p className="mt-0.5 text-[14px] text-muted">{f.when}</p>
+                  <p className="mt-1.5 text-[14px] text-ink-2"><span className="text-muted">Ask first:</span> {f.ask}</p>
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </section>
+
+        <section id="formulas" className="scroll-mt-32">
+          <h2 className="mb-3 text-[26px] font-semibold">Formulas</h2>
+          <Formulas />
+        </section>
+
+        <section id="glossary" className="scroll-mt-32">
+          <h2 className="mb-3 text-[26px] font-semibold">Glossary</h2>
+          <dl className="divide-y divide-line overflow-hidden rounded-xl border border-line bg-white">
+            {GLOSSARY.map((g) => (
+              <div key={g.term} className="grid gap-1 px-5 py-3.5 sm:grid-cols-[190px_1fr] sm:gap-4">
+                <dt className="font-serif text-[17px] font-semibold text-ink">{g.term}</dt>
+                <dd><span className="text-ink-2">{g.plain}</span> <span className="block text-[14px] text-muted">For example: {g.example}</span></dd>
+              </div>
+            ))}
+          </dl>
+        </section>
+      </div>
     </>
   )
 }
@@ -88,7 +139,7 @@ export default function Framework() {
   const i = FRAMEWORKS.indexOf(f)
   return (
     <div className="max-w-4xl">
-      <Link to="/frameworks" className="text-[13.5px] text-muted hover:text-ink">Frameworks</Link>
+      <Link to="/frameworks#case-types" className="text-[13.5px] text-muted hover:text-ink">Frameworks</Link>
       <h1 className="mt-1 text-[34px] leading-tight font-semibold">{f.type}</h1>
       <p className="mt-1 text-[17px] text-muted">{f.when}</p>
 

@@ -9,6 +9,7 @@ import '@fontsource/ibm-plex-sans/600.css'
 import './index.css'
 import App from './App'
 import { StoreProvider } from './lib/store'
+import { Analytics } from '@vercel/analytics/react'
 
 // Preview builds (VITE_MEMORY_ROUTER=1) keep navigation inside the page for hosts without URL rewrites
 const Router = import.meta.env.VITE_MEMORY_ROUTER ? MemoryRouter : BrowserRouter
@@ -18,6 +19,7 @@ createRoot(document.getElementById('root')!).render(
     <Router>
       <StoreProvider>
         <App />
+        <Analytics />
       </StoreProvider>
     </Router>
   </StrictMode>,

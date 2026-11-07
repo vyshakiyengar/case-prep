@@ -45,7 +45,7 @@ function FirstSteps() {
   const hasCase = data!.cases.length > 0
   const steps = [
     { t: 'Do the first three lessons', d: 'How cases work, the opening, and structuring. About 30 minutes.', done: ['how-case-interviews-work', 'the-opening', 'structuring'].every((s) => learned.has(s)), to: '/learn' },
-    { t: 'Train your first perfect-casing phrases', d: 'A 5-minute session. Say each line out loud.', done: trained >= 5, to: '/perfect-casing?tab=train' },
+    { t: 'Train your first perfect-casing phrases', d: 'A 5-minute session. Say each line out loud.', done: trained >= 5, to: '/perfect-casing#trainer' },
     { t: 'Do case 1 alone, with the timer', d: 'Coastal Brew, an easy profitability case. Talk out loud.', done: hasCase, to: '/casebook/coastal-brew' },
     { t: 'Score it and write one fix', d: 'The last step of the case saves it to your case log.', done: hasCase && data!.cases.some((c) => c.fix), to: '/cases' },
   ]

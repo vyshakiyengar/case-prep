@@ -5,10 +5,10 @@ service cloud.firestore {
     function signedIn() { return request.auth != null; }
     function isSelf(uid) { return signedIn() && request.auth.uid == uid; }
 
-    // >>> Put your own Google sign-in email here (and in VITE_ADMIN_EMAILS in .env.local) <<<
+    // The site owner. Keep in sync with DEFAULT_ADMINS in src/lib/admin.ts
     function isAdmin() {
       return signedIn() && request.auth.token.email_verified == true
-        && request.auth.token.email in ['you@example.com'];
+        && request.auth.token.email in ['vyshakiyengar@gmail.com'];
     }
     function isVerifiedStudent() {
       return signedIn() && exists(/databases/$(database)/documents/students/$(request.auth.uid));
@@ -52,6 +52,12 @@ service cloud.firestore {
         && ('email' in request.auth.token.firebase.identities)
         && request.resource.data.schoolEmail in request.auth.token.firebase.identities['email'];
       allow delete: if isSelf(uid) || isAdmin();
+    }
+
+    // Activity stats: each user writes their own; only the admin can read them (analytics)
+    match /stats/{uid} {
+      allow read: if isAdmin();
+      allow write: if isSelf(uid) && request.resource.data.uid == uid;
     }
 
     // Perks: visible to verified students, managed by you from /admin

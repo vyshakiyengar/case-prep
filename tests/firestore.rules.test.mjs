@@ -4,7 +4,7 @@ import { readFileSync } from 'node:fs'
 import { initializeTestEnvironment, assertSucceeds, assertFails } from '@firebase/rules-unit-testing'
 import { doc, getDoc, setDoc, updateDoc, collection, getDocs, query, where } from 'firebase/firestore'
 
-const ADMIN = 'you@example.com' // keep in sync with firestore.rules
+const ADMIN = 'vyshakiyengar@gmail.com' // keep in sync with firestore.rules
 let env
 before(async () => {
   env = await initializeTestEnvironment({ projectId: 'demo-case-prep-os', firestore: { rules: readFileSync('firestore.rules', 'utf8') } })

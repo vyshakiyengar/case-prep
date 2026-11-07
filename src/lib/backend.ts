@@ -1,4 +1,5 @@
-import type { CaseEntry, DayEntry, DrillEntry, Invite, Perk, Profile, StudentRecord, Story, Summary } from './types'
+import type { CaseEntry, DayEntry, DrillEntry, Invite, Perk, Profile, StudentRecord, Story, Summary, UserStats } from './types'
+import { FIREBASE_CONFIG } from './firebaseConfig'
 import { uid as newId } from './dates'
 
 export interface AuthUser { uid: string; name: string; email?: string; photoURL?: string }
@@ -34,24 +35,29 @@ export interface Backend {
   listStudents(): Promise<StudentRecord[]>
   savePerk(p: Perk): Promise<void>
   deletePerk(id: string): Promise<void>
+  saveStats(s: UserStats): Promise<void>
+  listStats(): Promise<UserStats[]>
 }
 
 export class SchoolLinkError extends Error {}
 
 const env = import.meta.env
-export const firebaseConfigured = Boolean(env.VITE_FIREBASE_API_KEY && env.VITE_FIREBASE_PROJECT_ID)
+// Firebase web config. These values are public by design (they ship to every browser).
+// Fill src/lib/firebaseConfig.ts, or set VITE_FIREBASE_* environment variables.
+const fb = {
+  apiKey: env.VITE_FIREBASE_API_KEY || FIREBASE_CONFIG.apiKey,
+  authDomain: env.VITE_FIREBASE_AUTH_DOMAIN || FIREBASE_CONFIG.authDomain,
+  projectId: env.VITE_FIREBASE_PROJECT_ID || FIREBASE_CONFIG.projectId,
+  appId: env.VITE_FIREBASE_APP_ID || FIREBASE_CONFIG.appId,
+}
+export const firebaseConfigured = Boolean(fb.apiKey && fb.projectId)
 
 /* ------------------------------------------------------------------ Firebase */
 async function makeFirebase(): Promise<Backend> {
   const { initializeApp } = await import('firebase/app')
   const authMod = await import('firebase/auth')
   const fs = await import('firebase/firestore')
-  const app = initializeApp({
-    apiKey: env.VITE_FIREBASE_API_KEY,
-    authDomain: env.VITE_FIREBASE_AUTH_DOMAIN,
-    projectId: env.VITE_FIREBASE_PROJECT_ID,
-    appId: env.VITE_FIREBASE_APP_ID,
-  })
+  const app = initializeApp(fb)
   const auth = authMod.getAuth(app)
   const db = fs.getFirestore(app)
   const col = (uid: string, name: string) => fs.collection(db, 'users', uid, name)
@@ -149,6 +155,10 @@ async function makeFirebase(): Promise<Backend> {
     },
     savePerk: (p) => fs.setDoc(fs.doc(db, 'perks', p.id), clean(p)),
     deletePerk: (id) => fs.deleteDoc(fs.doc(db, 'perks', id)),
+    saveStats: (st) => fs.setDoc(fs.doc(db, 'stats', st.uid), { ...clean(st), activeDays: fs.arrayUnion(...st.activeDays) }, { merge: true }),
+    async listStats() {
+      const s = await fs.getDocs(fs.collection(db, 'stats')); return s.docs.map((d) => d.data() as UserStats)
+    },
   }
 }
 
@@ -160,7 +170,7 @@ const DEMO_PERKS: Perk[] = [
 ]
 
 const KEY = 'cpos-device-v2'
-type DemoState = { signedIn: boolean; data: UserData; summaries: Record<string, Summary>; invites: Record<string, Invite>; student?: StudentRecord | null; perks?: Perk[] }
+type DemoState = { signedIn: boolean; data: UserData; summaries: Record<string, Summary>; invites: Record<string, Invite>; student?: StudentRecord | null; perks?: Perk[]; stats?: UserStats }
 
 function seed(): DemoState {
   return { signedIn: false, data: { profile: null, days: {}, cases: [], drills: [], stories: [] }, summaries: {}, invites: {} }
@@ -205,6 +215,8 @@ function makeDemo(): Backend {
     async listStudents() { return state.student ? [state.student] : [] },
     savePerk: (p) => upd((s) => { s.perks = [...(s.perks ?? DEMO_PERKS).filter((x) => x.id !== p.id), p] }),
     deletePerk: (id) => upd((s) => { s.perks = (s.perks ?? DEMO_PERKS).filter((x) => x.id !== id) }),
+    saveStats: (st) => upd((s) => { s.stats = { ...st, activeDays: Array.from(new Set([...(s.stats?.activeDays || []), ...st.activeDays])).sort() } }),
+    async listStats() { return state.stats ? [state.stats] : [] },
   }
 }
 

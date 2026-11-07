@@ -16,7 +16,6 @@ import Perks from './pages/Perks'
 import VerifySchool from './pages/VerifySchool'
 import Privacy from './pages/Privacy'
 import Learn from './pages/Learn'
-import Lesson from './pages/Lesson'
 
 const Admin = lazy(() => import('./pages/Admin'))
 const Casebook = lazy(() => import('./pages/Casebook'))
@@ -62,7 +61,7 @@ export default function App() {
         <Route element={<AppShell />}>
           {/* open to everyone */}
           <Route path="/learn" element={<Learn />} />
-          <Route path="/learn/:slug" element={<Lesson />} />
+          <Route path="/learn/:slug" element={<Learn />} />
           <Route path="/perfect-casing" element={<PerfectCasing />} />
           <Route path="/frameworks" element={<FrameworksIndex />} />
           <Route path="/frameworks/:slug" element={<Framework />} />

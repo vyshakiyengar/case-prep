@@ -126,3 +126,23 @@ export interface Perk {
   code?: string
   order?: number
 }
+
+/** Small per-user activity record, written by each user and readable only by the admin. */
+export interface UserStats {
+  uid: string
+  name: string
+  email?: string
+  createdAt: number
+  lastActive: number
+  activeDays: string[] // YYYY-MM-DD (merged on write)
+  learned: string[]
+  lessons: number
+  cases: number
+  drills: number
+  stories: number
+  trainerCards: number
+  trainerMastered: number
+  habitDays: number
+  interviewDate?: string
+  updatedAt: number
+}

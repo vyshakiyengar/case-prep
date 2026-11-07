@@ -56,7 +56,7 @@ export default function Landing() {
       <header className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-5 py-5 sm:px-8">
         <Logo />
         <nav className="flex items-center gap-5 text-[14.5px] font-medium text-muted" aria-label="Main">
-          <Link to="/learn" className="hidden hover:text-ink sm:inline">Start here</Link>
+          <Link to="/learn" className="hidden hover:text-ink sm:inline">Course</Link>
           <Link to="/perfect-casing" className="hidden hover:text-ink md:inline">Perfect casing</Link>
           <Link to="/frameworks" className="hidden hover:text-ink sm:inline">Frameworks</Link>
           <Link to="/casebook" className="hidden hover:text-ink sm:inline">Casebook</Link>

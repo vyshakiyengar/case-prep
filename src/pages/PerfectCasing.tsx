@@ -1,11 +1,13 @@
 import { useMemo, useState } from 'react'
-import { Link, useSearchParams } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import { CARDS, STAGES_PC, stageByN } from '../content/perfectCasing'
 import type { Card } from '../content/perfectCasing'
 import { lessonBySlug } from '../content/course'
 import { useStore } from '../lib/store'
 import { addDays, todayIso } from '../lib/dates'
-import { Button, Meter, PageHeader, Section, Tabs } from '../components/ui'
+import { Button, Meter, PageHeader, Section } from '../components/ui'
+import { Gate, StickyNav, useScrollToTarget } from '../components/Learning'
+import { SignInButton } from './SignIn'
 import { Countdown } from '../components/Timer'
 
 type Boxes = Record<string, { box: number; due: string }>
@@ -19,54 +21,38 @@ function useBoxes(): [Boxes, (b: Boxes) => void] {
   return [local, (b) => { setLocal(b); try { localStorage.setItem(LS, JSON.stringify(b)) } catch { /* ignore */ } }]
 }
 
-function Flow({ onTrain }: { onTrain: (stage: number) => void }) {
-  const [params, setParams] = useSearchParams()
-  const n = Number(params.get('stage') || 1)
-  const s = stageByN(n)
+function Stage({ s, onTrain }: { s: ReturnType<typeof stageByN>; onTrain: (n: number) => void }) {
   const lesson = lessonBySlug(s.lesson)
   return (
-    <>
-      <ol className="mb-6 flex flex-wrap gap-2" aria-label="Stages of a case">
-        {STAGES_PC.map((x) => (
-          <li key={x.n}>
-            <button onClick={() => setParams({ tab: 'flow', stage: String(x.n) })} aria-current={x.n === n ? 'step' : undefined}
-              className={`flex items-center gap-2 rounded-full border px-3 py-1.5 text-[14px] ${x.n === n ? 'border-ink bg-ink text-white' : 'border-line bg-white text-ink-2 hover:border-faint'}`}>
-              <span className={`flex h-5 w-5 items-center justify-center rounded-full text-[11px] font-semibold ${x.n === n ? 'bg-white text-ink' : 'bg-canvas text-muted'}`}>{x.n}</span>{x.title}
-            </button>
+    <article id={`stage-${s.n}`} className="scroll-mt-32 rounded-2xl border border-line bg-white p-5 sm:p-7">
+      <div className="flex items-baseline gap-3">
+        <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-ink font-serif text-[16px] font-semibold text-white">{s.n}</span>
+        <div>
+          <h2 className="text-[26px] leading-tight font-semibold">{s.title}</h2>
+          <p className="mt-1 text-[16px] text-ink-2">{s.why}</p>
+        </div>
+      </div>
+      <ol className="mt-6 space-y-5">
+        {s.moments.map((m) => (
+          <li key={m.name} className="grid gap-2 border-t border-line pt-5 first:border-t-0 first:pt-0 md:grid-cols-[1fr_1.1fr] md:gap-6">
+            <div>
+              <h3 className="font-sans text-[16px] font-semibold text-ink">{m.name}</h3>
+              <p className="mt-1 text-[15px] text-ink-2">{m.do}</p>
+            </div>
+            {m.say && (
+              <blockquote className="graph-paper rounded-lg border-l-4 border-teal px-4 py-3 font-serif text-[17px] leading-relaxed text-ink">
+                <span className="mb-1 block font-sans text-[12.5px] font-medium text-teal-d">Say this</span>{m.say}
+              </blockquote>
+            )}
           </li>
         ))}
       </ol>
-
-      <article className="rounded-xl border border-line bg-white p-5 sm:p-7">
-        <p className="text-[14px] text-muted">Stage {s.n} of 10</p>
-        <h2 className="text-[28px] font-semibold">{s.title}</h2>
-        <p className="mt-1 text-[16px] text-ink-2">{s.why}</p>
-        <ol className="mt-6 space-y-5">
-          {s.moments.map((m) => (
-            <li key={m.name} className="grid gap-2 border-t border-line pt-5 first:border-t-0 first:pt-0 md:grid-cols-[1fr_1.1fr] md:gap-6">
-              <div>
-                <h3 className="font-sans text-[16px] font-semibold text-ink">{m.name}</h3>
-                <p className="mt-1 text-[15px] text-ink-2">{m.do}</p>
-              </div>
-              {m.say && (
-                <blockquote className="graph-paper rounded-lg border-l-4 border-teal px-4 py-3 font-serif text-[17px] leading-relaxed text-ink">
-                  <span className="mb-1 block font-sans text-[12.5px] font-medium text-teal-d">Say this</span>{m.say}
-                </blockquote>
-              )}
-            </li>
-          ))}
-        </ol>
-        <p className="mt-6 rounded-lg bg-signal-l px-4 py-3 text-[15px] text-signal-d"><b className="font-semibold">Common mistake:</b> {s.mistake}</p>
-        <div className="mt-6 flex flex-wrap gap-2 border-t border-line pt-5">
-          <Button onClick={() => onTrain(s.n)}>Train this stage's phrases</Button>
-          {lesson && <Link to={`/learn/${lesson.slug}`} className="inline-flex items-center rounded-lg border border-line bg-white px-4 py-2 text-[14px] font-medium text-ink hover:border-faint">Lesson: {lesson.title}</Link>}
-          <div className="ml-auto flex gap-2">
-            {n > 1 && <Button variant="quiet" onClick={() => setParams({ tab: 'flow', stage: String(n - 1) })}>Previous stage</Button>}
-            {n < 10 && <Button variant="secondary" onClick={() => setParams({ tab: 'flow', stage: String(n + 1) })}>Next stage</Button>}
-          </div>
-        </div>
-      </article>
-    </>
+      <p className="mt-6 rounded-lg bg-signal-l px-4 py-3 text-[15px] text-signal-d"><b className="font-semibold">Common mistake:</b> {s.mistake}</p>
+      <div className="mt-5 flex flex-wrap gap-2">
+        <Button onClick={() => onTrain(s.n)}>Train these phrases</Button>
+        {lesson && <Link to={`/learn/${lesson.slug}`} className="inline-flex items-center rounded-lg border border-line bg-white px-4 py-2 text-[14px] font-medium text-ink hover:border-faint">Lesson: {lesson.title}</Link>}
+      </div>
+    </article>
   )
 }
 
@@ -166,15 +152,51 @@ function Trainer({ stage }: { stage: number | null }) {
   )
 }
 
+const HOW = [
+  ['Read the flow', 'Ten stages, in the order they happen in a real interview. Each has the exact words to use.'],
+  ['Say the lines out loud', 'Reading isn\'t enough. Under pressure you only say what you\'ve already said many times.'],
+  ['Train for 5 minutes a day', 'The trainer at the bottom tests you on the phrases. Ones you miss come back sooner.'],
+]
+
 export default function PerfectCasing() {
-  const [params, setParams] = useSearchParams()
-  const tab = (params.get('tab') as 'flow' | 'train') || 'flow'
-  const stage = params.get('trainStage') ? Number(params.get('trainStage')) : null
+  const { user } = useStore()
+  const [stage, setStage] = useState<number | null>(null)
+  useScrollToTarget()
+  const train = (n: number | null) => { setStage(n); setTimeout(() => document.getElementById('trainer')?.scrollIntoView({ behavior: 'smooth' }), 30) }
+  const nav = [...STAGES_PC.map((x) => ({ id: `stage-${x.n}`, label: `${x.n}. ${x.title.replace(/ \(.*\)/, "")}`, locked: !user && x.n > 2 })), { id: 'trainer', label: 'Phrase trainer', locked: !user }]
   return (
     <>
-      <PageHeader title="Perfect casing" intro="The choreography of a strong case, from the first sentence to the recommendation, with the exact words to use at each moment. Learn the flow, then train the phrases until they come out on their own." />
-      <Tabs value={tab} onChange={(v) => setParams({ tab: v })} items={[{ value: 'flow', label: 'The 10-stage flow' }, { value: 'train', label: 'Phrase trainer' }]} />
-      {tab === 'flow' ? <Flow onTrain={(n) => setParams({ tab: 'train', trainStage: String(n) })} /> : <Trainer key={stage ?? 'all'} stage={stage} />}
+      <PageHeader title="Perfect casing" intro="The choreography of a strong case, from the first sentence to the recommendation, with the exact words to use at each moment. Read it top to bottom once, then train the phrases daily until they come out on their own." />
+      <ol className="mb-5 grid gap-2 sm:grid-cols-3">
+        {HOW.map(([t, d], i) => (
+          <li key={t} className="rounded-lg border border-line bg-white px-4 py-3">
+            <div className="text-[14px] font-semibold text-ink"><span className="mr-1.5 text-teal-d">{i + 1}</span>{t}</div>
+            <p className="mt-0.5 text-[13.5px] text-muted">{d}</p>
+          </li>
+        ))}
+      </ol>
+      <StickyNav items={nav} gateId="pc-gate" />
+      <div className="space-y-6">
+        {STAGES_PC.slice(0, 2).map((s) => <Stage key={s.n} s={s} onTrain={train} />)}
+        <Gate id="pc-gate" title="Sign in to see all 10 stages" body="Stages 3 to 10 cover clarifying, structuring, driving the case, charts, maths, brainstorming, the recommendation, and habits that matter throughout. Free.">
+          <div className="space-y-6">{STAGES_PC.slice(2).map((s) => <Stage key={s.n} s={s} onTrain={train} />)}</div>
+        </Gate>
+        <section id="trainer" className="scroll-mt-32 pt-4">
+          <h2 className="mb-1 text-[28px] font-semibold">Phrase trainer</h2>
+          <p className="mb-4 text-muted">Five minutes a day. You see a moment from an interview, say your line out loud, then compare it with a model answer.</p>
+          {user ? (
+            <>
+              {stage && <p className="mb-3 text-[14px] text-muted">Training stage {stage} only. <button className="font-medium text-violet-d hover:underline" onClick={() => setStage(null)}>Train all stages instead</button></p>}
+              <Trainer key={stage ?? 'all'} stage={stage} />
+            </>
+          ) : (
+            <div className="flex flex-wrap items-center justify-between gap-4 rounded-xl border border-line bg-white p-5">
+              <p className="max-w-xl text-ink-2">The trainer remembers which phrases you've nailed and which you keep missing, so it needs you to sign in.</p>
+              <SignInButton label="Sign in to train" />
+            </div>
+          )}
+        </section>
+      </div>
     </>
   )
 }

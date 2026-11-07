@@ -2,7 +2,7 @@ import { createContext, useCallback, useContext, useEffect, useMemo, useRef, use
 import type { ReactNode } from 'react'
 import { getBackend } from './backend'
 import type { AuthUser, Backend, UserData } from './backend'
-import type { CaseEntry, DayEntry, DrillEntry, Profile, Story, Summary } from './types'
+import type { CaseEntry, DayEntry, DrillEntry, Profile, Story, Summary, UserStats } from './types'
 import { caseOverall, last7, weakestStage } from './stats'
 import { todayIso } from './dates'
 
@@ -81,6 +81,25 @@ export function StoreProvider({ children }: { children: ReactNode }) {
       }
       backend.saveSummary(summary).catch(() => {})
     }, 1500)
+    return () => clearTimeout(t)
+  }, [backend, user, data])
+
+  // activity stats for the admin dashboard (aggregates only, no case notes)
+  useEffect(() => {
+    if (!backend || !user || !data?.profile) return
+    const t = setTimeout(() => {
+      const p = data.profile!
+      const boxes = Object.values(p.trainer || {})
+      const stats: UserStats = {
+        uid: user.uid, name: p.name || user.name, email: user.email, createdAt: p.createdAt || Date.now(),
+        lastActive: Date.now(), activeDays: [todayIso()], learned: p.learned || [], lessons: (p.learned || []).length,
+        cases: data.cases.length, drills: data.drills.length, stories: data.stories.length,
+        trainerCards: boxes.length, trainerMastered: boxes.filter((b) => b.box >= 3).length,
+        habitDays: Object.values(data.days).filter((d) => Object.values(d.habits).some(Boolean)).length,
+        interviewDate: p.interviewDate, updatedAt: Date.now(),
+      }
+      backend.saveStats(stats).catch(() => {})
+    }, 3000)
     return () => clearTimeout(t)
   }, [backend, user, data])
 
