@@ -39,7 +39,7 @@ function makeExercises(): Exercise[] {
         const labels = ['Small firms', 'Mid-size', 'Enterprise', 'Public sector']
         out.push({ ...base, values, second, third, labels, question: 'Which customer group produces the most direct-channel revenue? Explain why the tallest section might not be the largest opportunity.', answer: labels[win] + ' leads: ' + values[win] + ' × ' + second[win] + '% = £' + fmt(calc[win]) + 'm. In a Marimekko chart, the area of each rectangle represents the absolute amount, not its height alone.', followUp: 'Check profit margin by customer group before choosing where to invest.' })
       } else if (f === 1) {
-        const values = [2.1 + .1 * i, 1.2 + .15 * i, 1.6 + .09 * i, 2.3 + .05 * i, 1.1 + .12 * i]
+        const values = [2.1 + .1 * i, 1.2 + .15 * i, 1.6 + .09 * i, 2.3 + .05 * i, 1.1 + .12 * i].map((x) => Math.round(x * 100) / 100)
         const second = [12 + i, 26 + i % 3, 20 + i % 4, 18 + i % 4, 32 - i]
         const calc = values.map((v, j) => v * second[j] / 100), win = maxIndex(calc)
         const labels = ['Core', 'Premium', 'Digital', 'Managed', 'Custom']
@@ -56,14 +56,14 @@ function makeExercises(): Exercise[] {
         const third = [65 + 2 * i, 45 + 5 * i, 80 - 3 * i, 30 + i, 70]
         const calc = second.map((v, j) => v * third[j]), win = maxIndex(calc)
         const labels = ['Market A', 'Market B', 'Market C', 'Market D', 'Market E']
-        out.push({ ...base, values, second, third, labels, question: 'Which market has the largest simple margin × demand opportunity proxy?', answer: labels[win] + ' leads at ' + calc[win] + ' index-points (' + second[win] + '% margin × ' + third[win] + ' demand index). The bubble area shows market demand, not the radius.', followUp: 'Test whether high margins can actually be captured after acquisition costs and competition.' })
+        out.push({ ...base, values, second, third, labels, question: 'Which market looks like the biggest profit opportunity if you combine margin (height) and demand (bubble size)?', answer: labels[win] + ' scores highest: ' + second[win] + '% margin × ' + third[win] + ' demand = ' + calc[win] + '. Bubble area, not radius, shows demand, so compare areas, not widths.', followUp: 'Test whether high margins can actually be captured after acquisition costs and competition.' })
       } else if (f === 4) {
         const values = [42 + i * 5, 67 + i * 3, 55 + i * 7, 78 - i * 2, 60 + i * 4]
         const labels = ['North', 'South', 'East', 'West', 'Central'], hi = maxIndex(values), lo = values.indexOf(Math.min(...values))
         out.push({ ...base, values, labels, question: 'Which region has the highest gross profit per sale and how much higher is it than the lowest?', answer: labels[hi] + ' leads at £' + values[hi] + ' per sale; ' + labels[lo] + ' is lowest at £' + values[lo] + '. The difference is £' + (values[hi] - values[lo]) + ' per sale.', followUp: 'Separate changes in pricing, customer mix, and cost-to-serve before copying the top performer.' })
       } else if (f === 5) {
         const values = [80 + i * 8, 95 + i * 6, 110 + i * 5, 125 + i * 7, 100 + i * 9, 150 + i * 5]
-        const second = [5 + i * .15, 6.2, 4.5 + i * .1, 5.4, 6 + i * .05, 5.3 + i * .15]
+        const second = [5 + i * .15, 6.2, 4.5 + i * .1, 5.4, 6 + i * .05, 5.3 + i * .15].map((x) => Math.round(x * 100) / 100)
         const calc = values.map((v, j) => v * second[j] / 100), win = maxIndex(calc)
         out.push({ ...base, values, second, labels: QUARTERS, question: 'Which quarter created the most conversions? Do not judge by lead volume or conversion rate alone.', answer: QUARTERS[win] + ' created about ' + fmt(calc[win]) + ' thousand conversions (' + values[win] + 'k leads × ' + fmt(second[win]) + '% conversion). Check both axes before comparing periods.', followUp: 'Explore lead quality and customer acquisition cost alongside converted volumes.' })
       } else if (f === 6) {

@@ -1,63 +1,63 @@
 {
  "stages": [
   {
-   "stage": "1 \u00b7 Listen & note",
+   "stage": "1 · Listen & note",
    "do": "Write the client's goal at the top of your page so every later answer can link back to it. If something isn't clear, interrupt politely and ask.",
-   "say": "\"Sorry, before you go on: when you say X, do you mean\u2026?\"",
+   "say": "\"Sorry, before you go on: when you say X, do you mean…?\"",
    "mistake": "Faking understanding, then getting lost 10 minutes later."
   },
   {
-   "stage": "2 \u00b7 Recap",
+   "stage": "2 · Recap",
    "do": "Recap the client, the problem and the measurable goal. Key points only, then check you have it right.",
    "say": "\"So our client is X, facing Y, and success means Z by [date]. Is that right?\"",
    "mistake": "Reading the whole prompt back word for word."
   },
   {
-   "stage": "3 \u00b7 Clarify (max ~3 questions)",
+   "stage": "3 · Clarify (max ~3 questions)",
    "do": "Only ask questions whose answers would change your structure: how the client makes money, the target and timeline, scope, whether the whole industry is affected.",
    "say": "\"Is this a problem the whole industry has, or just our client?\"",
    "mistake": "Asking a list of questions to buy time."
   },
   {
-   "stage": "4 \u00b7 Structure",
+   "stage": "4 · Structure",
    "do": "Ask for a moment. Draw 3-4 buckets, MECE, with second-level drivers specific to this case. Present it top-down, numbering the buckets.",
-   "say": "\"There are three areas I want to look at. First\u2026 I believe the second is most likely the issue, so I'd start there.\"",
+   "say": "\"There are three areas I want to look at. First… I believe the second is most likely the issue, so I'd start there.\"",
    "mistake": "Generic buckets with no hypothesis, then asking 'where should I start?'"
   },
   {
-   "stage": "5 \u00b7 Lead the case",
+   "stage": "5 · Lead the case",
    "do": "After the structure, and after every answer, say where you want to go next and what data you need.",
    "say": "\"Next, I'd like to check whether the decline is industry-wide. Do we have market data?\"",
    "mistake": "Waiting for the interviewer to steer you."
   },
   {
-   "stage": "6 \u00b7 Charts",
+   "stage": "6 · Charts",
    "do": "Ask for 30 seconds. Read title, axes, units and FOOTNOTE. Write down 2 insights and the so-what. Do the maths without being asked.",
-   "say": "\"Two things stand out. First\u2026 Given our goal, the second matters more. Let me size it.\"",
+   "say": "\"Two things stand out. First… Given our goal, the second matters more. Let me size it.\"",
    "mistake": "Describing the chart instead of drawing insight from it."
   },
   {
-   "stage": "7 \u00b7 Maths",
+   "stage": "7 · Maths",
    "do": "Say your approach before you calculate. Keep talking while you work. Sanity-check the size of every result, and round sensibly.",
-   "say": "\"My approach is market \u00d7 share \u00d7 margin, minus the investment. Does that make sense before I run it?\"",
+   "say": "\"My approach is market × share × margin, minus the investment. Does that make sense before I run it?\"",
    "mistake": "Calculating in silence; dropping a zero."
   },
   {
-   "stage": "8 \u00b7 Brainstorm",
+   "stage": "8 · Brainstorm",
    "do": "Even here, use 2-3 buckets (internal / external, short / long term). Add a real-world example. Keep one idea back for the follow-up.",
    "say": "\"Let me think about this in two buckets: what we can do with today's capabilities, and what needs new ones.\"",
    "mistake": "Listing ideas in no order."
   },
   {
-   "stage": "9 \u00b7 Recommend",
+   "stage": "9 · Recommend",
    "do": "Take 20 seconds to prepare, then speak for about 60. Recommendation, then 2-3 reasons with numbers, then risks, then next steps. Don't replay the case.",
-   "say": "\"I recommend entering via a JV, for two reasons\u2026 The key risk is\u2026 so as next steps I would\u2026\"",
-   "mistake": "Opening with 'So, first we looked at\u2026'"
+   "say": "\"I recommend entering via a JV, for two reasons… The key risk is… so as next steps I would…\"",
+   "mistake": "Opening with 'So, first we looked at…'"
   },
   {
    "stage": "Throughout",
    "do": "Smile, especially when you're struggling. A pause comes across as composure; filler words come across as panic. Link everything back to the goal.",
-   "say": "\"\u2026and this matters because our client's goal is X.\"",
+   "say": "\"…and this matters because our client's goal is X.\"",
    "mistake": "Letting your nerves show."
   }
  ],
@@ -95,32 +95,32 @@
  ],
  "plan": [
   {
-   "week": "Week 1 \u00b7 Foundations",
+   "week": "Week 1 · Foundations",
    "focus": "Learn the case stages below, the core frameworks and formulas. Start both halves of the Daily Tracker.",
    "volume": "4-5 self + 2-3 partner cases; a structure drill every day"
   },
   {
-   "week": "Week 2 \u00b7 Volume",
+   "week": "Week 2 · Volume",
    "focus": "Partner cases every day. Re-read your fixes before each one.",
    "volume": "1 self + 1 partner case a day; 1 expert case"
   },
   {
-   "week": "Week 3 \u00b7 Weak spots",
+   "week": "Week 3 · Weak spots",
    "focus": "Run a drill sprint on the weakest stage the Dashboard shows. Write your FIT stories.",
    "volume": "6+ cases; 1 sprint; 6 FIT stories drafted"
   },
   {
-   "week": "Week 4 \u00b7 Polish",
+   "week": "Week 4 · Polish",
    "focus": "Charts and maths under time pressure. Record yourself and listen back.",
    "volume": "6+ cases (1-2 expert); 2 recorded cases reviewed"
   },
   {
-   "week": "Week 5 \u00b7 Simulation",
+   "week": "Week 5 · Simulation",
    "focus": "Full interview conditions: FIT + case back to back, on video, dressed for it.",
    "volume": "5+ full mock interviews, all logged"
   },
   {
-   "week": "Week 6 \u00b7 Taper",
+   "week": "Week 6 · Taper",
    "focus": "Fewer cases, higher quality. Re-read the whole Case Log. Sleep well.",
    "volume": "3-4 cases; daily voice & mind exercises only"
   }
@@ -129,97 +129,97 @@
   {
    "type": "Profitability",
    "ask": "Is the whole industry hit, or just us?",
-   "build": "Revenue (volume \u00d7 price, by segment) \u00b7 Costs (fixed vs variable, benchmarked) \u00b7 Market (competitors, regulation, tech)",
+   "build": "Revenue (volume × price, by segment) · Costs (fixed vs variable, benchmarked) · Market (competitors, regulation, tech)",
    "trap": "Diagnosing before splitting revenue by product / region / channel."
   },
   {
    "type": "Revenue drop",
    "ask": "Which stream, segment or region is falling?",
-   "build": "Isolate the stream \u2192 customers \u00d7 basket \u2192 market / customers / company / competitors",
+   "build": "Isolate the stream → customers × basket → market / customers / company / competitors",
    "trap": "Explaining 'revenue' as one number."
   },
   {
    "type": "Market entry",
    "ask": "What is the goal, and over what time frame?",
-   "build": "Market attractiveness \u00b7 Can we win? \u00b7 Economics (investment, breakeven) \u00b7 Risks \u00b7 Entry mode (build / partner / buy)",
+   "build": "Market attractiveness · Can we win? · Economics (investment, breakeven) · Risks · Entry mode (build / partner / buy)",
    "trap": "Forgetting entry mode and timing; no pilot."
   },
   {
    "type": "Growth strategy",
    "ask": "Growth from where: revenue split by business unit?",
-   "build": "Organic: existing customers, new segments, products, regions, channels \u00b7 Inorganic: M&A, partnerships",
+   "build": "Organic: existing customers, new segments, products, regions, channels · Inorganic: M&A, partnerships",
    "trap": "A list of ideas with no sizing or priority."
   },
   {
    "type": "M&A",
    "ask": "Why does the client want to buy?",
-   "build": "Target on its own (market, profit, quality) \u00b7 Synergies (revenue + cost) \u00b7 Risks & fit \u00b7 Deal (price vs value, build vs buy)",
+   "build": "Target on its own (market, profit, quality) · Synergies (revenue + cost) · Risks & fit · Deal (price vs value, build vs buy)",
    "trap": "Ignoring integration risk and the do-nothing option."
   },
   {
    "type": "Private equity",
    "ask": "What return does the fund need, and over how long?",
-   "build": "Market \u00b7 Target vs peers \u00b7 How we add value \u00b7 Exit (buyers, multiple, timing) \u00b7 Returns maths",
+   "build": "Market · Target vs peers · How we add value · Exit (buyers, multiple, timing) · Returns maths",
    "trap": "No exit thinking."
   },
   {
    "type": "Pricing",
    "ask": "What is the product worth to the customer?",
-   "build": "Cost-based floor \u00b7 Competitor reference \u00b7 Value-based ceiling \u2192 strategy (penetration vs skimming)",
+   "build": "Cost-based floor · Competitor reference · Value-based ceiling → strategy (penetration vs skimming)",
    "trap": "Using only one lens; no volume assumption."
   },
   {
    "type": "Competitive response",
    "ask": "How big is the threat in revenue terms?",
-   "build": "Understand the threat \u00b7 Options: do nothing / mitigate / copy / partner or buy \u00b7 Choose on impact, cost, speed, risk",
+   "build": "Understand the threat · Options: do nothing / mitigate / copy / partner or buy · Choose on impact, cost, speed, risk",
    "trap": "Not comparing to doing nothing."
   },
   {
    "type": "Capacity / investment",
    "ask": "Is demand real, and can existing capacity be squeezed?",
-   "build": "Demand \u00b7 Industry supply (price effect) \u00b7 Economics (breakeven, payback) \u00b7 Alternatives (outsource, lease) \u00b7 Execution",
+   "build": "Demand · Industry supply (price effect) · Economics (breakeven, payback) · Alternatives (outsource, lease) · Execution",
    "trap": "Approving capex before fixing bottlenecks."
   },
   {
    "type": "Cost & operations",
    "ask": "Goal: lower cost, more capacity, or reliability?",
-   "build": "Map the process & cost base \u2192 biggest driver first \u2192 people / process / technology levers \u2192 benchmark",
+   "build": "Map the process & cost base → biggest driver first → people / process / technology levers → benchmark",
    "trap": "Cutting costs that carry revenue."
   },
   {
    "type": "Market sizing",
    "ask": "Units or value? Which geography? Any limiting factor?",
-   "build": "Hypothesis first \u2192 top-down or bottom-up \u2192 segment \u2192 round numbers \u2192 sanity-check the other way",
+   "build": "Hypothesis first → top-down or bottom-up → segment → round numbers → sanity-check the other way",
    "trap": "No answer hypothesis; no cross-check."
   },
   {
    "type": "Valuation",
    "ask": "Valuing a standalone business or a stream of cash flows?",
-   "build": "DCF \u00b7 Trading comparables (P/E, EV/EBITDA) \u00b7 Transaction comparables; use at least two",
+   "build": "DCF · Trading comparables (P/E, EV/EBITDA) · Transaction comparables; use at least two",
    "trap": "Adding up future years without discounting."
   },
   {
    "type": "Public sector",
    "ask": "What does success look like for citizens and for the budget?",
-   "build": "Stakeholders & objectives \u00b7 Current performance vs benchmark \u00b7 Levers (policy, delivery, funding) \u00b7 Implementation & risks",
+   "build": "Stakeholders & objectives · Current performance vs benchmark · Levers (policy, delivery, funding) · Implementation & risks",
    "trap": "Forcing a profit lens onto a social goal."
   },
   {
    "type": "Product: design",
    "ask": "Who is it for, and what does success mean?",
-   "build": "Clarify \u2192 goal \u2192 users (both sides of a platform) \u2192 pain points \u2192 solutions \u2192 prioritise \u2192 MVP \u2192 metrics",
+   "build": "Clarify → goal → users (both sides of a platform) → pain points → solutions → prioritise → MVP → metrics",
    "trap": "Only looking at one side of a two-sided platform."
   },
   {
    "type": "Product: improve / grow",
    "ask": "Improve on which measure (engagement, revenue, UX)?",
-   "build": "Mission \u2192 pick a user and use case \u2192 journey friction \u2192 solutions \u2192 impact \u00d7 effort \u2192 metrics with guardrails",
+   "build": "Mission → pick a user and use case → journey friction → solutions → impact × effort → metrics with guardrails",
    "trap": "Defaulting to the biggest user group."
   },
   {
    "type": "Product: metric drop",
    "ask": "How is it measured, since when, sudden or gradual?",
-   "build": "External (season, competitors) vs internal (releases, bugs) \u2192 segment the drop \u2192 hypothesise \u2192 test",
+   "build": "External (season, competitors) vs internal (releases, bugs) → segment the drop → hypothesise → test",
    "trap": "Guessing before segmenting."
   }
  ],
@@ -227,16 +227,16 @@
   {
    "term": "Profit",
    "formula": "Revenue - Costs",
-   "note": "Revenue = volume \u00d7 price; costs = fixed + variable"
+   "note": "Revenue = volume × price; costs = fixed + variable"
   },
   {
    "term": "Profit margin",
-   "formula": "Profit \u00f7 Revenue",
+   "formula": "Profit ÷ Revenue",
    "note": "Margin is always on revenue"
   },
   {
    "term": "Markup",
-   "formula": "Profit \u00f7 Cost",
+   "formula": "Profit ÷ Cost",
    "note": "Markup is on cost. Don't mix it up with margin"
   },
   {
@@ -246,33 +246,33 @@
   },
   {
    "term": "Breakeven volume",
-   "formula": "Fixed costs \u00f7 Contribution margin per unit",
+   "formula": "Fixed costs ÷ Contribution margin per unit",
    "note": "'How many units to justify it?'"
   },
   {
    "term": "Payback",
-   "formula": "Investment \u00f7 Annual profit (or saving)",
+   "formula": "Investment ÷ Annual net cash gain (extra profit or saving)",
    "note": "Compare with the client's time frame"
   },
   {
    "term": "ROI",
-   "formula": "Profit \u00f7 Investment",
+   "formula": "Profit ÷ Investment",
    "note": "Compare with the hurdle rate"
   },
   {
    "term": "EBITDA",
-   "formula": "Revenue - COGS - Opex",
-   "note": "Before interest, tax, depreciation & amortisation; base for multiples"
+   "formula": "Revenue - COGS - Operating costs (excl. depreciation & amortisation)",
+   "note": "Earnings before interest, tax, depreciation & amortisation; the base for valuation multiples"
   },
   {
    "term": "Expected value",
-   "formula": "\u03a3 (outcome \u00d7 probability)",
+   "formula": "Σ (outcome × probability)",
    "note": "Launch and bid decisions"
   },
   {
    "term": "Perpetuity",
-   "formula": "Cash flow \u00f7 r   (growing: CF \u00f7 (r - g))",
-   "note": "Quick NPV of a steady stream"
+   "formula": "Cash flow ÷ r   (growing: CF ÷ (r - g))",
+   "note": "Value today of a steady stream; for the growing version, CF is next year's cash flow"
   },
   {
    "term": "NPV rule",
@@ -281,107 +281,107 @@
   },
   {
    "term": "CAGR",
-   "formula": "(End \u00f7 Start)^(1/years) - 1",
-   "note": "Rule of 72: years to double \u2248 72 \u00f7 growth %"
+   "formula": "(End ÷ Start)^(1/years) - 1",
+   "note": "Rule of 72: years to double ≈ 72 ÷ growth %"
   },
   {
    "term": "Market share",
-   "formula": "Our sales \u00f7 Market sales",
+   "formula": "Our sales ÷ Market sales",
    "note": "Say whether it is units or value"
   },
   {
    "term": "Elasticity",
-   "formula": "% change in volume \u00f7 % change in price",
+   "formula": "% change in volume ÷ % change in price",
    "note": "State the volume assumption behind any price move"
   },
   {
    "term": "Utilisation",
-   "formula": "Actual output \u00f7 Maximum output",
+   "formula": "Actual output ÷ Maximum output",
    "note": "Check before adding capacity"
   },
   {
    "term": "LTV",
-   "formula": "Profit per customer per year \u00d7 years retained",
-   "note": "Compare with CAC; healthy LTV:CAC \u2248 3+"
+   "formula": "Profit per customer per year × Years retained",
+   "note": "Simple, undiscounted version. Compare with CAC; LTV:CAC of 3+ is a common rule of thumb"
   },
   {
    "term": "CAC",
-   "formula": "Sales & marketing spend \u00f7 New customers",
-   "note": "Payback under ~12-18 months is healthy"
+   "formula": "Sales & marketing spend ÷ New customers",
+   "note": "Rule of thumb for subscription businesses: earn it back within about 12-18 months"
   },
   {
    "term": "Churn",
-   "formula": "Customers lost \u00f7 Customers at start",
-   "note": "Retention = 1 - churn; avg lifetime \u2248 1 \u00f7 churn"
+   "formula": "Customers lost ÷ Customers at start",
+   "note": "Retention = 1 - churn; avg lifetime ≈ 1 ÷ churn"
   },
   {
    "term": "Cost-to-revenue",
-   "formula": "Each cost line \u00f7 Revenue, over time",
+   "formula": "Each cost line ÷ Revenue, over time",
    "note": "Finds the cost that is ballooning"
   },
   {
-   "term": "Working capital",
+   "term": "Net working capital",
    "formula": "Inventory + Receivables - Payables",
    "note": "A cash trap in growth cases"
   }
  ],
  "skills": [
   {
-   "name": "MIND \u00b7 Dual n-back",
+   "name": "MIND · Dual n-back",
    "how": "Any dual n-back app. Start at 2-back; move up only above 80% accuracy.",
    "dose": "10 min daily",
    "trains": "Holding the structure, numbers and goal in your head at once."
   },
   {
-   "name": "MIND \u00b7 60-second recap",
-   "how": "Play 2 minutes of a business podcast, pause, recap it aloud in 60 seconds: 'three things were said\u2026'",
+   "name": "MIND · 60-second recap",
+   "how": "Play 2 minutes of a business podcast, pause, recap it aloud in 60 seconds: 'three things were said…'",
    "dose": "3-5 reps",
    "trains": "Summing up under time pressure, which is the core of chart insights and recommendations."
   },
   {
-   "name": "MIND \u00b7 Structure recall",
+   "name": "MIND · Structure recall",
    "how": "Read one row of the Frameworks tab, close it, redraw it from memory, check the gaps.",
    "dose": "1-2 daily",
    "trains": "Recalling structures under stress."
   },
   {
-   "name": "MIND \u00b7 Speed maths",
+   "name": "MIND · Speed maths",
    "how": "Speed-maths app: percentages, big multiplications, breakevens. Accuracy first, then speed.",
    "dose": "10 min daily",
    "trains": "Faster arithmetic leaves more attention for thinking."
   },
   {
-   "name": "VOICE \u00b7 Articulation",
+   "name": "VOICE · Articulation",
    "how": "2-3 tongue twisters: slow and exaggerated, then at speed.",
    "dose": "3 min pre-mock",
    "trains": "Crisp diction. Mumbling is the first thing interviewers notice."
   },
   {
-   "name": "VOICE \u00b7 Paced reading",
+   "name": "VOICE · Paced reading",
    "how": "Read a business article aloud, slightly slower than feels natural, honouring every full stop.",
    "dose": "5 min daily",
    "trains": "Controlling your pace. Measured speakers sound senior."
   },
   {
-   "name": "VOICE \u00b7 Pause practice",
+   "name": "VOICE · Pause practice",
    "how": "Record a 2-minute answer. Count the ums. Re-record with a silent pause where each filler was.",
    "dose": "1 answer daily",
    "trains": "Replacing filler words with pauses."
   },
   {
-   "name": "VOICE \u00b7 Explain to the CEO",
+   "name": "VOICE · Explain to the CEO",
    "how": "Explain any formula or framework aloud in 60 seconds to an imaginary busy executive.",
    "dose": "1-2 daily",
    "trains": "Top-down, jargon-free delivery."
   },
   {
-   "name": "FLUENCY \u00b7 Read & listen",
+   "name": "FLUENCY · Read & listen",
    "how": "15 min of a strategy book, business press or a CEO interview. Note one story and one phrase.",
    "dose": "Daily",
    "trains": "Business vocabulary and real examples to use in cases."
   },
   {
-   "name": "CALM \u00b7 Breathe",
+   "name": "CALM · Breathe",
    "how": "10 min breath-focused practice daily; box breathing 4-4-4-4 before every mock and interview.",
    "dose": "10 min daily",
    "trains": "A calmer baseline and faster recovery when a case goes wrong."
@@ -390,7 +390,7 @@
  "fitQuestions": [
   {
    "q": "Tell me about yourself",
-   "why": "Can you structure your own story? 60-90 sec: arc \u2192 proof points \u2192 why here, why now."
+   "why": "Can you structure your own story? 60-90 sec: arc → proof points → why here, why now."
   },
   {
    "q": "Why consulting? Why this firm?",

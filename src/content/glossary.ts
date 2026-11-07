@@ -1,5 +1,5 @@
 export const GLOSSARY: { term: string; plain: string; example: string }[] = [
-  { term: 'Breakeven', plain: 'The volume (or time) at which total profit covers the costs you put in.', example: '$12M launch cost ÷ $0.80 profit per bar = 15M bars to break even.' },
+  { term: 'Breakeven', plain: 'The point (in units sold, or time) where revenue covers all costs, so profit is exactly zero.', example: '$12M launch cost ÷ $0.80 contribution per bar = 15M bars to break even.' },
   { term: 'Cannibalisation', plain: 'When a new product or channel takes sales from your own existing ones instead of winning new customers.', example: 'If 60% of delivery orders replace a café visit, most delivery sales aren’t really new.' },
   { term: 'CAGR', plain: 'Compound annual growth rate: the steady yearly growth that takes you from a start value to an end value.', example: 'Doubling in 7 years ≈ 10.4% a year.' },
   { term: 'Capex and opex', plain: 'Capex is one-off spending on long-lasting assets (a plant). Opex is the ongoing cost of running the business (staff, rent).', example: 'A $150M plant is capex; its yearly running cost is opex.' },
@@ -8,7 +8,7 @@ export const GLOSSARY: { term: string; plain: string; example: string }[] = [
   { term: 'Due diligence', plain: 'The checks a buyer does before an acquisition or investment.', example: 'Testing whether RePlast can really make food-grade plastic.' },
   { term: 'Earn-out', plain: 'Part of an acquisition price paid later, only if the business hits agreed targets.', example: '€160M upfront plus up to €20M if premium contracts are signed.' },
   { term: 'EBITDA', plain: 'Earnings before interest, tax, depreciation and amortisation: a rough measure of operating cash profit, used to value companies.', example: 'FitHub makes £25M EBITDA.' },
-  { term: 'Enterprise value (EV)', plain: 'What the whole business is worth to all its funders: equity value plus debt.', example: 'Equity £245M + debt £60M = EV £305M.' },
+  { term: 'Enterprise value (EV)', plain: 'What the whole business is worth to all its funders: equity value plus net debt (debt minus cash).', example: 'Equity £245M + net debt £60M = EV £305M.' },
   { term: 'Fixed and variable costs', plain: 'Fixed costs don’t change with volume (rent). Variable costs rise with each unit made or sold (ingredients).', example: 'App commissions are variable; head-office salaries are fixed.' },
   { term: 'Hypothesis', plain: 'Your best guess at the answer, stated early so you can test it with data.', example: '"I suspect delivery costs are the issue, so I’d start there."' },
   { term: 'Margin vs markup', plain: 'Margin is profit as a share of price. Markup is profit as a share of cost.', example: 'Cost $80, price $100: margin 20%, markup 25%.' },

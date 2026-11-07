@@ -20,10 +20,10 @@ export const CORE: CoreFramework[] = [
     when: 'Profits are falling, or the client wants them higher.',
     ask: 'Is the drop driven by revenue, by costs, or both? Is the whole industry affected?',
     branches: [
-      { t: 'Revenue', c: [{ t: 'Units sold' }, { t: 'Price per unit' }, { t: 'Product and customer mix' }] },
-      { t: 'Costs', c: [{ t: 'Fixed costs', note: 'rent · salaries · overheads' }, { t: 'Variable costs', note: 'materials · delivery · commissions' }] },
+      { t: 'Revenue', c: [{ t: 'Units sold' }, { t: 'Price per unit' }], note: 'revenue = units × price' },
+      { t: 'Costs', c: [{ t: 'Fixed costs', note: 'rent · salaried staff · overheads' }, { t: 'Variable costs', note: 'materials · delivery · commissions' }] },
     ],
-    tip: 'Go one level deeper for the client: units sold = customers × how often they buy; split costs into the three or four biggest lines.',
+    tip: 'Go one level deeper for the client: units = customers × purchases each. If the client sells several products, run the tree for each one, because a shift in mix can move profit too.',
     practice: [{ label: 'Coastal Brew', to: '/casebook/coastal-brew' }, { label: 'Vertex Mobile', to: '/casebook/vertex-mobile' }],
   },
   {
@@ -32,16 +32,16 @@ export const CORE: CoreFramework[] = [
     ask: 'How much growth, by when, and is anything off the table?',
     example: 'Example: a coffee chain',
     branches: [
-      { t: 'Grow the core', c: [
-        { t: 'Win more in today\'s segments', note: 'new drinks · loyalty app · sharper prices' },
-        { t: 'Shift to the fastest-growing segments', note: 'cold drinks · drive-throughs · travel hubs' },
+      { t: 'With our existing products', c: [
+        { t: 'Sell more to current customers', note: 'more visits · bigger orders · loyalty app' },
+        { t: 'Reach new customers or markets', note: 'new cities · drive-throughs · travel hubs' },
       ] },
-      { t: 'Grow beyond the core', c: [
-        { t: 'New offers for today\'s customers', note: 'beans and pods for home · subscriptions · catering' },
-        { t: 'New businesses built on our strengths', note: 'bottled drinks in supermarkets · franchising abroad' },
+      { t: 'With new products', c: [
+        { t: 'For current customers', note: 'beans and pods for home · subscriptions' },
+        { t: 'For new customers (diversify)', note: 'bottled drinks in supermarkets' },
       ] },
     ],
-    tip: 'Start with the core: it is cheaper and less risky. Then size each option before recommending one.',
+    tip: 'Risk rises as you move away from what the client already sells to whom. Size each option, and say whether you would build it, partner or buy.',
     practice: [{ label: 'Meridian Hospitals', to: '/casebook/meridian-hospitals' }],
   },
   {
@@ -50,16 +50,16 @@ export const CORE: CoreFramework[] = [
     ask: 'Which costs are in scope, and what must not suffer (quality, safety, service)?',
     branches: [
       { t: 'Need less', c: [
-        { t: 'Stop doing it altogether', note: 'close a branch · move to self-service' },
-        { t: 'Do less of it', note: 'drop a free extra, like free delivery' },
+        { t: 'Stop the activity', note: 'close a branch · move to self-service' },
+        { t: 'Do less of it', note: 'lower a service level, like free delivery' },
       ] },
-      { t: 'Use less', c: [{ t: 'Cut waste and rework' }, { t: 'Raise productivity' }] },
-      { t: 'Pay less', c: [
-        { t: 'Switch to cheaper options', note: 'rail instead of air freight' },
+      { t: 'Use less per unit', c: [{ t: 'Cut waste and rework' }, { t: 'Get more output per person or machine' }] },
+      { t: 'Pay less per unit', c: [
+        { t: 'Switch to cheaper inputs', note: 'rail instead of air freight' },
         { t: 'Negotiate better prices' },
       ] },
     ],
-    tip: 'Need less, use less, pay less: work through them in that order, starting with the biggest cost lines.',
+    tip: 'Cost = how much we do × resources per unit × price per resource. Each branch cuts one factor. Start with the biggest cost lines.',
     practice: [{ label: 'SkyLine MRO', to: '/casebook/skyline-mro' }],
   },
   {
@@ -67,12 +67,12 @@ export const CORE: CoreFramework[] = [
     when: 'A new country, customer segment or product category.',
     ask: 'Why this market, and what would success look like, by when?',
     branches: [
-      { t: 'Is the market attractive?', c: [{ t: 'Size' }, { t: 'Growth' }, { t: 'Profitability' }] },
-      { t: 'Can we win share?', c: [{ t: 'Rivals and their strength' }, { t: 'What customers want' }, { t: 'How our offer compares' }] },
-      { t: 'Will it pay?', c: [{ t: 'Upfront investment' }, { t: 'Ongoing costs' }, { t: 'Expected revenue' }] },
-      { t: 'Can we do it, and what could go wrong?' },
+      { t: 'Is the market attractive?', c: [{ t: 'Size' }, { t: 'Growth' }, { t: 'Typical margins' }] },
+      { t: 'Can we win enough share?', c: [{ t: 'Competitors and their strength' }, { t: 'What customers need' }, { t: 'How our offer compares' }] },
+      { t: 'Will it pay for us?', c: [{ t: 'Revenue we can expect' }, { t: 'Costs to run it' }, { t: 'Upfront investment' }], note: 'compare with payback target' },
+      { t: 'How to enter, and the risks', c: [{ t: 'Build, partner or buy' }, { t: 'Capabilities we lack' }, { t: 'Key risks' }] },
     ],
-    tip: 'Market size × the share you can win × margin gives the prize. Compare it with the investment.',
+    tip: 'The prize = market size × the share you can win × margin. Compare it with the upfront investment.',
     practice: [{ label: 'Nordwind E-Bikes', to: '/casebook/nordwind-e-bikes' }, { label: 'SnackCo Protein Bar', to: '/casebook/snackco-protein-bar' }],
   },
   {
@@ -80,11 +80,11 @@ export const CORE: CoreFramework[] = [
     when: 'The decision to launch is made; the question is how.',
     ask: 'Who is it for, and what does the launch need to achieve?',
     branches: [
-      { t: 'Who to target', c: [{ t: 'Segment size and growth' }, { t: 'Rivals in the segment' }, { t: 'Unmet needs' }] },
-      { t: 'How to win them', c: [{ t: 'The offer' }, { t: 'Price' }, { t: 'Channels' }, { t: 'Message and brand' }] },
-      { t: 'How to roll it out', c: [{ t: 'Pilot and timing' }, { t: 'People, partners and budget' }] },
+      { t: 'Who to target', c: [{ t: 'Segment size and growth' }, { t: 'Competitors in the segment' }, { t: 'Unmet needs' }] },
+      { t: 'How to win them', c: [{ t: 'Product' }, { t: 'Price' }, { t: 'Place (channels)' }, { t: 'Promotion (message and brand)' }] },
+      { t: 'How to roll it out', c: [{ t: 'Pilot, then scale' }, { t: 'People, partners and budget' }] },
     ],
-    tip: 'Pick the segment first: product, price, channel and message all follow from who you are selling to.',
+    tip: 'Pick the segment first: the 4Ps (product, price, place, promotion) all follow from who you are selling to.',
     practice: [{ label: 'SnackCo Protein Bar', to: '/casebook/snackco-protein-bar' }, { label: 'LinguaLeap', to: '/casebook/lingualeap' }],
   },
   {
@@ -92,11 +92,11 @@ export const CORE: CoreFramework[] = [
     when: 'Setting or changing a price.',
     ask: 'What is the goal: profit, market share, or getting in fast?',
     branches: [
-      { t: 'Floor: our costs', c: [{ t: 'Cost per unit' }, { t: 'Fixed costs' }, { t: 'Upfront investment to recover' }], note: 'the price must leave margin to cover all three' },
+      { t: 'Floor: our costs', c: [{ t: 'Variable cost per unit', note: 'never price below this' }, { t: 'Fixed costs and investment', note: 'must be recovered over expected volume' }] },
       { t: 'Ceiling: value to the customer', c: [{ t: 'Value delivered' }, { t: 'Willingness to pay' }] },
       { t: 'Reference: the alternatives', c: [{ t: 'Competitor prices' }, { t: 'Substitutes' }], note: 'sit above or below them?' },
     ],
-    tip: 'Cost sets the floor, value to the customer sets the ceiling, competitors tell you where to land in between.',
+    tip: 'Cost sets the floor, value to the customer sets the ceiling, and the alternatives tell you where to land in between.',
     practice: [{ label: 'CloudLedger', to: '/casebook/cloudledger' }],
   },
   {
@@ -104,11 +104,11 @@ export const CORE: CoreFramework[] = [
     when: 'Mergers, acquisitions and private equity deals.',
     ask: 'Why buy: growth, capabilities, cost savings, or a financial return?',
     branches: [
-      { t: 'What is it worth on its own?', c: [{ t: 'Projected revenue' }, { t: 'Projected costs' }, { t: 'Comparable deal multiples' }], note: 'value = today\'s worth of future cash flows (NPV)' },
-      { t: 'What extra is it worth to us?', c: [{ t: 'Revenue synergies' }, { t: 'Cost synergies' }, { t: 'Overlap we lose' }] },
-      { t: 'Can we pull it off?', c: [{ t: 'Integration' }, { t: 'Culture' }, { t: 'Regulation' }] },
+      { t: 'What is it worth on its own?', c: [{ t: 'Future cash flows (DCF)' }, { t: 'Multiples of similar deals' }] },
+      { t: 'What extra is it worth to us?', c: [{ t: 'Revenue synergies' }, { t: 'Cost synergies' }, { t: 'Minus integration costs' }] },
+      { t: 'Can we make it work?', c: [{ t: 'Integration and culture' }, { t: 'Regulation (competition law)' }] },
     ],
-    tip: 'Buy only if standalone value + synergies is more than the price. A fund cares most about standalone value and the exit.',
+    tip: 'Buy only if standalone value + synergies − integration costs is more than the price. A private equity fund cares most about standalone value and the exit.',
     practice: [{ label: 'PackRight', to: '/casebook/packright' }, { label: 'FitHub Gyms', to: '/casebook/fithub-gyms' }],
   },
   {
@@ -119,9 +119,9 @@ export const CORE: CoreFramework[] = [
       { t: 'What does it cost?', c: [{ t: 'Upfront spend' }, { t: 'Running costs' }] },
       { t: 'What does it return?', c: [{ t: 'Extra revenue' }, { t: 'Cost savings' }], note: 'how long until it pays back?' },
       { t: 'Is there a cheaper alternative?' },
-      { t: 'Can we deliver it, and what are the risks?' },
+      { t: 'Can we deliver it, and what could go wrong?' },
     ],
-    tip: 'Payback = upfront cost ÷ yearly gain. Compare it with how long the asset lasts and with cheaper alternatives.',
+    tip: 'Payback = upfront cost ÷ yearly net gain. Compare it with the client\'s target and the asset\'s life, and with cheaper alternatives.',
     practice: [{ label: 'Desert Dairy', to: '/casebook/desert-dairy' }],
   },
   {
@@ -129,14 +129,14 @@ export const CORE: CoreFramework[] = [
     when: 'A rival cuts prices, launches a product or enters the market.',
     ask: 'What exactly did they do, and which of our customers does it touch?',
     branches: [
-      { t: 'How exposed are we?', c: [{ t: 'Customers at risk' }, { t: 'Revenue at risk' }], note: 'how much could we lose?' },
-      { t: 'Why are they doing it?', c: [{ t: 'Size of the prize' }, { t: 'Their economics' }], note: 'can they keep it up?' },
+      { t: 'How exposed are we?', c: [{ t: 'Customers at risk' }, { t: 'Revenue and profit at risk' }] },
+      { t: 'Why are they doing it?', c: [{ t: 'Size of the prize for them' }, { t: 'Their economics' }], note: 'can they keep it up?' },
       { t: 'Our options', c: [
-        { t: 'Hold steady' }, { t: 'Defend our customers', note: 'loyalty, service' }, { t: 'Match on price' },
+        { t: 'Do nothing' }, { t: 'Defend our customers', note: 'loyalty, service, contracts' }, { t: 'Match on price' },
         { t: 'Counter with our own offer' }, { t: 'Partner or acquire' },
       ] },
     ],
-    tip: 'Size the threat before choosing a response. Holding steady is a real option when little revenue is at risk.',
+    tip: 'Size the threat before choosing a response. Doing nothing is a real option when little profit is at risk.',
     practice: [{ label: 'FreshMart', to: '/casebook/freshmart' }],
   },
   {
@@ -144,23 +144,23 @@ export const CORE: CoreFramework[] = [
     when: 'Operations cases: something is slow, costly or error-prone.',
     ask: 'Which outcome matters most: cost, speed or quality?',
     branches: [
-      { t: 'Map it', c: [{ t: 'Steps and hand-offs' }, { t: 'Capacity and utilisation' }, { t: 'The bottleneck' }] },
-      { t: 'Improve each step', c: [{ t: 'Remove it' }, { t: 'Simplify or automate' }, { t: 'Speed it up' }, { t: 'Raise quality' }, { t: 'Prevent problems upstream' }] },
-      { t: 'Size the prize' },
+      { t: 'Map it', c: [{ t: 'Steps and hand-offs' }, { t: 'Time, cost and errors at each step' }, { t: 'The bottleneck' }] },
+      { t: 'Improve each step', c: [{ t: 'Eliminate' }, { t: 'Combine' }, { t: 'Re-order' }, { t: 'Simplify or automate' }], note: 'known as ECRS' },
+      { t: 'Size the gain' },
     ],
-    tip: 'The slowest step (the bottleneck) sets the speed of the whole process. Fix it first.',
+    tip: 'The slowest step (the bottleneck) sets the output of the whole process. Fix it first.',
     practice: [{ label: 'SkyLine MRO', to: '/casebook/skyline-mro' }, { label: 'RideNow Drivers', to: '/casebook/ridenow-drivers' }],
   },
 ]
 
 /** Second-order drivers: what to dig into once you are inside a branch. */
 export const DRIVERS: { head: string; c: string[] }[] = [
-  { head: 'Market', c: ['Size and growth', 'Geographies', 'Customer segments', 'Distribution channels'] },
-  { head: 'Customers', c: ['Segments', 'Preferences', 'How they decide to buy'] },
-  { head: 'Competition', c: ['Market shares', 'New entrants', 'Substitutes'] },
-  { head: 'Industry', c: ['Competitors', 'Profitability', 'Key success factors', 'Barriers to entry'] },
-  { head: 'Execution', c: ['Skills', 'Capital', 'Brand', 'Partners'] },
-  { head: 'Macro', c: ['Regulation', 'Unions', 'Technology', 'Economy', 'Politics'] },
+  { head: 'Market', c: ['Size and growth', 'Segments and geographies', 'Distribution channels'] },
+  { head: 'Customers', c: ['Needs and preferences', 'How they decide to buy', 'Willingness to pay'] },
+  { head: 'Competition', c: ['Players and market shares', 'New entrants', 'Substitutes'] },
+  { head: 'Industry economics', c: ['Typical margins', 'Key success factors', 'Barriers to entry', 'Supplier power'] },
+  { head: 'Our company', c: ['Skills and capabilities', 'Capital', 'Brand', 'Partners'] },
+  { head: 'Macro', c: ['Regulation', 'Economy', 'Technology', 'Politics', 'Labour and unions'] },
 ]
 
 export type OtherFramework =
@@ -170,17 +170,6 @@ export type OtherFramework =
   | { id: string; title: string; when: string; kind: 'chips'; c: string[] }
 
 export const OTHER: OtherFramework[] = [
-  {
-    id: 'growth-matrix', title: 'Growth matrix (Ansoff)', kind: 'matrix', when: 'A second way to lay out growth options, by product and by market.',
-    x: ['Existing products', 'New products'], y: ['Existing markets', 'New markets'],
-    cells: [
-      { tag: 'A', title: 'Sell more of what we have', c: ['prices, marketing, bundles, loyalty'] },
-      { tag: 'C', title: 'New products, same customers', c: ['line extensions, cross-selling'] },
-      { tag: 'B', title: 'Same products, new markets', c: ['new regions, segments, channels'] },
-      { tag: 'D', title: 'Diversify', c: ['highest risk; often via acquisition'] },
-    ],
-    note: 'Risk rises from A to D. Most answers start in A.',
-  },
   {
     id: 'market-sizing', title: 'Market sizing', kind: 'groups', when: '"How big is the market for X?" Say your approach before any maths.',
     groups: [

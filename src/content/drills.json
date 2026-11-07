@@ -2,83 +2,83 @@
  "structure": [
   {
    "prompt": "A national bank's mortgage applications are down 20%. Why?",
-   "buckets": "Market (rates, house prices) \u00b7 Our pricing vs rivals \u00b7 Channel (brokers, online) \u00b7 Approval process"
+   "buckets": "Market (rates, house prices) · Our pricing vs rivals · Channel (brokers, online) · Approval process"
   },
   {
    "prompt": "Should a hotel group launch a budget brand?",
-   "buckets": "Market attractiveness \u00b7 Cannibalisation of current hotels \u00b7 Economics per hotel \u00b7 Capabilities & brand risk"
+   "buckets": "Market attractiveness · Cannibalisation of current hotels · Economics per hotel · Capabilities & brand risk"
   },
   {
    "prompt": "A hospital's emergency waiting times have doubled.",
-   "buckets": "Demand (volume, case mix) \u00b7 Capacity (staff, beds) \u00b7 Process (triage, handovers) \u00b7 Outflow (beds upstairs)"
+   "buckets": "Demand (volume, case mix) · Capacity (staff, beds) · Process (triage, handovers) · Outflow (beds upstairs)"
   },
   {
    "prompt": "How should a newspaper grow digital subscriptions?",
-   "buckets": "Acquire (funnel, pricing) \u00b7 Convert free \u2192 paid \u00b7 Retain (engagement, bundles) \u00b7 New segments"
+   "buckets": "Reach (traffic, new audiences) · Convert free → paid (paywall, price) · Retain (engagement, bundles) · Revenue per subscriber (tiers, add-ons)"
   },
   {
    "prompt": "Should a car maker build its own battery plant?",
-   "buckets": "Demand & security of supply \u00b7 Make vs buy economics \u00b7 Technology risk \u00b7 Partners/JV"
+   "buckets": "Demand & security of supply · Make vs buy economics · Technology risk · Partners/JV"
   },
   {
    "prompt": "A fashion retailer's online returns cost too much.",
-   "buckets": "Return rate by product/size \u00b7 Cost per return \u00b7 Root causes (fit, photos) \u00b7 Policy levers"
+   "buckets": "Return rate by product/size · Cost per return · Root causes (fit, photos) · Policy levers"
   },
   {
    "prompt": "Should a city introduce a congestion charge?",
-   "buckets": "Objectives (traffic, pollution, revenue) \u00b7 Impact on residents & businesses \u00b7 Alternatives \u00b7 Implementation"
+   "buckets": "Objectives (traffic, pollution, revenue) · Impact on residents & businesses · Alternatives · Implementation"
   },
   {
    "prompt": "How would you value a football club?",
-   "buckets": "Revenue streams (media, match-day, commercial) \u00b7 Costs (wages) \u00b7 Multiples of comparable deals \u00b7 Strategic premium"
+   "buckets": "Revenue streams (media, match-day, commercial) · Costs (wages) · Multiples of comparable deals · Strategic premium"
   },
   {
    "prompt": "A pharma company's new drug is selling below forecast.",
-   "buckets": "Doctors (awareness, prescribing) \u00b7 Patients (access, price) \u00b7 Payers (reimbursement) \u00b7 Competition"
+   "buckets": "Doctors (awareness, prescribing) · Patients (access, price) · Payers (reimbursement) · Competition"
   },
   {
    "prompt": "Should an airline start a loyalty credit card?",
-   "buckets": "Customer value \u00b7 Economics (bank payments per point) \u00b7 Partner choice \u00b7 Brand risk"
+   "buckets": "Customer value · Economics (bank payments per point) · Partner choice · Brand risk"
   },
   {
    "prompt": "A ski resort's profits fell after two warm winters.",
-   "buckets": "Revenue by season \u00b7 Snow-dependence \u00b7 Cost flexibility \u00b7 Diversify (summer, snowmaking)"
+   "buckets": "Revenue (visitors × spend, by season) · Costs (fixed vs flexible) · Snow risk (snowmaking, altitude) · Other income (summer, events)"
   },
   {
    "prompt": "How can a university increase international students?",
-   "buckets": "Markets & demand \u00b7 Offer (courses, price, rankings) \u00b7 Visas & policy \u00b7 Recruitment channels"
+   "buckets": "Markets & demand · Offer (courses, price, rankings) · Visas & policy · Recruitment channels"
   },
   {
    "prompt": "A food-delivery start-up is burning cash. What do you cut?",
-   "buckets": "Unit economics per order \u00b7 Fixed costs \u00b7 Marketing efficiency (CAC) \u00b7 City-by-city profitability"
+   "buckets": "Unit economics per order · Fixed costs · Marketing efficiency (CAC) · City-by-city profitability"
   },
   {
    "prompt": "Should a supermarket open dark stores for 15-min delivery?",
-   "buckets": "Demand density \u00b7 Economics per order \u00b7 Cannibalisation \u00b7 Operations & competition"
+   "buckets": "Demand density · Economics per order · Cannibalisation · Operations & competition"
   },
   {
    "prompt": "A government wants more women in the workforce.",
-   "buckets": "Barriers (childcare, flexibility, norms) \u00b7 Employers \u00b7 Policy levers \u00b7 Measurement"
+   "buckets": "Barriers (childcare, flexibility, norms) · Employers · Policy levers · Measurement"
   },
   {
    "prompt": "How should an electricity company prepare for rooftop solar?",
-   "buckets": "Lost demand \u00b7 Grid costs \u00b7 New services (batteries, EV) \u00b7 Pricing & regulation"
+   "buckets": "Lost demand · Grid costs · New services (batteries, EV) · Pricing & regulation"
   },
   {
    "prompt": "A cinema chain's attendance has not recovered.",
-   "buckets": "Content supply \u00b7 Customer experience & price \u00b7 Streaming substitution \u00b7 Alternative uses of space"
+   "buckets": "Content supply · Customer experience & price · Streaming substitution · Alternative uses of space"
   },
   {
    "prompt": "Should a coffee brand sell in supermarkets?",
-   "buckets": "Brand risk \u00b7 Incremental revenue vs cannibalisation of caf\u00e9s \u00b7 Retailer economics \u00b7 Operations"
+   "buckets": "Brand risk · Incremental revenue vs cannibalisation of cafés · Retailer economics · Operations"
   },
   {
    "prompt": "A logistics company's on-time delivery fell to 85%.",
-   "buckets": "Where in the chain (pickup, hub, last mile) \u00b7 Capacity vs volume \u00b7 Process \u00b7 Tech & data"
+   "buckets": "Where in the chain (pickup, hub, last mile) · Capacity vs volume · Process and systems · External factors (weather, partners)"
   },
   {
    "prompt": "How would you increase organ donor registrations?",
-   "buckets": "Awareness \u00b7 Ease of sign-up (opt-out vs opt-in) \u00b7 Trust \u00b7 Channels (licences, GPs)"
+   "buckets": "Awareness · Ease of sign-up (opt-out vs opt-in) · Trust · Channels (licences, GPs)"
   }
  ],
  "maths": [
@@ -88,11 +88,11 @@
   },
   {
    "q": "Fixed costs $3M, price $25, variable cost $10. Breakeven units?",
-   "a": "3M \u00f7 15 = 200,000 units."
+   "a": "3M ÷ 15 = 200,000 units."
   },
   {
    "q": "Revenue grows from $50M to $80M in 5 years. CAGR roughly?",
-   "a": "1.6^(1/5) \u2248 9.9% \u2192 ~10%."
+   "a": "1.6^(1/5) ≈ 9.9% → ~10%."
   },
   {
    "q": "A machine costs $1.2M and saves $300k a year. Payback?",
@@ -100,26 +100,26 @@
   },
   {
    "q": "Perpetuity: $5M a year, discount rate 8%. Value?",
-   "a": "5 \u00f7 0.08 = $62.5M."
+   "a": "5 ÷ 0.08 = $62.5M."
   },
   {
    "q": "Price up 10%, volume down 5%. Revenue change?",
-   "a": "1.10 \u00d7 0.95 = 1.045 \u2192 +4.5%."
+   "a": "1.10 × 0.95 = 1.045 → +4.5%."
   },
   {
    "q": "Monthly churn 2%. Average customer lifetime?",
-   "a": "1 \u00f7 0.02 = 50 months."
+   "a": "1 ÷ 0.02 = 50 months."
   },
   {
-   "q": "50% chance of $10M, 30% of $2M, 20% of \u2212$5M. Expected value?",
-   "a": "5 + 0.6 \u2212 1 = $4.6M."
+   "q": "50% chance of $10M, 30% of $2M, 20% of −$5M. Expected value?",
+   "a": "5 + 0.6 − 1 = $4.6M."
   },
   {
    "q": "What is 17% of 340?",
    "a": "34 + 23.8 = 57.8 (10% + 7%)."
   },
   {
-   "q": "$4.5B \u00f7 1.5M customers?",
+   "q": "$4.5B ÷ 1.5M customers?",
    "a": "$3,000 per customer."
   }
  ]
