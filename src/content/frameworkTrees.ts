@@ -5,6 +5,7 @@ export interface CNode { t: string; c?: CNode[]; note?: string }
 
 export interface CoreFramework {
   id: string
+  family: Family
   title: string // the question the tree answers
   when: string
   ask: string
@@ -14,38 +15,30 @@ export interface CoreFramework {
   practice: { label: string; to: string }[]
 }
 
+export type Family = 'diagnose' | 'decide' | 'generate'
+
+/** The three kinds of case question. Name the kind first; it tells you the shape of the answer. */
+export const FAMILIES: { id: Family; name: string; question: string; shape: string }[] = [
+  { id: 'diagnose', name: 'Diagnose', question: '"Why is this happening, and how do we fix it?"', shape: 'Break the problem into parts that add up, find which part moved, then fix that part.' },
+  { id: 'decide', name: 'Decide', question: '"Should we do this?"', shape: 'Test it against a few yes/no questions, put a number on it, and end with a clear yes or no.' },
+  { id: 'generate', name: 'Generate', question: '"How can we do this?"', shape: 'Lay out every option in buckets that don\'t overlap, size them, then pick the best few.' },
+]
+
 export const CORE: CoreFramework[] = [
+  // ------------------------------------------------------------ Diagnose
   {
-    id: 'improve-profits', title: "How can the client make more profit?",
+    id: 'improve-profits', family: 'diagnose', title: "How can the client make more profit?",
     when: 'Profits are falling, or the client wants them higher.',
-    ask: 'Is the drop driven by revenue, by costs, or both? Is the whole industry affected?',
+    ask: 'Is it revenue, costs or both? Is the whole industry hit, or just us?',
     branches: [
-      { t: 'Revenue', c: [{ t: 'Units sold' }, { t: 'Price per unit' }], note: 'revenue = units × price' },
+      { t: 'Revenue', c: [{ t: 'Units sold', note: 'customers × purchases each' }, { t: 'Price per unit' }], note: 'revenue = units × price' },
       { t: 'Costs', c: [{ t: 'Fixed costs', note: 'rent · salaried staff · overheads' }, { t: 'Variable costs', note: 'materials · delivery · commissions' }] },
     ],
-    tip: 'Go one level deeper for the client: units = customers × purchases each. If the client sells several products, run the tree for each one, because a shift in mix can move profit too.',
+    tip: 'Split every line by product, customer segment and channel: a shift in mix often hides inside the averages. Compare each line with competitors to tell a company problem from a market problem.',
     practice: [{ label: 'Coastal Brew', to: '/casebook/coastal-brew' }, { label: 'Vertex Mobile', to: '/casebook/vertex-mobile' }],
   },
   {
-    id: 'grow-business', title: "How can the client grow?",
-    when: 'The client wants more revenue and is open to options.',
-    ask: 'How much growth, by when, and is anything off the table?',
-    example: 'Example: a coffee chain',
-    branches: [
-      { t: 'With our existing products', c: [
-        { t: 'Sell more to current customers', note: 'more visits · bigger orders · loyalty app' },
-        { t: 'Reach new customers or markets', note: 'new cities · drive-throughs · travel hubs' },
-      ] },
-      { t: 'With new products', c: [
-        { t: 'For current customers', note: 'beans and pods for home · subscriptions' },
-        { t: 'For new customers (diversify)', note: 'bottled drinks in supermarkets' },
-      ] },
-    ],
-    tip: 'Risk rises as you move away from what the client already sells to whom. Size each option, and say whether you would build it, partner or buy.',
-    practice: [{ label: 'Meridian Hospitals', to: '/casebook/meridian-hospitals' }],
-  },
-  {
-    id: 'reduce-costs', title: "How can the client cut costs?",
+    id: 'reduce-costs', family: 'diagnose', title: "How can the client cut costs?",
     when: 'The client needs to cut costs, often by a target percentage.',
     ask: 'Which costs are in scope, and what must not suffer (quality, safety, service)?',
     branches: [
@@ -55,101 +48,136 @@ export const CORE: CoreFramework[] = [
       ] },
       { t: 'Use less per unit', c: [{ t: 'Cut waste and rework' }, { t: 'Get more output per person or machine' }] },
       { t: 'Pay less per unit', c: [
-        { t: 'Switch to cheaper inputs', note: 'rail instead of air freight' },
+        { t: 'Switch to cheaper inputs or outsource', note: 'rail instead of air freight' },
         { t: 'Negotiate better prices' },
       ] },
     ],
-    tip: 'Cost = how much we do × resources per unit × price per resource. Each branch cuts one factor. Start with the biggest cost lines.',
+    tip: 'Cost = how much we do × resources per unit × price per resource. Each branch cuts one factor. Start with the biggest cost lines, and protect the costs that bring in revenue.',
     practice: [{ label: 'SkyLine MRO', to: '/casebook/skyline-mro' }],
   },
   {
-    id: 'enter-market', title: "Should the client enter this market?",
+    id: 'optimise-process', family: 'diagnose', title: "How can the client improve this process?",
+    when: 'Operations cases: something is slow, costly or error-prone.',
+    ask: 'Which outcome matters most: cost, speed, capacity or quality?',
+    branches: [
+      { t: 'Map it', c: [{ t: 'Steps and hand-offs' }, { t: 'Time, cost and errors at each step' }, { t: 'The bottleneck' }] },
+      { t: 'Fix the steps', c: [{ t: 'Eliminate' }, { t: 'Combine' }, { t: 'Re-order' }, { t: 'Simplify or automate' }], note: 'known as ECRS' },
+      { t: 'Fix what supports them', c: [{ t: 'People', note: 'skills · incentives · staffing' }, { t: 'Technology and systems' }] },
+    ],
+    tip: 'The slowest step (the bottleneck) sets the output of the whole process. Fix it first, then check which step becomes the new bottleneck.',
+    practice: [{ label: 'SkyLine MRO', to: '/casebook/skyline-mro' }, { label: 'RideNow Drivers', to: '/casebook/ridenow-drivers' }],
+  },
+  {
+    id: 'competitive-threat', family: 'diagnose', title: "How should the client respond to a rival's move?",
+    when: 'A rival cuts prices, launches a product or enters the market.',
+    ask: 'What exactly did they do, and which of our customers does it touch?',
+    branches: [
+      { t: 'How exposed are we?', c: [{ t: 'Customers at risk' }, { t: 'Revenue and margin at risk' }] },
+      { t: 'Why are they doing it?', c: [{ t: 'Which segments they want' }, { t: 'Their economics' }], note: 'can they keep it up?' },
+      { t: 'Our options', c: [
+        { t: 'Do nothing' }, { t: 'Defend our customers', note: 'loyalty · contracts · promotions' }, { t: 'Match them', note: 'adjust price · upgrade product' },
+        { t: 'Copy their offer' }, { t: 'Partner or buy' },
+      ] },
+    ],
+    tip: 'Size the threat before choosing a response, and compare every option with doing nothing. Doing nothing is right when little profit is at risk.',
+    practice: [{ label: 'FreshMart', to: '/casebook/freshmart' }],
+  },
+  // ------------------------------------------------------------ Decide
+  {
+    id: 'enter-market', family: 'decide', title: "Should the client enter this market?",
     when: 'A new country, customer segment or product category.',
     ask: 'Why this market, and what would success look like, by when?',
     branches: [
-      { t: 'Is the market attractive?', c: [{ t: 'Size' }, { t: 'Growth' }, { t: 'Typical margins' }] },
-      { t: 'Can we win enough share?', c: [{ t: 'Competitors and their strength' }, { t: 'What customers need' }, { t: 'How our offer compares' }] },
-      { t: 'Will it pay for us?', c: [{ t: 'Revenue we can expect' }, { t: 'Costs to run it' }, { t: 'Upfront investment' }], note: 'compare with payback target' },
-      { t: 'How to enter, and the risks', c: [{ t: 'Build, partner or buy' }, { t: 'Capabilities we lack' }, { t: 'Key risks' }] },
+      { t: 'Is the market attractive?', c: [{ t: 'Size and growth' }, { t: 'Typical margins' }, { t: 'Barriers to entry' }] },
+      { t: 'Can we win?', c: [{ t: 'Competitors and their strength' }, { t: 'What customers need' }, { t: 'Our edge' }] },
+      { t: 'Will it pay?', c: [{ t: 'Revenue we can expect' }, { t: 'Running costs' }, { t: 'Upfront investment' }], note: 'compare with payback target' },
+      { t: 'Can we pull it off?', c: [{ t: 'Capabilities we lack', note: 'decides build, partner or buy' }, { t: 'Timing and pilot' }, { t: 'Key risks' }] },
     ],
-    tip: 'The prize = market size × the share you can win × margin. Compare it with the upfront investment.',
+    tip: 'The prize = market size × the share you can win × margin. Compare it with the upfront investment, then say how you would enter.',
     practice: [{ label: 'Nordwind E-Bikes', to: '/casebook/nordwind-e-bikes' }, { label: 'SnackCo Protein Bar', to: '/casebook/snackco-protein-bar' }],
   },
   {
-    id: 'launch-product', title: "How should the client launch the product?",
-    when: 'The decision to launch is made; the question is how.',
+    id: 'make-investment', family: 'decide', title: "Should the client make this investment?",
+    when: 'A new plant, more capacity, a system, a store or a piece of equipment.',
+    ask: 'What does it cost upfront, and what does it change: revenue, costs, or both?',
+    branches: [
+      { t: 'Do we need it?', c: [{ t: 'Is demand real and lasting?' }, { t: 'Can we get more from what we have?', note: 'fix bottlenecks · extra shifts' }] },
+      { t: 'Will it pay?', c: [{ t: 'Upfront and running costs' }, { t: 'Extra revenue or savings' }], note: 'if rivals add capacity too, prices may fall' },
+      { t: 'Is there a better alternative?', c: [{ t: 'Outsource or subcontract' }, { t: 'Lease or rent' }] },
+      { t: 'Can we deliver it?', c: [{ t: 'Time to build' }, { t: 'Skills and risks' }] },
+    ],
+    tip: 'Payback = upfront cost ÷ yearly net gain. Break-even volume = upfront cost ÷ extra margin per unit. Compare both with the client\'s target and the asset\'s life.',
+    practice: [{ label: 'Desert Dairy', to: '/casebook/desert-dairy' }],
+  },
+  {
+    id: 'acquire-business', family: 'decide', title: "Should the client buy this company?",
+    when: 'A company buying another company (mergers and acquisitions).',
+    ask: 'Why buy: growth, capabilities, cost savings or a new market?',
+    branches: [
+      { t: 'Is the target good on its own?', c: [{ t: 'Its market' }, { t: 'Its performance vs peers' }, { t: 'Standalone value', note: 'cash flows (DCF) · multiples' }] },
+      { t: 'What extra is it worth to us?', c: [{ t: 'Revenue synergies' }, { t: 'Cost synergies' }, { t: 'Minus integration costs' }] },
+      { t: 'Can we make it work?', c: [{ t: 'Funding the deal' }, { t: 'Integration and culture' }, { t: 'Regulation (competition law)' }] },
+      { t: 'Is the price right?', c: [{ t: 'Price vs value to us' }, { t: 'Alternatives', note: 'other targets · build or partner' }] },
+    ],
+    tip: 'Buy only if standalone value + synergies − integration costs is more than the price, and buying beats building it yourself.',
+    practice: [{ label: 'PackRight', to: '/casebook/packright' }],
+  },
+  {
+    id: 'pe-invest', family: 'decide', title: "Should the fund invest in this company?",
+    when: 'Private equity: a fund buys a company to improve it and sell it in 3 to 7 years.',
+    ask: 'What return does the fund need, over how many years?',
+    branches: [
+      { t: 'Is the market attractive?', c: [{ t: 'Size and growth' }, { t: 'Margins' }, { t: 'Barriers to entry' }] },
+      { t: 'Is the company strong?', c: [{ t: 'Position vs competitors' }, { t: 'Performance and outlook' }, { t: 'Management team' }] },
+      { t: 'How can we add value?', c: [{ t: 'Grow revenue' }, { t: 'Raise margins' }, { t: 'Buy add-on companies' }] },
+      { t: 'Can we exit well?', c: [{ t: 'Who would buy it' }, { t: 'Exit multiple' }, { t: 'Timing' }], note: 'gives the return' },
+    ],
+    tip: 'Return = equity at exit ÷ equity at entry. A fund that triples its money in 6 years earns about 20% a year. No credible buyer at exit means no deal.',
+    practice: [{ label: 'FitHub Gyms', to: '/casebook/fithub-gyms' }],
+  },
+  // ------------------------------------------------------------ Generate
+  {
+    id: 'grow-business', family: 'generate', title: "How can the client grow?",
+    when: 'The client wants more revenue and is open to options.',
+    ask: 'How much growth, by when? Which business units grow today, and is anything off the table?',
+    example: 'Example: a coffee chain',
+    branches: [
+      { t: 'With our existing products', c: [
+        { t: 'Sell more to current customers', note: 'more visits · bigger orders · loyalty app' },
+        { t: 'Reach new customers or markets', note: 'new cities · segments · channels' },
+      ] },
+      { t: 'With new products', c: [
+        { t: 'For current customers', note: 'beans and pods for home · subscriptions' },
+        { t: 'For new customers (diversify)', note: 'bottled drinks in supermarkets' },
+      ] },
+    ],
+    tip: 'Risk rises as you move away from what the client already sells to whom. Size each option, then say how: build it, partner or buy.',
+    practice: [{ label: 'Meridian Hospitals', to: '/casebook/meridian-hospitals' }],
+  },
+  {
+    id: 'launch-product', family: 'generate', title: "How should the client launch the product?",
+    when: 'The client wants a plan to launch a product. If the question is whether to launch at all, use market entry.',
     ask: 'Who is it for, and what does the launch need to achieve?',
     branches: [
       { t: 'Who to target', c: [{ t: 'Segment size and growth' }, { t: 'Competitors in the segment' }, { t: 'Unmet needs' }] },
-      { t: 'How to win them', c: [{ t: 'Product' }, { t: 'Price' }, { t: 'Place (channels)' }, { t: 'Promotion (message and brand)' }] },
-      { t: 'How to roll it out', c: [{ t: 'Pilot, then scale' }, { t: 'People, partners and budget' }] },
+      { t: 'What to offer', c: [{ t: 'Product' }, { t: 'Price' }, { t: 'Place (channels)' }, { t: 'Promotion (message and brand)' }] },
+      { t: 'How to roll it out', c: [{ t: 'Capabilities', note: 'production · distribution · cash' }, { t: 'Pilot, then scale' }] },
+      { t: 'Does it pay?', c: [{ t: 'Expected sales' }, { t: 'Costs and break-even' }] },
     ],
     tip: 'Pick the segment first: the 4Ps (product, price, place, promotion) all follow from who you are selling to.',
     practice: [{ label: 'SnackCo Protein Bar', to: '/casebook/snackco-protein-bar' }, { label: 'LinguaLeap', to: '/casebook/lingualeap' }],
   },
   {
-    id: 'price-product', title: "What price should the client charge?",
+    id: 'price-product', family: 'generate', title: "What price should the client charge?",
     when: 'Setting or changing a price.',
     ask: 'What is the goal: profit, market share, or getting in fast?',
     branches: [
-      { t: 'Floor: our costs', c: [{ t: 'Variable cost per unit', note: 'never price below this' }, { t: 'Fixed costs and investment', note: 'must be recovered over expected volume' }] },
-      { t: 'Ceiling: value to the customer', c: [{ t: 'Value delivered' }, { t: 'Willingness to pay' }] },
+      { t: 'Floor: our costs', c: [{ t: 'Variable cost per unit', note: 'never price below this' }, { t: 'Fixed costs and investment', note: 'recovered over expected volume' }] },
+      { t: 'Ceiling: value to the customer', c: [{ t: 'Price of their next best option' }, { t: 'Extra value we add', note: 'savings · more revenue for them' }] },
       { t: 'Reference: the alternatives', c: [{ t: 'Competitor prices' }, { t: 'Substitutes' }], note: 'sit above or below them?' },
     ],
-    tip: 'Cost sets the floor, value to the customer sets the ceiling, and the alternatives tell you where to land in between.',
+    tip: 'Cost sets the floor, value to the customer sets the ceiling, and the alternatives tell you where to land in between. Then check the effect on your other products.',
     practice: [{ label: 'CloudLedger', to: '/casebook/cloudledger' }],
-  },
-  {
-    id: 'acquire-business', title: "Should the client buy this company?",
-    when: 'Mergers, acquisitions and private equity deals.',
-    ask: 'Why buy: growth, capabilities, cost savings, or a financial return?',
-    branches: [
-      { t: 'What is it worth on its own?', c: [{ t: 'Future cash flows (DCF)' }, { t: 'Multiples of similar deals' }] },
-      { t: 'What extra is it worth to us?', c: [{ t: 'Revenue synergies' }, { t: 'Cost synergies' }, { t: 'Minus integration costs' }] },
-      { t: 'Can we make it work?', c: [{ t: 'Integration and culture' }, { t: 'Regulation (competition law)' }] },
-    ],
-    tip: 'Buy only if standalone value + synergies − integration costs is more than the price. A private equity fund cares most about standalone value and the exit.',
-    practice: [{ label: 'PackRight', to: '/casebook/packright' }, { label: 'FitHub Gyms', to: '/casebook/fithub-gyms' }],
-  },
-  {
-    id: 'make-investment', title: "Should the client make this investment?",
-    when: 'A new plant, system, store or piece of equipment.',
-    ask: 'What does it cost upfront, and what does it change: revenue, costs, or both?',
-    branches: [
-      { t: 'What does it cost?', c: [{ t: 'Upfront spend' }, { t: 'Running costs' }] },
-      { t: 'What does it return?', c: [{ t: 'Extra revenue' }, { t: 'Cost savings' }], note: 'how long until it pays back?' },
-      { t: 'Is there a cheaper alternative?' },
-      { t: 'Can we deliver it, and what could go wrong?' },
-    ],
-    tip: 'Payback = upfront cost ÷ yearly net gain. Compare it with the client\'s target and the asset\'s life, and with cheaper alternatives.',
-    practice: [{ label: 'Desert Dairy', to: '/casebook/desert-dairy' }],
-  },
-  {
-    id: 'competitive-threat', title: "How should the client respond to a rival's move?",
-    when: 'A rival cuts prices, launches a product or enters the market.',
-    ask: 'What exactly did they do, and which of our customers does it touch?',
-    branches: [
-      { t: 'How exposed are we?', c: [{ t: 'Customers at risk' }, { t: 'Revenue and profit at risk' }] },
-      { t: 'Why are they doing it?', c: [{ t: 'Size of the prize for them' }, { t: 'Their economics' }], note: 'can they keep it up?' },
-      { t: 'Our options', c: [
-        { t: 'Do nothing' }, { t: 'Defend our customers', note: 'loyalty, service, contracts' }, { t: 'Match on price' },
-        { t: 'Counter with our own offer' }, { t: 'Partner or acquire' },
-      ] },
-    ],
-    tip: 'Size the threat before choosing a response. Doing nothing is a real option when little profit is at risk.',
-    practice: [{ label: 'FreshMart', to: '/casebook/freshmart' }],
-  },
-  {
-    id: 'optimise-process', title: "How can the client improve this process?",
-    when: 'Operations cases: something is slow, costly or error-prone.',
-    ask: 'Which outcome matters most: cost, speed or quality?',
-    branches: [
-      { t: 'Map it', c: [{ t: 'Steps and hand-offs' }, { t: 'Time, cost and errors at each step' }, { t: 'The bottleneck' }] },
-      { t: 'Improve each step', c: [{ t: 'Eliminate' }, { t: 'Combine' }, { t: 'Re-order' }, { t: 'Simplify or automate' }], note: 'known as ECRS' },
-      { t: 'Size the gain' },
-    ],
-    tip: 'The slowest step (the bottleneck) sets the output of the whole process. Fix it first.',
-    practice: [{ label: 'SkyLine MRO', to: '/casebook/skyline-mro' }, { label: 'RideNow Drivers', to: '/casebook/ridenow-drivers' }],
   },
 ]
 
@@ -208,7 +236,7 @@ export const OTHER: OtherFramework[] = [
     ],
   },
   {
-    id: 'four-ps', title: 'The 4Ps (marketing mix)', kind: 'groups', when: 'The "Define our strategy" branch of a product launch.',
+    id: 'four-ps', title: 'The 4Ps (marketing mix)', kind: 'groups', when: 'The "What to offer" branch of a product launch.',
     groups: [
       { head: 'Product', c: ['features', 'range', 'quality'] },
       { head: 'Price', c: ['level', 'discounts', 'tiers'] },
@@ -240,6 +268,15 @@ export const OTHER: OtherFramework[] = [
     rows: [
       ['Outsource', 'Lower cost; focus on the core; less risk if volumes fall', 'Less control over quality; reliance on others; brand risk'],
       ['Keep in-house', 'Control over process and quality; keeps know-how', 'Higher fixed costs; capacity tied up'],
+    ],
+  },
+  {
+    id: 'risks', title: 'Risk checklist', kind: 'groups', when: 'When you are asked "What are the risks?" or need to close a recommendation.',
+    groups: [
+      { head: 'Business', c: ['demand lower than planned', 'competitors react', 'prices fall'] },
+      { head: 'Operations', c: ['delays and cost overruns', 'quality or supply problems', 'skills we lack'] },
+      { head: 'Strategy', c: ['distracts from the core business', 'hurts the brand', 'locks us in'] },
+      { head: 'Regulation and macro', c: ['laws and approvals', 'politics', 'exchange rates and the economy'] },
     ],
   },
   {

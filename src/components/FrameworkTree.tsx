@@ -140,7 +140,7 @@ export function CoreFrameworksMini({ items }: { items: CoreFramework[] }) {
       {items.map((f, i) => (
         <li key={f.id} className="rounded-xl border border-line bg-white p-3">
           <div className="mb-2 flex items-baseline justify-between gap-2">
-            <span className="text-[14px] font-semibold text-ink"><span className="mr-1.5 text-teal-d">{i + 1}</span>{f.title}</span>
+            <span className="text-[14px] font-semibold text-ink"><span className="mr-1.5 text-teal-d">{i + 1}</span>{f.title}<span className="ml-2 text-[12px] font-medium capitalize text-muted">{f.family}</span></span>
             <Link to={`/frameworks#${f.id}`} className="shrink-0 text-[13px] font-medium text-violet-d hover:underline">Full tree</Link>
           </div>
           <ul className="space-y-1 pl-1">

@@ -129,7 +129,7 @@
   {
    "type": "Profitability",
    "ask": "Is the whole industry hit, or just us?",
-   "build": "Revenue (volume × price, by segment) · Costs (fixed vs variable, benchmarked) · Market (competitors, regulation, tech)",
+   "build": "Revenue (units × price, split by product, segment and channel) · Costs (fixed vs variable, benchmarked against competitors)",
    "trap": "Diagnosing before splitting revenue by product / region / channel."
   },
   {
@@ -141,7 +141,7 @@
   {
    "type": "Market entry",
    "ask": "What is the goal, and over what time frame?",
-   "build": "Market attractiveness · Can we win? · Economics (investment, breakeven) · Risks · Entry mode (build / partner / buy)",
+   "build": "Is the market attractive? (size and growth, margins, barriers to entry) · Can we win? (competitors, customer needs, our edge) · Will it pay? (revenue, costs, upfront investment, payback) · Can we pull it off? (capabilities we lack, build / partner / buy, timing and pilot, risks)",
    "trap": "Forgetting entry mode and timing; no pilot."
   },
   {
@@ -153,13 +153,13 @@
   {
    "type": "M&A",
    "ask": "Why does the client want to buy?",
-   "build": "Target on its own (market, profit, quality) · Synergies (revenue + cost) · Risks & fit · Deal (price vs value, build vs buy)",
+   "build": "Target on its own (its market, performance vs peers, standalone value) · Synergies (revenue, cost, minus integration costs) · Can we make it work? (funding, integration and culture, regulation) · Price (price vs value to us, other targets, build or partner instead)",
    "trap": "Ignoring integration risk and the do-nothing option."
   },
   {
    "type": "Private equity",
    "ask": "What return does the fund need, and over how long?",
-   "build": "Market · Target vs peers · How we add value · Exit (buyers, multiple, timing) · Returns maths",
+   "build": "Market (size and growth, margins, barriers to entry) · Company (position vs peers, performance, management team) · Value creation (revenue growth, margins, add-on deals) · Exit (buyers, exit multiple, timing) · Returns (money multiple and yearly return vs the fund's target)",
    "trap": "No exit thinking."
   },
   {
@@ -171,13 +171,13 @@
   {
    "type": "Competitive response",
    "ask": "How big is the threat in revenue terms?",
-   "build": "Understand the threat · Options: do nothing / mitigate / copy / partner or buy · Choose on impact, cost, speed, risk",
+   "build": "Exposure (customers, revenue and margin at risk) · Rival's motive (segments targeted, can they sustain it) · Options (do nothing, defend, match, copy, partner or buy) · Choose on impact, cost, speed and risk vs doing nothing",
    "trap": "Not comparing to doing nothing."
   },
   {
    "type": "Capacity / investment",
    "ask": "Is demand real, and can existing capacity be squeezed?",
-   "build": "Demand · Industry supply (price effect) · Economics (breakeven, payback) · Alternatives (outsource, lease) · Execution",
+   "build": "Need (is demand real and lasting, squeeze existing capacity first) · Economics (upfront and running cost, extra margin, payback, price effect if rivals add capacity) · Alternatives (outsource, lease, subcontract) · Execution (time to build, skills, risks)",
    "trap": "Approving capex before fixing bottlenecks."
   },
   {

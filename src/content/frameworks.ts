@@ -58,7 +58,7 @@ function parse(build: string): Pick<Framework, 'mode' | 'branches' | 'steps'> {
 
 const CORE_FOR: Record<string, string> = {
   'Profitability': 'improve-profits', 'Revenue drop': 'improve-profits', 'Market entry': 'enter-market', 'Growth strategy': 'grow-business',
-  'M&A': 'acquire-business', 'Private equity': 'acquire-business', 'Pricing': 'price-product', 'Competitive response': 'competitive-threat',
+  'M&A': 'acquire-business', 'Private equity': 'pe-invest', 'Pricing': 'price-product', 'Competitive response': 'competitive-threat',
   'Capacity / investment': 'make-investment', 'Cost & operations': 'reduce-costs', 'Valuation': 'acquire-business', 'Product: improve / grow': 'grow-business',
 }
 export const FRAMEWORKS: Framework[] = playbook.frameworks.map((f) => ({

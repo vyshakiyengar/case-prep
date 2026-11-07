@@ -5,10 +5,51 @@ import { loadCases } from '../content'
 import type { CaseDef } from '../content'
 import { LinkButton, PageHeader } from '../components/ui'
 import { useStore } from '../lib/store'
-import { CORE, OTHER } from '../content/frameworkTrees'
+import { CORE, FAMILIES, OTHER } from '../content/frameworkTrees'
+import type { CoreFramework } from '../content/frameworkTrees'
 import { CoreBlock, DriversGrid, OtherCard } from '../components/FrameworkTree'
 import { Gate, JumpBar, useScrollToTarget } from '../components/Learning'
 import { StructureTree } from '../components/CaseParts'
+
+/** The three kinds of case question, so a candidate knows which shelf to reach for. */
+function FamilyGuide() {
+  return (
+    <div className="grid gap-3 md:grid-cols-3">
+      {FAMILIES.map((fam) => (
+        <a key={fam.id} href={`#family-${fam.id}`} className="rounded-xl border border-line bg-white p-4 transition-colors hover:border-teal">
+          <p className="text-[17px] font-semibold text-ink">{fam.name}</p>
+          <p className="mt-0.5 text-[14.5px] font-medium text-violet-d">{fam.question}</p>
+          <p className="mt-1.5 text-[14px] text-ink-2">{fam.shape}</p>
+          <p className="mt-2 text-[13px] text-muted">{CORE.filter((c) => c.family === fam.id).map((c) => c.title.replace(/\?$/, '')).join(' · ')}</p>
+        </a>
+      ))}
+    </div>
+  )
+}
+
+/** Core trees with a heading wherever a new family starts. */
+function TreeList({ list, start }: { list: CoreFramework[]; start: number }) {
+  return (
+    <>
+      {list.map((f, i) => {
+        const g = start + i
+        const fam = FAMILIES.find((x) => x.id === f.family)!
+        const first = g === 0 || CORE[g - 1].family !== f.family
+        return (
+          <div key={f.id} className="space-y-12">
+            {first && (
+              <div id={`family-${fam.id}`} className="scroll-mt-32 border-b border-line pb-2">
+                <h3 className="text-[19px] font-semibold text-teal-d">{fam.name}</h3>
+                <p className="text-[14.5px] text-ink-2">{fam.question} {fam.shape}</p>
+              </div>
+            )}
+            <CoreBlock f={f} n={g + 1} />
+          </div>
+        )
+      })}
+    </>
+  )
+}
 
 export function FrameworksIndex() {
   const { user } = useStore()
@@ -19,17 +60,18 @@ export function FrameworksIndex() {
   ]
   return (
     <>
-      <PageHeader title="Frameworks" intro="Ten core frameworks cover most cases you will get. Learn these first; the rest of the page is for later." />
+      <PageHeader title="Frameworks" intro="Eleven core frameworks cover most cases you will get. Learn these first; the rest of the page is for later." />
       <p className="mb-5 max-w-2xl text-[15.5px] text-ink-2">How to use them: pick the tree closest to the question, rename every branch for your client, and say which branch you would test first. New to this? Read the <Link to="/learn/structuring" className="font-medium text-violet-d hover:underline">structuring lesson</Link> first.</p>
       <JumpBar items={nav} label="Jump to" />
       <div className="space-y-14">
         <div>
           <h2 className="text-[28px] font-semibold">Core frameworks to learn</h2>
-          <p className="mt-1 mb-6 text-muted">Know these ten well enough to sketch from memory. Each starts with the question it answers.</p>
-          <div className="space-y-12">
-            {CORE.slice(0, 2).map((f, i) => <CoreBlock key={f.id} f={f} n={i + 1} />)}
-            <Gate id="frameworks-gate" title="Sign in to see all ten core frameworks" body="Costs, market entry, product launch, pricing, acquisitions, investment, competitive threats and process. Free.">
-              <div className="space-y-12">{CORE.slice(2).map((f, i) => <CoreBlock key={f.id} f={f} n={i + 3} />)}</div>
+          <p className="mt-1 mb-5 text-muted">Know these eleven well enough to sketch from memory. Each starts with the question it answers.</p>
+          <FamilyGuide />
+          <div className="mt-10 space-y-12">
+            <TreeList list={CORE.slice(0, 2)} start={0} />
+            <Gate id="frameworks-gate" title="Sign in to see all eleven core frameworks" body="Process, competitive threats, market entry, investment, acquisitions, private equity, growth, product launch and pricing. Free.">
+              <div className="space-y-12"><TreeList list={CORE.slice(2)} start={2} /></div>
             </Gate>
           </div>
         </div>

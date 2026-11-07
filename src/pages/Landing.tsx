@@ -43,7 +43,7 @@ function Notepad() {
 }
 
 const PATH = [
-  { t: 'Learn', d: 'The map of a case, 11 short lessons, perfect casing and 10 core frameworks.', to: '/learn', cta: 'Start the course' },
+  { t: 'Learn', d: 'The map of a case, 11 short lessons, perfect casing and 11 core frameworks.', to: '/learn', cta: 'Start the course' },
   { t: 'Practise', d: '15 cases, 64 charts, timed drills, and cases to give a friend.', to: '/casebook', cta: 'Open the casebook' },
   { t: 'Look things up', d: 'Case types, formulas and a plain-English glossary.', to: '/glossary', cta: 'Open the glossary' },
   { t: 'Track and improve', d: 'Log each case, find your weakest stage, fix one thing at a time.', to: '/signin', cta: 'Start tracking' },
