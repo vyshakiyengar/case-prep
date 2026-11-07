@@ -33,7 +33,7 @@ export function SchoolForm({ initial, submitLabel, onSubmit, busy }: { initial?:
       </div>
       <label className="flex items-start gap-3 rounded-lg border border-line bg-canvas/60 p-3 text-[14px]">
         <input type="checkbox" className="mt-1 h-4 w-4 accent-[#6C5CE7]" checked={p.marketing} onChange={(e) => setP({ ...p, marketing: e.target.checked })} />
-        <span>Email me new free materials and student offers from Case Prep OS. <span className="text-muted">Optional. You can unsubscribe at any time.</span></span>
+        <span>Email me new free materials and student offers from PrepForCase. <span className="text-muted">Optional. You can unsubscribe at any time.</span></span>
       </label>
       <p className="text-[13px] text-muted">We store your school email, school, programme and graduation year to confirm student status and run student offers. See our <Link to="/privacy" className="underline">privacy notice</Link>.</p>
       <Button type="submit" disabled={busy || !valid || !!problem} className="py-2.5">{busy ? 'Sending…' : submitLabel}</Button>
@@ -126,7 +126,7 @@ export default function Perks() {
         </Section>
         <Section title="What you unlock">
           <ul className="list-disc space-y-2 pl-5 text-ink-2">
-            <li>Free downloads, such as the Case Prep OS spreadsheet</li>
+            <li>Free downloads, such as the PrepForCase spreadsheet</li>
             <li>Student discounts on the casebook and new materials</li>
             <li>Early access to new cases</li>
           </ul>

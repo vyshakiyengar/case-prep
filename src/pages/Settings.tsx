@@ -18,7 +18,7 @@ export default function Settings() {
   }
   const download = () => {
     const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' })
-    const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'case-prep-os-my-data.json'; a.click()
+    const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'prepforcase-my-data.json'; a.click()
   }
   return (
     <>

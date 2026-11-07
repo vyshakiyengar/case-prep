@@ -73,7 +73,7 @@ export default function Home() {
   return (
     <>
       <header className="mb-6">
-        <h1 className="text-[34px] leading-tight font-semibold">{user ? `Welcome back${name ? `, ${name}` : ''}` : 'Welcome to Case Prep OS'}</h1>
+        <h1 className="text-[34px] leading-tight font-semibold">{user ? `Welcome back${name ? `, ${name}` : ''}` : 'Welcome to PrepForCase'}</h1>
         <p className="mt-1 max-w-2xl text-[16.5px] text-muted">Learn it, practise it, look it up, track it. Start with your next step below.</p>
       </header>
 

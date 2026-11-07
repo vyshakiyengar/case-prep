@@ -114,11 +114,24 @@ export function Avatar({ name, photo, size = 32 }: { name: string; photo?: strin
     : <span className="inline-flex items-center justify-center rounded-full bg-teal-l font-semibold text-teal-d" style={{ width: size, height: size, fontSize: size * 0.38 }}>{initials}</span>
 }
 
+/** The PrepForCase mark: an issue tree (question → three branches). */
+export function LogoMark({ size = 28, light = false }: { size?: number; light?: boolean }) {
+  const bg = light ? '#FBFCFE' : '#14213D', fg = light ? '#14213D' : '#FBFCFE'
+  return (
+    <svg width={size} height={size} viewBox="0 0 48 48" aria-hidden>
+      <rect width="48" height="48" rx="11" fill={bg} />
+      <rect x="17" y="9" width="14" height="9" rx="2.5" fill={fg} />
+      <path d="M24 18v5M12 23h24M12 23v6M24 23v6M36 23v6" stroke={fg} strokeWidth="2.6" fill="none" strokeLinecap="round" strokeLinejoin="round" />
+      <circle cx="12" cy="34" r="4" fill="#0E9AA7" /><circle cx="24" cy="34" r="4" fill="#6C5CE7" /><circle cx="36" cy="34" r="4" fill="#E8505B" />
+    </svg>
+  )
+}
+
 export function Logo({ light = false }: { light?: boolean }) {
   return (
-    <span className="inline-flex items-center gap-2.5">
-      <svg width="28" height="28" viewBox="0 0 32 32" aria-hidden><rect width="32" height="32" rx="7" fill={light ? '#FBFCFE' : '#14213D'} /><path d="M16 7v6M9 13h14M9 13v5M16 13v5M23 13v5" stroke={light ? '#14213D' : '#FBFCFE'} strokeWidth="2.2" fill="none" strokeLinecap="round" /><circle cx="9" cy="22" r="2.6" fill="#0E9AA7" /><circle cx="16" cy="22" r="2.6" fill="#6C5CE7" /><circle cx="23" cy="22" r="2.6" fill="#E8505B" /></svg>
-      <span className={`font-serif text-[19px] font-semibold ${light ? 'text-white' : 'text-ink'}`}>Case Prep OS</span>
+    <span className="inline-flex items-center gap-2.5" aria-label="PrepForCase">
+      <LogoMark light={light} />
+      <span aria-hidden className={`font-serif text-[20px] font-semibold tracking-[-0.2px] ${light ? 'text-white' : 'text-ink'}`}>Prep<span className="text-teal">For</span>Case</span>
     </span>
   )
 }

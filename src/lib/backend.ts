@@ -164,7 +164,7 @@ async function makeFirebase(): Promise<Backend> {
 
 /* ------------------------------------------------------------------ Demo (localStorage) */
 const DEMO_PERKS: Perk[] = [
-  { id: 'tracker', title: 'The Case Prep OS spreadsheet', description: 'The full tracker as an Excel / Google Sheets file, free for verified students.', kind: 'download', url: '#', order: 1 },
+  { id: 'tracker', title: 'The PrepForCase spreadsheet', description: 'The full tracker as an Excel / Google Sheets file, free for verified students.', kind: 'download', url: '#', order: 1 },
   { id: 'casebook', title: '40% off the Casebook Vol. 1', description: '15 original cases with full solutions, as a printable PDF.', kind: 'code', code: 'STUDENT40', url: '#', order: 2 },
   { id: 'early', title: 'Early access to new cases', description: 'New cases appear here a week before anyone else gets them.', kind: 'link', url: '#', order: 3 },
 ]

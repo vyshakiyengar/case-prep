@@ -20,7 +20,7 @@ export const LESSONS_1: Lesson[] = [
       },
       {
         h: 'The six stages interviewers score',
-        body: `<p>Almost every firm's scorecard comes down to six things, and the Case Prep OS case log scores you on exactly these:</p>
+        body: `<p>Almost every firm's scorecard comes down to six things, and the PrepForCase case log scores you on exactly these:</p>
 <ul><li><b>Clarify and recap</b>: did you understand the problem and the goal?</li>
 <li><b>Structure and hypothesis</b>: did you break it down sensibly and say where you'd start?</li>
 <li><b>Maths and charts</b>: were your numbers right, and did you draw the insight?</li>

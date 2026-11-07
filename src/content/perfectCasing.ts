@@ -1,5 +1,5 @@
 // Perfect casing: the choreography of a case from hello to recommendation.
-// Adapted from the original Case Prep OS tracker ("Perfect Casing" tab).
+// Adapted from the original PrepForCase tracker ("Perfect Casing" tab).
 
 export interface Moment { name: string; do: string; say?: string }
 export interface Stage { n: number; slug: string; title: string; why: string; moments: Moment[]; mistake: string; lesson: string }

@@ -10,7 +10,7 @@ export default function Privacy() {
         <h1 className="mt-8 text-[34px] font-semibold">Privacy notice</h1>
         <p className="mt-1 text-muted">Last updated [date]</p>
         <div className="mt-6 space-y-5 font-serif text-[17px] leading-[1.7] text-ink-2">
-          <p>Case Prep OS is run by [your name or company], [address], ("we"). Contact: [email]. This notice explains what we collect and why.</p>
+          <p>PrepForCase is run by [your name or company], [address], ("we"). Contact: [email]. This notice explains what we collect and why.</p>
           <h2 className="font-serif text-[22px] font-semibold">What we collect</h2>
           <p>When you sign in with Google: your name, email address and profile photo. When you use the app: the practice data you enter (tracker, case log, drills, stories). If you verify as a student: your school email, school, programme and graduation year, and whether you agreed to receive marketing emails.</p>
           <h2 className="font-serif text-[22px] font-semibold">Why, and on what basis</h2>

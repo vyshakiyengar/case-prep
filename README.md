@@ -1,6 +1,6 @@
-# Case Prep OS: the website
+# PrepForCase: the website
 
-The interactive version of Case Prep OS, organised the way students learn:
+The interactive version of PrepForCase, organised the way students learn:
 
 **Learn**
 1. **Course** (`/learn`): 11 lessons on one scrolling page. Signed-out visitors see the first part of each lesson; the rest unlocks on sign-in.
@@ -19,6 +19,14 @@ It's a React app (Vite + TypeScript + Tailwind) that uses **Firebase** for Googl
 
 ---
 
+
+## Custom domain: prepforcase.com
+
+1. In Vercel, open the **case-prep** project → **Settings → Domains** → add `prepforcase.com`, then add `www.prepforcase.com` and set it to redirect to `prepforcase.com`.
+2. Vercel shows the DNS records to create. At the company where you bought the domain, add them exactly as shown (usually an **A record** for `@` pointing to Vercel's IP, and a **CNAME** for `www` pointing to `cname.vercel-dns.com`).
+3. Wait for Vercel to show "Valid configuration" (minutes to a few hours). HTTPS is set up automatically.
+4. In Firebase → **Authentication → Settings → Authorized domains**, add `prepforcase.com` and `www.prepforcase.com`, so Google sign-in and school email links work on the new domain.
+
 ## Try it first (no setup)
 
 ```bash
@@ -36,7 +44,7 @@ You need [Node.js](https://nodejs.org) 20 or newer.
 
 ### 1. Create a Firebase project
 1. Go to https://console.firebase.google.com and click **Create a project**. Google Analytics is optional.
-2. In the project, click the **</>** (Web) icon to add a web app. Name it "Case Prep OS". You don't need Hosting yet.
+2. In the project, click the **</>** (Web) icon to add a web app. Name it "PrepForCase". You don't need Hosting yet.
 3. Firebase shows a `firebaseConfig` block. Copy `.env.example` to a new file called `.env.local` and fill in:
    - `VITE_FIREBASE_API_KEY` = `apiKey`
    - `VITE_FIREBASE_AUTH_DOMAIN` = `authDomain`
@@ -49,7 +57,7 @@ You need [Node.js](https://nodejs.org) 20 or newer.
 1. Enable **Google**. Choose a support email and save.
 2. Enable **Email/Password**, then switch on **Email link (passwordless sign-in)** inside it, and save. This is what sends the business-school verification emails. Students never get a password.
 3. Under **Settings → Authorized domains**, add your website's domain once you have one (localhost is already there).
-4. Optional: **Templates → Email address verification / Sign-in link**. Set the sender name to "Case Prep OS" so the email looks trustworthy.
+4. Optional: **Templates → Email address verification / Sign-in link**. Set the sender name to "PrepForCase" so the email looks trustworthy.
 
 ### 3. Create the database
 **Build → Firestore Database → Create database**. Choose **production mode** and a region close to your users (e.g. `europe-west2`, London). You can't change the region later.

@@ -118,7 +118,7 @@ function Analytics({ stats, students }: { stats: UserStats[]; students: StudentR
     const head = ['Name', 'Email', 'Joined', 'Last active', 'Active days', 'Lessons', 'Cases', 'Drills', 'Phrases trained', 'Interview date']
     const lines = stats.map((s) => [s.name, s.email, iso(s.createdAt), iso(s.lastActive), s.activeDays?.length || 0, s.lessons, s.cases, s.drills, s.trainerCards, s.interviewDate || ''].map(csvCell).join(','))
     const blob = new Blob([[head.map(csvCell).join(','), ...lines].join('\n')], { type: 'text/csv' })
-    const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = `case-prep-os-users-${iso(now)}.csv`; a.click()
+    const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = `prepforcase-users-${iso(now)}.csv`; a.click()
   }
   return (
     <>
@@ -185,12 +185,12 @@ export default function Admin() {
     const head = ['Name', 'School email', 'Google email', 'School', 'Known school', 'Programme', 'Graduation year', 'Marketing consent', 'Verified at']
     const lines = rows.map((r) => [r.name, r.schoolEmail, r.googleEmail, r.school, r.knownSchool ? 'yes' : 'no', r.program, r.gradYear, r.marketing ? 'yes' : 'no', new Date(r.verifiedAt).toISOString()].map(csvCell).join(','))
     const blob = new Blob([[head.map(csvCell).join(','), ...lines].join('\n')], { type: 'text/csv' })
-    const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = `case-prep-os-students-${new Date().toISOString().slice(0, 10)}.csv`; a.click()
+    const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = `prepforcase-students-${new Date().toISOString().slice(0, 10)}.csv`; a.click()
   }
   const optIn = rows.filter((r) => r.marketing).length
   return (
     <>
-      <PageHeader title="Admin" intro="How people use Case Prep OS: sign-ups, activity, learning progress and verified students. Only you can see this page." />
+      <PageHeader title="Admin" intro="How people use PrepForCase: sign-ups, activity, learning progress and verified students. Only you can see this page." />
       <Analytics stats={stats} students={rows} />
       <div className="mb-3 flex flex-wrap items-center justify-between gap-3"><h2 className="text-[24px] font-semibold">Verified students</h2><Button onClick={exportCsv}>Export students CSV</Button></div>
       <dl className="mb-6 flex flex-wrap gap-x-10 gap-y-3">
