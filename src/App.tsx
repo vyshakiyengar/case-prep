@@ -32,6 +32,8 @@ const Formulas = lazy(() => import('./pages/Reference').then((m) => ({ default: 
 const Glossary = lazy(() => import('./pages/Reference').then((m) => ({ default: m.Glossary })))
 const Interviewer = lazy(() => import('./pages/Interviewer'))
 const SiteHome = lazy(() => import('./pages/Home'))
+const About = lazy(() => import('./pages/About'))
+const Notes = lazy(() => import('./pages/Notes'))
 
 export function Loading({ label = 'Loading…' }: { label?: string }) {
   return <div className="flex min-h-[40vh] items-center justify-center text-muted" role="status">{label}</div>
@@ -72,6 +74,7 @@ export default function App() {
           <Route path="/frameworks/:slug" element={<Framework />} />
           <Route path="/graphs" element={<Graphs />} />
           <Route path="/home" element={<SiteHome />} />
+          <Route path="/about" element={<About />} />
           <Route path="/case-types" element={<CaseTypes />} />
           <Route path="/formulas" element={<Formulas />} />
           <Route path="/glossary" element={<Glossary />} />
@@ -85,6 +88,7 @@ export default function App() {
           <Route path="/tracker" element={<RequireUser><Tracker /></RequireUser>} />
           <Route path="/cases" element={<RequireUser><CaseLog /></RequireUser>} />
           <Route path="/stories" element={<RequireUser><Stories /></RequireUser>} />
+          <Route path="/notes" element={<RequireUser><Notes /></RequireUser>} />
           <Route path="/partners" element={<RequireUser><Partners /></RequireUser>} />
           <Route path="/perks" element={<RequireUser><Perks /></RequireUser>} />
           <Route path="/settings" element={<RequireUser><Settings /></RequireUser>} />

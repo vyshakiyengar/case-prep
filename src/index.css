@@ -67,6 +67,53 @@ h1:not(.font-sans) { letter-spacing: -0.02em; }
   .tree-line, .tree-node { animation: none; }
 }
 
+/* ---------- Motion ---------- */
+/* Everything below only hides content once JS has set data-reveal="wait",
+   and only animates under data-reveal="in". Reduced motion never sets either. */
+@keyframes rise { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+.rise { animation: rise .55s cubic-bezier(.2,.7,.2,1) both; }
+
+/* Issue trees grow left to right, one level at a time, like being drawn on a pad */
+[data-reveal="wait"] .htree-kids::before, [data-reveal="wait"] .htree-kid::before { transform: scaleX(0); }
+[data-reveal="wait"] .htree-kid::after { transform: scaleY(0); }
+[data-reveal="wait"] .htree-kid > .htree-node > :first-child { opacity: 0; transform: translateX(-8px); }
+[data-reveal="in"] .htree-kids::before, [data-reveal="in"] .htree-kid::before {
+  transform-origin: left; transition: transform .3s ease-out; transition-delay: calc(var(--lvl, 0) * .32s + .05s); }
+[data-reveal="in"] .htree-kid::after { transform-origin: center; transition: transform .3s ease-out; transition-delay: calc(var(--lvl, 0) * .32s + .15s); }
+[data-reveal="in"] .htree-kid > .htree-node > :first-child {
+  transition: opacity .35s ease-out, transform .35s cubic-bezier(.2,.7,.2,1); transition-delay: calc(var(--lvl, 0) * .32s + .3s); }
+
+/* The case flow rail: segments fill, stages light up in order */
+.rail-seg { background: var(--color-line); overflow: hidden; }
+.rail-seg::after { content: ''; position: absolute; inset: 0; background: var(--color-teal); transform-origin: left; }
+[data-reveal="wait"] .rail-seg::after { transform: scaleX(0); }
+[data-reveal="wait"] .rail-node { transform: scale(.6); opacity: .35; }
+[data-reveal="wait"] .flow-card { opacity: 0; transform: translateY(8px); }
+[data-reveal="in"] .rail-seg::after { transition: transform .2s linear; transition-delay: calc(var(--i) * .2s - .15s); }
+[data-reveal="in"] .rail-node { transition: transform .4s cubic-bezier(.3,1.6,.5,1), opacity .3s; transition-delay: calc(var(--i) * .2s); }
+[data-reveal="in"] .flow-card { transition: opacity .45s ease-out, transform .45s cubic-bezier(.2,.7,.2,1); transition-delay: calc(var(--i) * .09s + .25s); }
+
+/* Course pages turn like a book: forward turns from the right, back from the left */
+@keyframes turn-next { from { opacity: 0; transform: perspective(1400px) translateX(48px) rotateY(-9deg); } to { opacity: 1; transform: none; } }
+@keyframes turn-prev { from { opacity: 0; transform: perspective(1400px) translateX(-48px) rotateY(9deg); } to { opacity: 1; transform: none; } }
+.turn-next { animation: turn-next .5s cubic-bezier(.2,.7,.2,1) both; transform-origin: left center; }
+.turn-prev { animation: turn-prev .5s cubic-bezier(.2,.7,.2,1) both; transform-origin: right center; }
+
+/* Reading progress along the bottom of the course bar */
+.read-progress { transform-origin: left; transform: scaleX(var(--p, 0)); transition: transform .12s linear; }
+
+/* The sign-in wall: the page softens and blurs out below the first screen */
+.wall-veil {
+  -webkit-backdrop-filter: blur(9px); backdrop-filter: blur(9px);
+  background: linear-gradient(to bottom, rgb(246 247 249 / 0) 0%, rgb(246 247 249 / .55) 35%, rgb(246 247 249 / .98) 75%);
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0, black 120px); mask-image: linear-gradient(to bottom, transparent 0, black 120px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .rise, .turn-next, .turn-prev { animation: none; }
+  .read-progress { transition: none; }
+}
+
 /* Left-to-right issue tree with bracket connectors */
 .htree-node { display: flex; align-items: center; }
 .htree-kids { position: relative; display: flex; flex-direction: column; justify-content: center; gap: 8px; padding-left: 28px; }

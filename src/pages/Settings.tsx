@@ -1,12 +1,14 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useStore } from '../lib/store'
-import { resetDemo } from '../lib/backend'
+import { AuthError, resetDemo } from '../lib/backend'
 import { Button, Field, inputCls, PageHeader, Section } from '../components/ui'
 import { useIsAdmin } from '../lib/admin'
 
 export default function Settings() {
   const { data, user, saveProfile, signOut, backend } = useStore()
+  const [delMsg, setDelMsg] = useState('')
+  const [deleting, setDeleting] = useState(false)
   const p = data!.profile!
   const [name, setName] = useState(p.name)
   const [start, setStart] = useState(p.startDate || '')
@@ -20,6 +22,14 @@ export default function Settings() {
     const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' })
     const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'prepforcase-my-data.json'; a.click()
   }
+  const deleteAccount = async () => {
+    if (!backend || !confirm('Delete your account and everything you have saved? This cannot be undone.')) return
+    setDeleting(true); setDelMsg('')
+    try { await backend.deleteAccount(); location.href = '/' }
+    catch (e) { setDelMsg(e instanceof AuthError ? e.message : "Couldn't delete everything. Check your connection and try again.") }
+    finally { setDeleting(false) }
+  }
+  const how = user?.provider === 'password' ? 'with your school email' : user?.provider === 'google' ? 'with Google' : ''
   return (
     <>
       <PageHeader title="Settings" />
@@ -34,12 +44,18 @@ export default function Settings() {
         </Section>
         <div className="space-y-5">
           <Section title="Account">
-            <p className="text-ink-2">{backend?.mode === 'demo' ? 'Your progress is saved in this browser on this device.' : `Signed in as ${user?.email || user?.name} with Google.`}</p>
+            <p className="text-ink-2">{backend?.mode === 'demo' ? 'Your progress is saved in this browser on this device.' : `Signed in as ${user?.email || user?.name} ${how}.`}</p>
             <div className="mt-4 flex flex-wrap gap-2">
               <Button variant="secondary" onClick={download}>Download my data</Button>
               <Button variant="secondary" onClick={signOut}>Sign out</Button>
               {backend?.mode === 'demo' && <Button variant="danger" onClick={() => { if (confirm('Delete all progress saved in this browser?')) { resetDemo(); location.href = '/' } }}>Clear my progress</Button>}
             </div>
+            {backend?.mode === 'firebase' && (
+              <div className="mt-5 border-t border-line pt-4">
+                <button onClick={deleteAccount} disabled={deleting} className="text-[14px] font-medium text-signal-d hover:underline disabled:opacity-50">{deleting ? 'Deleting…' : 'Delete my account and data'}</button>
+                {delMsg && <p role="alert" className="mt-2 text-[13.5px] text-signal-d">{delMsg}</p>}
+              </div>
+            )}
           </Section>
           <Section title="More">
             <ul className="space-y-2 text-[15px]">

@@ -1,16 +1,16 @@
 import { Link, Navigate, useLocation } from 'react-router-dom'
 import { useStore } from '../lib/store'
-import { firebaseConfigured } from '../lib/backend'
-import { GoogleMark, Logo } from '../components/ui'
+import { Logo } from '../components/ui'
+import { SignInPanel } from '../components/SignInPanel'
 
-export function SignInButton({ dark = false, label }: { dark?: boolean; label?: string }) {
-  const { signIn } = useStore()
+/** A button that takes people to the sign-in page and brings them back afterwards. */
+export function SignInButton({ dark = false, label = 'Sign in' }: { dark?: boolean; label?: string }) {
+  const loc = useLocation()
   return (
-    <button onClick={signIn}
-      className={`inline-flex items-center gap-3 rounded-lg px-5 py-3 text-[15px] font-medium shadow-sm transition-colors ${dark ? 'bg-white text-ink hover:bg-paper' : 'bg-ink text-white hover:bg-[#22325A]'}`}>
-      {firebaseConfigured && <span className="flex h-6 w-6 items-center justify-center rounded bg-white"><GoogleMark /></span>}
-      {label || (firebaseConfigured ? 'Continue with Google' : 'Start tracking my prep')}
-    </button>
+    <Link to={`/signin?next=${encodeURIComponent(loc.pathname + loc.search)}`}
+      className={`inline-flex items-center gap-2 rounded-lg px-5 py-3 text-[15px] font-medium transition-colors ${dark ? 'bg-white text-ink hover:bg-teal-l' : 'bg-ink text-white hover:bg-[#1C2B4A]'}`}>
+      {label}
+    </Link>
   )
 }
 
@@ -18,22 +18,14 @@ export default function SignIn() {
   const { ready, user } = useStore()
   const loc = useLocation()
   const next = new URLSearchParams(loc.search).get('next')
-  if (ready && user) return <Navigate to={next && next.startsWith('/') && next !== '/signin' ? next : '/home'} replace />
+  if (ready && user) return <Navigate to={next && next.startsWith('/') && !next.startsWith('//') && next !== '/signin' ? next : '/home'} replace />
   return (
     <div className="graph-paper flex min-h-screen items-center justify-center px-4 py-10">
-      <div className="w-full max-w-md rounded-2xl border border-line bg-white p-7 shadow-[0_18px_40px_-24px_rgba(20,33,61,.35)]">
-        <Link to="/"><Logo /></Link>
-        <h1 className="mt-6 text-[28px] font-semibold">Track your prep</h1>
-        <p className="mt-1 text-muted">The course, frameworks, casebook and drills are open to everyone. Sign in to save your progress:</p>
-        <ul className="mt-4 list-disc space-y-1 pl-5 text-ink-2">
-          <li>Daily tracker and dashboard</li>
-          <li>Case log that finds your weakest stage</li>
-          <li>Course progress and drill scores</li>
-          <li>Practice partners and student perks</li>
-        </ul>
-        <div className="mt-6"><SignInButton /></div>
-        {!firebaseConfigured && <p className="mt-3 text-[13px] text-muted">Your progress is saved in this browser on this device.</p>}
-        <Link to="/learn" className="mt-6 inline-block text-[14px] text-muted hover:text-ink">Or start the free course</Link>
+      <div className="rise w-full max-w-[420px] rounded-2xl border border-line bg-white p-7 shadow-[0_30px_60px_-30px_rgba(15,27,51,.45)]">
+        <Link to="/" aria-label="PrepForCase home"><Logo /></Link>
+        <h1 className="mt-7 text-[30px] leading-tight">Sign in to get started</h1>
+        <p className="mt-1.5 mb-6 text-[15px] text-muted">Free. Every lesson, framework, case and drill, with your progress saved.</p>
+        <SignInPanel />
       </div>
     </div>
   )

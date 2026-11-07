@@ -2,7 +2,7 @@ import type { CaseEntry, DayEntry, DrillEntry, Invite, Perk, Profile, StudentRec
 import { FIREBASE_CONFIG } from './firebaseConfig'
 import { uid as newId } from './dates'
 
-export interface AuthUser { uid: string; name: string; email?: string; photoURL?: string }
+export interface AuthUser { uid: string; name: string; email?: string; photoURL?: string; emailVerified?: boolean; provider?: 'google' | 'password' | 'other' }
 export interface UserData { profile: Profile | null; days: Record<string, DayEntry>; cases: CaseEntry[]; drills: DrillEntry[]; stories: Story[] }
 
 export interface Backend {
@@ -10,6 +10,14 @@ export interface Backend {
   onAuth(cb: (u: AuthUser | null) => void): () => void
   signIn(): Promise<void>
   signOut(): Promise<void>
+  // business school accounts: school email + password
+  signUpEmail(name: string, email: string, password: string): Promise<void>
+  signInEmail(email: string, password: string): Promise<void>
+  resetPassword(email: string): Promise<void>
+  resendVerification(): Promise<void>
+  refreshUser(): Promise<AuthUser | null>
+  /** Removes everything stored about this person, then the account itself. */
+  deleteAccount(): Promise<void>
   loadAll(uid: string): Promise<UserData>
   saveProfile(uid: string, p: Profile): Promise<void>
   saveDay(uid: string, d: DayEntry): Promise<void>
@@ -40,6 +48,20 @@ export interface Backend {
 }
 
 export class SchoolLinkError extends Error {}
+/** A sign-in problem with a message that is safe and useful to show the person. */
+export class AuthError extends Error {}
+
+function authMessage(code: string): string {
+  if (code.includes('email-already-in-use')) return 'There is already an account with this email. Sign in instead, or reset your password.'
+  if (code.includes('invalid-credential') || code.includes('wrong-password') || code.includes('user-not-found') || code.includes('invalid-login')) return 'That email and password don\'t match. Try again or reset your password.'
+  if (code.includes('weak-password')) return 'Use a password of at least 8 characters.'
+  if (code.includes('invalid-email')) return 'That doesn\'t look like an email address.'
+  if (code.includes('too-many-requests')) return 'Too many attempts. Wait a few minutes, then try again.'
+  if (code.includes('network-request-failed')) return 'No connection. Check your internet and try again.'
+  if (code.includes('unauthorized-domain')) return 'Sign-in isn\'t enabled on this web address yet.'
+  return 'Sign-in didn\'t work. Try again.'
+}
+const authFail = (e: unknown): never => { throw new AuthError(authMessage((e as { code?: string }).code || '')) }
 
 const env = import.meta.env
 // Firebase web config. These values are public by design (they ship to every browser).
@@ -50,7 +72,8 @@ const fb = {
   projectId: env.VITE_FIREBASE_PROJECT_ID || FIREBASE_CONFIG.projectId,
   appId: env.VITE_FIREBASE_APP_ID || FIREBASE_CONFIG.appId,
 }
-export const firebaseConfigured = Boolean(fb.apiKey && fb.projectId)
+// VITE_FORCE_DEMO=1 runs the app on browser storage only (used for local tests).
+export const firebaseConfigured = Boolean(fb.apiKey && fb.projectId) && env.VITE_FORCE_DEMO !== '1'
 
 /* ------------------------------------------------------------------ Firebase */
 async function makeFirebase(): Promise<Backend> {
@@ -63,19 +86,71 @@ async function makeFirebase(): Promise<Backend> {
   const col = (uid: string, name: string) => fs.collection(db, 'users', uid, name)
   const clean = <T extends object>(o: T) => JSON.parse(JSON.stringify(o)) as T // drop undefined fields
 
+  const toUser = (u: import('firebase/auth').User | null): AuthUser | null => {
+    if (!u) return null
+    const ids = u.providerData.map((p) => p.providerId)
+    return {
+      uid: u.uid, name: u.displayName || u.email?.split('@')[0] || 'You', email: u.email || undefined, photoURL: u.photoURL || undefined,
+      emailVerified: u.emailVerified, provider: ids.includes('google.com') ? 'google' : ids.includes('password') ? 'password' : 'other',
+    }
+  }
+  const verifyUrl = () => ({ url: `${window.location.origin}/home?verified=1` })
+
   return {
     mode: 'firebase',
     onAuth(cb) {
-      return authMod.onAuthStateChanged(auth, (u) =>
-        cb(u ? { uid: u.uid, name: u.displayName || 'You', email: u.email || undefined, photoURL: u.photoURL || undefined } : null))
+      return authMod.onAuthStateChanged(auth, (u) => cb(toUser(u)))
+    },
+    async signUpEmail(name, email, password) {
+      try {
+        const { user } = await authMod.createUserWithEmailAndPassword(auth, email.trim(), password)
+        await authMod.updateProfile(user, { displayName: name.trim() })
+        await authMod.sendEmailVerification(user, verifyUrl()).catch(() => {})
+      } catch (e) { authFail(e) }
+    },
+    async signInEmail(email, password) {
+      try { await authMod.signInWithEmailAndPassword(auth, email.trim(), password) } catch (e) { authFail(e) }
+    },
+    async resetPassword(email) {
+      try { await authMod.sendPasswordResetEmail(auth, email.trim(), { url: `${window.location.origin}/signin` }) }
+      catch (e) { const code = (e as { code?: string }).code || ''; if (!code.includes('user-not-found')) authFail(e) } // don't reveal whether an account exists
+    },
+    async resendVerification() {
+      if (!auth.currentUser) return
+      try { await authMod.sendEmailVerification(auth.currentUser, verifyUrl()) } catch (e) { authFail(e) }
+    },
+    async deleteAccount() {
+      const u = auth.currentUser
+      if (!u) return
+      const uid = u.uid
+      for (const name of ['days', 'cases', 'drills', 'stories']) {
+        const snap = await fs.getDocs(col(uid, name))
+        await Promise.all(snap.docs.map((d) => fs.deleteDoc(d.ref)))
+      }
+      const invites = await fs.getDocs(fs.query(fs.collection(db, 'invites'), fs.where('from', '==', uid)))
+      await Promise.all(invites.docs.map((d) => fs.deleteDoc(d.ref)))
+      await Promise.all(['users', 'summaries', 'stats', 'students'].map((c) => fs.deleteDoc(fs.doc(db, c, uid)).catch(() => {})))
+      try { await authMod.deleteUser(u) } catch (e) {
+        if (((e as { code?: string }).code || '').includes('requires-recent-login')) {
+          throw new AuthError('Your saved data has been deleted. To remove the sign-in itself, sign out, sign back in, and press delete again.')
+        }
+        authFail(e)
+      }
+    },
+    async refreshUser() {
+      if (!auth.currentUser) return null
+      await auth.currentUser.reload()
+      if (auth.currentUser.emailVerified) await auth.currentUser.getIdToken(true) // database rules see the new state
+      return toUser(auth.currentUser)
     },
     async signIn() {
       const provider = new authMod.GoogleAuthProvider()
+      provider.setCustomParameters({ prompt: 'select_account' })
       try { await authMod.signInWithPopup(auth, provider) }
       catch (e: unknown) {
         const code = (e as { code?: string }).code
         if (code === 'auth/popup-blocked' || code === 'auth/operation-not-supported-in-this-environment') await authMod.signInWithRedirect(auth, provider)
-        else if (code !== 'auth/popup-closed-by-user' && code !== 'auth/cancelled-popup-request') throw e
+        else if (code !== 'auth/popup-closed-by-user' && code !== 'auth/cancelled-popup-request') authFail(e)
       }
     },
     signOut: () => authMod.signOut(auth),
@@ -192,6 +267,12 @@ function makeDemo(): Backend {
     onAuth(cb) { listeners.add(cb); setTimeout(() => cb(state.signedIn ? user : null), 0); return () => { listeners.delete(cb) } },
     async signIn() { state.signedIn = true; write(); emit() },
     async signOut() { state.signedIn = false; write(); emit() },
+    async signUpEmail(name, email) { state.signedIn = true; user.name = name || 'You'; user.email = email; write(); emit() },
+    async signInEmail(email) { state.signedIn = true; user.email = email; write(); emit() },
+    async resetPassword() { /* demo: no email is sent */ },
+    async resendVerification() { /* demo: no email is sent */ },
+    async refreshUser() { return state.signedIn ? user : null },
+    async deleteAccount() { state = seed(); write(); emit() },
     async loadAll() { return JSON.parse(JSON.stringify(state.data)) },
     saveProfile: (_u, p) => upd((s) => { s.data.profile = { ...(s.data.profile || {}), ...p } }),
     saveDay: (_u, d) => upd((s) => { s.data.days[d.date] = d }),

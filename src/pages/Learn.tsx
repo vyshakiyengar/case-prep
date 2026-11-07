@@ -1,14 +1,17 @@
-import { Link, useParams } from 'react-router-dom'
-import { LESSONS, MODULES, lessonBySlug, totalMinutes } from '../content/course'
+import { useEffect, useRef } from 'react'
+import { Link, useLocation, useNavigate, useParams } from 'react-router-dom'
+import { LESSONS, lessonBySlug, totalMinutes } from '../content/course'
 import type { Lesson } from '../content/course'
 import { playbook } from '../content'
 import { useStore } from '../lib/store'
-import { Button, LinkButton, PageHeader, Section } from '../components/ui'
+import { LinkButton, PageHeader, Section } from '../components/ui'
 import { Rich, StructureTree } from '../components/CaseParts'
-import { Gate, JumpBar, Quiz, TryIt, useScrollToTarget } from '../components/Learning'
+import { Gate, Quiz, TryIt } from '../components/Learning'
 import { CoreFrameworksMini } from '../components/FrameworkTree'
 import { CaseMap } from '../components/CaseMap'
 import { CORE } from '../content/frameworkTrees'
+import { PAGES, pageTitle } from '../content/coursePages'
+import { NotesBox } from '../components/NotesBox'
 
 
 function SectionBody({ s }: { s: Lesson['sections'][number] }) {
@@ -21,12 +24,12 @@ function SectionBody({ s }: { s: Lesson['sections'][number] }) {
 }
 
 function LessonChapter({ l, n }: { l: Lesson; n: number }) {
-  const { user, data, markLesson } = useStore()
+  const { data } = useStore()
   const done = !!data?.profile?.learned?.includes(l.slug)
   const freeCount = l.sections.length > 2 ? 2 : 1
   return (
-    <article id={l.slug} className="scroll-mt-32 rounded-2xl border border-line bg-white p-5 sm:p-8">
-      <p className="text-[13.5px] text-muted">Lesson {n} of {LESSONS.length} · {l.minutes} min{done && <span className="ml-2 font-medium text-teal-d">Completed ✓</span>}</p>
+    <article id={l.slug} className="scroll-mt-32 rounded-2xl border border-line bg-white p-5 shadow-[0_1px_0_#E3E7ED,0_24px_48px_-36px_rgba(15,27,51,.4)] sm:p-9">
+      <p className="text-[13.5px] text-muted">Lesson {n} of {LESSONS.length}, {l.minutes} min{done && <span className="ml-2 font-medium text-teal-d">Completed ✓</span>}</p>
       <h2 className="mt-1 text-[30px] leading-tight font-semibold">{l.title}</h2>
       <p className="mt-1 max-w-2xl text-[16.5px] text-muted">{l.summary}</p>
 
@@ -94,8 +97,8 @@ function LessonChapter({ l, n }: { l: Lesson; n: number }) {
             </section>
 
             <div className="flex flex-wrap items-center gap-3 border-t border-line pt-6">
-              <LinkButton to={l.practice.to}>{l.practice.label}</LinkButton>
-              {user && <Button variant="secondary" onClick={() => markLesson(l.slug, !done)}>{done ? 'Completed ✓' : 'Mark as complete'}</Button>}
+              <span className="text-[14.5px] text-ink-2">Now practise it:</span>
+              <LinkButton to={l.practice.to} variant="secondary">{l.practice.label}</LinkButton>
             </div>
           </div>
         </Gate>
@@ -104,63 +107,164 @@ function LessonChapter({ l, n }: { l: Lesson; n: number }) {
   )
 }
 
+function PageTurner({ i, onTurn }: { i: number; onTurn: (to: number) => void }) {
+  const prev = PAGES[i - 1], next = PAGES[i + 1]
+  const card = 'group flex min-w-0 flex-1 flex-col rounded-xl border border-line bg-white px-5 py-4 transition-[border-color,transform] duration-200 hover:border-teal active:scale-[.99]'
+  return (
+    <nav aria-label="Course pages" className="mt-8 flex flex-col gap-3 sm:flex-row">
+      {prev ? (
+        <button onClick={() => onTurn(i - 1)} className={`${card} items-start text-left`}>
+          <span className="text-[13px] text-muted"><span className="inline-block transition-transform group-hover:-translate-x-0.5">←</span> Previous</span>
+          <span className="mt-0.5 truncate font-serif text-[18px] text-ink">{prev.label}</span>
+        </button>
+      ) : <span className="hidden flex-1 sm:block" />}
+      {next && (
+        <button onClick={() => onTurn(i + 1)} className={`${card} items-end text-right ${i === 0 ? 'border-ink bg-ink text-white hover:border-teal' : ''}`}>
+          <span className={`text-[13px] ${i === 0 ? 'text-[#B8C2D3]' : 'text-muted'}`}>{i === 0 ? 'Start the course' : 'Next'} <span className="inline-block transition-transform group-hover:translate-x-0.5">→</span></span>
+          <span className={`mt-0.5 truncate font-serif text-[18px] ${i === 0 ? 'text-white' : 'text-ink'}`}>{next.label}</span>
+        </button>
+      )}
+    </nav>
+  )
+}
+
+function CourseBar({ i, onTurn, done }: { i: number; onTurn: (to: number) => void; done?: string }) {
+  const bar = useRef<HTMLSpanElement>(null)
+  useEffect(() => {
+    let raf = 0
+    const tick = () => {
+      raf = 0
+      const max = document.documentElement.scrollHeight - window.innerHeight
+      bar.current?.style.setProperty('--p', String(max > 0 ? Math.min(1, window.scrollY / max) : 0))
+    }
+    const on = () => { if (!raf) raf = requestAnimationFrame(tick) }
+    tick(); window.addEventListener('scroll', on, { passive: true }); window.addEventListener('resize', on)
+    return () => { window.removeEventListener('scroll', on); window.removeEventListener('resize', on); cancelAnimationFrame(raf) }
+  }, [i])
+  const arrow = 'flex h-8 w-8 items-center justify-center rounded-lg border border-line bg-white text-ink transition-colors hover:border-teal disabled:opacity-35 disabled:hover:border-line'
+  return (
+    <nav aria-label="Course" className="sticky top-[57px] z-10 -mx-4 mb-6 border-b border-line bg-canvas/95 px-4 py-2 backdrop-blur sm:-mx-6 sm:px-6 lg:top-0 lg:-mx-10 lg:px-10">
+      <div className="flex items-center justify-between gap-3">
+        <label className="flex min-w-0 items-center gap-2 text-[14px] text-muted">
+          <span className="shrink-0">Jump to</span>
+          <select value={PAGES[i].id} onChange={(e) => onTurn(PAGES.findIndex((p) => p.id === e.target.value))}
+            className="min-w-0 max-w-[13rem] truncate rounded-lg border border-line bg-white px-2.5 py-1.5 text-[14px] font-medium text-ink sm:max-w-sm">
+            {PAGES.map((p, pi) => <option key={p.id} value={p.id}>{pageTitle(p.id, pi)}</option>)}
+          </select>
+        </label>
+        <div className="flex shrink-0 items-center gap-2 text-[13.5px] text-muted">
+          <span className="hidden sm:inline">{done ? `${done} · ` : ''}Page {i + 1} of {PAGES.length}</span>
+          <span className="sm:hidden">{i + 1}/{PAGES.length}</span>
+          <button className={arrow} disabled={i === 0} onClick={() => onTurn(i - 1)} aria-label="Previous page">‹</button>
+          <button className={arrow} disabled={i === PAGES.length - 1} onClick={() => onTurn(i + 1)} aria-label="Next page">›</button>
+        </div>
+      </div>
+      <span aria-hidden className="absolute inset-x-0 -bottom-px h-[2px] overflow-hidden"><span ref={bar} className="read-progress block h-full bg-teal" /></span>
+    </nav>
+  )
+}
+
 export default function Learn() {
   const { slug } = useParams()
-  const { user, data } = useStore()
-  useScrollToTarget(slug && lessonBySlug(slug) ? slug : undefined)
+  const loc = useLocation()
+  const navigate = useNavigate()
+  const { user, data, markLesson } = useStore()
+  const found = PAGES.findIndex((p) => p.id === (slug || 'case-map'))
+  const i = found < 0 ? 0 : found
+  const page = PAGES[i]
   const learned = new Set(data?.profile?.learned || [])
   const done = LESSONS.filter((l) => learned.has(l.slug)).length
   const nextLesson = LESSONS.find((l) => !learned.has(l.slug)) || LESSONS[0]
-  const nav = [{ id: 'case-map', label: 'The map of a case' }, ...LESSONS.map((l, i) => ({ id: l.slug, label: `Lesson ${i + 1}: ${l.title.split(':')[0]}` }))]
-  let n = 0
+
+  // which way did we turn? forward pages come in from the right
+  const last = useRef(i)
+  const dir = useRef<'next' | 'prev'>('next')
+  if (i !== last.current) dir.current = i > last.current ? 'next' : 'prev'
+  useEffect(() => { last.current = i }, [i])
+
+  // deep links like /learn/structuring#core-frameworks
+  useEffect(() => {
+    if (!loc.hash) return
+    const t = setTimeout(() => document.getElementById(decodeURIComponent(loc.hash.slice(1)))?.scrollIntoView({ block: 'start' }), 120)
+    return () => clearTimeout(t)
+  }, [loc.hash, i])
+
+  const turn = (to: number) => {
+    if (to < 0 || to >= PAGES.length || to === i) return
+    // finishing a lesson by moving forward counts it as read
+    if (to > i && user && LESSONS.some((l) => l.slug === page.id) && !learned.has(page.id)) markLesson(page.id, true)
+    navigate(PAGES[to].to)
+  }
+
+  // arrow keys turn the page, like an e-reader
+  const turnRef = useRef(turn); turnRef.current = turn
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      const t = e.target as HTMLElement
+      if (e.altKey || e.ctrlKey || e.metaKey || e.shiftKey || t.closest('input, textarea, select, [contenteditable="true"]')) return
+      if (e.key === 'ArrowRight') turnRef.current(last.current + 1)
+      if (e.key === 'ArrowLeft') turnRef.current(last.current - 1)
+    }
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+  }, [])
+
+  const lessonN = LESSONS.findIndex((l) => l.slug === page.id) + 1
   return (
     <>
-      <PageHeader title="The case interview course"
-        intro={`${LESSONS.length} short lessons, about ${Math.round(totalMinutes / 5) * 5} minutes in total. Go at your own pace, one lesson at a time.`}
-        action={<LinkButton to={`/learn/${nextLesson.slug}`}>{done ? 'Continue where I left off' : 'Start lesson 1'}</LinkButton>} />
+      {i === 0 && (
+        <PageHeader title="The case interview course"
+          intro={`${LESSONS.length} short lessons, about ${Math.round(totalMinutes / 5) * 5} minutes in total. One lesson per page: turn with the buttons or your arrow keys.`}
+          action={<LinkButton to={`/learn/${nextLesson.slug}`}>{done ? 'Continue where I left off' : 'Start lesson 1'}</LinkButton>} />
+      )}
 
-      <JumpBar items={nav} label="Jump to" right={user ? `${done} of ${LESSONS.length} lessons done` : undefined} />
+      <CourseBar i={i} onTurn={turn} done={user ? `${done} of ${LESSONS.length} done` : undefined} />
 
-      <section id="case-map" className="mb-12 scroll-mt-32">
-        <h2 className="text-[26px] font-semibold">First, the map: how a case interview flows</h2>
-        <p className="mt-1 mb-4 max-w-2xl text-[16px] text-ink-2">Every case has the same six steps and takes 30 to 40 minutes. Read these six lines, then start lesson 1.</p>
-        <CaseMap />
-        <p className="mt-4 text-[15px] text-ink-2">Want to see a whole case done well? <Link to="/perfect-casing" className="font-medium text-violet-d hover:underline">See the perfect case</Link></p>
-      </section>
+      <div key={page.id} className={dir.current === 'prev' ? 'turn-prev' : 'turn-next'}>
+        {page.id === 'case-map' && (
+          <section id="case-map" className="scroll-mt-32">
+            <h2 className="text-[28px] leading-tight">First, the map: how a case interview flows</h2>
+            <p className="mt-1 mb-5 max-w-2xl text-[16px] text-ink-2">Every case has the same six steps and takes 30 to 40 minutes. Read these six lines, then turn the page to start lesson 1.</p>
+            <CaseMap />
+            <p className="mt-4 text-[15px] text-ink-2">Want to see a whole case done well? <Link to="/perfect-casing" className="font-medium text-violet-d hover:underline">See the perfect case</Link></p>
+          </section>
+        )}
 
-      <div className="space-y-10">
-        {MODULES.map((m, mi) => (
-          <div key={m.title} className="space-y-6">
-            <div className="border-b border-line pb-2">
-              <p className="text-[13px] font-semibold text-teal-d">Module {mi + 1}</p>
-              <h2 className="text-[24px] font-semibold">{m.title}</h2>
-              <p className="text-muted">{m.blurb}</p>
-            </div>
-            {m.slugs.map((s) => { n++; return <LessonChapter key={s} l={lessonBySlug(s)!} n={n} /> })}
-          </div>
-        ))}
+        {lessonN > 0 && (
+          <>
+            {page.module && <p className="mb-2 text-[13.5px] font-medium text-teal-d">{page.module}</p>}
+            <LessonChapter l={lessonBySlug(page.id)!} n={lessonN} />
+          </>
+        )}
+
+        {page.id === 'whats-next' && (
+          <>
+            <section className="grid items-center gap-5 rounded-2xl border-2 border-teal bg-white p-6 md:grid-cols-[1fr_auto]">
+              <div>
+                <h2 className="text-[24px] leading-tight">Next: perfect casing</h2>
+                <p className="mt-1 text-ink-2">The course teaches each skill. Perfect casing puts them in order: the 10 stages of a strong case, the exact words to use at each, and a 5-minute daily trainer that makes those words automatic.</p>
+              </div>
+              <LinkButton to="/perfect-casing">Open perfect casing</LinkButton>
+            </section>
+            <Section title="Then: a 6-week practice plan" className="mt-6">
+              <p className="mb-4 text-muted">This is how to turn the course into an offer. The tracker in My prep follows the same plan.</p>
+              <ol className="grid gap-3 md:grid-cols-2 lg:grid-cols-3">
+                {playbook.plan.map((p, pi) => (
+                  <li key={p.week} className="rounded-lg border border-line p-4">
+                    <div className={`font-serif text-[15px] font-semibold ${pi < 2 ? 'text-teal-d' : pi < 4 ? 'text-violet-d' : 'text-signal-d'}`}>{p.week}</div>
+                    <p className="mt-1 text-[14.5px] text-ink">{p.focus}</p>
+                    <p className="mt-1.5 text-[13.5px] text-muted">Target: {p.volume}</p>
+                  </li>
+                ))}
+              </ol>
+            </Section>
+          </>
+        )}
+
+        {user && <NotesBox pageId={page.id} title={pageTitle(page.id, i)} />}
+
+        <PageTurner i={i} onTurn={turn} />
       </div>
-
-      <section className="mt-12 grid items-center gap-5 rounded-xl border-2 border-teal bg-white p-6 md:grid-cols-[1fr_auto]">
-        <div>
-          <h2 className="text-[22px] font-semibold">Next: perfect casing</h2>
-          <p className="mt-1 text-ink-2">The course teaches each skill. Perfect casing puts them in order: the 10 stages of a strong case, the exact words to use at each, and a 5-minute daily trainer that makes those words automatic.</p>
-        </div>
-        <LinkButton to="/perfect-casing">Open perfect casing</LinkButton>
-      </section>
-
-      <Section title="Then: a 6-week practice plan" className="mt-6">
-        <p className="mb-4 text-muted">Once you've done the course, this is how to turn it into an offer. The tracker in My prep follows the same plan.</p>
-        <ol className="grid gap-3 md:grid-cols-2 lg:grid-cols-3">
-          {playbook.plan.map((p, i) => (
-            <li key={p.week} className="rounded-lg border border-line p-4">
-              <div className={`font-serif text-[15px] font-semibold ${i < 2 ? 'text-teal-d' : i < 4 ? 'text-violet-d' : 'text-signal-d'}`}>{p.week}</div>
-              <p className="mt-1 text-[14.5px] text-ink">{p.focus}</p>
-              <p className="mt-1.5 text-[13.5px] text-muted">Target: {p.volume}</p>
-            </li>
-          ))}
-        </ol>
-      </Section>
     </>
   )
 }

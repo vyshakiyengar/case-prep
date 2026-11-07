@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Link, NavLink, Outlet, useLocation } from 'react-router-dom'
+import { SignInWall } from './SignInWall'
 import { useStore } from '../lib/store'
 import { Avatar, Logo } from './ui'
 import { useIsAdmin } from '../lib/admin'
@@ -28,6 +29,7 @@ export const PREP: Item[] = [
   { to: '/today', label: 'Dashboard', icon: 'M4 12h4l2-6 4 12 2-6h4' },
   { to: '/tracker', label: 'Tracker', icon: 'M4 5h16v14H4zM4 10h16M9 5v14' },
   { to: '/cases', label: 'Case log', icon: 'M6 4h12v16H6zM9 8h6M9 12h6M9 16h3' },
+  { to: '/notes', label: 'My notes', icon: 'M6 3h9l3 3v15H6zM9 9h6M9 13h6M9 17h4' },
   { to: '/stories', label: 'FIT stories', icon: 'M5 5h14v10H9l-4 4zM9 9h6M9 12h4' },
   { to: '/partners', label: 'Partners', icon: 'M9 11a3 3 0 1 0 0-6 3 3 0 0 0 0 6zM3 19c0-3 3-5 6-5s6 2 6 5M16 5a3 3 0 0 1 0 6M18 14c2 .6 3 2.4 3 5' },
   { to: '/perks', label: 'Student perks', icon: 'M3 9l9-5 9 5-9 5-9-5zM7 11.5V16c0 1.5 2.5 3 5 3s5-1.5 5-3v-4.5M21 9v6' },
@@ -56,6 +58,20 @@ export function SignInLink({ className = '' }: { className?: string }) {
   return <Link to={`/signin?next=${encodeURIComponent(loc.pathname + loc.search)}`} className={`rounded-lg bg-ink px-3.5 py-2 text-[14px] font-medium text-white hover:bg-[#22325A] ${className}`}>Sign in</Link>
 }
 
+function VerifyBanner({ email }: { email?: string }) {
+  const { resendVerification, refreshUser } = useStore()
+  const [sent, setSent] = useState(false)
+  return (
+    <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-1 border-b border-marker/60 bg-marker-l px-4 py-2 text-[13.5px] text-ink-2 lg:px-10">
+      <span>Confirm your school email: we sent a link to <b className="font-medium text-ink">{email}</b>.</span>
+      <span className="flex gap-4">
+        <button onClick={() => refreshUser()} className="font-medium text-ink underline-offset-2 hover:underline">I've confirmed it</button>
+        <button disabled={sent} onClick={() => resendVerification().then(() => setSent(true)).catch(() => {})} className="text-muted hover:text-ink disabled:no-underline">{sent ? 'Sent again' : 'Resend'}</button>
+      </span>
+    </div>
+  )
+}
+
 export default function AppShell() {
   const { user, data, error, setError } = useStore()
   const loc = useLocation()
@@ -75,6 +91,10 @@ export default function AppShell() {
           <NavGroup title="My prep" items={isAdmin ? [...PREP, ADMIN] : PREP} />
         </nav>
         <div className="mt-auto pt-6">
+          <div className="mb-3 flex gap-4 px-3 text-[12.5px] text-[#8C98AE]">
+            <NavLink to="/about" className={({ isActive }) => isActive ? 'text-white' : 'hover:text-white'}>About</NavLink>
+            <Link to="/privacy" className="hover:text-white">Privacy</Link>
+          </div>
           {user ? (
             <NavLink to="/settings" className="flex items-center gap-3 rounded-lg border-t border-white/10 px-2 pt-4 pb-1 hover:text-white">
               <Avatar name={name} photo={user.photoURL} />
@@ -109,6 +129,10 @@ export default function AppShell() {
               </div>
             </div>
           ))}
+          <div className="mt-4 flex gap-4 border-t border-line px-2 pt-3 text-[13.5px] text-muted">
+            <NavLink to="/about" onClick={() => setMobileOpen(false)} className="hover:text-ink">About</NavLink>
+            <Link to="/privacy" className="hover:text-ink">Privacy</Link>
+          </div>
         </nav>}
       </header>
 
@@ -118,7 +142,9 @@ export default function AppShell() {
         </div>
       )}
 
-      <main className="mx-auto max-w-6xl px-4 pt-6 pb-28 sm:px-6 lg:px-10 lg:pt-10 lg:pb-16"><Outlet /></main>
+      {user?.provider === 'password' && !user.emailVerified && <VerifyBanner email={user.email} />}
+
+      <main className="mx-auto max-w-6xl px-4 pt-6 pb-28 sm:px-6 lg:px-10 lg:pt-10 lg:pb-16"><SignInWall><Outlet /></SignInWall></main>
 
       <nav aria-label="Main" className="fixed inset-x-0 bottom-0 z-20 grid grid-cols-5 border-t border-line bg-white lg:hidden">
         {[...[LEARN[0], LEARN[1], PRACTISE[0], PRACTISE.find((n) => n.to === '/drills')!], user ? PREP[0] : { to: '/signin', label: 'Sign in', icon: 'M15 3h4v18h-4M10 17l5-5-5-5M15 12H3' }].map((n) => (

@@ -1,6 +1,7 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react'
 import type { ReactNode } from 'react'
-import { getBackend } from './backend'
+import { AuthError, getBackend } from './backend'
+import { lookupSchool } from './schools'
 import type { AuthUser, Backend, UserData } from './backend'
 import type { CaseEntry, DayEntry, DrillEntry, Profile, Story, Summary, UserStats } from './types'
 import { caseOverall, last7, weakestStage } from './stats'
@@ -13,8 +14,15 @@ interface Store {
   data: UserData | null
   signIn(): Promise<void>
   signOut(): Promise<void>
+  /** School email + password. These reject with an AuthError whose message can be shown as-is. */
+  signUpEmail(name: string, email: string, password: string): Promise<void>
+  signInEmail(email: string, password: string): Promise<void>
+  resetPassword(email: string): Promise<void>
+  resendVerification(): Promise<void>
+  refreshUser(): Promise<void>
   saveProfile(p: Partial<Profile>): Promise<void>
   markLesson(slug: string, done: boolean): Promise<void>
+  saveNote(pageId: string, text: string): Promise<void>
   toggleHabit(date: string, key: keyof DayEntry['habits']): Promise<void>
   setDayNote(date: string, note: string): Promise<void>
   saveCase(c: CaseEntry): Promise<void>
@@ -33,6 +41,17 @@ export const useStore = () => {
   return s
 }
 
+/** A verified school email + password account counts as a verified student (unlocks perks). */
+async function ensureStudent(b: Backend, u: AuthUser, name: string) {
+  if (u.provider !== 'password' || !u.emailVerified || !u.email) return
+  const look = lookupSchool(u.email)
+  if (look.personal || (await b.getStudent(u.uid))) return
+  await b.saveStudent({
+    uid: u.uid, name, schoolEmail: u.email.toLowerCase(), domain: look.domain, school: look.school || look.domain, knownSchool: !!look.school,
+    program: '', gradYear: '', marketing: false, consentAt: Date.now(), verifiedAt: Date.now(),
+  })
+}
+
 export function StoreProvider({ children }: { children: ReactNode }) {
   const [backend, setBackend] = useState<Backend | null>(null)
   const [user, setUser] = useState<AuthUser | null>(null)
@@ -41,6 +60,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
   const [error, setError] = useState<string | null>(null)
   const dataRef = useRef<UserData | null>(null)
   dataRef.current = data
+  const pendingName = useRef<string | null>(null)
 
   useEffect(() => {
     let unsub = () => {}
@@ -52,10 +72,11 @@ export function StoreProvider({ children }: { children: ReactNode }) {
           try {
             const d = await b.loadAll(u.uid)
             if (!d.profile) {
-              d.profile = { name: u.name, email: u.email, photoURL: u.photoURL, createdAt: Date.now() }
+              d.profile = { name: pendingName.current || u.name, email: u.email, photoURL: u.photoURL, createdAt: Date.now() }
               await b.saveProfile(u.uid, d.profile)
             }
             setData(d)
+            ensureStudent(b, u, d.profile.name).catch(() => {})
           } catch {
             setError("Couldn't load your data. Check your connection and refresh the page.")
           }
@@ -65,6 +86,15 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     }).catch(() => { setError("Couldn't start the app. Refresh the page to try again."); setReady(true) })
     return () => unsub()
   }, [])
+
+  // after someone clicks the verification link in their inbox, pick up the change when they come back
+  useEffect(() => {
+    if (!backend || !user || user.provider !== 'password' || user.emailVerified) return
+    const onFocus = () => { backend.refreshUser().then((u) => { if (u?.emailVerified) { setUser(u); ensureStudent(backend, u, dataRef.current?.profile?.name || u.name).catch(() => {}) } }).catch(() => {}) }
+    window.addEventListener('focus', onFocus)
+    const t = setInterval(onFocus, 15000)
+    return () => { window.removeEventListener('focus', onFocus); clearInterval(t) }
+  }, [backend, user])
 
   // keep a small shareable summary for practice partners
   useEffect(() => {
@@ -112,7 +142,25 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     const patch = (f: (d: UserData) => UserData) => setData((d) => (d ? f(d) : d))
     return {
       ready, backend, user, data, error, setError,
-      signIn: async () => { if (backend) await guard(() => backend.signIn()) },
+      signIn: async () => {
+        if (!backend) return
+        try { await backend.signIn() } catch (e) { setError(e instanceof AuthError ? e.message : "Couldn't sign you in. Try again.") }
+      },
+      signUpEmail: async (name, email, password) => {
+        if (!backend) return
+        pendingName.current = name.trim()
+        await backend.signUpEmail(name, email, password)
+        const u = await backend.refreshUser()
+        if (u) { setUser(u); if (dataRef.current?.profile) await backend.saveProfile(u.uid, { ...dataRef.current.profile, name: name.trim() }) }
+      },
+      signInEmail: async (email, password) => { if (backend) await backend.signInEmail(email, password) },
+      resetPassword: async (email) => { if (backend) await backend.resetPassword(email) },
+      resendVerification: async () => { if (backend) await backend.resendVerification() },
+      refreshUser: async () => {
+        if (!backend) return
+        const u = await backend.refreshUser()
+        if (u) { setUser(u); await ensureStudent(backend, u, dataRef.current?.profile?.name || u.name).catch(() => {}) }
+      },
       signOut: async () => { if (backend) await backend.signOut() },
       markLesson: async (slug, done) => {
         if (!user) return
@@ -121,6 +169,14 @@ export function StoreProvider({ children }: { children: ReactNode }) {
         const next = { ...(dataRef.current?.profile || { name: user.name }), learned } as Profile
         patch((d) => ({ ...d, profile: next }))
         await guard(() => backend!.saveProfile(uid, next))
+      },
+      saveNote: (pageId, text) => {
+        if (!user) return Promise.resolve()
+        const cur = dataRef.current?.profile || ({ name: user.name } as Profile)
+        const next = { ...cur, notes: { ...(cur.notes || {}), [pageId]: { text, updatedAt: Date.now() } } }
+        patch((d) => ({ ...d, profile: next }))
+        dataRef.current = dataRef.current ? { ...dataRef.current, profile: next } : dataRef.current
+        return guard(() => backend!.saveProfile(uid, next))
       },
       saveProfile: (p) => {
         const next = { ...(dataRef.current?.profile || { name: user?.name || '' }), ...p } as Profile

@@ -11,6 +11,8 @@ export interface Profile {
   partners?: string[]
   learned?: string[]
   trainer?: Record<string, { box: number; due: string }>
+  /** Personal notes, keyed by course page id ('case-map', a lesson slug, 'whats-next', 'general'). */
+  notes?: Record<string, { text: string; updatedAt: number }>
 }
 
 export interface DayEntry {

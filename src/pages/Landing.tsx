@@ -143,7 +143,7 @@ export default function Landing() {
         </div>
       </section>
       <footer className="mx-auto flex max-w-6xl flex-wrap justify-between gap-2 px-5 py-6 text-[13px] text-muted sm:px-8">
-        <span>© {new Date().getFullYear()} PrepForCase. <Link to="/privacy" className="underline">Privacy</Link></span>
+        <span>© {new Date().getFullYear()} PrepForCase · <Link to="/about" className="underline">About</Link> · <Link to="/privacy" className="underline">Privacy</Link></span>
         <span>All cases are original and fictional, written for practice.</span>
       </footer>
     </div>

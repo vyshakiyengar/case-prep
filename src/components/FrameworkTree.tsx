@@ -1,3 +1,5 @@
+import type { CSSProperties } from 'react'
+import { useReveal } from './motion'
 import { Link } from 'react-router-dom'
 import type { CNode, CoreFramework, OtherFramework } from '../content/frameworkTrees'
 import { DRIVERS } from '../content/frameworkTrees'
@@ -16,7 +18,7 @@ function Box({ text, level, note, below }: { text: string; level: number; note?:
 function HNode({ n, level, depth }: { n: CNode; level: number; depth: number }) {
   const kids = level < depth ? n.c : undefined
   return (
-    <div className="htree-node">
+    <div className="htree-node" style={{ '--lvl': level } as CSSProperties}>
       <Box text={n.t} level={level} note={level <= depth ? n.note : undefined} below={!!(kids && kids.length)} />
       {kids && kids.length > 0 && (
         <div className="htree-kids">{kids.map((k) => <div key={k.t} className="htree-kid"><HNode n={k} level={level + 1} depth={depth} /></div>)}</div>
@@ -38,8 +40,9 @@ function Outline({ n, level, depth }: { n: CNode; level: number; depth: number }
 /** The tree, left to right on wide screens and as an indented outline on phones. depth 1 shows the first level only. */
 export function IssueTree({ f, depth = 9 }: { f: CoreFramework; depth?: number }) {
   const root: CNode = { t: f.title, c: f.branches }
+  const ref = useReveal<HTMLDivElement>(0.3)
   return (
-    <div className="graph-paper rounded-xl border border-line p-4 sm:p-5">
+    <div ref={ref} className="graph-paper rounded-xl border border-line p-4 sm:p-5">
       {f.example && depth > 1 && <p className="mb-2 text-[12.5px] font-medium text-muted">{f.example}</p>}
       <div className="hidden overflow-x-auto md:block"><div className="w-max py-1"><HNode n={root} level={0} depth={depth} /></div></div>
       <ul className="md:hidden"><Outline n={root} level={0} depth={depth} /></ul>

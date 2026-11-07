@@ -25,7 +25,8 @@ service cloud.firestore {
     // Weekly summary shared only with the people the owner lists as partners
     match /summaries/{uid} {
       allow read: if isSelf(uid) || (signedIn() && request.auth.uid in resource.data.partners);
-      allow write: if isSelf(uid) && request.resource.data.uid == uid;
+      allow create, update: if isSelf(uid) && request.resource.data.uid == uid;
+      allow delete: if isSelf(uid);
     }
 
     // Partner invites: anyone with the link can read one; only the invitee can accept it, once
@@ -38,15 +39,18 @@ service cloud.firestore {
         && request.auth.uid != resource.data.from
         && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['acceptedBy', 'acceptedName'])
         && request.resource.data.acceptedBy == request.auth.uid;
+      allow delete: if signedIn() && resource.data.from == request.auth.uid;
     }
 
     // Verified business school students. A record is only accepted if the school
-    // email has really been verified on this account (Firebase email-link sign-in),
-    // so the list can't be filled with typed-in addresses.
+    // email has really been verified on this account (an email link, or a school
+    // email + password account whose address has been confirmed), so the list
+    // can't be filled with typed-in addresses.
     match /students/{uid} {
       allow get: if isSelf(uid) || isAdmin();
       allow list: if isAdmin();
       allow create, update: if isSelf(uid)
+        && request.auth.token.email_verified == true
         && request.resource.data.uid == uid
         && request.resource.data.schoolEmail is string
         && ('email' in request.auth.token.firebase.identities)
@@ -57,7 +61,8 @@ service cloud.firestore {
     // Activity stats: each user writes their own; only the admin can read them (analytics)
     match /stats/{uid} {
       allow read: if isAdmin();
-      allow write: if isSelf(uid) && request.resource.data.uid == uid;
+      allow create, update: if isSelf(uid) && request.resource.data.uid == uid;
+      allow delete: if isSelf(uid);
     }
 
     // Perks: visible to verified students, managed by you from /admin

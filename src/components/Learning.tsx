@@ -1,30 +1,16 @@
 import { useEffect, useRef, useState } from 'react'
 import type { ReactNode } from 'react'
-import { useStore } from '../lib/store'
-import { SignInButton } from '../pages/SignIn'
 import { Button, inputCls } from './ui'
 import { Countdown } from './Timer'
 import type { Lesson } from '../content/course'
 
-/** Shows children to signed-in users. Signed-out visitors see a blurred preview and a sign-in prompt. */
-export function Gate({ children, title = 'Sign in to keep reading', body = 'It\'s free. You also get progress tracking, the phrase trainer and your case log.', id }: { children: ReactNode; title?: string; body?: string; id?: string }) {
-  const { user, ready } = useStore()
-  if (user || !ready) return <>{children}</>
-  return (
-    <div id={id} className="relative scroll-mt-32">
-      <div aria-hidden inert className="pointer-events-none max-h-[340px] select-none overflow-hidden blur-[6px] [mask-image:linear-gradient(to_bottom,black_25%,transparent_95%)]">{children}</div>
-      <div className="absolute inset-x-0 top-10 flex justify-center px-3">
-        <div className="w-full max-w-md rounded-2xl border border-line bg-white p-6 text-center shadow-[0_18px_40px_-20px_rgba(20,33,61,.45)]">
-          <div className="mx-auto mb-2 flex h-10 w-10 items-center justify-center rounded-full bg-violet-l text-violet-d" aria-hidden>
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><rect x="5" y="11" width="14" height="9" rx="2" /><path d="M8 11V8a4 4 0 0 1 8 0v3" /></svg>
-          </div>
-          <p className="font-serif text-[21px] font-semibold text-ink">{title}</p>
-          <p className="mt-1 text-[14px] text-muted">{body}</p>
-          <div className="mt-4 flex justify-center"><SignInButton label="Sign in to unlock" /></div>
-        </div>
-      </div>
-    </div>
-  )
+/**
+ * Section-level gate. Gating now happens once per page in SignInWall (after the first
+ * screen), so this simply renders its children. Kept so pages can mark where the
+ * members-only part begins.
+ */
+export function Gate({ children, id }: { children: ReactNode; title?: string; body?: string; id?: string }) {
+  return id ? <div id={id}>{children}</div> : <>{children}</>
 }
 
 export type NavItem = { id: string; label: string; locked?: boolean }
