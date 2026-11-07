@@ -40,12 +40,13 @@ export function Loading({ label = 'Loading…' }: { label?: string }) {
   return <div className="flex min-h-[40vh] items-center justify-center text-muted" role="status">{label}</div>
 }
 
-function RequireUser({ children }: { children: ReactNode }) {
+/** Signed-in only. `onboard` also asks for a prep start date first (only the dashboard and tracker need it). */
+function RequireUser({ children, onboard = false }: { children: ReactNode; onboard?: boolean }) {
   const { ready, user, data } = useStore()
   const loc = useLocation()
   if (!ready || (user && !data)) return <Loading />
   if (!user) return <Navigate to={`/signin?next=${encodeURIComponent(loc.pathname + loc.search)}`} replace />
-  if (!data?.profile?.startDate && loc.pathname !== '/welcome' && !loc.pathname.startsWith('/invite') && !loc.pathname.startsWith('/verify-school')) return <Navigate to={`/welcome?next=${encodeURIComponent(loc.pathname)}`} replace />
+  if (onboard && !data?.profile?.startDate) return <Navigate to={`/welcome?next=${encodeURIComponent(loc.pathname)}`} replace />
   return <>{children}</>
 }
 
@@ -86,8 +87,8 @@ export default function App() {
           <Route path="/casebook/:slug" element={<CasePlayer />} />
           <Route path="/drills" element={<Drills />} />
           {/* my prep: signed in */}
-          <Route path="/today" element={<RequireUser><Today /></RequireUser>} />
-          <Route path="/tracker" element={<RequireUser><Tracker /></RequireUser>} />
+          <Route path="/today" element={<RequireUser onboard><Today /></RequireUser>} />
+          <Route path="/tracker" element={<RequireUser onboard><Tracker /></RequireUser>} />
           <Route path="/cases" element={<RequireUser><CaseLog /></RequireUser>} />
           <Route path="/stories" element={<RequireUser><Stories /></RequireUser>} />
           <Route path="/notes" element={<RequireUser><Notes /></RequireUser>} />
