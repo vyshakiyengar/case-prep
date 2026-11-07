@@ -3,9 +3,9 @@ import type { ButtonHTMLAttributes, ReactNode } from 'react'
 import { Link } from 'react-router-dom'
 
 type BtnVariant = 'primary' | 'secondary' | 'quiet' | 'danger'
-const btnBase = 'inline-flex items-center justify-center gap-2 rounded-lg px-4 py-2 text-[14px] font-medium transition-colors disabled:opacity-50'
+const btnBase = 'inline-flex items-center justify-center gap-2 rounded-lg px-4 py-2 text-[14px] font-medium transition-[background-color,border-color,box-shadow,transform] duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal focus-visible:ring-offset-2 disabled:opacity-50'
 const btnVar: Record<BtnVariant, string> = {
-  primary: 'bg-ink text-white hover:bg-[#1C2B4A] shadow-[0_1px_0_rgba(15,27,51,.08)]',
+  primary: 'btn-primary text-white hover:-translate-y-px active:translate-y-0',
   secondary: 'bg-white text-ink border border-[#D3DAE3] hover:border-ink/40',
   quiet: 'text-ink hover:bg-white/70 px-3',
   danger: 'text-signal-d hover:bg-signal-l px-3',

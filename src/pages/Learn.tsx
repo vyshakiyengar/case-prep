@@ -107,22 +107,25 @@ function LessonChapter({ l, n }: { l: Lesson; n: number }) {
   )
 }
 
-function PageTurner({ i, onTurn }: { i: number; onTurn: (to: number) => void }) {
+/** Small previous / next controls, shown at the start and end of each page. */
+function PageTurner({ i, onTurn, top = false }: { i: number; onTurn: (to: number) => void; top?: boolean }) {
   const prev = PAGES[i - 1], next = PAGES[i + 1]
-  const card = 'group flex min-w-0 flex-1 flex-col rounded-xl border border-line bg-white px-5 py-4 transition-[border-color,transform] duration-200 hover:border-teal active:scale-[.99]'
+  const pill = 'group inline-flex max-w-[48%] items-center gap-2 rounded-full border border-line bg-white px-3.5 py-1.5 text-[13.5px] text-ink-2 transition-[border-color,color,transform] duration-200 hover:border-teal hover:text-ink active:scale-[.98]'
   return (
-    <nav aria-label="Course pages" className="mt-8 flex flex-col gap-3 sm:flex-row">
+    <nav aria-label={top ? 'Course pages (top)' : 'Course pages'} className={`flex items-center justify-between gap-3 ${top ? 'mb-5' : 'mt-8'}`}>
       {prev ? (
-        <button onClick={() => onTurn(i - 1)} className={`${card} items-start text-left`}>
-          <span className="text-[13px] text-muted"><span className="inline-block transition-transform group-hover:-translate-x-0.5">←</span> Previous</span>
-          <span className="mt-0.5 truncate font-serif text-[18px] text-ink">{prev.label}</span>
+        <button onClick={() => onTurn(i - 1)} className={pill}>
+          <span aria-hidden className="text-teal-d transition-transform group-hover:-translate-x-0.5">←</span>
+          <span className="truncate"><span className="text-muted">Previous: </span>{prev.label}</span>
         </button>
-      ) : <span className="hidden flex-1 sm:block" />}
+      ) : <span />}
       {next && (
-        <button onClick={() => onTurn(i + 1)} className={`${card} items-end text-right ${i === 0 ? 'border-ink bg-ink text-white hover:border-teal' : ''}`}>
-          <span className={`text-[13px] ${i === 0 ? 'text-[#B8C2D3]' : 'text-muted'}`}>{i === 0 ? 'Start the course' : 'Next'} <span className="inline-block transition-transform group-hover:translate-x-0.5">→</span></span>
-          <span className={`mt-0.5 truncate font-serif text-[18px] ${i === 0 ? 'text-white' : 'text-ink'}`}>{next.label}</span>
-        </button>
+        i === 0 && !top
+          ? <button onClick={() => onTurn(1)} className="btn-primary inline-flex items-center gap-2 rounded-full px-5 py-2.5 text-[14.5px] font-medium text-white transition-transform hover:-translate-y-px">Start the course <span aria-hidden>→</span></button>
+          : <button onClick={() => onTurn(i + 1)} className={pill}>
+              <span className="truncate"><span className="text-muted">Next: </span>{next.label}</span>
+              <span aria-hidden className="text-teal-d transition-transform group-hover:translate-x-0.5">→</span>
+            </button>
       )}
     </nav>
   )
@@ -221,6 +224,7 @@ export default function Learn() {
       <CourseBar i={i} onTurn={turn} done={user ? `${done} of ${LESSONS.length} done` : undefined} />
 
       <div key={page.id} className={dir.current === 'prev' ? 'turn-prev' : 'turn-next'}>
+        {i > 0 && <PageTurner i={i} onTurn={turn} top />}
         {page.id === 'case-map' && (
           <section id="case-map" className="scroll-mt-32">
             <h2 className="text-[28px] leading-tight">First, the map: how a case interview flows</h2>

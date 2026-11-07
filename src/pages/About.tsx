@@ -6,8 +6,8 @@ import { LinkButton } from '../components/ui'
 function Portrait() {
   const [ok, setOk] = useState(true)
   return ok
-    ? <img src="/vyshak.jpg" alt="Vyshak K Iyengar" width={52} height={52} onError={() => setOk(false)} className="h-[52px] w-[52px] rounded-full object-cover ring-2 ring-teal/30 ring-offset-2 ring-offset-canvas" />
-    : <span aria-hidden className="flex h-[52px] w-[52px] items-center justify-center rounded-full bg-ink font-serif text-[19px] text-white ring-2 ring-teal/30 ring-offset-2 ring-offset-canvas">VI</span>
+    ? <img src="/vyshak.jpg" alt="Vyshak K Iyengar" width={64} height={64} onError={() => setOk(false)} className="h-16 w-16 rounded-full object-cover ring-2 ring-teal/30 ring-offset-2 ring-offset-canvas" />
+    : <span aria-hidden className="flex h-16 w-16 items-center justify-center rounded-full bg-ink font-serif text-[19px] text-white ring-2 ring-teal/30 ring-offset-2 ring-offset-canvas">VI</span>
 }
 
 export default function About() {
@@ -62,7 +62,10 @@ export default function About() {
         London Business School or any other firm or school. See the <Link to="/privacy" className="underline hover:text-ink">privacy policy</Link> for how your data is handled.
       </p>
 
-      <div className="mt-8"><LinkButton to="/learn">Start the course</LinkButton></div>
+      <div className="mt-8 flex flex-wrap items-center justify-between gap-4">
+        <LinkButton to="/learn" className="px-5 py-2.5 text-[14.5px]">Start the course <span aria-hidden>→</span></LinkButton>
+        <p className="text-[14px] text-muted">Made by <a href="https://vyshak.me" target="_blank" rel="noopener noreferrer me" className="font-medium text-ink hover:underline">Vyshak K Iyengar</a>, London</p>
+      </div>
     </article>
   )
 }
