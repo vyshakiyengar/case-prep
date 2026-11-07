@@ -17,7 +17,7 @@ export default function Privacy() {
           <ul className="list-disc space-y-1.5 pl-5">
             <li><b className="font-medium text-ink">Your account.</b> If you sign in with Google: your name, email address and profile photo. If you sign in with a business school email: your name, that email address, and whether you have confirmed it. Your password is handled by Google Firebase and is never visible to us.</li>
             <li><b className="font-medium text-ink">What you save.</b> Your tracker, case log, drill scores, stories, notes, course progress and dates you enter.</li>
-            <li><b className="font-medium text-ink">Activity totals.</b> Counts such as lessons done, cases logged and days active, used to see which parts of the site help people. Your case notes and stories are not included.</li>
+            <li><b className="font-medium text-ink">Usage totals, once you're signed in.</b> How you signed in, the days you were active, number of visits, minutes of active use, how often you open each section, the last page you viewed, lessons done, cases logged, how many notes you have, whether you used a phone or computer, your time zone, and the site that first sent you here (for example a search engine or LinkedIn). These are used to see which parts of the site help people. The text of your notes, cases and stories is never included.</li>
             <li><b className="font-medium text-ink">Student details.</b> If you confirm a school email: the address, school, and (if you give them) your programme and graduation year.</li>
             <li><b className="font-medium text-ink">Anonymous page statistics.</b> Vercel Web Analytics counts page views without cookies and without identifying you.</li>
           </ul>

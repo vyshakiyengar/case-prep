@@ -16,6 +16,7 @@ import Perks from './pages/Perks'
 import VerifySchool from './pages/VerifySchool'
 import Privacy from './pages/Privacy'
 import Learn from './pages/Learn'
+import { ActivityTracker } from './components/ActivityTracker'
 
 const Admin = lazy(() => import('./pages/Admin'))
 const Casebook = lazy(() => import('./pages/Casebook'))
@@ -58,6 +59,7 @@ function Home() {
 export default function App() {
   return (
     <Suspense fallback={<Loading />}>
+      <ActivityTracker />
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/signin" element={<SignIn />} />

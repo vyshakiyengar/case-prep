@@ -147,4 +147,30 @@ export interface UserStats {
   habitDays: number
   interviewDate?: string
   updatedAt: number
+  // how they signed in
+  provider?: 'google' | 'password' | 'other'
+  emailVerified?: boolean
+  schoolDomain?: string
+  // usage, added up across visits
+  sessions?: number
+  minutes?: number // engaged minutes: tab visible and used in that minute
+  views?: Record<string, number> // page views by section, e.g. learn, casebook
+  notes?: number
+  lastPath?: string
+  device?: 'mobile' | 'desktop'
+  tz?: string
+  source?: string // where they first came from: utm_source, referring site, or direct
+}
+
+/** Counters to add to a user's stats in one write. */
+export interface StatsBump {
+  uid: string
+  sessions?: number
+  minutes?: number
+  views?: Record<string, number>
+  lastPath?: string
+  device?: 'mobile' | 'desktop'
+  tz?: string
+  source?: string
+  day: string
 }

@@ -1,4 +1,4 @@
-import type { CaseEntry, DayEntry, DrillEntry, Invite, Perk, Profile, StudentRecord, Story, Summary, UserStats } from './types'
+import type { CaseEntry, DayEntry, DrillEntry, Invite, Perk, Profile, StatsBump, StudentRecord, Story, Summary, UserStats } from './types'
 import { FIREBASE_CONFIG } from './firebaseConfig'
 import { uid as newId } from './dates'
 
@@ -44,7 +44,10 @@ export interface Backend {
   savePerk(p: Perk): Promise<void>
   deletePerk(id: string): Promise<void>
   saveStats(s: UserStats): Promise<void>
+  bumpStats(b: StatsBump): Promise<void>
   listStats(): Promise<UserStats[]>
+  /** Live feed of everyone's stats for the admin dashboard. Returns an unsubscribe function. */
+  watchStats(cb: (rows: UserStats[]) => void, onError: () => void): () => void
 }
 
 export class SchoolLinkError extends Error {}
@@ -231,8 +234,19 @@ async function makeFirebase(): Promise<Backend> {
     savePerk: (p) => fs.setDoc(fs.doc(db, 'perks', p.id), clean(p)),
     deletePerk: (id) => fs.deleteDoc(fs.doc(db, 'perks', id)),
     saveStats: (st) => fs.setDoc(fs.doc(db, 'stats', st.uid), { ...clean(st), activeDays: fs.arrayUnion(...st.activeDays) }, { merge: true }),
+    async bumpStats(b) {
+      const inc: Record<string, unknown> = { uid: b.uid, lastActive: Date.now(), activeDays: fs.arrayUnion(b.day) }
+      if (b.sessions) inc.sessions = fs.increment(b.sessions)
+      if (b.minutes) inc.minutes = fs.increment(b.minutes)
+      if (b.views && Object.keys(b.views).length) inc.views = Object.fromEntries(Object.entries(b.views).map(([k, v]) => [k, fs.increment(v)]))
+      for (const k of ['lastPath', 'device', 'tz', 'source'] as const) if (b[k]) inc[k] = b[k]
+      await fs.setDoc(fs.doc(db, 'stats', b.uid), inc, { merge: true })
+    },
     async listStats() {
       const s = await fs.getDocs(fs.collection(db, 'stats')); return s.docs.map((d) => d.data() as UserStats)
+    },
+    watchStats(cb, onError) {
+      return fs.onSnapshot(fs.collection(db, 'stats'), (snap) => cb(snap.docs.map((d) => d.data() as UserStats)), onError)
     },
   }
 }
@@ -296,8 +310,16 @@ function makeDemo(): Backend {
     async listStudents() { return state.student ? [state.student] : [] },
     savePerk: (p) => upd((s) => { s.perks = [...(s.perks ?? DEMO_PERKS).filter((x) => x.id !== p.id), p] }),
     deletePerk: (id) => upd((s) => { s.perks = (s.perks ?? DEMO_PERKS).filter((x) => x.id !== id) }),
-    saveStats: (st) => upd((s) => { s.stats = { ...st, activeDays: Array.from(new Set([...(s.stats?.activeDays || []), ...st.activeDays])).sort() } }),
+    saveStats: (st) => upd((s) => { s.stats = { ...(s.stats || {}), ...JSON.parse(JSON.stringify(st)), activeDays: Array.from(new Set([...(s.stats?.activeDays || []), ...st.activeDays])).sort() } }),
     async listStats() { return state.stats ? [state.stats] : [] },
+    bumpStats: (b) => upd((s) => {
+      const cur = (s.stats || { uid: b.uid, name: 'You', createdAt: Date.now(), activeDays: [], learned: [], lessons: 0, cases: 0, drills: 0, stories: 0, trainerCards: 0, trainerMastered: 0, habitDays: 0, updatedAt: Date.now(), lastActive: Date.now() }) as UserStats
+      const views = { ...(cur.views || {}) }
+      Object.entries(b.views || {}).forEach(([k, v]) => { views[k] = (views[k] || 0) + v })
+      s.stats = { ...cur, lastActive: Date.now(), sessions: (cur.sessions || 0) + (b.sessions || 0), minutes: (cur.minutes || 0) + (b.minutes || 0), views,
+        activeDays: Array.from(new Set([...(cur.activeDays || []), b.day])).sort(), lastPath: b.lastPath || cur.lastPath, device: b.device || cur.device, tz: b.tz || cur.tz, source: cur.source || b.source }
+    }),
+    watchStats(cb) { cb(state.stats ? [state.stats] : []); const t = setInterval(() => cb(state.stats ? [state.stats] : []), 5000); return () => clearInterval(t) },
   }
 }
 

@@ -127,6 +127,9 @@ export function StoreProvider({ children }: { children: ReactNode }) {
         trainerCards: boxes.length, trainerMastered: boxes.filter((b) => b.box >= 3).length,
         habitDays: Object.values(data.days).filter((d) => Object.values(d.habits).some(Boolean)).length,
         interviewDate: p.interviewDate, updatedAt: Date.now(),
+        provider: user.provider, emailVerified: user.emailVerified,
+        notes: Object.values(p.notes || {}).filter((n) => n.text.trim()).length,
+        ...(user.provider === 'password' && user.email ? { schoolDomain: user.email.split('@')[1]?.toLowerCase() } : {}),
       }
       backend.saveStats(stats).catch(() => {})
     }, 3000)
