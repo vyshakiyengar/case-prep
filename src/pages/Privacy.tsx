@@ -11,7 +11,7 @@ export default function Privacy() {
         <h1 className="mt-8 text-[34px]">Privacy notice</h1>
         <p className="mt-1 text-muted">Last updated 7 November 2026</p>
         <div className="mt-6 space-y-4 text-[16px] leading-[1.7] text-ink-2">
-          <p>PrepForCase is a free, personal project run by Vyshak Iyengar in London, United Kingdom. This notice explains, in plain words, what is collected when you use prepforcase.com, why, and what you can do about it. For any privacy question or request, get in touch through <a href="https://vyshak.me" target="_blank" rel="noopener noreferrer" className="font-medium text-violet-d underline">vyshak.me</a>.</p>
+          <p>PrepForCase is a free, personal project run by Vyshak K Iyengar in London, United Kingdom. This notice explains, in plain words, what is collected when you use prepforcase.com, why, and what you can do about it. For any privacy question or request, get in touch through <a href="https://vyshak.me" target="_blank" rel="noopener noreferrer" className="font-medium text-violet-d underline">vyshak.me</a>.</p>
 
           <H>What is collected</H>
           <ul className="list-disc space-y-1.5 pl-5">

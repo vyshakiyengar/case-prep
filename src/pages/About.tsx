@@ -1,7 +1,13 @@
+import { useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { LinkButton } from '../components/ui'
 
 export default function About() {
+  useEffect(() => {
+    const prev = document.title
+    document.title = 'About PrepForCase · Vyshak K Iyengar'
+    return () => { document.title = prev }
+  }, [])
   return (
     <article className="rise mx-auto max-w-[640px] pt-2 pb-8">
       <p className="text-[14px] font-medium text-teal-d">About PrepForCase</p>
@@ -10,7 +16,7 @@ export default function About() {
 
       <div className="mt-7 space-y-5 font-serif text-[19px] leading-[1.65] text-ink">
         <p>
-          Hi, I'm <a href="https://vyshak.me" target="_blank" rel="noopener noreferrer" className="underline decoration-teal decoration-2 underline-offset-4 hover:text-teal-d">Vyshak</a>.
+          Hi, I'm <a href="https://vyshak.me" target="_blank" rel="noopener noreferrer me" className="underline decoration-teal decoration-2 underline-offset-4 hover:text-teal-d">Vyshak K Iyengar</a>.
           I did my MBA at London Business School, made it through BCG's case interviews, and later worked on product strategy at Meta.
           Before business school I spent five years at Accenture Strategy.
         </p>
@@ -43,7 +49,10 @@ export default function About() {
         London Business School or any other firm or school. See the <Link to="/privacy" className="underline hover:text-ink">privacy policy</Link> for how your data is handled.
       </p>
 
-      <div className="mt-8"><LinkButton to="/learn">Start the course</LinkButton></div>
+      <div className="mt-8 flex flex-wrap items-center justify-between gap-4">
+        <LinkButton to="/learn">Start the course</LinkButton>
+        <p className="text-[14px] text-muted">Made by <a href="https://vyshak.me" target="_blank" rel="noopener noreferrer me" className="font-medium text-ink hover:underline">Vyshak K Iyengar</a>, London</p>
+      </div>
     </article>
   )
 }
