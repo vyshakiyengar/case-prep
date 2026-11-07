@@ -39,7 +39,7 @@ const kindOf = (q: CaseQuestion): Kind => {
 const TOOL: Partial<Record<Kind, { label: string; to: string }>> = {
   structure: { label: 'Core frameworks', to: '/frameworks' },
   chart: { label: 'More charts: graph library', to: '/graphs' },
-  maths: { label: 'Formulas', to: '/frameworks#formulas' },
+  maths: { label: 'Formulas', to: '/formulas' },
   sizing: { label: 'Market sizing framework', to: '/frameworks#market-sizing' },
   ideas: { label: 'Brainstorming frameworks', to: '/frameworks#other' },
 }
@@ -124,7 +124,7 @@ export default function CasePlayer() {
           <p className="text-ink-2">{c.sub}</p>
           <div className="mt-1 flex flex-wrap items-center gap-x-4 gap-y-1 text-[13px] text-muted">
             <span>{c.type}</span><span>{c.industry}, {c.geo}</span><Difficulty d={c.diff} /><span>{c.fmt}</span>
-            <Link to="/frameworks#glossary" className="text-violet-d hover:underline">Unfamiliar term? Glossary</Link>
+            <Link to="/glossary" className="text-violet-d hover:underline">Unfamiliar term? Glossary</Link>
           </div>
         </div>
         <div className="flex flex-col items-end gap-2">

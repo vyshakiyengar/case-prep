@@ -1,39 +1,14 @@
 import { useEffect, useState } from 'react'
 import { Link, Navigate, useParams } from 'react-router-dom'
 import { FRAMEWORKS, frameworkBySlug } from '../content/frameworks'
-import { loadCases, playbook } from '../content'
+import { loadCases } from '../content'
 import type { CaseDef } from '../content'
-import { Button, LinkButton, PageHeader } from '../components/ui'
+import { LinkButton, PageHeader } from '../components/ui'
 import { useStore } from '../lib/store'
 import { CORE, OTHER } from '../content/frameworkTrees'
 import { CoreBlock, DriversGrid, OtherCard } from '../components/FrameworkTree'
 import { Gate, StickyNav, useScrollToTarget } from '../components/Learning'
 import { StructureTree } from '../components/CaseParts'
-import { GLOSSARY } from '../content/glossary'
-
-function Formulas() {
-  const [hide, setHide] = useState(false)
-  const [open, setOpen] = useState<Record<number, boolean>>({})
-  return (
-    <>
-      <div className="mb-3 flex flex-wrap items-center justify-between gap-3">
-        <p className="text-muted">Test yourself: hide the formulas, say each one out loud, then reveal it.</p>
-        <Button variant="secondary" onClick={() => { setHide((h) => !h); setOpen({}) }}>{hide ? 'Show all formulas' : 'Hide formulas to test myself'}</Button>
-      </div>
-      <div className="overflow-hidden rounded-xl border border-line bg-white">
-        {playbook.formulas.map((f, i) => (
-          <div key={f.term} className="grid gap-1 border-b border-line px-5 py-3 last:border-0 sm:grid-cols-[180px_1fr_1fr] sm:gap-4">
-            <div className="font-medium text-ink">{f.term}</div>
-            <div>{hide && !open[i]
-              ? <button onClick={() => setOpen((o) => ({ ...o, [i]: true }))} className="text-[14px] font-medium text-violet-d hover:underline">Reveal</button>
-              : <span className="font-serif text-[16px] font-semibold text-ink">{f.formula}</span>}</div>
-            <div className="text-[14px] text-muted">{f.note}</div>
-          </div>
-        ))}
-      </div>
-    </>
-  )
-}
 
 const GUIDE = [
   ['Read the question', 'Is the client trying to fix something or decide something?'],
@@ -50,7 +25,6 @@ export function FrameworksIndex() {
   const nav = [
     ...CORE.map((t, i) => ({ id: t.id, label: `${i + 1}. ${SHORT[i]}`, locked: !user && i >= 2 })),
     { id: 'drivers', label: 'Second-order drivers' }, { id: 'other', label: 'Other frameworks' },
-    { id: 'case-types', label: 'Case types' }, { id: 'formulas', label: 'Formulas' }, { id: 'glossary', label: 'Glossary' },
   ]
   return (
     <>
@@ -89,37 +63,13 @@ export function FrameworksIndex() {
           <div className="grid gap-4 lg:grid-cols-2">{OTHER.map((f) => <OtherCard key={f.id} f={f} />)}</div>
         </section>
 
-        <section id="case-types" className="scroll-mt-32">
-          <h2 className="text-[26px] font-semibold">All 16 case types: what to ask first</h2>
-          <p className="mt-1 mb-4 text-muted">Open any one for its skeleton, the same skeleton tailored to a real case, and the trap to avoid.</p>
-          <ul className="grid gap-3 md:grid-cols-2">
-            {FRAMEWORKS.map((f) => (
-              <li key={f.slug}>
-                <Link to={`/frameworks/${f.slug}`} className="block h-full rounded-xl border border-line bg-white p-4 hover:border-faint">
-                  <h3 className="font-sans text-[16px] font-semibold text-ink">{f.type}</h3>
-                  <p className="mt-0.5 text-[14px] text-muted">{f.when}</p>
-                  <p className="mt-1.5 text-[14px] text-ink-2"><span className="text-muted">Ask first:</span> {f.ask}</p>
-                </Link>
-              </li>
-            ))}
+        <section className="rounded-xl border border-line bg-white p-5">
+          <h2 className="text-[22px] font-semibold">Keep going</h2>
+          <ul className="mt-2 grid gap-2 text-[15px] sm:grid-cols-3">
+            <li><Link to="/case-types" className="font-medium text-violet-d hover:underline">All 16 case types →</Link><p className="text-[13.5px] text-muted">What to ask first, and the trap, for each type.</p></li>
+            <li><Link to="/formulas" className="font-medium text-violet-d hover:underline">Formulas →</Link><p className="text-[13.5px] text-muted">The 20 you need, with a test-yourself mode.</p></li>
+            <li><Link to="/glossary" className="font-medium text-violet-d hover:underline">Glossary →</Link><p className="text-[13.5px] text-muted">Business terms in plain English.</p></li>
           </ul>
-        </section>
-
-        <section id="formulas" className="scroll-mt-32">
-          <h2 className="mb-3 text-[26px] font-semibold">Formulas</h2>
-          <Formulas />
-        </section>
-
-        <section id="glossary" className="scroll-mt-32">
-          <h2 className="mb-3 text-[26px] font-semibold">Glossary</h2>
-          <dl className="divide-y divide-line overflow-hidden rounded-xl border border-line bg-white">
-            {GLOSSARY.map((g) => (
-              <div key={g.term} className="grid gap-1 px-5 py-3.5 sm:grid-cols-[190px_1fr] sm:gap-4">
-                <dt className="font-serif text-[17px] font-semibold text-ink">{g.term}</dt>
-                <dd><span className="text-ink-2">{g.plain}</span> <span className="block text-[14px] text-muted">For example: {g.example}</span></dd>
-              </div>
-            ))}
-          </dl>
         </section>
       </div>
     </>
@@ -137,7 +87,7 @@ export default function Framework() {
   const i = FRAMEWORKS.indexOf(f)
   return (
     <div className="max-w-4xl">
-      <Link to="/frameworks#case-types" className="text-[13.5px] text-muted hover:text-ink">Frameworks</Link>
+      <Link to="/case-types" className="text-[13.5px] text-muted hover:text-ink">Case types</Link>
       <h1 className="mt-1 text-[34px] leading-tight font-semibold">{f.type}</h1>
       <p className="mt-1 text-[17px] text-muted">{f.when}</p>
       {f.core && <p className="mt-3 rounded-lg border border-teal bg-teal-l/40 px-4 py-2.5 text-[14.5px] text-ink">Start from the core framework <Link to={`/frameworks#${f.core}`} className="font-semibold text-teal-d hover:underline">{CORE.find((x) => x.id === f.core)?.title}</Link>. This page adds the detail for this case type.</p>}

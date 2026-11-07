@@ -27,6 +27,10 @@ const Stories = lazy(() => import('./pages/Stories'))
 const PerfectCasing = lazy(() => import('./pages/PerfectCasing'))
 const FrameworksIndex = lazy(() => import('./pages/Frameworks').then((m) => ({ default: m.FrameworksIndex })))
 const Framework = lazy(() => import('./pages/Frameworks'))
+const CaseTypes = lazy(() => import('./pages/Reference').then((m) => ({ default: m.CaseTypes })))
+const Formulas = lazy(() => import('./pages/Reference').then((m) => ({ default: m.Formulas })))
+const Glossary = lazy(() => import('./pages/Reference').then((m) => ({ default: m.Glossary })))
+const Interviewer = lazy(() => import('./pages/Interviewer'))
 
 export function Loading({ label = 'Loading…' }: { label?: string }) {
   return <div className="flex min-h-[40vh] items-center justify-center text-muted" role="status">{label}</div>
@@ -66,6 +70,10 @@ export default function App() {
           <Route path="/frameworks" element={<FrameworksIndex />} />
           <Route path="/frameworks/:slug" element={<Framework />} />
           <Route path="/graphs" element={<Graphs />} />
+          <Route path="/case-types" element={<CaseTypes />} />
+          <Route path="/formulas" element={<Formulas />} />
+          <Route path="/glossary" element={<Glossary />} />
+          <Route path="/interviewer" element={<Interviewer />} />
           <Route path="/interview-skills" element={<InterviewSkills />} />
           <Route path="/casebook" element={<Casebook />} />
           <Route path="/casebook/:slug" element={<CasePlayer />} />

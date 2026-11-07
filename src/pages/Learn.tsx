@@ -7,6 +7,7 @@ import { Button, LinkButton, Meter, PageHeader, Section } from '../components/ui
 import { Rich, StructureTree } from '../components/CaseParts'
 import { Gate, Quiz, StickyNav, TryIt, useScrollToTarget } from '../components/Learning'
 import { CoreFrameworksMini } from '../components/FrameworkTree'
+import { CaseMap } from '../components/CaseMap'
 import { CORE } from '../content/frameworkTrees'
 
 type L = { label: string; to: string }
@@ -15,7 +16,7 @@ const MORE: Record<string, L[]> = {
   'the-opening': [{ label: 'Perfect casing: stages 1-3', to: '/perfect-casing#stage-1' }],
   structuring: [{ label: 'All core frameworks', to: '/frameworks' }, { label: 'Second-order drivers', to: '/frameworks#drivers' }, { label: 'Perfect casing: structure', to: '/perfect-casing#stage-4' }],
   'driving-the-case': [{ label: 'Perfect casing: lead the case', to: '/perfect-casing#stage-5' }],
-  'case-maths': [{ label: 'Formulas to know', to: '/frameworks#formulas' }, { label: 'Perfect casing: maths', to: '/perfect-casing#stage-7' }],
+  'case-maths': [{ label: 'Formulas to know', to: '/formulas' }, { label: 'Perfect casing: maths', to: '/perfect-casing#stage-7' }],
   'charts-and-exhibits': [{ label: 'Chart drill (90 sec)', to: '/drills?tab=charts' }, { label: 'Perfect casing: charts', to: '/perfect-casing#stage-6' }],
   'market-sizing': [{ label: 'Market sizing framework', to: '/frameworks#market-sizing' }, { label: 'Perfect casing: maths', to: '/perfect-casing#stage-7' }],
   brainstorming: [{ label: 'Brainstorming frameworks', to: '/frameworks#other' }, { label: 'Perfect casing: brainstorm', to: '/perfect-casing#stage-8' }],
@@ -134,12 +135,12 @@ export default function Learn() {
   const learned = new Set(data?.profile?.learned || [])
   const done = LESSONS.filter((l) => learned.has(l.slug)).length
   const nextLesson = LESSONS.find((l) => !learned.has(l.slug)) || LESSONS[0]
-  const nav = LESSONS.map((l, i) => ({ id: l.slug, label: `${i + 1}. ${l.title.split(':')[0]}` }))
+  const nav = [{ id: 'case-map', label: 'Case map' }, ...LESSONS.map((l, i) => ({ id: l.slug, label: `${i + 1}. ${l.title.split(':')[0]}` }))]
   let n = 0
   return (
     <>
       <PageHeader title="The case interview course"
-        intro={`${LESSONS.length} short lessons on one page, about ${Math.round(totalMinutes / 5) * 5} minutes in total. Read top to bottom, or jump to a lesson from the bar below.`}
+        intro={`Start with the map of a case interview, then ${LESSONS.length} short lessons, about ${Math.round(totalMinutes / 5) * 5} minutes in total. Read top to bottom, or jump to any part from the bar below.`}
         action={<LinkButton to={`/learn/${nextLesson.slug}`}>{done ? 'Continue where I left off' : 'Start lesson 1'}</LinkButton>} />
 
       <div className="mb-5 flex flex-wrap items-center gap-x-6 gap-y-3">
@@ -160,6 +161,20 @@ export default function Learn() {
       </div>
 
       <StickyNav items={nav} />
+
+      <section id="case-map" className="mb-10 scroll-mt-32">
+        <p className="text-[13px] font-semibold text-teal-d">Start here</p>
+        <h2 className="text-[28px] font-semibold">The map of a case interview</h2>
+        <p className="mt-1 mb-5 max-w-3xl text-[16px] text-ink-2">Every case follows the same six stages in roughly 30-40 minutes. Learn the map first; each lesson below goes deep on one part. Click a stage for what good looks like, the lessons to read and what to practise.</p>
+        <CaseMap />
+        <div className="mt-6 grid items-center gap-4 rounded-xl border-2 border-teal bg-white p-5 md:grid-cols-[1fr_auto]">
+          <div>
+            <h3 className="text-[20px] font-semibold">The perfect case</h3>
+            <p className="mt-1 text-ink-2">See what perfect casing looks like: every stage of the map, with what to do and the exact words to say, from the first note to the final recommendation.</p>
+          </div>
+          <LinkButton to="/perfect-casing">See the perfect case</LinkButton>
+        </div>
+      </section>
 
       <div className="space-y-10">
         {MODULES.map((m, mi) => (

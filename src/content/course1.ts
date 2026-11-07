@@ -149,7 +149,7 @@ export const LESSONS_1: Lesson[] = [
       },
       {
         h: 'Formulas you must know cold',
-        body: `<p>Profit, margin vs markup, contribution margin, breakeven volume, payback, ROI, CAGR and a simple perpetuity value come up again and again. The Frameworks section has all 20 with a test-yourself mode.</p>`,
+        body: `<p>Profit, margin vs markup, contribution margin, breakeven volume, payback, ROI, CAGR and a simple perpetuity value come up again and again. The <a href="/formulas">Formulas page</a> has all 20 with a test-yourself mode.</p>`,
       },
     ],
     example: {

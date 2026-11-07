@@ -26,7 +26,7 @@ const TOOLS: Record<number, { label: string; to: string }[]> = {
   4: [{ label: 'Core frameworks', to: '/frameworks' }, { label: 'Structuring drill', to: '/drills?tab=structure' }],
   5: [{ label: 'Second-order drivers', to: '/frameworks#drivers' }],
   6: [{ label: 'Graph library', to: '/graphs' }, { label: 'Chart drill', to: '/drills?tab=charts' }],
-  7: [{ label: 'Maths drill', to: '/drills?tab=maths' }, { label: 'Formulas', to: '/frameworks#formulas' }],
+  7: [{ label: 'Maths drill', to: '/drills?tab=maths' }, { label: 'Formulas', to: '/formulas' }],
   8: [{ label: 'Brainstorming frameworks', to: '/frameworks#other' }],
   10: [{ label: 'Interview skills', to: '/interview-skills' }],
 }

@@ -71,3 +71,4 @@
 .htree-kid:first-child::after { top: 50%; }
 .htree-kid:last-child::after { bottom: 50%; }
 .htree-kid:only-child::after { display: none; }
+.rich a { color: var(--color-violet-d); font-weight: 500; text-decoration: underline; text-underline-offset: 2px; }

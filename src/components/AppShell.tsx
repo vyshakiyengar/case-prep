@@ -12,9 +12,15 @@ export const LEARN: Item[] = [
 ]
 export const PRACTISE: Item[] = [
   { to: '/casebook', label: 'Casebook', icon: 'M5 4h9a3 3 0 0 1 3 3v13H8a3 3 0 0 1-3-3zM17 7h2v13' },
+  { to: '/interviewer', label: 'Interviewer mode', icon: 'M9 8a3 3 0 1 0 0-.01M3 20c0-3 3-5 6-5s6 2 6 5M17 7h4M17 11h4M19 15h2' },
   { to: '/graphs', label: 'Graph library', icon: 'M4 20V4M4 20h16M7 16l4-6 3 3 5-8' },
   { to: '/drills', label: 'Drills', icon: 'M12 7v5l3 2M12 21a8 8 0 1 0 0-16 8 8 0 0 0 0 16zM10 2h4' },
   { to: '/interview-skills', label: 'Interview skills', icon: 'M8 8a4 4 0 0 1 8 0c0 3-4 4-4 7M12 19h.01M4 21h16' },
+]
+export const REFERENCE: Item[] = [
+  { to: '/case-types', label: 'Case types', icon: 'M4 5h16M4 12h16M4 19h10' },
+  { to: '/formulas', label: 'Formulas', icon: 'M5 7h6M8 4v6M14 7h5M5 17l4 4M9 17l-4 4M14 16h5M14 20h5' },
+  { to: '/glossary', label: 'Glossary', icon: 'M5 4h11a3 3 0 0 1 3 3v13H8a3 3 0 0 1-3-3zM9 9h6M9 13h4' },
 ]
 const ADMIN: Item = { to: '/admin', label: 'Admin', icon: 'M4 20V10M10 20V4M16 20v-7M22 20H2' }
 export const PREP: Item[] = [
@@ -63,6 +69,7 @@ export default function AppShell() {
         <nav aria-label="Main" className="mt-2">
           <NavGroup title="Learn" items={LEARN} />
           <NavGroup title="Practise" items={PRACTISE} />
+          <NavGroup title="Reference" items={REFERENCE} />
           <NavGroup title="My prep" items={isAdmin ? [...PREP, ADMIN] : PREP} />
         </nav>
         <div className="mt-auto pt-6">
@@ -91,7 +98,7 @@ export default function AppShell() {
           {user ? <NavLink to="/settings" aria-label="Settings"><Avatar name={name} photo={user.photoURL} /></NavLink> : <SignInLink />}
         </div>
         {mobileOpen && <nav id="mobile-sections" aria-label="Browse all sections" className="absolute left-3 right-3 top-full z-30 max-h-[min(75vh,620px)] overflow-y-auto rounded-b-xl border border-line bg-white p-4 shadow-xl">
-          {[['Learn', LEARN], ['Practise', PRACTISE], ...(user ? [['My prep', isAdmin ? [...PREP, ADMIN] : PREP]] : [])].map(([title, items], gi) => (
+          {[['Learn', LEARN], ['Practise', PRACTISE], ['Reference', REFERENCE], ...(user ? [['My prep', isAdmin ? [...PREP, ADMIN] : PREP]] : [])].map(([title, items], gi) => (
             <div key={title as string} className={gi ? 'mt-4' : ''}>
               <p className="px-2 pb-1 text-[12.5px] font-medium text-faint">{title as string}</p>
               <div className="grid grid-cols-2 gap-1">
@@ -111,7 +118,7 @@ export default function AppShell() {
       <main className="mx-auto max-w-6xl px-4 pt-6 pb-28 sm:px-6 lg:px-10 lg:pt-10 lg:pb-16"><Outlet /></main>
 
       <nav aria-label="Main" className="fixed inset-x-0 bottom-0 z-20 grid grid-cols-5 border-t border-line bg-white lg:hidden">
-        {[...[LEARN[0], LEARN[1], PRACTISE[0], PRACTISE[2]], user ? PREP[0] : { to: '/signin', label: 'Sign in', icon: 'M15 3h4v18h-4M10 17l5-5-5-5M15 12H3' }].map((n) => (
+        {[...[LEARN[0], LEARN[1], PRACTISE[0], PRACTISE.find((n) => n.to === '/drills')!], user ? PREP[0] : { to: '/signin', label: 'Sign in', icon: 'M15 3h4v18h-4M10 17l5-5-5-5M15 12H3' }].map((n) => (
           <NavLink key={n.to} to={n.to}
             className={({ isActive }) => `flex flex-col items-center gap-0.5 py-2 text-[10.5px] font-medium ${isActive ? 'text-ink' : 'text-faint'}`}>
             <Icon d={n.icon} /><span className="truncate">{n.label}</span>
