@@ -59,7 +59,7 @@ export function CoreBlock({ f, n }: { f: CoreFramework; n: number }) {
       <div className="mt-3 flex flex-wrap items-start justify-between gap-3">
         <p className="max-w-3xl flex-1 rounded-lg bg-teal-l/60 px-4 py-2.5 text-[14.5px] text-ink"><b className="font-semibold text-teal-d">Make it yours: </b>{f.tip}</p>
         <div className="flex flex-wrap gap-x-4 gap-y-1 pt-2 text-[14px] font-medium">
-          {f.practice.map((p) => <Link key={p.to} to={p.to} className="text-violet-d hover:underline">Practise: {p.label} →</Link>)}
+          {f.practice.map((p) => <Link key={p.to} to={p.to} className="text-violet-d hover:underline">Practise: {p.label}</Link>)}
         </div>
       </div>
     </section>
@@ -138,7 +138,7 @@ export function CoreFrameworksMini({ items }: { items: CoreFramework[] }) {
         <li key={f.id} className="rounded-xl border border-line bg-white p-3">
           <div className="mb-2 flex items-baseline justify-between gap-2">
             <span className="text-[14px] font-semibold text-ink"><span className="mr-1.5 text-teal-d">{i + 1}</span>{f.title}</span>
-            <Link to={`/frameworks#${f.id}`} className="shrink-0 text-[13px] font-medium text-violet-d hover:underline">Full tree →</Link>
+            <Link to={`/frameworks#${f.id}`} className="shrink-0 text-[13px] font-medium text-violet-d hover:underline">Full tree</Link>
           </div>
           <ul className="space-y-1 pl-1">
             {f.branches.map((b) => (

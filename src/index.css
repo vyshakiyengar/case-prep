@@ -1,44 +1,50 @@
 @import "tailwindcss";
 
 @theme {
-  --font-serif: "Source Serif 4 Variable", Georgia, serif;
+  --font-serif: "Newsreader Variable", "Newsreader", Georgia, serif;
   --font-sans: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
-  --color-ink: #14213D;
-  --color-ink-2: #2D3748;
-  --color-muted: #5F6B7D;
-  --color-faint: #94A0B2;
-  --color-canvas: #F5F7FA;
-  --color-paper: #FBFCFE;
-  --color-grid: #E3EAF3;
-  --color-line: #DDE3EC;
-  --color-teal: #0E9AA7;
-  --color-teal-d: #0B7C86;
-  --color-teal-l: #DDF2F4;
-  --color-violet: #6C5CE7;
-  --color-violet-d: #5446C9;
-  --color-violet-l: #EAE7FC;
-  --color-signal: #E8505B;
-  --color-signal-d: #B9343F;
-  --color-signal-l: #FCE4E6;
-  --color-marker: #FFE066;
-  --color-marker-l: #FFF6CC;
-  --color-good: #1E8E3E;
-  --color-good-l: #DDF4E3;
+  --color-ink: #0F1B33;
+  --color-ink-2: #2B3445;
+  --color-muted: #5B6475;
+  --color-faint: #98A1B0;
+  --color-canvas: #F6F7F9;
+  --color-paper: #FCFCFD;
+  --color-grid: #D9DFE8;
+  --color-line: #E1E6ED;
+  --color-teal: #0E8C96;
+  --color-teal-d: #0A6E76;
+  --color-teal-l: #E4F2F3;
+  --color-violet: #2E5C8A;
+  --color-violet-d: #234A72;
+  --color-violet-l: #E8EFF6;
+  --color-signal: #B5404A;
+  --color-signal-d: #93313A;
+  --color-signal-l: #F7E9EA;
+  --color-marker: #E9C46A;
+  --color-marker-l: #FBF5E4;
+  --color-good: #2D7A4B;
+  --color-good-l: #E5F2EA;
 }
 
 @layer base {
   html { -webkit-text-size-adjust: 100%; }
-  body { @apply bg-canvas font-sans text-ink-2 antialiased; font-size: 15px; line-height: 1.55; }
-  h1, h2, h3 { @apply font-serif text-ink; font-optical-sizing: auto; }
+  body { @apply bg-canvas font-sans text-ink-2 antialiased; font-size: 15px; line-height: 1.6; font-feature-settings: "kern", "liga"; }
+  h1, h2, h3 { @apply font-serif text-ink; font-optical-sizing: auto; letter-spacing: -0.012em; }
+  ::selection { background: #CFE7E9; color: var(--color-ink); }
   :focus-visible { outline: 2px solid var(--color-violet); outline-offset: 2px; border-radius: 4px; }
   button { cursor: pointer; }
   button:disabled { cursor: not-allowed; }
 }
 
+/* Serif headings read lighter and more refined than the default semibold. */
+:where(h1, h2, h3):not(.font-sans) { font-weight: 500; }
+h1:not(.font-sans) { letter-spacing: -0.02em; }
+
+/* A quiet dot grid: the paper consultants sketch issue trees on. */
 .graph-paper {
   background-color: var(--color-paper);
-  background-image: linear-gradient(var(--color-grid) 1px, transparent 1px), linear-gradient(90deg, var(--color-grid) 1px, transparent 1px);
-  background-size: 22px 22px;
+  background-image: radial-gradient(circle at 1px 1px, #CBD3DE 1px, transparent 1.2px);
+  background-size: 18px 18px;
 }
 
 /* model answers and exhibits authored as HTML */

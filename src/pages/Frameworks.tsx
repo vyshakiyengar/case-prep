@@ -49,9 +49,9 @@ export function FrameworksIndex() {
         <section className="rounded-xl border border-line bg-white p-5">
           <h2 className="text-[22px] font-semibold">Keep going</h2>
           <ul className="mt-2 grid gap-2 text-[15px] sm:grid-cols-3">
-            <li><Link to="/case-types" className="font-medium text-violet-d hover:underline">All 16 case types →</Link><p className="text-[13.5px] text-muted">What to ask first, and the trap, for each type.</p></li>
-            <li><Link to="/formulas" className="font-medium text-violet-d hover:underline">Formulas →</Link><p className="text-[13.5px] text-muted">The 20 you need, with a test-yourself mode.</p></li>
-            <li><Link to="/glossary" className="font-medium text-violet-d hover:underline">Glossary →</Link><p className="text-[13.5px] text-muted">Business terms in plain English.</p></li>
+            <li><Link to="/case-types" className="font-medium text-violet-d hover:underline">All 16 case types</Link><p className="text-[13.5px] text-muted">What to ask first, and the trap, for each type.</p></li>
+            <li><Link to="/formulas" className="font-medium text-violet-d hover:underline">Formulas</Link><p className="text-[13.5px] text-muted">The 20 you need, with a test-yourself mode.</p></li>
+            <li><Link to="/glossary" className="font-medium text-violet-d hover:underline">Glossary</Link><p className="text-[13.5px] text-muted">Business terms in plain English.</p></li>
           </ul>
         </section>
       </div>

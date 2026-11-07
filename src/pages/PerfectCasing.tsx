@@ -50,7 +50,7 @@ function Stage({ s, onTrain }: { s: ReturnType<typeof stageByN>; onTrain: (n: nu
       <p className="mt-6 rounded-lg bg-signal-l px-4 py-3 text-[15px] text-signal-d"><b className="font-semibold">Common mistake:</b> {s.mistake}</p>
       <div className="mt-5 flex flex-wrap gap-2">
         <Button onClick={() => onTrain(s.n)}>Train these phrases</Button>
-        {lesson && <Link to={`/learn/${lesson.slug}`} className="inline-flex items-center px-2 py-2 text-[14px] font-medium text-violet-d hover:underline">Read the lesson →</Link>}
+        {lesson && <Link to={`/learn/${lesson.slug}`} className="inline-flex items-center px-2 py-2 text-[14px] font-medium text-violet-d hover:underline">Read the lesson</Link>}
       </div>
     </article>
   )

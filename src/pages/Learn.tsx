@@ -125,7 +125,7 @@ export default function Learn() {
         <h2 className="text-[26px] font-semibold">First, the map: how a case interview flows</h2>
         <p className="mt-1 mb-4 max-w-2xl text-[16px] text-ink-2">Every case has the same six steps and takes 30 to 40 minutes. Read these six lines, then start lesson 1.</p>
         <CaseMap />
-        <p className="mt-4 text-[15px] text-ink-2">Want to see a whole case done well? <Link to="/perfect-casing" className="font-medium text-violet-d hover:underline">See the perfect case →</Link></p>
+        <p className="mt-4 text-[15px] text-ink-2">Want to see a whole case done well? <Link to="/perfect-casing" className="font-medium text-violet-d hover:underline">See the perfect case</Link></p>
       </section>
 
       <div className="space-y-10">

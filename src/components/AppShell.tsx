@@ -40,11 +40,11 @@ export function Icon({ d }: { d: string }) {
 function NavGroup({ title, items }: { title: string; items: Item[] }) {
   return (
     <div className={title ? 'mt-6' : 'mt-4'}>
-      {title && <div className="px-3 pb-1 text-[12.5px] font-medium text-faint">{title}</div>}
+      {title && <div className="px-3 pb-1.5 font-serif text-[13.5px] italic text-[#8C98AE]">{title}</div>}
       {items.map((n) => (
         <NavLink key={n.to} to={n.to}
-          className={({ isActive }) => `flex items-center gap-3 rounded-lg px-3 py-2 text-[14.5px] font-medium ${isActive ? 'bg-canvas text-ink' : 'text-muted hover:bg-canvas hover:text-ink'}`}>
-          <Icon d={n.icon} />{n.label}
+          className={({ isActive }) => `relative flex items-center gap-3 rounded-md px-3 py-[7px] text-[14.5px] transition-colors ${isActive ? 'bg-white/[0.07] text-white before:absolute before:top-1/2 before:-left-1 before:h-5 before:w-[3px] before:-translate-y-1/2 before:rounded-full before:bg-teal' : 'text-[#B8C2D3] hover:bg-white/[0.05] hover:text-white'}`}>
+          <span className="opacity-80"><Icon d={n.icon} /></span>{n.label}
         </NavLink>
       ))}
     </div>
@@ -65,8 +65,8 @@ export default function AppShell() {
   const name = data?.profile?.name || user?.name || ''
   return (
     <div className="min-h-screen lg:pl-60">
-      <aside className="fixed inset-y-0 left-0 z-20 hidden w-60 flex-col overflow-y-auto border-r border-line bg-white px-4 py-5 lg:flex">
-        <Link to="/home" className="px-2"><Logo /></Link>
+      <aside className="fixed inset-y-0 left-0 z-20 hidden w-60 flex-col overflow-y-auto bg-ink px-4 py-6 lg:flex">
+        <Link to="/home" className="px-3"><Logo light height={28} /></Link>
         <nav aria-label="Main" className="mt-2">
           <NavGroup title="" items={[HOME]} />
           <NavGroup title="Learn" items={LEARN} />
@@ -76,17 +76,17 @@ export default function AppShell() {
         </nav>
         <div className="mt-auto pt-6">
           {user ? (
-            <NavLink to="/settings" className="flex items-center gap-3 rounded-lg px-2 py-2 hover:bg-canvas">
+            <NavLink to="/settings" className="flex items-center gap-3 rounded-lg border-t border-white/10 px-2 pt-4 pb-1 hover:text-white">
               <Avatar name={name} photo={user.photoURL} />
               <span className="min-w-0">
-                <span className="block truncate text-[14px] font-medium text-ink">{name}</span>
-                <span className="block text-[12.5px] text-muted">Settings</span>
+                <span className="block truncate text-[14px] font-medium text-white">{name}</span>
+                <span className="block text-[12.5px] text-[#8C98AE]">Settings</span>
               </span>
             </NavLink>
           ) : (
-            <div className="rounded-lg bg-canvas p-3">
-              <p className="text-[13px] text-muted">Sign in to track your progress, log cases and practise with a partner.</p>
-              <SignInLink className="mt-2 inline-block" />
+            <div className="rounded-lg border border-white/10 p-3.5">
+              <p className="text-[13px] leading-snug text-[#B8C2D3]">Sign in to unlock every lesson and track your progress.</p>
+              <SignInLink className="mt-3 inline-block !bg-white !text-ink hover:!bg-teal-l" />
             </div>
           )}
         </div>

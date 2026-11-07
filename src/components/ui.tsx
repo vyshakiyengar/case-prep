@@ -5,8 +5,8 @@ import { Link } from 'react-router-dom'
 type BtnVariant = 'primary' | 'secondary' | 'quiet' | 'danger'
 const btnBase = 'inline-flex items-center justify-center gap-2 rounded-lg px-4 py-2 text-[14px] font-medium transition-colors disabled:opacity-50'
 const btnVar: Record<BtnVariant, string> = {
-  primary: 'bg-ink text-white hover:bg-[#22325A]',
-  secondary: 'bg-white text-ink border border-line hover:border-faint',
+  primary: 'bg-ink text-white hover:bg-[#1C2B4A] shadow-[0_1px_0_rgba(15,27,51,.08)]',
+  secondary: 'bg-white text-ink border border-[#D3DAE3] hover:border-ink/40',
   quiet: 'text-ink hover:bg-white/70 px-3',
   danger: 'text-signal-d hover:bg-signal-l px-3',
 }
@@ -19,10 +19,11 @@ export function LinkButton({ to, variant = 'primary', children, className = '' }
 
 export function PageHeader({ title, intro, action }: { title: string; intro?: ReactNode; action?: ReactNode }) {
   return (
-    <header className="mb-6 flex flex-wrap items-end justify-between gap-4">
+    <header className="mb-8 flex flex-wrap items-end justify-between gap-4">
       <div className="max-w-2xl">
-        <h1 className="text-[30px] leading-tight font-semibold sm:text-[34px]">{title}</h1>
-        {intro && <p className="mt-1.5 text-[15.5px] text-muted">{intro}</p>}
+        <h1 className="text-[32px] leading-[1.1] sm:text-[40px]">{title}</h1>
+        <span aria-hidden className="mt-3 block h-[2px] w-10 bg-teal" />
+        {intro && <p className="mt-3 text-[16px] leading-relaxed text-muted">{intro}</p>}
       </div>
       {action}
     </header>
@@ -31,10 +32,10 @@ export function PageHeader({ title, intro, action }: { title: string; intro?: Re
 
 export function Section({ title, aside, children, className = '' }: { title?: string; aside?: ReactNode; children: ReactNode; className?: string }) {
   return (
-    <section className={`rounded-xl border border-line bg-white p-5 ${className}`}>
+    <section className={`rounded-xl border border-line bg-white p-5 sm:p-6 ${className}`}>
       {(title || aside) && (
         <div className="mb-3 flex items-baseline justify-between gap-3">
-          {title && <h2 className="text-[19px] font-semibold">{title}</h2>}
+          {title && <h2 className="text-[21px]">{title}</h2>}
           {aside}
         </div>
       )}
@@ -93,7 +94,7 @@ export function Field({ label, hint, children }: { label: string; hint?: string;
     </label>
   )
 }
-export const inputCls = 'w-full rounded-lg border border-line bg-white px-3 py-2 text-[14.5px] text-ink placeholder:text-faint focus:border-violet focus:outline-none'
+export const inputCls = 'w-full rounded-lg border border-line bg-white px-3 py-2 text-[14.5px] text-ink placeholder:text-faint focus:border-teal focus:outline-none focus:ring-2 focus:ring-teal/15'
 
 export function Tabs<T extends string>({ value, onChange, items }: { value: T; onChange: (v: T) => void; items: { value: T; label: string }[] }) {
   return (

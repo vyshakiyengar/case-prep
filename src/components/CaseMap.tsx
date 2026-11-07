@@ -31,7 +31,7 @@ export function CaseMap() {
               <span className="text-[12.5px] text-muted">{s.time}</span>
             </div>
             <p className="mt-0.5 text-[14.5px] text-ink-2">{s.what}</p>
-            <Link to={s.learn[0].to} className="mt-1 inline-block text-[13.5px] font-medium text-violet-d hover:underline">{s.learn[0].label.replace('Lesson: ', 'Lesson: ')} →</Link>
+            <Link to={s.learn[0].to} className="mt-1 inline-block text-[13.5px] font-medium text-violet-d hover:underline">{s.learn[0].label.replace('Lesson: ', 'Lesson: ')}</Link>
           </div>
         </li>
       ))}
