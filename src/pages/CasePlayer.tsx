@@ -120,8 +120,8 @@ export default function CasePlayer() {
         </div>
         <div className="flex flex-col items-end gap-2">
           <div className="inline-flex overflow-hidden rounded-lg border border-line bg-white text-[13.5px]">
-            <button onClick={() => setParams({})} aria-pressed={!interviewer} className={`px-3 py-1.5 ${!interviewer ? 'bg-ink font-medium text-white' : 'text-muted'}`}>Practise alone</button>
-            <button onClick={() => setParams({ mode: 'interviewer' })} aria-pressed={interviewer} className={`px-3 py-1.5 ${interviewer ? 'bg-ink font-medium text-white' : 'text-muted'}`}>I'm the interviewer</button>
+            <button onClick={() => setParams({})} aria-pressed={!interviewer} className={`px-3 py-1.5 ${!interviewer ? 'bg-ink font-medium text-white' : 'text-muted'}`}>Practice</button>
+            <button onClick={() => setParams({ mode: 'interviewer' })} aria-pressed={interviewer} className={`px-3 py-1.5 ${interviewer ? 'bg-ink font-medium text-white' : 'text-muted'}`}>Be the interviewer</button>
           </div>
           <div className="flex items-center gap-2 text-[13.5px] text-muted">
             <span className="tabular-nums">Elapsed <b className="font-serif text-[17px] text-ink">{mmss(watch.secs)}</b> of {c.time}</span>

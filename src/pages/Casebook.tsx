@@ -50,8 +50,8 @@ export default function Casebook() {
               </div>
             </div>
             <div className="flex gap-2">
-              <Link to={`/casebook/${c.slug}`} className="rounded-lg bg-ink px-3.5 py-2 text-[14px] font-medium text-white hover:bg-[#22325A]">Practise</Link>
-              <Link to={`/casebook/${c.slug}?mode=interviewer`} className="rounded-lg border border-line bg-white px-3.5 py-2 text-[14px] font-medium text-ink hover:border-faint">Give this case</Link>
+              <Link to={`/casebook/${c.slug}`} className="rounded-lg bg-ink px-3.5 py-2 text-[14px] font-medium text-white hover:bg-[#22325A]">Practice</Link>
+              <Link to={`/casebook/${c.slug}?mode=interviewer`} className="rounded-lg border border-line bg-white px-3.5 py-2 text-[14px] font-medium text-ink hover:border-faint">Be the interviewer</Link>
             </div>
           </li>
         ))}

@@ -38,7 +38,7 @@ export default function Interviewer() {
                   <div className="font-medium text-ink">{c.id}. {c.title} <span className="ml-1 text-[13px] text-muted">{'●'.repeat(c.diff)}{'○'.repeat(3 - c.diff)}</span></div>
                   <div className="text-[14px] text-muted">{c.type} · {c.industry}</div>
                 </div>
-                <LinkButton to={`/casebook/${c.slug}?mode=interviewer`} variant="secondary">Give this case</LinkButton>
+                <LinkButton to={`/casebook/${c.slug}?mode=interviewer`} variant="secondary">Be the interviewer</LinkButton>
               </li>
             ))}
           </ul>
