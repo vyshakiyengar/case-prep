@@ -36,14 +36,6 @@ const kindOf = (q: CaseQuestion): Kind => {
   return 'ideas'
 }
 
-const TOOL: Partial<Record<Kind, { label: string; to: string }>> = {
-  structure: { label: 'Core frameworks', to: '/frameworks' },
-  chart: { label: 'More charts: graph library', to: '/graphs' },
-  maths: { label: 'Formulas', to: '/formulas' },
-  sizing: { label: 'Market sizing framework', to: '/frameworks#market-sizing' },
-  ideas: { label: 'Brainstorming frameworks', to: '/frameworks#other' },
-}
-
 function Coach({ kind }: { kind: Kind }) {
   const c = COACH[kind]
   const [on, setOn] = useState<Record<number, boolean>>({})
@@ -62,7 +54,6 @@ function Coach({ kind }: { kind: Kind }) {
       <div className="mt-2 flex flex-wrap gap-x-5 gap-y-1 text-[13.5px] font-medium">
         <Link to={`/perfect-casing#stage-${PC[kind]}`} className="text-teal-d hover:underline">What to say here (perfect casing)</Link>
         <Link to={`/learn/${c.lesson}`} className="text-violet-d hover:underline">Stuck? Lesson: {c.lessonTitle}</Link>
-        {TOOL[kind] && <Link to={TOOL[kind]!.to} className="text-violet-d hover:underline">{TOOL[kind]!.label}</Link>}
       </div>
     </div>
   )

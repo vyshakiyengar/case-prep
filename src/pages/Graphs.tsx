@@ -1,7 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
 import type { ReactNode } from 'react'
-import { Link } from 'react-router-dom'
-import { Button, PageHeader, Section, inputCls } from '../components/ui'
+import { Button, PageHeader, inputCls } from '../components/ui'
 
 type Family = 'Marimekko' | 'Bar Mekko' | 'Waterfall' | 'Bubble' | 'Bar' | 'Bar + Line' | 'Line' | 'Scatter'
 type Exercise = { id: string; family: Family; title: string; context: string; difficulty: string; question: string; answer: string; followUp: string; index: number; values: number[]; second?: number[]; third?: number[]; fourth?: number[]; fifth?: number[]; labels: string[] }
@@ -136,7 +135,7 @@ function Graph({ e }: { e: Exercise }) {
     marks = <g>{marks}{[['Direct',COLORS[0]], ['Partner',COLORS[1]], ['Other',COLORS[2]]].map(([name,color],k) => <g key={name}><rect x={left + 160*k} y={308} width={10} height={10} fill={color} /><text x={left + 15 + 160*k} y={318} style={txt}>{name}</text></g>)}</g>
     note = 'Width: group demand (£m) · Height: channel share (%) · Area: value'
   }
-  return <div className="overflow-x-auto rounded-xl border border-line bg-white p-2 sm:p-4"><svg viewBox="0 0 720 345" className="w-full min-w-[560px]" role="img" aria-label={e.family + ' chart for ' + e.title}><rect x={0} y={0} width={720} height={345} fill="white" />{grid}<line x1={left} y1={top} x2={left} y2={bottom} stroke="#94A0B2" /><line x1={left} y1={bottom} x2={right} y2={bottom} stroke="#94A0B2" />{marks}<text x={left} y={16} style={{ ...txt, fontSize: 12, fill: '#14213D' }}>{note}</text></svg><p className="mt-1 text-[12.5px] text-muted">Fictional training data. Labels and scales are designed for practice, not real-world research.</p></div>
+  return <div className="overflow-x-auto rounded-xl border border-line bg-white p-2 sm:p-4"><svg viewBox="0 0 720 345" className="w-full min-w-[560px]" role="img" aria-label={e.family + ' chart for ' + e.title}><rect x={0} y={0} width={720} height={345} fill="white" />{grid}<line x1={left} y1={top} x2={left} y2={bottom} stroke="#94A0B2" /><line x1={left} y1={bottom} x2={right} y2={bottom} stroke="#94A0B2" />{marks}<text x={left} y={16} style={{ ...txt, fontSize: 12, fill: '#14213D' }}>{note}</text></svg><p className="mt-1 text-[12.5px] text-muted">Fictional practice data.</p></div>
 }
 
 function DataTable({ e }: { e: Exercise }) {
@@ -148,7 +147,7 @@ function DataTable({ e }: { e: Exercise }) {
     : e.family === 'Bar + Line' ? [['Leads (thousands)',e.values], ['Conversion rate (%)',e.second || []]]
     : e.family === 'Line' ? [['Core (indexed)',e.values], ['Premium (indexed)',e.second || []], ['New ventures (indexed)',e.third || []]]
     : [['Training hours',e.values], ['Satisfaction index',e.second || []]]
-  return <details className="mt-3 rounded-lg border border-line bg-canvas/50"><summary className="cursor-pointer px-4 py-3 text-[13.5px] font-medium text-violet-d">View exact numbers and chart data</summary><div className="overflow-x-auto px-4 pb-4"><table className="w-full min-w-[420px] border-collapse text-left text-[13px]"><thead><tr className="border-b border-line"><th className="py-2 pr-3 font-semibold text-ink">{e.family === 'Waterfall' ? 'Step' : e.family === 'Bar + Line' || e.family === 'Line' ? 'Quarter' : 'Group'}</th>{columns.map(([title])=><th key={title} className="py-2 pr-3 font-semibold text-ink">{title}</th>)}</tr></thead><tbody>{e.labels.map((label,i)=><tr key={label} className="border-b border-line/70 last:border-0"><td className="py-2 pr-3 font-medium">{label}</td>{columns.map(([title,values])=><td key={title} className="py-2 pr-3 tabular-nums">{values[i]}</td>)}</tr>)}</tbody></table><p className="mt-2 text-[12px] text-muted">Check the visual first, then use this table for exact calculations. These are original, fictional practice numbers.</p></div></details>
+  return <details className="mt-3 rounded-lg border border-line bg-canvas/50"><summary className="cursor-pointer px-4 py-3 text-[13.5px] font-medium text-violet-d">See the exact numbers</summary><div className="overflow-x-auto px-4 pb-4"><table className="w-full min-w-[420px] border-collapse text-left text-[13px]"><thead><tr className="border-b border-line"><th className="py-2 pr-3 font-semibold text-ink">{e.family === 'Waterfall' ? 'Step' : e.family === 'Bar + Line' || e.family === 'Line' ? 'Quarter' : 'Group'}</th>{columns.map(([title])=><th key={title} className="py-2 pr-3 font-semibold text-ink">{title}</th>)}</tr></thead><tbody>{e.labels.map((label,i)=><tr key={label} className="border-b border-line/70 last:border-0"><td className="py-2 pr-3 font-medium">{label}</td>{columns.map(([title,values])=><td key={title} className="py-2 pr-3 tabular-nums">{values[i]}</td>)}</tr>)}</tbody></table></div></details>
 }
 
 const GUIDE = [
@@ -177,31 +176,23 @@ export default function Graphs() {
     setDone(next); try { window.localStorage.setItem(STORAGE, JSON.stringify(next)) } catch { /* optional */ }
   }
   return <>
-    <PageHeader title="Graph interpretation library" intro="Become comfortable reading unfamiliar charts before you see them in a case interview. Practise 64 original exhibits across eight chart types, explain the business insight, and check your reasoning." />
-    <div className="mb-6 grid gap-3 rounded-xl border border-line bg-white p-5 sm:grid-cols-[1fr_auto] sm:items-center">
-      <div><p className="font-serif text-[20px] font-semibold text-ink">A graph is a question, not a test of your memory.</p><p className="mt-1 text-[14.5px] text-muted">Try one or two exhibits each day. The goal is to see a chart, understand it, find an insight, and explain what you would do next.</p></div>
-      <div className="rounded-lg bg-teal-l px-4 py-3 text-center"><strong className="block font-serif text-[27px] text-ink">{done.length} / 64</strong><span className="text-[12.5px] text-teal-d">exercises reviewed</span></div>
-    </div>
-    <Section title="How to practise each exhibit" className="mb-6">
-      <ol className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">{GUIDE.map(([title, desc]) => <li key={title} className="rounded-lg bg-canvas p-3"><h3 className="font-sans text-[14px] font-semibold text-ink">{title}</h3><p className="mt-1 text-[13.5px] text-muted">{desc}</p></li>)}</ol>
-      <p className="mt-4 text-[13.5px] text-muted">Suggested pace: 60–90 seconds to observe and calculate, 30 seconds to say your conclusion, then 1 minute to compare with the model analysis. Read the <Link to="/learn/charts-and-exhibits" className="font-medium text-violet-d underline">chart-reading lesson</Link> for a full walkthrough.</p>
-    </Section>
-    <div className="mb-5"><h2 className="mb-2 text-[20px] font-semibold">Choose a chart type</h2><div className="flex flex-wrap gap-2">{['All', ...FAMILIES].map((f) => <button key={f} onClick={() => chooseFamily(f)} aria-pressed={family === f} className={'rounded-full border px-3.5 py-2 text-[13.5px] font-medium transition-colors ' + (family === f ? 'border-ink bg-ink text-white' : 'border-line bg-white text-muted hover:border-faint hover:text-ink')}>{f}{f !== 'All' && <span className="ml-1.5 opacity-70">8</span>}</button>)}</div></div>
-    <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_225px]">
-      <article className="min-w-0"><div className="mb-3 flex flex-wrap items-center justify-between gap-2"><span className="text-[13.5px] text-muted">Exercise {selectedIndex + 1} of {visible.length} · {current.difficulty} · {current.family}</span><span className="rounded-full bg-violet-l px-3 py-1 text-[12px] font-medium text-violet-d">Original practice exhibit</span></div>
-        <h2 className="text-[25px] font-semibold">{current.title}</h2><p className="mb-4 mt-1 text-[14.5px] text-muted">{current.context}</p>
-        <div className="mb-4 rounded-xl border border-line bg-white p-4"><h3 className="font-sans text-[14px] font-semibold text-ink">How to read this {current.family} chart</h3><p className="mt-1 text-[13.5px] text-ink-2">{FAMILY_GUIDES[current.family].meaning}</p><p className="mt-2 text-[13px] text-muted"><b className="font-semibold text-ink">Watch out:</b> {FAMILY_GUIDES[current.family].caution}</p></div>
-        <Graph e={current} />
-        <DataTable e={current} />
-        <section className="mt-5 rounded-xl border-2 border-violet bg-white p-5"><h3 className="font-sans text-[15px] font-semibold text-violet-d">Your turn · 90 seconds</h3><p className="mt-1 text-[17px] font-medium text-ink">{current.question}</p><label htmlFor="graph-notes" className="mt-3 block text-[13px] text-muted">Jot down your insight, calculation and next step. Then say it out loud.</label><textarea id="graph-notes" className={inputCls + ' mt-1'} rows={4} value={notes} onChange={(e) => setNotes(e.target.value)} placeholder="The chart tells me… Because… Next I would…" />
-          <div className="mt-3 flex flex-wrap gap-2"><Button onClick={() => setShow((s) => !s)}>{show ? 'Hide model answer' : 'Reveal model answer'}</Button><Button variant="secondary" onClick={toggleDone}>{done.includes(current.id) ? '✓ Reviewed' : 'Mark as reviewed'}</Button></div>
-          {show && <div className="mt-4 rounded-lg bg-good-l/60 p-4"><h4 className="font-sans text-[14px] font-semibold text-good">A strong interpretation</h4><p className="mt-1 text-[15px] text-ink">{current.answer}</p><h4 className="mt-3 font-sans text-[14px] font-semibold text-ink">What to investigate next</h4><p className="mt-1 text-[14.5px] text-ink-2">{current.followUp}</p><p className="mt-3 text-[13px] text-muted">Your words do not need to match exactly. Check whether you found a useful observation, quantified it, explained what it means and proposed a next step.</p></div>}
-        </section>
-        <div className="mt-4 flex flex-wrap justify-between gap-3"><Button variant="secondary" disabled={selectedIndex <= 0} onClick={() => pick(visible[selectedIndex - 1])}>Previous exhibit</Button><Button disabled={selectedIndex >= visible.length - 1} onClick={() => pick(visible[selectedIndex + 1])}>Next exhibit</Button></div>
-      </article>
-      <aside className="space-y-4"><Section title="Browse exercises"><p className="mb-3 text-[13px] text-muted">Pick any example, or follow the exercises in order. Your progress is saved in this browser.</p><div className="grid grid-cols-4 gap-2 lg:grid-cols-4">{visible.map((e, i) => <button key={e.id} onClick={() => pick(e)} aria-label={'Exercise ' + (i + 1) + ', ' + e.family + (done.includes(e.id) ? ', reviewed' : '')} aria-current={e.id === current.id ? 'true' : undefined} className={'rounded-lg border py-2 text-[13px] font-medium ' + (e.id === current.id ? 'border-violet bg-violet-l text-violet-d' : done.includes(e.id) ? 'border-teal bg-teal-l text-teal-d' : 'border-line bg-white text-muted hover:border-faint')}>{i + 1}{done.includes(e.id) ? ' ✓' : ''}</button>)}</div></Section>
-        <Section title="After each chart"><p className="text-[14px] text-muted">If you miss an insight, write down why: did you overlook the axis, focus on percentages instead of absolute values, forget a calculation, or fail to explain the business meaning?</p><Link to="/drills?tab=charts" className="mt-3 inline-block text-[13.5px] font-medium text-violet-d hover:underline">Try timed chart drills →</Link></Section>
-      </aside>
-    </div>
+    <PageHeader title="Graph library" intro="64 practice charts in eight types. Do one or two a day: read the chart, find the insight, say what it means." action={<span className="rounded-lg bg-teal-l px-3 py-2 text-[14px] font-medium text-teal-d">{done.length} of 64 done</span>} />
+    <details className="mb-5 rounded-xl border border-line bg-white px-5 py-3">
+      <summary className="cursor-pointer text-[15px] font-medium text-ink">How to read any chart (5 steps)</summary>
+      <ol className="mt-3 space-y-1.5 pb-2 text-[14.5px] text-ink-2">{GUIDE.map(([title, desc]) => <li key={title}><b className="font-semibold text-ink">{title.replace(/^\d · /, '')}:</b> {desc}</li>)}</ol>
+    </details>
+    <div className="mb-5 flex flex-wrap gap-2" role="group" aria-label="Chart type">{['All', ...FAMILIES].map((f) => <button key={f} onClick={() => chooseFamily(f)} aria-pressed={family === f} className={'rounded-full border px-3.5 py-1.5 text-[13.5px] font-medium transition-colors ' + (family === f ? 'border-ink bg-ink text-white' : 'border-line bg-white text-muted hover:border-faint hover:text-ink')}>{f}</button>)}</div>
+    <article className="min-w-0 max-w-4xl">
+      <p className="text-[13.5px] text-muted">Chart {selectedIndex + 1} of {visible.length}{done.includes(current.id) ? ' · done ✓' : ''}</p>
+      <h2 className="text-[24px] font-semibold">{current.title.split(' · ')[0]} <span className="font-sans text-[16px] font-normal text-muted">{current.family} chart</span></h2>
+      <p className="mt-1 mb-3 text-[14.5px] text-ink-2"><b className="font-semibold text-ink">How to read it:</b> {FAMILY_GUIDES[current.family].meaning}</p>
+      <Graph e={current} />
+      <DataTable e={current} />
+      <section className="mt-5 rounded-xl border-2 border-violet bg-white p-5"><h3 className="font-sans text-[15px] font-semibold text-violet-d">Your turn · 90 seconds</h3><p className="mt-1 text-[17px] font-medium text-ink">{current.question}</p><textarea aria-label="Your answer" className={inputCls + ' mt-3'} rows={3} value={notes} onChange={(e) => setNotes(e.target.value)} placeholder="Say it out loud first. Typing is optional." />
+        <div className="mt-3 flex flex-wrap gap-2"><Button onClick={() => setShow((s) => !s)}>{show ? 'Hide the answer' : 'Show the answer'}</Button><Button variant="secondary" onClick={toggleDone}>{done.includes(current.id) ? 'Done ✓' : 'Mark as done'}</Button></div>
+        {show && <div className="mt-4 rounded-lg bg-good-l/60 p-4"><p className="text-[15px] text-ink">{current.answer}</p><p className="mt-2 text-[14.5px] text-ink-2"><b className="font-semibold">Next, I would:</b> {current.followUp.charAt(0).toLowerCase() + current.followUp.slice(1)}</p><p className="mt-2 text-[13.5px] text-muted"><b className="font-semibold text-ink">Watch out:</b> {FAMILY_GUIDES[current.family].caution}</p></div>}
+      </section>
+      <div className="mt-4 flex flex-wrap justify-between gap-3"><Button variant="secondary" disabled={selectedIndex <= 0} onClick={() => pick(visible[selectedIndex - 1])}>Previous chart</Button><Button disabled={selectedIndex >= visible.length - 1} onClick={() => pick(visible[selectedIndex + 1])}>Next chart</Button></div>
+    </article>
   </>
 }

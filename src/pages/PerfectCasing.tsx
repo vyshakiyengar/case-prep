@@ -21,16 +21,6 @@ function useBoxes(): [Boxes, (b: Boxes) => void] {
   return [local, (b) => { setLocal(b); try { localStorage.setItem(LS, JSON.stringify(b)) } catch { /* ignore */ } }]
 }
 
-const TOOLS: Record<number, { label: string; to: string }[]> = {
-  3: [{ label: 'Casebook: practise openings', to: '/casebook' }],
-  4: [{ label: 'Core frameworks', to: '/frameworks' }, { label: 'Structuring drill', to: '/drills?tab=structure' }],
-  5: [{ label: 'Second-order drivers', to: '/frameworks#drivers' }],
-  6: [{ label: 'Graph library', to: '/graphs' }, { label: 'Chart drill', to: '/drills?tab=charts' }],
-  7: [{ label: 'Maths drill', to: '/drills?tab=maths' }, { label: 'Formulas', to: '/formulas' }],
-  8: [{ label: 'Brainstorming frameworks', to: '/frameworks#other' }],
-  10: [{ label: 'Interview skills', to: '/interview-skills' }],
-}
-
 function Stage({ s, onTrain }: { s: ReturnType<typeof stageByN>; onTrain: (n: number) => void }) {
   const lesson = lessonBySlug(s.lesson)
   return (
@@ -60,8 +50,7 @@ function Stage({ s, onTrain }: { s: ReturnType<typeof stageByN>; onTrain: (n: nu
       <p className="mt-6 rounded-lg bg-signal-l px-4 py-3 text-[15px] text-signal-d"><b className="font-semibold">Common mistake:</b> {s.mistake}</p>
       <div className="mt-5 flex flex-wrap gap-2">
         <Button onClick={() => onTrain(s.n)}>Train these phrases</Button>
-        {lesson && <Link to={`/learn/${lesson.slug}`} className="inline-flex items-center rounded-lg border border-line bg-white px-4 py-2 text-[14px] font-medium text-ink hover:border-faint">Lesson: {lesson.title}</Link>}
-        {(TOOLS[s.n] || []).map((t) => <Link key={t.to} to={t.to} className="inline-flex items-center rounded-lg border border-line bg-white px-4 py-2 text-[14px] font-medium text-violet-d hover:border-faint">{t.label} →</Link>)}
+        {lesson && <Link to={`/learn/${lesson.slug}`} className="inline-flex items-center px-2 py-2 text-[14px] font-medium text-violet-d hover:underline">Read the lesson →</Link>}
       </div>
     </article>
   )

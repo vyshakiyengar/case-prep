@@ -26,7 +26,7 @@ export default function Casebook() {
   const shown = cases.filter((c) => filter === 'All' || c.type === filter)
   return (
     <>
-      <PageHeader title="Casebook" intro="15 original cases with exhibits, coaching checklists and model answers. Practise alone with a timer, or be the interviewer for a friend and then swap. New to cases? Do the course first." />
+      <PageHeader title="Casebook" intro="15 practice cases. Do one alone with the timer, or give one to a friend and swap." />
       <p className="mb-4 rounded-lg border border-teal bg-teal-l/50 px-4 py-3 text-[14.5px] text-ink">New to cases? Do the first three lessons of the course, then start with the three easy cases: <Link to="/casebook/coastal-brew" className="font-medium underline">1</Link>, <Link to="/casebook/plugged-in" className="font-medium underline">11</Link> and <Link to="/casebook/snackco-protein-bar" className="font-medium underline">12</Link>.</p>
       <div className="mb-4 flex flex-wrap gap-1.5" role="group" aria-label="Filter by case type">
         {types.map((t) => (

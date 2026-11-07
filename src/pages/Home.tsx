@@ -5,28 +5,27 @@ import { LESSONS } from '../content/course'
 import { CARDS } from '../content/perfectCasing'
 import { dayScore, streak } from '../lib/stats'
 import { todayIso } from '../lib/dates'
-import { LinkButton, Meter } from '../components/ui'
 import { SignInButton } from './SignIn'
 
 type Item = { to: string; label: string; icon: string }
 const ABOUT: Record<string, string> = {
-  '/learn': 'Start here. The map of a case interview, then 11 short lessons.',
-  '/perfect-casing': 'What a perfect case sounds like, stage by stage, plus a daily phrase trainer.',
-  '/frameworks': '10 core frameworks as trees, the drivers to dig into, and others to remember.',
-  '/casebook': '15 original cases with a step-by-step player and coaching at each step.',
-  '/interviewer': 'Give a case to a partner: what to read, what to reveal, what to push on.',
-  '/graphs': '64 chart exercises: read the chart, find the insight, say the "so what".',
-  '/drills': 'Short timed drills: structuring, chart reading, mental maths.',
-  '/interview-skills': 'Thinking, speaking and sounding commercial: a daily 30-minute routine.',
-  '/case-types': 'The 16 kinds of case: what to ask first and the trap to avoid.',
-  '/formulas': 'The 20 formulas for case maths, with a test-yourself mode.',
-  '/glossary': 'Business terms in plain English, with examples.',
-  '/today': 'Your day at a glance: habits, next focus, scores.',
-  '/tracker': 'Daily habits across six weeks, so you can see your consistency.',
-  '/cases': 'Every case you practise: scores by stage, the mistake, and one fix.',
-  '/stories': 'Build your FIT stories: leadership, teamwork, failure, why consulting.',
-  '/partners': 'Invite practice partners and see each other\'s progress.',
-  '/perks': 'Verify your business school email for free downloads and discounts.',
+  '/learn': 'Start here: 11 short lessons',
+  '/perfect-casing': 'What to say at every stage',
+  '/frameworks': '10 trees to structure any case',
+  '/casebook': '15 cases to practise',
+  '/interviewer': 'Give a case to a friend',
+  '/graphs': '64 charts to read',
+  '/drills': 'Quick timed drills',
+  '/interview-skills': 'Think and speak clearly',
+  '/case-types': 'The 16 kinds of case',
+  '/formulas': '20 formulas for case maths',
+  '/glossary': 'Business terms, plain English',
+  '/today': 'Your day at a glance',
+  '/tracker': 'Daily habits',
+  '/cases': 'Every case, and one fix',
+  '/stories': 'Your behavioural stories',
+  '/partners': 'Practise with friends',
+  '/perks': 'Free extras for students',
 }
 
 const GRAPH_KEY = 'case-prep-graph-library-v1'
@@ -75,14 +74,14 @@ export default function Home() {
     <>
       <header className="mb-6">
         <h1 className="text-[34px] leading-tight font-semibold">{user ? `Welcome back${name ? `, ${name}` : ''}` : 'Welcome to Case Prep OS'}</h1>
-        <p className="mt-1 max-w-2xl text-[16.5px] text-muted">Everything on the site, in the order to use it. Learn a skill, practise it, look things up when you need to, and track what to fix next.</p>
+        <p className="mt-1 max-w-2xl text-[16.5px] text-muted">Learn it, practise it, look it up, track it. Start with your next step below.</p>
       </header>
 
       <section className="mb-8 flex flex-wrap items-center justify-between gap-4 rounded-2xl bg-ink p-5 text-white sm:p-6">
         <div>
           <p className="text-[13px] font-semibold text-teal-l">Your next step</p>
           <p className="mt-0.5 font-serif text-[22px] leading-snug font-semibold">{next.label}</p>
-          {user && <p className="mt-1 text-[14px] text-white/75">{lessonsDone} of {LESSONS.length} lessons · {mastered} phrases mastered · {cases.length} cases logged · {today} of 8 habits today</p>}
+
         </div>
         <div className="flex flex-wrap gap-2">
           <Link to={next.to} className="rounded-lg bg-white px-4 py-2.5 text-[14.5px] font-semibold text-ink hover:bg-teal-l">Go</Link>
@@ -90,8 +89,7 @@ export default function Home() {
         </div>
       </section>
 
-      <h2 className="mb-1 text-[24px] font-semibold">Site map</h2>
-      <p className="mb-4 text-muted">Four parts. Work left to right, then loop: every case you log tells you what to learn or practise next.</p>
+      <h2 className="mb-3 text-[22px] font-semibold">Everything on the site</h2>
       <div className="grid gap-4 lg:grid-cols-4">
         {COLS.map((col, ci) => (
           <section key={col.n} className="relative flex flex-col rounded-2xl border border-line bg-white p-4">
@@ -103,21 +101,18 @@ export default function Home() {
                 <p className="text-[12.5px] text-muted">{col.sub}</p>
               </div>
             </div>
-            <ul className="space-y-2">
+            <ul className="space-y-0.5">
               {col.items.map((it) => {
                 const pr = progress[it.to]
                 const locked = !user && col.n === 4
                 return (
                   <li key={it.to}>
-                    <Link to={it.to} className="block rounded-xl border border-line px-3 py-2.5 hover:border-faint hover:bg-canvas/60">
-                      <div className="flex items-center gap-2 text-ink"><Icon d={it.icon} /><span className="text-[15px] font-semibold">{it.label}</span>{locked && <span className="ml-auto text-[11.5px] text-faint">sign in</span>}</div>
-                      <p className="mt-0.5 text-[13px] leading-snug text-muted">{ABOUT[it.to]}</p>
-                      {pr && (
-                        <div className="mt-1.5 flex items-center gap-2">
-                          {pr.max ? <Meter value={pr.v} max={pr.max} color="bg-teal" /> : null}
-                          <span className="shrink-0 text-[12px] font-medium text-teal-d tabular-nums">{pr.text}</span>
-                        </div>
-                      )}
+                    <Link to={it.to} className="flex items-start gap-2.5 rounded-lg px-2 py-2 hover:bg-canvas">
+                      <span className="mt-0.5 text-muted"><Icon d={it.icon} /></span>
+                      <span className="min-w-0">
+                        <span className="block text-[15px] font-semibold text-ink">{it.label}{locked && <span className="ml-2 text-[11.5px] font-normal text-faint">sign in</span>}</span>
+                        <span className="block text-[13px] text-muted">{pr && pr.v > 0 ? <span className="font-medium text-teal-d">{pr.text}</span> : ABOUT[it.to]}</span>
+                      </span>
                     </Link>
                   </li>
                 )
@@ -127,19 +122,6 @@ export default function Home() {
         ))}
       </div>
 
-      <section className="mt-8 grid gap-4 md:grid-cols-3">
-        {[
-          ['New to case interviews?', 'Read the map of a case interview, then the first three lessons. About 35 minutes.', '/learn#case-map', 'Open the map'],
-          ['Interview in a few weeks?', 'Follow the 6-week plan: lessons in week 1, then a case a day with a partner.', '/learn#case-map', 'See the course'],
-          ['Practising with a friend?', 'Take turns: one of you runs the case in interviewer mode, then swap.', '/interviewer', 'Interviewer mode'],
-        ].map(([t, d, to, cta]) => (
-          <div key={t} className="flex flex-col rounded-xl border border-line bg-white p-4">
-            <h3 className="font-sans text-[16px] font-semibold text-ink">{t}</h3>
-            <p className="mt-1 mb-3 text-[14px] text-muted">{d}</p>
-            <div className="mt-auto"><LinkButton to={to} variant="secondary">{cta}</LinkButton></div>
-          </div>
-        ))}
-      </section>
     </>
   )
 }

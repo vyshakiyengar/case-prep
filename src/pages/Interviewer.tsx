@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
+
 import { loadCases } from '../content'
 import type { CaseDef } from '../content'
 import { LinkButton, PageHeader, Section } from '../components/ui'
@@ -18,7 +18,7 @@ export default function Interviewer() {
   useEffect(() => { loadCases().then(setCases) }, [])
   return (
     <>
-      <PageHeader title="Interviewer mode" intro="Practising with a partner is the fastest way to improve, and giving a case teaches you as much as taking one. In interviewer mode every case shows the prompt to read aloud, the facts to give only if asked, the exhibits, the model answers and what to push on." />
+      <PageHeader title="Interviewer mode" intro="Give a case to a friend, then swap. Each case shows you what to read aloud, what to reveal when asked, and the model answers." />
       <Section title="How to run a case for a partner" className="mb-6">
         <ol className="grid gap-3 md:grid-cols-2 lg:grid-cols-3">
           {STEPS.map(([t, d], i) => (
@@ -28,7 +28,6 @@ export default function Interviewer() {
             </li>
           ))}
         </ol>
-        <p className="mt-4 text-[14.5px] text-ink-2">Need someone to practise with? <Link to="/partners" className="font-medium text-violet-d hover:underline">Invite a partner</Link> to share progress. Want to know what great looks like? <Link to="/perfect-casing" className="font-medium text-violet-d hover:underline">Perfect casing</Link> is the standard to judge against.</p>
       </Section>
       <Section title="Pick a case to give">
         {!cases ? <p className="text-muted">Loading cases…</p> : (

@@ -10,21 +10,6 @@ import { CoreFrameworksMini } from '../components/FrameworkTree'
 import { CaseMap } from '../components/CaseMap'
 import { CORE } from '../content/frameworkTrees'
 
-type L = { label: string; to: string }
-const MORE: Record<string, L[]> = {
-  'how-case-interviews-work': [{ label: 'Perfect casing: the 10-stage flow', to: '/perfect-casing' }, { label: 'Casebook', to: '/casebook' }],
-  'the-opening': [{ label: 'Perfect casing: stages 1-3', to: '/perfect-casing#stage-1' }],
-  structuring: [{ label: 'All core frameworks', to: '/frameworks' }, { label: 'Second-order drivers', to: '/frameworks#drivers' }, { label: 'Perfect casing: structure', to: '/perfect-casing#stage-4' }],
-  'driving-the-case': [{ label: 'Perfect casing: lead the case', to: '/perfect-casing#stage-5' }],
-  'case-maths': [{ label: 'Formulas to know', to: '/formulas' }, { label: 'Perfect casing: maths', to: '/perfect-casing#stage-7' }],
-  'charts-and-exhibits': [{ label: 'Chart drill (90 sec)', to: '/drills?tab=charts' }, { label: 'Perfect casing: charts', to: '/perfect-casing#stage-6' }],
-  'market-sizing': [{ label: 'Market sizing framework', to: '/frameworks#market-sizing' }, { label: 'Perfect casing: maths', to: '/perfect-casing#stage-7' }],
-  brainstorming: [{ label: 'Brainstorming frameworks', to: '/frameworks#other' }, { label: 'Perfect casing: brainstorm', to: '/perfect-casing#stage-8' }],
-  recommendation: [{ label: 'Perfect casing: recommendation', to: '/perfect-casing#stage-9' }],
-  'how-you-come-across': [{ label: 'Perfect casing: throughout the case', to: '/perfect-casing#stage-10' }],
-  'fit-interview': [{ label: 'Interview skills', to: '/interview-skills' }],
-}
-
 
 function SectionBody({ s }: { s: Lesson['sections'][number] }) {
   return (
@@ -112,9 +97,6 @@ function LessonChapter({ l, n }: { l: Lesson; n: number }) {
               <LinkButton to={l.practice.to}>{l.practice.label}</LinkButton>
               {user && <Button variant="secondary" onClick={() => markLesson(l.slug, !done)}>{done ? 'Completed ✓' : 'Mark as complete'}</Button>}
             </div>
-            {MORE[l.slug] && (
-              <p className="flex flex-wrap gap-x-4 gap-y-1 text-[14px]"><span className="text-muted">Go further:</span>{MORE[l.slug].map((m) => <Link key={m.to} to={m.to} className="font-medium text-violet-d hover:underline">{m.label} →</Link>)}</p>
-            )}
           </div>
         </Gate>
       </div>

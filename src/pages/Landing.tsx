@@ -43,11 +43,10 @@ function Notepad() {
 }
 
 const PATH = [
-  { t: 'Learn the basics', d: `A ${LESSONS.length}-lesson course: how cases work, structuring, maths, charts, sizing, the recommendation, and how you come across. Each lesson ends with a timed exercise and a quiz.`, to: '/learn', cta: 'Start the course' },
-  { t: 'Learn the flow', d: 'Perfect casing: the 10 stages of a strong case with the exact words to use, plus a daily phrase trainer. And 16 frameworks, each shown generic and tailored.', to: '/perfect-casing', cta: 'Open perfect casing' },
-  { t: 'Practise full cases', d: '15 original cases with exhibits and model answers. A checklist at every step tells you what a strong answer includes before you look.', to: '/casebook', cta: 'Open the casebook' },
-  { t: 'Drill your weak spots', d: 'Two-minute structuring prompts, 90-second chart reads, and endless mental-maths questions.', to: '/drills', cta: 'Try a drill' },
-  { t: 'Track and fix one thing', d: 'Log every case against the six things interviewers score. The dashboard names your weakest stage and the lesson and drill that fix it.', to: '/signin', cta: 'Start tracking' },
+  { t: 'Learn', d: 'The map of a case, 11 short lessons, perfect casing and 10 core frameworks.', to: '/learn', cta: 'Start the course' },
+  { t: 'Practise', d: '15 cases, 64 charts, timed drills, and cases to give a friend.', to: '/casebook', cta: 'Open the casebook' },
+  { t: 'Look things up', d: 'Case types, formulas and a plain-English glossary.', to: '/glossary', cta: 'Open the glossary' },
+  { t: 'Track and improve', d: 'Log each case, find your weakest stage, fix one thing at a time.', to: '/signin', cta: 'Start tracking' },
 ]
 
 export default function Landing() {
@@ -71,44 +70,22 @@ export default function Landing() {
             Learn case interviews properly, then practise until they feel easy.
           </h1>
           <p className="mt-5 max-w-xl text-[17.5px] leading-relaxed text-muted">
-            A free course, a perfect-casing playbook with a phrase trainer, 16 visual frameworks, 15 original cases, 64 graph-reading exercises, timed drills, and daily habits for clearer thinking and communication. Built for business school students heading into consulting interviews.
+            A free course and practice kit for consulting interviews. Built for business school students.
           </p>
           <div className="mt-8 flex flex-wrap items-center gap-3">
             <Link to="/learn" className="rounded-lg bg-ink px-5 py-3 text-[15px] font-medium text-white shadow-sm hover:bg-[#22325A]">Start the free course</Link>
             <Link to="/casebook" className="rounded-lg border border-line bg-white px-5 py-3 text-[15px] font-medium text-ink hover:border-faint">Browse the casebook</Link>
           </div>
-          <p className="mt-3 text-[14px] text-muted">No sign-up needed to learn. Sign in when you want to track your progress.</p>
+          <p className="mt-3 text-[14px] text-muted">Free. Sign in to unlock every lesson and track your progress.</p>
         </div>
         <Notepad />
       </section>
 
-      <section className="border-t border-line bg-canvas">
-        <div className="mx-auto max-w-6xl px-5 py-14 sm:px-8">
-          <p className="text-[13px] font-semibold uppercase tracking-wide text-violet-d">The method behind this website</p>
-          <h2 className="mt-2 text-[32px] font-semibold">Case preparation is two different jobs.</h2>
-          <p className="mt-2 max-w-3xl text-[16px] text-muted">First, learn how to solve business cases. Second, build the thinking, communication and business judgement that help you perform well in the interview. You need both. This programme gives you a way to practise each one.</p>
-          <div className="mt-7 grid gap-4 md:grid-cols-2">
-            <div className="rounded-xl border border-line border-t-4 border-t-teal bg-white p-6">
-              <span className="text-[13px] font-semibold text-teal-d">PILLAR 1</span>
-              <h3 className="mt-2 text-[24px] font-semibold">Master case mechanics</h3>
-              <p className="mt-2 text-[15px] text-muted">Learn how to open a case, ask good questions, build a tailored structure, read graphs, calculate quickly and make a recommendation. Then practise full cases and learn from every mistake.</p>
-              <div className="mt-4 flex flex-wrap gap-3 text-[14px] font-medium text-violet-d"><Link to="/perfect-casing" className="hover:underline">Perfect casing →</Link><Link to="/frameworks" className="hover:underline">Frameworks →</Link><Link to="/graphs" className="hover:underline">64 graph exercises →</Link></div>
-            </div>
-            <div className="rounded-xl border border-line border-t-4 border-t-violet bg-white p-6">
-              <span className="text-[13px] font-semibold text-violet-d">PILLAR 2</span>
-              <h3 className="mt-2 text-[24px] font-semibold">Master interview skills</h3>
-              <p className="mt-2 text-[15px] text-muted">Improve your ability to recall information, speak clearly and think commercially. Use practical exercises, SpeechOn, optional brain games, CEO interviews, Shark Tank and business books to prepare.</p>
-              <Link to="/interview-skills" className="mt-4 inline-block text-[14px] font-medium text-violet-d hover:underline">See the complete daily routine →</Link>
-            </div>
-          </div>
-        </div>
-      </section>
 
       <section className="border-t border-line bg-canvas">
         <div className="mx-auto max-w-6xl px-5 py-16 sm:px-8">
-          <h2 className="text-[32px] font-semibold">Your path to the offer</h2>
-          <p className="mt-2 max-w-2xl text-[16.5px] text-muted">Five steps, in this order. Most candidates jump straight to cases; learning the basics first makes every case you practise count for more.</p>
-          <ol className="mt-10 grid gap-x-8 gap-y-10 md:grid-cols-2 lg:grid-cols-5">
+          <h2 className="text-[32px] font-semibold">How it works</h2>
+          <ol className="mt-8 grid gap-x-8 gap-y-8 md:grid-cols-2 lg:grid-cols-4">
             {PATH.map((p, i) => (
               <li key={p.t} className="flex flex-col border-t-2 border-ink pt-4">
                 <span className="font-serif text-[36px] leading-none font-semibold text-teal">{i + 1}</span>
@@ -143,21 +120,6 @@ export default function Landing() {
         </div>
       </section>
 
-      <section className="border-t border-line bg-canvas">
-        <div className="mx-auto max-w-6xl px-5 py-16 sm:px-8">
-          <h2 className="max-w-2xl text-[32px] leading-tight font-semibold">Coaching built into every case</h2>
-          <div className="mt-8 grid gap-8 md:grid-cols-3">
-            {[['Before you look', 'At each question, a short checklist of what a strong answer includes, so you mark your own work like an interviewer would.'],
-              ['Stuck? Go back a step', 'Every step links to the lesson that teaches that skill: structuring, maths, charts or the recommendation.'],
-              ['Swap seats', 'Switch to interviewer mode to give the case to a friend, with the facts to share only if asked and notes on where to push.']].map(([t, d]) => (
-              <div key={t} className="border-t border-line pt-4">
-                <h3 className="text-[20px] font-semibold">{t}</h3>
-                <p className="mt-1 text-muted">{d}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
 
       <section className="mx-auto max-w-6xl px-5 py-14 sm:px-8">
         <div className="grid items-center gap-6 rounded-2xl border border-violet bg-violet-l/50 p-7 md:grid-cols-[1fr_auto]">
