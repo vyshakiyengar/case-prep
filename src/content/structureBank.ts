@@ -23,8 +23,8 @@ const hash = (s: string) => [...s].reduce((h, c) => (h * 31 + c.charCodeAt(0)) >
 /** "Cost synergies: shared bakeries" -> "Cost synergies" */
 const asBucket = (item: string) => { const t = item.split(/:|, | \(|; /)[0].trim(); return /^[a-z][A-Z]/.test(t) ? t : t.charAt(0).toUpperCase() + t.slice(1) }
 
-function overlap(p: StructPrompt): OverlapQ {
-  const heads = p.tree.map((b) => b.head), h = hash(p.id)
+export function overlap(p: StructPrompt, shift = 0): OverlapQ {
+  const heads = p.tree.map((b) => b.head), h = hash(p.id) + shift
   // Every sub-item that reads as a bucket name: short, not a question, not a copy of a head.
   const cands = p.tree.flatMap((b, bi) => b.items.map((it) => ({ bi, sub: asBucket(it) })))
     .filter(({ sub }) => !sub.includes('?') && sub.length >= 4 && sub.length <= 40 && !heads.some((x) => x.toLowerCase() === sub.toLowerCase()))
@@ -38,5 +38,8 @@ function overlap(p: StructPrompt): OverlapQ {
   }
 }
 
-export const ALL_OVERLAPS: OverlapQ[] = ALL_PROMPTS.map(overlap)
+// Hand-checked: for these prompts the default pick could fairly belong under two buckets,
+// so a clearer sub-item is used instead.
+const SHIFT: Record<string, number> = { 'saas-churn': 4, 'bank-costs': 2, 'grocer-margins': 1, 'competitor-price': 5, 'dark-stores': 4, 'acquire-rival': 2, 'food-delivery-cash': 6, 'women-workforce': 6, 'price-ev-charging': 6, 'launch-snack': 1, 'hotel-revpar': 4, 'gym-churn': 4, 'bank-app-ratings': 4, 'ev-switch': 3, 'new-route': 5, 'university-online': 2, 'school-merger': 6, 'build-warehouse': 4, 'vertical-farm': 4, 'nuclear-plant': 2, 'cut-hospital-costs': 3, 'airline-ancillary': 1, 'retailer-online': 3, 'reduce-turnover': 1, 'pharma-pipeline': 1, 'logistics-peak': 2 }
+export const ALL_OVERLAPS: OverlapQ[] = ALL_PROMPTS.map((p) => overlap(p, SHIFT[p.id] ?? 0))
 export const ALL_SPOT: SpotQ[] = [...STRUCTURE_PICKS.map((p) => ({ ...p, kind: 'pick' as const })), ...ALL_OVERLAPS]

@@ -175,7 +175,7 @@
    "trap": "Not comparing to doing nothing."
   },
   {
-   "type": "Capacity / investment",
+   "type": "Investment / capacity",
    "ask": "Is demand real, and can existing capacity be squeezed?",
    "build": "Need (is demand real and lasting, squeeze existing capacity first) · Economics (upfront and running cost, extra margin, payback, price effect if rivals add capacity) · Alternatives (outsource, lease, subcontract) · Execution (time to build, skills, risks)",
    "trap": "Approving capex before fixing bottlenecks."

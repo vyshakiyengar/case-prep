@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useStore } from '../lib/store'
 import type { Perk, StudentRecord } from '../lib/types'
-import { lookupSchool, PROGRAMS } from '../lib/schools'
+import { isAcademicDomain, lookupSchool, PROGRAMS } from '../lib/schools'
 import { Button, Field, inputCls, PageHeader, Section } from '../components/ui'
 import { Loading } from '../App'
 
@@ -17,7 +17,8 @@ export function SchoolForm({ initial, submitLabel, onSubmit, busy }: { initial?:
   const look = lookupSchool(p.email)
   const valid = /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(p.email.trim())
   useEffect(() => { if (look.school) setP((x) => ({ ...x, school: look.school! })) }, [look.school])
-  const problem = valid && look.personal ? 'Use your school email address, not a personal one.' : null
+  const problem = !valid ? null : look.personal ? 'Use your school email address, not a personal one.'
+    : !look.academic ? "That doesn't look like a school email. Use the address your school gave you (it usually ends in .edu or .ac.uk). If your school's address doesn't, get in touch through vyshak.me." : null
   return (
     <form className="space-y-4" onSubmit={(e) => { e.preventDefault(); if (!problem && p.school.trim()) onSubmit({ ...p, email: p.email.trim().toLowerCase(), school: p.school.trim() }) }}>
       <Field label="Business school email" hint="We send a one-click link to this address to confirm it's yours.">
@@ -93,7 +94,7 @@ export default function Perks() {
     setBusy(false)
   }
 
-  if (student) return (
+  if (student && isAcademicDomain(student.domain)) return (
     <>
       <PageHeader title="Student perks" intro="Free materials and offers for verified business school students." />
       <div className="mb-5 flex flex-wrap items-center gap-3 rounded-lg border border-good/40 bg-good-l px-5 py-3">

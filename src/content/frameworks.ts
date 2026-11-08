@@ -18,7 +18,7 @@ const slugify = (s: string) => s.toLowerCase().replace(/[^a-z0-9]+/g, '-').repla
 const CASES: Record<string, string[]> = {
   'Profitability': ['coastal-brew', 'vertex-mobile'], 'Revenue drop': ['vertex-mobile'], 'Market entry': ['nordwind-e-bikes', 'snackco-protein-bar'],
   'Growth strategy': ['meridian-hospitals'], 'M&A': ['packright'], 'Private equity': ['fithub-gyms'], 'Pricing': ['cloudledger'],
-  'Competitive response': ['freshmart'], 'Capacity / investment': ['desert-dairy'], 'Cost & operations': ['skyline-mro'], 'Market sizing': ['plugged-in'],
+  'Competitive response': ['freshmart'], 'Investment / capacity': ['desert-dairy'], 'Cost & operations': ['skyline-mro'], 'Market sizing': ['plugged-in'],
   'Valuation': ['packright', 'fithub-gyms'], 'Public sector': ['visit-al-noor'], 'Product: design': ['ridenow-drivers'],
   'Product: improve / grow': ['ridenow-drivers'], 'Product: metric drop': ['lingualeap'],
   'Product launch': ['snackco-protein-bar', 'elm-home-security'],
@@ -32,7 +32,7 @@ const WHEN: Record<string, string> = {
   'Private equity': '"Should our fund invest in this business?"',
   'Pricing': '"What should we charge for our new product?"',
   'Competitive response': '"A rival just launched something. How should we react?"',
-  'Capacity / investment': '"Should we build a new plant or add capacity?"',
+  'Investment / capacity': '"Should we build a new plant or add capacity?"',
   'Cost & operations': '"Cut costs by 15%" or "Why is this process so slow?"',
   'Market sizing': '"How big is the market for X?" Often a mini-case inside a bigger case.',
   'Valuation': '"What is this business, asset or contract worth?"',
@@ -61,7 +61,7 @@ function parse(build: string): Pick<Framework, 'mode' | 'branches' | 'steps'> {
 const CORE_FOR: Record<string, string> = {
   'Profitability': 'improve-profits', 'Revenue drop': 'improve-profits', 'Market entry': 'enter-market', 'Growth strategy': 'grow-business',
   'M&A': 'acquire-business', 'Private equity': 'pe-invest', 'Pricing': 'price-product', 'Competitive response': 'competitive-threat',
-  'Capacity / investment': 'make-investment', 'Cost & operations': 'reduce-costs', 'Valuation': 'acquire-business', 'Product launch': 'launch-product',
+  'Investment / capacity': 'make-investment', 'Cost & operations': 'reduce-costs', 'Valuation': 'acquire-business', 'Product launch': 'launch-product',
 }
 export const FRAMEWORKS: Framework[] = playbook.frameworks.map((f) => ({
   slug: slugify(f.type), type: f.type, ask: f.ask, trap: f.trap, ...parse(f.build), cases: CASES[f.type] || [], when: WHEN[f.type] || '', core: CORE_FOR[f.type],

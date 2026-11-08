@@ -18,8 +18,9 @@ export default function Settings() {
   const save = async (e: React.FormEvent) => {
     e.preventDefault(); await saveProfile({ name, startDate: start, interviewDate: iv || undefined }); setSaved(true); setTimeout(() => setSaved(false), 2000)
   }
-  const download = () => {
-    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' })
+  const download = async () => {
+    const [student, usageRecord] = user && backend ? await Promise.all([backend.getStudent(user.uid), backend.getStats(user.uid)]) : [null, null]
+    const blob = new Blob([JSON.stringify({ ...data, student, usageRecord }, null, 2)], { type: 'application/json' })
     const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'prepforcase-my-data.json'; a.click()
   }
   const deleteAccount = async () => {

@@ -42,11 +42,12 @@ export const useStore = () => {
   return s
 }
 
-/** A verified school email + password account counts as a verified student (unlocks perks). */
+/** A verified university email + password account counts as a verified student (unlocks perks). */
 async function ensureStudent(b: Backend, u: AuthUser, name: string) {
   if (u.provider !== 'password' || !u.emailVerified || !u.email) return
   const look = lookupSchool(u.email)
-  if (look.personal || (await b.getStudent(u.uid))) return
+  // Only university addresses count; a work or personal email never unlocks student perks
+  if (!look.academic || (await b.getStudent(u.uid))) return
   await b.saveStudent({
     uid: u.uid, name, schoolEmail: u.email.toLowerCase(), domain: look.domain, school: look.school || look.domain, knownSchool: !!look.school,
     program: '', gradYear: '', marketing: false, consentAt: Date.now(), verifiedAt: Date.now(),

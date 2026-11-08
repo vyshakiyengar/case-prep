@@ -46,6 +46,8 @@ export interface Backend {
   saveStats(s: UserStats): Promise<void>
   bumpStats(b: StatsBump): Promise<void>
   listStats(): Promise<UserStats[]>
+  /** The signed-in person's own usage record, for their data download. */
+  getStats(uid: string): Promise<UserStats | null>
   /** Live feed of everyone's stats for the admin dashboard. Returns an unsubscribe function. */
   watchStats(cb: (rows: UserStats[]) => void, onError: () => void): () => void
 }
@@ -132,6 +134,9 @@ async function makeFirebase(): Promise<Backend> {
       }
       const invites = await fs.getDocs(fs.query(fs.collection(db, 'invites'), fs.where('from', '==', uid)))
       await Promise.all(invites.docs.map((d) => fs.deleteDoc(d.ref)))
+      // Invites this person accepted carry their name, so remove those too
+      const accepted = await fs.getDocs(fs.query(fs.collection(db, 'invites'), fs.where('acceptedBy', '==', uid))).catch(() => null)
+      if (accepted) await Promise.all(accepted.docs.map((d) => fs.deleteDoc(d.ref).catch(() => {})))
       await Promise.all(['users', 'summaries', 'stats', 'students'].map((c) => fs.deleteDoc(fs.doc(db, c, uid)).catch(() => {})))
       try { await authMod.deleteUser(u) } catch (e) {
         if (((e as { code?: string }).code || '').includes('requires-recent-login')) {
@@ -245,6 +250,9 @@ async function makeFirebase(): Promise<Backend> {
     async listStats() {
       const s = await fs.getDocs(fs.collection(db, 'stats')); return s.docs.map((d) => d.data() as UserStats)
     },
+    async getStats(uid) {
+      try { const d = await fs.getDoc(fs.doc(db, 'stats', uid)); return d.exists() ? (d.data() as UserStats) : null } catch { return null }
+    },
     watchStats(cb, onError) {
       return fs.onSnapshot(fs.collection(db, 'stats'), (snap) => cb(snap.docs.map((d) => d.data() as UserStats)), onError)
     },
@@ -312,6 +320,7 @@ function makeDemo(): Backend {
     deletePerk: (id) => upd((s) => { s.perks = (s.perks ?? DEMO_PERKS).filter((x) => x.id !== id) }),
     saveStats: (st) => upd((s) => { s.stats = { ...(s.stats || {}), ...JSON.parse(JSON.stringify(st)), activeDays: Array.from(new Set([...(s.stats?.activeDays || []), ...st.activeDays])).sort() } }),
     async listStats() { return state.stats ? [state.stats] : [] },
+    async getStats() { return state.stats || null },
     bumpStats: (b) => upd((s) => {
       const cur = (s.stats || { uid: b.uid, name: 'You', createdAt: Date.now(), activeDays: [], learned: [], lessons: 0, cases: 0, drills: 0, stories: 0, trainerCards: 0, trainerMastered: 0, habitDays: 0, updatedAt: Date.now(), lastActive: Date.now() }) as UserStats
       const views = { ...(cur.views || {}) }

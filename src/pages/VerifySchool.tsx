@@ -18,8 +18,9 @@ export default function VerifySchool() {
     if (!backend || !user) return
     setState('working')
     try {
-      await backend.completeSchoolLink(p.email, href)
       const look = lookupSchool(p.email)
+      if (!look.academic) throw new SchoolLinkError("That doesn't look like a school email, so it can't unlock student perks. Use the address your school gave you.")
+      await backend.completeSchoolLink(p.email, href)
       await backend.saveStudent({
         uid: user.uid, name: data?.profile?.name || user.name, googleEmail: user.email, schoolEmail: p.email.toLowerCase(), domain: look.domain,
         school: p.school, knownSchool: !!look.school, program: p.program, gradYear: p.gradYear, marketing: p.marketing,

@@ -35,7 +35,7 @@ export default function Privacy() {
           <p>The site uses your browser's storage to keep you signed in, remember small settings, and save some progress on this device: graph library progress, best drill scores, phrase-trainer progress before you sign in, and your school email details while a confirmation link is pending. Once you're signed in it also remembers which site first sent you here, for the usage record above. There are no advertising or tracking cookies.</p>
 
           <H>How long it is kept</H>
-          <p>For as long as you have an account. You can delete your account and everything saved with it at any time from <Link to="/settings" className="font-medium text-violet-d underline">Settings</Link>. Progress kept only in this browser is removed when you clear your browser's site data. In Settings you can also download your prep data (profile, tracker, case log, drills and stories); for a copy of your student or usage record, get in touch.</p>
+          <p>For as long as you have an account. You can delete your account and everything saved with it at any time from <Link to="/settings" className="font-medium text-violet-d underline">Settings</Link>. Progress kept only in this browser is removed when you clear your browser's site data. In Settings you can also download a copy of your data: your prep data (profile, tracker, case log, drills and stories), your student record and your usage record.</p>
 
           <H>Your rights</H>
           <p>Under UK data protection law you can ask for a copy of your data, ask for it to be corrected or deleted, or object to how it is used. If you are unhappy with how your data is handled, you can complain to the Information Commissioner's Office at ico.org.uk.</p>

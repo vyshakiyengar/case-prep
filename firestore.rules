@@ -32,14 +32,15 @@ service cloud.firestore {
     // Partner invites: anyone with the link can read one; only the invitee can accept it, once
     match /invites/{code} {
       allow get: if signedIn();
-      allow list: if signedIn() && resource.data.from == request.auth.uid;
+      allow list: if signedIn() && (resource.data.from == request.auth.uid || resource.data.acceptedBy == request.auth.uid);
       allow create: if signedIn() && request.resource.data.from == request.auth.uid
         && request.resource.data.acceptedBy == null;
       allow update: if signedIn() && resource.data.acceptedBy == null
         && request.auth.uid != resource.data.from
         && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['acceptedBy', 'acceptedName'])
         && request.resource.data.acceptedBy == request.auth.uid;
-      allow delete: if signedIn() && resource.data.from == request.auth.uid;
+      // The inviter can withdraw it; the person who accepted can remove it (used when they delete their account)
+      allow delete: if signedIn() && (resource.data.from == request.auth.uid || resource.data.acceptedBy == request.auth.uid);
     }
 
     // Verified business school students. A record is only accepted if the school
@@ -54,13 +55,15 @@ service cloud.firestore {
         && request.resource.data.uid == uid
         && request.resource.data.schoolEmail is string
         && ('email' in request.auth.token.firebase.identities)
-        && request.resource.data.schoolEmail in request.auth.token.firebase.identities['email'];
+        && request.resource.data.schoolEmail in request.auth.token.firebase.identities['email']
+        // Only university addresses (.edu, .ac.uk and the like, or a school on the list in src/lib/schools.ts)
+        && request.resource.data.schoolEmail.lower().matches('^[^@]+@([a-z0-9-]+\\.)*(([a-z0-9-]+\\.)?(edu|ac)(\\.[a-z]{2})?|cbs\\.dk|escp\\.eu|eur\\.nl|iese\\.net|imd\\.org|ivey\\.ca|mannheim-business-school\\.com|rotman\\.utoronto\\.ca|rsm\\.nl|studbocconi\\.it|uni-mannheim\\.de|unibocconi\\.it|unisg\\.ch|ust\\.hk|utoronto\\.ca)$');
       allow delete: if isSelf(uid) || isAdmin();
     }
 
     // Activity stats: each user writes their own; only the admin can read them (analytics)
     match /stats/{uid} {
-      allow read: if isAdmin();
+      allow read: if isSelf(uid) || isAdmin();
       allow create, update: if isSelf(uid) && request.resource.data.uid == uid;
       allow delete: if isSelf(uid);
     }

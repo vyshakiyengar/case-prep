@@ -75,6 +75,7 @@ export function SignInPanel({ compact = false }: { compact?: boolean }) {
       <label className="block text-[13.5px] text-ink-2">School email
         <input className={`${inputCls} mt-1`} type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="name@school.edu" autoComplete="email" required />
         {mode === 'signup' && look?.school && <span className="mt-1 block text-[12.5px] text-teal-d">{look.school}</span>}
+        {mode === 'signup' && look && !look.personal && !look.academic && /\.[a-z]{2,}$/.test(look.domain) && <span className="mt-1 block text-[12.5px] text-muted">This doesn't look like a school email, so student perks won't unlock. You can still sign up.</span>}
       </label>
       {mode !== 'reset' && (
         <label className="block text-[13.5px] text-ink-2">Password
