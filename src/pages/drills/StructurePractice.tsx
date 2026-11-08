@@ -3,13 +3,12 @@ import { Link, useSearchParams } from 'react-router-dom'
 import { useStore } from '../../lib/store'
 import { todayIso, uid } from '../../lib/dates'
 import { FLAW_LABEL, STRUCTURE_PICKS, STRUCTURE_PROMPTS } from '../../content/structureDrills'
-import type { StructFamily, StructPrompt } from '../../content/structureDrills'
-import { Button, inputCls, PageHeader, Section, Tabs } from '../../components/ui'
+import type { StructPrompt } from '../../content/structureDrills'
+import { Button, inputCls, PageHeader, Section } from '../../components/ui'
 import { Countdown } from '../../components/Timer'
-import { DrillCrumbs, Seg } from './shared'
+import { DrillCrumbs, StartCard } from './shared'
 
 const shuffle = <T,>(a: T[]) => [...a].sort(() => Math.random() - 0.5)
-const FAMILY_NAME: Record<StructFamily, string> = { diagnose: 'Diagnose: why is this happening?', decide: 'Decide: should we do it?', generate: 'Generate: how can we do it?' }
 const CHECKS = [
   'Three or four buckets, each a different part of the problem (no overlaps)',
   'Nothing big missing: together the buckets cover the question',
@@ -35,75 +34,66 @@ function Tree({ p }: { p: StructPrompt }) {
 
 function Build() {
   const { addDrill, user } = useStore()
-  const [fam, setFam] = useState<'all' | StructFamily>('all')
-  const order = useMemo(() => shuffle(STRUCTURE_PROMPTS.filter((p) => fam === 'all' || p.family === fam)), [fam])
+  const order = useMemo(() => shuffle(STRUCTURE_PROMPTS), [])
   const [n, setN] = useState(0)
-  const [phase, setPhase] = useState<'ready' | 'running' | 'review'>('ready')
+  const [phase, setPhase] = useState<'running' | 'review'>('running')
   const [notes, setNotes] = useState('')
   const [ticks, setTicks] = useState<boolean[]>(CHECKS.map(() => false))
   const left = useRef(120)
   const p = order[n % order.length]
   const end = useCallback(() => setPhase('review'), [])
   const tick = useCallback((l: number) => { left.current = l }, [])
-  const reset = () => { setPhase('ready'); setNotes(''); setTicks(CHECKS.map(() => false)); left.current = 120 }
   const score = ticks.filter(Boolean).length
-  const save = async () => {
-    if (user) await addDrill({ id: uid(), kind: 'structure', mode: 'build', prompt: p.prompt, seconds: 120 - Math.max(0, left.current), score: Math.max(1, score), date: todayIso(), createdAt: Date.now() }).catch(() => {})
-    setN((x) => x + 1); reset()
+  const nextPrompt = async () => {
+    if (user && score) await addDrill({ id: uid(), kind: 'structure', mode: 'build', prompt: p.prompt, seconds: 120 - Math.max(0, left.current), score, date: todayIso(), createdAt: Date.now() }).catch(() => {})
+    setN((x) => x + 1); setPhase('running'); setNotes(''); setTicks(CHECKS.map(() => false)); left.current = 120
   }
   return (
-    <>
-      <div className="mb-4 flex flex-wrap items-center gap-3">
-        <Seg label="Kind of question" value={fam} onChange={(v) => { setFam(v); setN(0); reset() }}
-          items={[{ value: 'all', label: 'All' }, { value: 'diagnose', label: 'Diagnose' }, { value: 'decide', label: 'Decide' }, { value: 'generate', label: 'Generate' }]} />
-        <span className="text-[13.5px] text-muted">{order.length} prompts</span>
-      </div>
-      <div className="grid gap-5 lg:grid-cols-[1.5fr_1fr]">
-        <div className="min-w-0 graph-paper rounded-xl border border-line p-5 sm:p-6">
-          <p className="text-[13px] text-muted">Prompt {n + 1}{phase !== 'ready' ? ` · ${p.type}` : ''}</p>
-          <p className="mt-1 font-serif text-[24px] leading-snug font-semibold text-ink">{phase === 'ready' ? 'Press start to see your prompt. You have two minutes.' : p.prompt}</p>
-          {phase !== 'ready' && (
-            <textarea aria-label="Your structure" className={`${inputCls} mt-5 bg-white/90`} rows={6} value={notes} onChange={(e) => setNotes(e.target.value)} disabled={phase === 'review'}
-              placeholder={'Your first-level buckets, then a line or two under each.\n1. …\n2. …\n3. …\nI would start with … because …'} />
-          )}
-          {phase === 'review' && (
-            <div className="mt-5 space-y-4">
-              <div>
-                <p className="mb-2 text-[13.5px] font-semibold text-teal-d">One strong structure · {FAMILY_NAME[p.family]}</p>
-                <Tree p={p} />
-              </div>
-              <p className="text-[14.5px] text-ink-2"><b className="font-semibold text-ink">Where to start:</b> {p.start}</p>
-              <p className="text-[14.5px] text-ink-2"><b className="font-semibold text-ink">The usual trap:</b> {p.trap}</p>
-              {p.framework && <Link to={`/frameworks/${p.framework}`} className="inline-block text-[14px] font-medium text-violet-d hover:underline">See the core framework this builds on</Link>}
-              <fieldset className="rounded-lg border border-line bg-white p-4">
-                <legend className="px-1 text-[14px] font-medium text-ink">Mark yours honestly</legend>
-                <ul className="space-y-2">
-                  {CHECKS.map((c, i) => (
-                    <li key={c}><label className="flex cursor-pointer items-start gap-2.5 text-[14px] text-ink-2">
-                      <input type="checkbox" className="mt-0.5 h-4 w-4 accent-teal" checked={ticks[i]} onChange={() => setTicks((t) => t.map((x, j) => (j === i ? !x : x)))} />{c}
-                    </label></li>
-                  ))}
-                </ul>
-                <p className="mt-3 text-[14px] text-ink">Score: <b className="font-semibold">{score} / 5</b></p>
-              </fieldset>
+    <div className="grid gap-5 lg:grid-cols-[1.5fr_1fr]">
+      <div className="min-w-0 graph-paper rounded-xl border border-line p-5 sm:p-6">
+        <p className="text-[13px] text-muted">Problem {n + 1} · {p.type}</p>
+        <p className="mt-1 font-serif text-[24px] leading-snug font-semibold text-ink">{p.prompt}</p>
+        <label className="mt-5 mb-1.5 block text-[13.5px] text-muted" htmlFor="st-notes">Your structure: 3 or 4 main buckets, then a line or two under each</label>
+        <textarea id="st-notes" className={`${inputCls} bg-white/90`} rows={6} value={notes} onChange={(e) => setNotes(e.target.value)} disabled={phase === 'review'}
+          placeholder={'1. …\n2. …\n3. …\nI would start with … because …'} />
+        {phase === 'review' && (
+          <div className="mt-5 space-y-4">
+            <div>
+              <p className="mb-2 text-[13.5px] font-semibold text-teal-d">A strong answer</p>
+              <Tree p={p} />
             </div>
-          )}
-        </div>
-        <div className="space-y-4">
-          {phase === 'ready' && <Button className="w-full py-3" onClick={() => setPhase('running')}>Start the 2-minute drill</Button>}
-          {phase === 'running' && <><Countdown seconds={120} label="Time left" autoStart onEnd={end} onTick={tick} /><Button className="w-full" variant="secondary" onClick={() => setPhase('review')}>I'm done, show the answer</Button></>}
-          {phase === 'review' && <Button className="w-full py-3" onClick={save}>{user ? 'Save and next prompt' : 'Next prompt'}</Button>}
-          <Section title="How to do it">
-            <ul className="list-disc space-y-1 pl-5 text-[14px] text-ink-2">
-              <li>Take 30 seconds of silence. Interviewers expect it.</li>
-              <li>Say three or four buckets out loud, then one line under each.</li>
-              <li>Make the buckets add up to the question, with no overlaps.</li>
-              <li>End with: "I'd start with … because …"</li>
-            </ul>
-          </Section>
-        </div>
+            <p className="text-[14.5px] text-ink-2"><b className="font-semibold text-ink">Where to start:</b> {p.start}</p>
+            <p className="text-[14.5px] text-ink-2"><b className="font-semibold text-ink">The usual mistake:</b> {p.trap}</p>
+            {p.framework && <Link to={`/frameworks/${p.framework}`} className="inline-block text-[14px] font-medium text-violet-d hover:underline">See the framework this builds on</Link>}
+            <fieldset className="rounded-lg border border-line bg-white p-4">
+              <legend className="px-1 text-[14px] font-medium text-ink">Now mark yours: tick what's true</legend>
+              <ul className="space-y-2">
+                {CHECKS.map((c, i) => (
+                  <li key={c}><label className="flex cursor-pointer items-start gap-2.5 text-[14px] text-ink-2">
+                    <input type="checkbox" className="mt-0.5 h-4 w-4 accent-teal" checked={ticks[i]} onChange={() => setTicks((t) => t.map((x, j) => (j === i ? !x : x)))} />{c}
+                  </label></li>
+                ))}
+              </ul>
+              <p className="mt-3 text-[14px] text-ink">Your score: <b className="font-semibold">{score} / 5</b></p>
+            </fieldset>
+          </div>
+        )}
       </div>
-    </>
+      <div className="space-y-4">
+        {phase === 'running' ? <>
+          <Countdown key={n} seconds={120} label="Time left" autoStart onEnd={end} onTick={tick} />
+          <Button className="w-full py-3" onClick={() => setPhase('review')}>I'm done: show a strong answer</Button>
+        </> : <Button className="w-full py-3" onClick={nextPrompt}>Next problem</Button>}
+        <Section title="Tips">
+          <ul className="list-disc space-y-1 pl-5 text-[14px] text-ink-2">
+            <li>It's fine to think quietly for 30 seconds first.</li>
+            <li>Buckets shouldn't overlap, and together they should cover the whole question.</li>
+            <li>Make them about this client, not a generic list.</li>
+            <li>Finish with: "I'd start with … because …"</li>
+          </ul>
+        </Section>
+      </div>
+    </div>
   )
 }
 
@@ -124,11 +114,11 @@ function Spot() {
   return (
     <div className="max-w-4xl">
       <div className="mb-3 flex flex-wrap items-baseline justify-between gap-2">
-        <p className="text-[13.5px] text-muted">Question {n + 1} of {order.length}</p>
+        <p className="text-[13.5px] text-muted">Problem {n + 1} of {order.length}</p>
         {score.total > 0 && <p className="text-[14px] text-ink">{score.right} of {score.total} right</p>}
       </div>
       <p className="font-serif text-[24px] leading-snug font-semibold text-ink">{p.prompt}</p>
-      <p className="mt-1 text-[14.5px] text-muted">Pick the structure you would say to the interviewer. Three of these have one flaw each.</p>
+      <p className="mt-1 text-[14.5px] text-muted">Four ways to break this problem down. Tap the best one. The other three each have one flaw.</p>
       <div className="mt-4 grid gap-3 sm:grid-cols-2">
         {p.options.map((o, i) => {
           const good = o.flaw === 'good', picked = chosen === i, shown = chosen !== null
@@ -146,20 +136,40 @@ function Spot() {
           )
         })}
       </div>
-      {chosen !== null && <Button className="mt-5" onClick={() => { setN((x) => x + 1); setChosen(null) }}>Next question</Button>}
+      {chosen !== null && <Button className="mt-5" onClick={() => { setN((x) => x + 1); setChosen(null) }}>Next problem</Button>}
     </div>
   )
 }
 
 export default function StructurePractice() {
   const [params, setParams] = useSearchParams()
-  const tab = params.get('mode') === 'spot' ? 'spot' : 'build'
+  const mode = params.get('mode') === 'spot' || params.get('mode') === 'pick' ? 'pick' : params.get('mode') === 'write' || params.get('mode') === 'build' ? 'write' : null
+  const go = (m: 'pick' | 'write' | null) => setParams(m ? { mode: m } : {}, { replace: false })
   return (
     <>
       <DrillCrumbs here="Structuring" />
-      <PageHeader title="Structuring drills" intro={`Build a structure in two minutes and compare it with a strong one (${STRUCTURE_PROMPTS.length} prompts), or spot the flaw in four structures (${STRUCTURE_PICKS.length} questions, marked instantly).`} />
-      <Tabs value={tab} onChange={(v) => setParams({ mode: v }, { replace: true })} items={[{ value: 'build', label: 'Build a structure, 2 min' }, { value: 'spot', label: 'Spot the flaw' }]} />
-      {tab === 'build' ? <Build /> : <Spot />}
+      {mode === null && <PageHeader title="Structuring" intro="In a case you're asked to break a problem into a few clear parts before you dive in. This is the skill interviewers watch most closely. Practise it here in two ways." />}
+      {mode === null && (
+        <div className="grid max-w-5xl gap-4 md:grid-cols-2">
+          <StartCard title="Pick the best structure" tag="Start here" onStart={() => go('pick')}
+            body="You see a problem and four ways to break it down. Tap the best one. You're told straight away which is right and what's wrong with the others."
+            example={<>Example: "A clinic's wait for appointments has risen from 5 to 12 days." Which is better: <i>Doctors / Nurses / Rooms</i>, or <i>More demand / Less capacity / Less efficient use</i>?</>}
+            meta={`${STRUCTURE_PICKS.length} problems · about 1 minute each`} />
+          <StartCard title="Write your own" onStart={() => go('write')}
+            body="You get a problem and 2 minutes to write your main buckets. Then you see a strong answer, the usual mistake, and mark yourself with a short checklist."
+            example={<>Example: "Should a luxury hotel group launch a budget brand?"</>}
+            meta={`${STRUCTURE_PROMPTS.length} problems · 2 minutes each`} />
+        </div>
+      )}
+      {mode !== null && (
+        <div className="mb-5 flex flex-wrap items-baseline gap-x-4 gap-y-2 border-b border-line pb-3">
+          <h1 className="text-[26px] leading-tight sm:text-[30px]">{mode === 'pick' ? 'Pick the best structure' : 'Write your own structure'}</h1>
+          <button className="text-[14px] font-medium text-violet-d hover:underline" onClick={() => go(mode === 'pick' ? 'write' : 'pick')}>{mode === 'pick' ? 'Switch to: write your own' : 'Switch to: pick the best'}</button>
+          <button className="text-[14px] text-muted hover:text-ink" onClick={() => go(null)}>Back</button>
+        </div>
+      )}
+      {mode === 'pick' && <Spot />}
+      {mode === 'write' && <Build />}
     </>
   )
 }

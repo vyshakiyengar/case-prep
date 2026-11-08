@@ -21,9 +21,9 @@ export const SKILLS: { key: Skill; label: string; blurb: string }[] = [
   { key: 'payback', label: 'Payback', blurb: 'Years to earn it back' },
 ]
 export const LEVELS: { key: Level; label: string; blurb: string }[] = [
-  { key: 1, label: 'Warm-up', blurb: 'Round numbers' },
-  { key: 2, label: 'Interview', blurb: 'Typical case numbers' },
-  { key: 3, label: 'Stretch', blurb: 'Decimals and chains' },
+  { key: 1, label: 'Easy', blurb: 'Round numbers' },
+  { key: 2, label: 'Medium', blurb: 'Typical case numbers' },
+  { key: 3, label: 'Hard', blurb: 'Decimals and longer chains' },
 ]
 
 export interface Unit { label: string; scale: number; pct?: boolean }

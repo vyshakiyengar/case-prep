@@ -9,9 +9,9 @@ import { loadCases } from '../../content'
 import type { CaseDef, CaseQuestion } from '../../content'
 import { ExhibitView, Rich } from '../../components/CaseParts'
 import { DrillChart } from '../../components/DrillChart'
-import { Button, PageHeader, ScorePicker, Section, Tabs } from '../../components/ui'
+import { Button, PageHeader, ScorePicker, Section } from '../../components/ui'
 import { Countdown } from '../../components/Timer'
-import { DrillCrumbs, readBest, writeBest } from './shared'
+import { DrillCrumbs, StartCard, readBest, writeBest } from './shared'
 
 const SET = 8, SECS = 60
 type Fam = ChartQ['family'] | 'All'
@@ -24,9 +24,8 @@ function mark(q: ChartQ, raw: string): boolean {
   return q.unit === '%' && Math.abs(v) <= 1.5 && !raw.includes('%') && Math.abs(v * 100 - q.answer) <= (q.tol ?? 0.01)
 }
 
-function QuickReads() {
+function QuickReads({ fam }: { fam: Fam }) {
   const { addDrill, user } = useStore()
-  const [fam, setFam] = useState<Fam>('All')
   const [phase, setPhase] = useState<'setup' | 'run' | 'done'>('setup')
   const [q, setQ] = useState<ChartQ | null>(null)
   const [log, setLog] = useState<{ q: ChartQ; ok: boolean; given: string }[]>([])
@@ -42,6 +41,7 @@ function QuickReads() {
     setTimeout(() => input.current?.focus(), 0)
   }
   const start = () => { setLog([]); saved.current = false; setPhase('run'); next() }
+  useEffect(() => { start() }, []) // eslint-disable-line react-hooks/exhaustive-deps
   const record = useCallback((ok: boolean, given: string, timeout = false) => {
     if (!q || fb) return
     setFb({ ok, timeout }); setLog((l) => [...l, { q, ok, given }])
@@ -59,31 +59,18 @@ function QuickReads() {
   }
   const onTimeout = useCallback(() => record(false, '', true), [record])
 
-  if (phase === 'setup') return (
-    <div className="max-w-3xl space-y-5">
-      <p className="text-[15px] text-ink-2">{SET} exhibits, {SECS} seconds each. Read the chart, do the maths, answer. Every chart is new, so you can't memorise them.</p>
-      <div>
-        <p className="mb-2 text-[14px] font-medium text-ink">Chart type</p>
-        <div className="flex flex-wrap gap-2" role="group" aria-label="Chart type">
-          {(['All', ...FAMILIES] as Fam[]).map((f) => <button key={f} onClick={() => setFam(f)} aria-pressed={fam === f}
-            className={`rounded-full border px-3.5 py-1.5 text-[13.5px] font-medium transition-colors ${fam === f ? 'border-ink bg-ink text-white' : 'border-line bg-white text-ink-2 hover:border-faint'}`}>{f}</button>)}
-        </div>
-      </div>
-      <div className="flex flex-wrap items-center gap-4">
-        <Button className="px-6 py-3 text-[15.5px]" onClick={start}>Start</Button>
-        {best !== null && <span className="text-[14px] text-muted">Your best: <b className="font-semibold text-ink">{best} of {SET}</b></span>}
-      </div>
-    </div>
-  )
+  if (phase === 'setup') return null
 
   if (phase === 'done') {
     const right = log.filter((d) => d.ok).length
     return (
       <div className="max-w-3xl">
         <div className="graph-paper rounded-xl border border-line p-6 text-center sm:p-8">
+          <p className="text-[14px] text-muted">Your score</p>
           <p className="font-serif text-[48px] leading-none font-semibold text-ink">{right}<span className="text-[26px] text-muted"> / {log.length}</span></p>
-          <p className="mt-2 text-ink-2">{right === log.length ? 'Clean sheet.' : right >= log.length * 0.75 ? 'Strong. Check the misses below.' : 'Slow down on the units and the base of each percentage.'}</p>
-          <div className="mt-5 flex flex-wrap justify-center gap-2"><Button onClick={start}>Go again</Button><Button variant="secondary" onClick={() => setPhase('setup')}>Change chart type</Button></div>
+          <p className="mt-2 text-ink-2">{right === log.length ? 'Every one right.' : right >= log.length * 0.75 ? 'Strong. Check the ones you missed below.' : 'Check the units, and what each percentage is a percentage of.'}</p>
+          <div className="mt-5 flex flex-wrap justify-center gap-2"><Button onClick={start}>Another round</Button></div>
+          {best !== null && <p className="mt-3 text-[13.5px] text-muted">Your best: {best} of {SET}</p>}
         </div>
         {log.some((d) => !d.ok) && <section className="mt-6"><h2 className="text-[20px]">The ones you missed</h2><ul className="mt-3 space-y-3">{log.filter((d) => !d.ok).map((d) => <li key={d.q.id} className="rounded-lg border border-line bg-white p-4"><p className="font-medium text-ink">{d.q.chart.title}: {d.q.q}</p><p className="mt-1 text-[14px] text-ink-2">Answer: <b className="font-semibold text-ink">{d.q.show}</b>. {d.q.why}</p></li>)}</ul></section>}
       </div>
@@ -138,7 +125,7 @@ function Insight() {
   const { addDrill, user } = useStore()
   const [items, setItems] = useState<{ c: CaseDef; q: CaseQuestion }[] | null>(null)
   const [n, setN] = useState(0)
-  const [phase, setPhase] = useState<'ready' | 'running' | 'review'>('ready')
+  const [phase, setPhase] = useState<'running' | 'review'>('running')
   const [score, setScore] = useState<number>()
   useEffect(() => {
     loadCases().then((cs) => setItems(cs.flatMap((c) => c.questions.filter((q) => q.exhibit).map((q) => ({ c, q }))).sort(() => Math.random() - 0.5)))
@@ -147,32 +134,27 @@ function Insight() {
   if (!items) return <p className="text-muted">Loading exhibits…</p>
   const it = items[n % items.length]
   const save = async () => {
-    if (user) await addDrill({ id: uid(), kind: 'charts', mode: 'insight', prompt: `${it.c.title}: ${it.q.q}`, seconds: 90, score, date: todayIso(), createdAt: Date.now() }).catch(() => {})
-    setN((x) => x + 1); setPhase('ready'); setScore(undefined)
+    if (user && score) await addDrill({ id: uid(), kind: 'charts', mode: 'insight', prompt: `${it.c.title}: ${it.q.q}`, seconds: 90, score, date: todayIso(), createdAt: Date.now() }).catch(() => {})
+    setN((x) => x + 1); setPhase('running'); setScore(undefined)
   }
   return (
     <div className="grid gap-5 lg:grid-cols-[1.5fr_1fr]">
       <div className="min-w-0 rounded-xl border border-line bg-white p-5">
         <p className="text-[13px] text-muted">Exhibit {n + 1} of {items.length}, from case {it.c.id}: {it.c.title}</p>
-        {phase === 'ready' ? <p className="mt-2 font-serif text-[22px] font-semibold text-ink">Press start. You'll get one exhibit from a real case and 90 seconds to find the insight.</p> : (
-          <>
-            <p className="mt-2 text-[15px] text-ink-2"><span className="font-medium text-ink">Context:</span> {it.c.sub} {it.q.q}</p>
-            {it.q.exhibit && <ExhibitView ex={it.q.exhibit} />}
-          </>
-        )}
+        <p className="mt-2 text-[15px] text-ink-2"><span className="font-medium text-ink">Context:</span> {it.c.sub} {it.q.q}</p>
+        {it.q.exhibit && <ExhibitView ex={it.q.exhibit} />}
         {phase === 'review' && (
           <div className="mt-2 rounded-lg border border-good/40 p-4">
-            <p className="mb-1 text-[13px] font-semibold text-good">Strong answer</p>
+            <p className="mb-1 text-[13px] font-semibold text-good">A strong answer</p>
             <Rich html={it.q.answer} />
-            <div className="mt-4 flex flex-wrap items-center gap-3"><span className="text-[14px] font-medium text-ink">How did yours compare?</span><ScorePicker label="Self score" value={score} onChange={setScore} /></div>
+            <div className="mt-4 flex flex-wrap items-center gap-3"><span className="text-[14px] font-medium text-ink">How close was yours? (optional)</span><ScorePicker label="Self score" value={score} onChange={setScore} /></div>
           </div>
         )}
       </div>
       <div className="space-y-4">
-        {phase === 'ready' && <Button className="w-full py-3" onClick={() => setPhase('running')}>Start a 90-second exhibit</Button>}
-        {phase === 'running' && <><Countdown seconds={90} label="Time left" autoStart onEnd={end} /><Button className="w-full" variant="secondary" onClick={() => setPhase('review')}>I'm done, compare</Button></>}
-        {phase === 'review' && <Button className="w-full py-3" disabled={!score} onClick={save}>{score ? 'Save and next exhibit' : 'Score yourself to continue'}</Button>}
-        <Section title="The routine">
+        {phase === 'running' && <><Countdown key={n} seconds={90} label="Time left" autoStart onEnd={end} /><Button className="w-full py-3" onClick={() => setPhase('review')}>I'm done: show the answer</Button></>}
+        {phase === 'review' && <Button className="w-full py-3" onClick={save}>Next exhibit</Button>}
+        <Section title="What to say">
           <ol className="list-decimal space-y-1 pl-5 text-[14px] text-ink-2">
             <li>Read the title, axes, units and footnote.</li>
             <li>Find the one thing that matters: the biggest number, the biggest change, the outlier.</li>
@@ -189,13 +171,45 @@ function Insight() {
 
 export default function ChartPractice() {
   const [params, setParams] = useSearchParams()
-  const tab = params.get('mode') === 'insight' ? 'insight' : 'quick'
+  const m = params.get('mode')
+  const mode = m === 'quick' ? 'quick' : m === 'insight' ? 'insight' : null
+  const [fam, setFam] = useState<Fam>('All')
+  const go = (x: 'quick' | 'insight' | null) => setParams(x ? { mode: x } : {})
   return (
     <>
-      <DrillCrumbs here="Chart reading" />
-      <PageHeader title="Chart reading drills" intro={<>Quick reads: a fresh exhibit every time, one question, marked instantly. Find the insight: real exhibits from the casebook, compared with the model answer. For a slower look at every chart type, use the <Link to="/graphs" className="font-medium text-violet-d hover:underline">graph library</Link>.</>} />
-      <Tabs value={tab} onChange={(v) => setParams({ mode: v }, { replace: true })} items={[{ value: 'quick', label: 'Quick reads, 60 sec' }, { value: 'insight', label: 'Find the insight, 90 sec' }]} />
-      {tab === 'quick' ? <QuickReads /> : <Insight />}
+      <DrillCrumbs here="Reading charts" />
+      {mode === null && <PageHeader title="Reading charts" intro="Most cases hand you a chart or table and ask what it tells you. Practise reading them quickly and getting to the number that matters." />}
+      {mode === null && (
+        <>
+          <div className="grid max-w-5xl gap-4 md:grid-cols-2">
+            <StartCard title="Quick chart questions" tag="Start here" onStart={() => go('quick')}
+              body="You see a chart and one question about it. Type the answer or tap a choice, and you're told straight away if it's right and how to work it out."
+              example={<>Example: a bar chart of revenue by region. "What share of total revenue comes from the North?"</>}
+              meta={`${SET} charts · 60 seconds each`} />
+            <StartCard title="Charts from real cases" onStart={() => go('insight')}
+              body="You see an exhibit from one of our cases. In 90 seconds, say out loud what it tells you, then compare with a strong answer."
+              example={<>No typing needed: this one is about saying the "so what" clearly.</>}
+              meta="90 seconds each" />
+          </div>
+          <details className="mt-4 max-w-5xl rounded-xl border border-line bg-white px-5 py-3">
+            <summary className="cursor-pointer text-[15px] font-medium text-ink">Options: practise one chart type</summary>
+            <div className="flex flex-wrap gap-2 py-3" role="group" aria-label="Chart type">
+              {(['All', ...FAMILIES] as Fam[]).map((f) => <button key={f} onClick={() => setFam(f)} aria-pressed={fam === f}
+                className={`rounded-full border px-3.5 py-1.5 text-[13.5px] font-medium transition-colors ${fam === f ? 'border-ink bg-ink text-white' : 'border-line bg-white text-ink-2 hover:border-faint'}`}>{f === 'All' ? 'All types' : f}</button>)}
+            </div>
+            <p className="pb-2 text-[13.5px] text-muted">For a slower look at every kind of chart, with an explanation of each, use the <Link to="/graphs" className="font-medium text-violet-d hover:underline">graph library</Link>.</p>
+          </details>
+        </>
+      )}
+      {mode !== null && (
+        <div className="mb-5 flex flex-wrap items-baseline gap-x-4 gap-y-2 border-b border-line pb-3">
+          <h1 className="text-[26px] leading-tight sm:text-[30px]">{mode === 'quick' ? `Quick chart questions${fam !== 'All' ? `: ${fam}` : ''}` : 'Charts from real cases'}</h1>
+          <button className="text-[14px] font-medium text-violet-d hover:underline" onClick={() => go(mode === 'quick' ? 'insight' : 'quick')}>{mode === 'quick' ? 'Switch to: charts from real cases' : 'Switch to: quick chart questions'}</button>
+          <button className="text-[14px] text-muted hover:text-ink" onClick={() => go(null)}>Back</button>
+        </div>
+      )}
+      {mode === 'quick' && <QuickReads fam={fam} />}
+      {mode === 'insight' && <Insight />}
     </>
   )
 }
