@@ -66,7 +66,7 @@ const GEN: Record<ChartQ['family'], () => ChartQ | null> = {
         q: `What share of total revenue comes from ${labels[i]}?`, answer: share, unit: '%', tol: 1, show: `${n(share, 1)}%`,
         why: `Total = ${values.map((v) => n(v)).join(' + ')} = $${n(total)}M. ${labels[i]}: ${n(values[i])} ÷ ${n(total)} = ${n(share, 1)}%.` }
     }
-    const order = values.map((v, i) => i).sort((a, b) => values[b] - values[a])
+    const order = values.map((_, i) => i).sort((a, b) => values[b] - values[a])
     const [a, b] = [order[0], order[int(2, 4)]]
     if (values[a] === values[b]) return null
     const gap = (values[a] / values[b] - 1) * 100

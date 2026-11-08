@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
+import type { ReactElement } from 'react'
 import type { ChartSpec } from '../lib/chartDrills'
 import { n } from '../lib/speedMaths'
 
@@ -43,7 +44,7 @@ export function DrillChart({ spec }: { spec: ChartSpec }) {
   // Narrow screens: a narrower canvas with larger type, so labels stay readable
   if (compact) { W = 420; H = 300; L = 40; R = 8; T = 22; B = spec.kind === 'mekko' ? 52 : 46; K = 1.3 } else { W = 640; H = 300; L = 44; R = 16; T = 20; B = spec.kind === 'mekko' ? 44 : 40; K = 1 }
   PW = W - L - R; PH = H - T - B
-  let body: JSX.Element
+  let body: ReactElement
   let legend: { name: string; color: string }[] = []
   if (spec.kind === 'bar') {
     const max = niceMax(Math.max(...spec.values) * 1.12), k = spec.values.length, slot = PW / k, bw = Math.min(64, slot * 0.6)
