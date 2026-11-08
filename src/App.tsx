@@ -15,6 +15,7 @@ import Settings from './pages/Settings'
 import Perks from './pages/Perks'
 import VerifySchool from './pages/VerifySchool'
 import Privacy from './pages/Privacy'
+import Terms from './pages/Terms'
 import Learn from './pages/Learn'
 import { ActivityTracker } from './components/ActivityTracker'
 
@@ -65,6 +66,7 @@ export default function App() {
         <Route path="/" element={<Home />} />
         <Route path="/signin" element={<SignIn />} />
         <Route path="/privacy" element={<Privacy />} />
+        <Route path="/terms" element={<Terms />} />
         <Route path="/welcome" element={<RequireUser><Welcome /></RequireUser>} />
         <Route path="/invite/:code" element={<RequireUser><Invite /></RequireUser>} />
         <Route path="/verify-school" element={<RequireUser><VerifySchool /></RequireUser>} />

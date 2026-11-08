@@ -226,7 +226,7 @@
  "formulas": [
   {
    "term": "Profit",
-   "formula": "Revenue - Costs",
+   "formula": "Revenue − Costs",
    "note": "Revenue = volume × price; costs = fixed + variable"
   },
   {
@@ -241,7 +241,7 @@
   },
   {
    "term": "Contribution margin",
-   "formula": "Price - Variable cost per unit",
+   "formula": "Price − Variable cost per unit",
    "note": "Drives all breakeven maths"
   },
   {
@@ -261,7 +261,7 @@
   },
   {
    "term": "EBITDA",
-   "formula": "Revenue - COGS - Operating costs (excl. depreciation & amortisation)",
+   "formula": "Revenue − COGS − Operating costs (excl. depreciation & amortisation)",
    "note": "Earnings before interest, tax, depreciation & amortisation; the base for valuation multiples"
   },
   {
@@ -271,7 +271,7 @@
   },
   {
    "term": "Perpetuity",
-   "formula": "Cash flow ÷ r   (growing: CF ÷ (r - g))",
+   "formula": "Cash flow ÷ r   (growing: CF ÷ (r − g))",
    "note": "Value today of a steady stream; for the growing version, CF is next year's cash flow"
   },
   {
@@ -281,7 +281,7 @@
   },
   {
    "term": "CAGR",
-   "formula": "(End ÷ Start)^(1/years) - 1",
+   "formula": "(End ÷ Start)^(1/years) − 1",
    "note": "Rule of 72: years to double ≈ 72 ÷ growth %"
   },
   {
@@ -312,7 +312,7 @@
   {
    "term": "Churn",
    "formula": "Customers lost ÷ Customers at start",
-   "note": "Retention = 1 - churn; avg lifetime ≈ 1 ÷ churn"
+   "note": "Retention = 1 − churn; avg lifetime ≈ 1 ÷ churn"
   },
   {
    "term": "Cost-to-revenue",
@@ -321,7 +321,7 @@
   },
   {
    "term": "Net working capital",
-   "formula": "Inventory + Receivables - Payables",
+   "formula": "Inventory + Receivables − Payables",
    "note": "A cash trap in growth cases"
   }
  ],

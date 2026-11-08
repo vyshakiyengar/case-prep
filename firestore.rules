@@ -5,7 +5,7 @@ service cloud.firestore {
     function signedIn() { return request.auth != null; }
     function isSelf(uid) { return signedIn() && request.auth.uid == uid; }
 
-    // The site owner. Keep in sync with DEFAULT_ADMINS in src/lib/admin.ts
+    // The site owner. If you change this email, update ADMIN_HASHES (its SHA-256) in src/lib/admin.ts
     function isAdmin() {
       return signedIn() && request.auth.token.email_verified == true
         && request.auth.token.email in ['vyshakiyengar@gmail.com'];

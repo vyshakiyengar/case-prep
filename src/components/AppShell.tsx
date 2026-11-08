@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { Link, NavLink, Outlet, useLocation } from 'react-router-dom'
 import { SignInWall } from './SignInWall'
 import { useStore } from '../lib/store'
@@ -72,10 +72,58 @@ function VerifyBanner({ email }: { email?: string }) {
   )
 }
 
+const MENU = 'M4 7h16M4 12h16M4 17h16'
+const CLOSE = 'M6 6l12 12M18 6L6 18'
+const SIGN_IN: Item = { to: '/signin', label: 'Sign in', icon: 'M15 3h4v18h-4M10 17l5-5-5-5M15 12H3' }
+// The four sections in the phone tab bar; everything else lives behind More
+const TABS = (signedIn: boolean): Item[] => [LEARN[0], PRACTISE[0], PRACTISE.find((n) => n.to === '/drills')!, signedIn ? PREP[0] : SIGN_IN]
+
+/** Phone menu: a panel that slides up from the tab bar with every section, grouped. */
+function MobileSheet({ open, onClose, user, isAdmin }: { open: boolean; onClose: () => void; user: boolean; isAdmin: boolean }) {
+  useEffect(() => {
+    if (!open) return
+    const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') onClose() }
+    document.addEventListener('keydown', onKey)
+    const prev = document.body.style.overflow; document.body.style.overflow = 'hidden'
+    return () => { document.removeEventListener('keydown', onKey); document.body.style.overflow = prev }
+  }, [open, onClose])
+  if (!open) return null
+  const groups: [string, Item[]][] = [['Learn', LEARN], ['Practise', PRACTISE], ['Reference', REFERENCE], ...(user ? [['My prep', isAdmin ? [...PREP, ADMIN] : PREP] as [string, Item[]]] : [])]
+  return (
+    <div className="lg:hidden">
+      <button type="button" aria-label="Close menu" onClick={onClose} className="sheet-fade fixed inset-0 z-30 bg-ink/40" />
+      <nav id="mobile-sections" aria-label="All sections" className="sheet-up fixed inset-x-0 bottom-[calc(57px+env(safe-area-inset-bottom))] z-30 max-h-[calc(100svh-140px)] overflow-y-auto rounded-t-2xl border-t border-line bg-white px-4 pt-3 pb-4 shadow-[0_-12px_40px_rgba(15,27,51,.18)]">
+        <div aria-hidden className="mx-auto mb-3 h-1 w-10 rounded-full bg-line" />
+        <NavLink to="/home" onClick={onClose} className="mb-1 flex items-center gap-3 rounded-lg px-2 py-2 text-[14.5px] font-medium text-ink hover:bg-canvas"><Icon d={HOME.icon} />Home</NavLink>
+        {groups.map(([title, items]) => (
+          <div key={title} className="mt-3">
+            <p className="px-2 pb-1 font-serif text-[13.5px] italic text-muted">{title}</p>
+            <div className="grid grid-cols-2 gap-x-2">
+              {items.map((n) => (
+                <NavLink key={n.to} to={n.to} onClick={onClose}
+                  className={({ isActive }) => `flex items-center gap-2.5 rounded-lg px-2 py-2.5 text-[14px] font-medium ${isActive ? 'bg-canvas text-ink' : 'text-ink-2 hover:bg-canvas'}`}>
+                  <span className="text-teal-d"><Icon d={n.icon} /></span>{n.label}
+                </NavLink>
+              ))}
+            </div>
+          </div>
+        ))}
+        <div className="mt-4 flex gap-5 border-t border-line px-2 pt-3 text-[13.5px] text-muted">
+          <NavLink to="/about" onClick={onClose} className="hover:text-ink">About</NavLink>
+          <NavLink to="/privacy" onClick={onClose} className="hover:text-ink">Privacy</NavLink>
+          <NavLink to="/terms" onClick={onClose} className="hover:text-ink">Terms</NavLink>
+          {user && <NavLink to="/settings" onClick={onClose} className="hover:text-ink">Settings</NavLink>}
+        </div>
+      </nav>
+    </div>
+  )
+}
+
 export default function AppShell() {
   const { user, data, error, setError } = useStore()
   const loc = useLocation()
   const [mobileOpen, setMobileOpen] = useState(false)
+  const closeMenu = useCallback(() => setMobileOpen(false), [])
   const isAdmin = useIsAdmin()
   useEffect(() => { if (!loc.hash) window.scrollTo(0, 0); setMobileOpen(false) }, [loc.pathname, loc.hash])
   const name = data?.profile?.name || user?.name || ''
@@ -94,6 +142,7 @@ export default function AppShell() {
           <div className="mb-3 flex gap-4 px-3 text-[12.5px] text-[#8C98AE]">
             <NavLink to="/about" className={({ isActive }) => isActive ? 'text-white' : 'hover:text-white'}>About</NavLink>
             <Link to="/privacy" className="hover:text-white">Privacy</Link>
+            <Link to="/terms" className="hover:text-white">Terms</Link>
           </div>
           {user ? (
             <NavLink to="/settings" className="flex items-center gap-3 rounded-lg border-t border-white/10 px-2 pt-4 pb-1 hover:text-white">
@@ -115,25 +164,10 @@ export default function AppShell() {
       <header className="sticky top-0 z-20 flex items-center justify-between border-b border-line bg-white/95 px-4 py-3 backdrop-blur lg:hidden">
         <Link to="/home"><Logo /></Link>
         <div className="flex items-center gap-3">
-          <button type="button" onClick={() => setMobileOpen((o) => !o)} aria-expanded={mobileOpen} aria-controls="mobile-sections"
-            className="rounded-lg border border-line bg-white px-3 py-2 text-[13.5px] font-medium text-ink hover:border-violet">{mobileOpen ? 'Close' : 'Menu'}</button>
+          <button type="button" onClick={() => setMobileOpen((o) => !o)} aria-expanded={mobileOpen} aria-controls="mobile-sections" aria-label={mobileOpen ? 'Close menu' : 'Open menu: all sections'}
+            className="grid h-10 w-10 place-items-center rounded-lg border border-line bg-white text-ink hover:border-violet"><Icon d={mobileOpen ? CLOSE : MENU} /></button>
           {user ? <NavLink to="/settings" aria-label="Settings"><Avatar name={name} photo={user.photoURL} /></NavLink> : <SignInLink />}
         </div>
-        {mobileOpen && <nav id="mobile-sections" aria-label="Browse all sections" className="absolute left-3 right-3 top-full z-30 max-h-[min(75vh,620px)] overflow-y-auto rounded-b-xl border border-line bg-white p-4 shadow-xl">
-          <NavLink to="/home" onClick={() => setMobileOpen(false)} className="mb-3 block rounded-lg bg-canvas px-3 py-2.5 text-[14px] font-semibold text-ink">Home: site map</NavLink>
-          {[['Learn', LEARN], ['Practise', PRACTISE], ['Reference', REFERENCE], ...(user ? [['My prep', isAdmin ? [...PREP, ADMIN] : PREP]] : [])].map(([title, items], gi) => (
-            <div key={title as string} className={gi ? 'mt-4' : ''}>
-              <p className="px-2 pb-1 text-[12.5px] font-medium text-faint">{title as string}</p>
-              <div className="grid grid-cols-2 gap-1">
-                {(items as Item[]).map((n) => <NavLink key={n.to} to={n.to} onClick={() => setMobileOpen(false)} className={({ isActive }) => `rounded-lg px-3 py-2.5 text-[14px] font-medium ${isActive ? 'bg-canvas text-ink' : 'text-ink-2 hover:bg-canvas'}`}>{n.label}</NavLink>)}
-              </div>
-            </div>
-          ))}
-          <div className="mt-4 flex gap-4 border-t border-line px-2 pt-3 text-[13.5px] text-muted">
-            <NavLink to="/about" onClick={() => setMobileOpen(false)} className="hover:text-ink">About</NavLink>
-            <Link to="/privacy" className="hover:text-ink">Privacy</Link>
-          </div>
-        </nav>}
       </header>
 
       {error && (
@@ -146,13 +180,19 @@ export default function AppShell() {
 
       <main className="mx-auto max-w-6xl px-4 pt-6 pb-28 sm:px-6 lg:px-10 lg:pt-10 lg:pb-16"><SignInWall><Outlet /></SignInWall></main>
 
-      <nav aria-label="Main" className="fixed inset-x-0 bottom-0 z-20 grid grid-cols-5 border-t border-line bg-white lg:hidden">
-        {[...[LEARN[0], LEARN[1], PRACTISE[0], PRACTISE.find((n) => n.to === '/drills')!], user ? PREP[0] : { to: '/signin', label: 'Sign in', icon: 'M15 3h4v18h-4M10 17l5-5-5-5M15 12H3' }].map((n) => (
+      <MobileSheet open={mobileOpen} onClose={closeMenu} user={!!user} isAdmin={isAdmin} />
+
+      <nav aria-label="Main" className="fixed inset-x-0 bottom-0 z-40 grid grid-cols-5 border-t border-line bg-white pb-[env(safe-area-inset-bottom)] lg:hidden">
+        {TABS(!!user).map((n) => (
           <NavLink key={n.to} to={n.to}
-            className={({ isActive }) => `flex flex-col items-center gap-0.5 py-2 text-[10.5px] font-medium ${isActive ? 'text-ink' : 'text-faint'}`}>
+            className={({ isActive }) => `flex flex-col items-center gap-0.5 py-2 text-[10.5px] font-medium ${isActive && !mobileOpen ? 'text-ink' : 'text-faint'}`}>
             <Icon d={n.icon} /><span className="truncate">{n.label}</span>
           </NavLink>
         ))}
+        <button type="button" onClick={() => setMobileOpen((o) => !o)} aria-expanded={mobileOpen} aria-controls="mobile-sections"
+          className={`flex flex-col items-center gap-0.5 py-2 text-[10.5px] font-medium ${mobileOpen || !TABS(!!user).some((t) => loc.pathname.startsWith(t.to)) ? 'text-ink' : 'text-faint'}`}>
+          <Icon d={mobileOpen ? CLOSE : MENU} /><span>More</span>
+        </button>
       </nav>
     </div>
   )

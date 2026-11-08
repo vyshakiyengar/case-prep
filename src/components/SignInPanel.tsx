@@ -57,7 +57,7 @@ export function SignInPanel({ compact = false }: { compact?: boolean }) {
       <button type="button" onClick={() => go('signin')} className={`${btn} border border-line bg-white text-ink hover:border-teal`}>
         <span className="text-teal-d"><SchoolIcon /></span>Sign in with business school email
       </button>
-      {!compact && <p className="pt-1 text-center text-[12.5px] text-muted">Free. By continuing you agree to the <Link to="/privacy" className="underline hover:text-ink">privacy policy</Link>.</p>}
+      {!compact && <p className="pt-1 text-center text-[12.5px] text-muted">Free. By continuing you agree to the <Link to="/terms" className="underline hover:text-ink">terms</Link> and <Link to="/privacy" className="underline hover:text-ink">privacy notice</Link>.</p>}
     </div>
   )
 

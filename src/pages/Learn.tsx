@@ -49,8 +49,8 @@ function LessonChapter({ l, n }: { l: Lesson; n: number }) {
 
             {l.slug === 'structuring' && (
               <section id="core-frameworks" className="scroll-mt-32">
-                <h3 className="text-[21px] font-semibold">The ten core frameworks</h3>
-                <p className="mt-1 mb-3 text-[16px] leading-relaxed text-ink-2">These ten trees cover most cases you will get. Here is the first level of each. Learn them well enough to sketch from memory, then always rename the branches for your client. Each opens as a full tree on the frameworks page.</p>
+                <h3 className="text-[21px] font-semibold">The eleven core frameworks</h3>
+                <p className="mt-1 mb-3 text-[16px] leading-relaxed text-ink-2">These eleven trees cover most cases you will get. Here is the first level of each. Learn them well enough to sketch from memory, then always rename the branches for your client. Each opens as a full tree on the frameworks page.</p>
                 <CoreFrameworksMini items={CORE} />
                 <p className="mt-3 text-[14.5px] text-ink-2">Inside any branch, dig into the <Link to="/frameworks#drivers" className="font-medium text-violet-d hover:underline">second-order drivers</Link> (market, customers, competition, industry, execution, macro).</p>
               </section>

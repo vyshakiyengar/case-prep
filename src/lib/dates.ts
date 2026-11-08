@@ -14,4 +14,7 @@ export const diffDays = (a: string, b: string) => Math.round((parse(b).getTime()
 export const fmtShort = (s: string) => parse(s).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' })
 export const fmtDow = (s: string) => parse(s).toLocaleDateString('en-GB', { weekday: 'short' })
 export const fmtLong = (s: string) => parse(s).toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'long' })
-export const uid = () => Math.random().toString(36).slice(2, 10) + Date.now().toString(36).slice(-4)
+export const uid = () => {
+  const b = crypto.getRandomValues(new Uint8Array(9))
+  return Array.from(b, (x) => (x % 36).toString(36)).join('') + Date.now().toString(36).slice(-4)
+}

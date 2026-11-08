@@ -25,7 +25,7 @@ function Chips<T extends string | number>({ label, value, options, onChange }: {
       {options.map((o) => (
         <button key={String(o.v)} onClick={() => onChange(o.v)} aria-pressed={value === o.v}
           className={`rounded-full border px-3 py-1 text-[13px] transition-colors ${value === o.v ? 'border-ink bg-ink text-white' : 'border-line bg-white text-ink-2 hover:border-faint'}`}>
-          {o.label}{o.n !== undefined && <span className={`ml-1.5 tabular-nums ${value === o.v ? 'text-white/70' : 'text-faint'}`}>{o.n}</span>}
+          {o.label}{o.n !== undefined && <span className={`ml-1.5 tabular-nums ${value === o.v ? 'text-white/80' : 'text-muted'}`}>{o.n}</span>}
         </button>
       ))}
     </div>
@@ -87,11 +87,11 @@ export default function Casebook() {
             <li key={c.slug} className="grid gap-3 px-5 py-4 sm:grid-cols-[44px_1fr_auto] sm:items-center">
               {user ? (
                 <button onClick={() => markCase(c.slug, !marked.has(c.slug))} aria-pressed={done} aria-label={done ? `${c.title}: practised (click to unmark)` : `Mark ${c.title} as practised`} title={done ? 'Practised. Click to unmark.' : 'Mark as practised'}
-                  className={`flex h-9 w-9 items-center justify-center rounded-full border transition-colors ${done ? 'border-good bg-good text-white' : 'border-line text-faint hover:border-good hover:text-good'}`}>
+                  className={`flex h-9 w-9 items-center justify-center rounded-full border transition-colors ${done ? 'border-good bg-good text-white' : 'border-line text-muted hover:border-good hover:text-good'}`}>
                   {done ? <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden><path d="m5 12 5 5 9-10" /></svg>
                     : <span className="font-serif text-[15px] tabular-nums">{c.id}</span>}
                 </button>
-              ) : <span className="font-serif text-[22px] text-faint tabular-nums">{c.id}</span>}
+              ) : <span className="font-serif text-[22px] text-muted tabular-nums">{c.id}</span>}
               <div className="min-w-0">
                 <div className="flex flex-wrap items-center gap-x-2.5 gap-y-1">
                   <h2 className="text-[19px]">{c.title}</h2>

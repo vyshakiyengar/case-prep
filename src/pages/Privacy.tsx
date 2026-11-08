@@ -23,7 +23,7 @@ export default function Privacy() {
           </ul>
 
           <H>Why, and on what legal basis</H>
-          <p>To run the service you signed up for: saving your progress and showing it back to you (contract). To understand which parts of the site are useful and improve them, using totals only (legitimate interests). To confirm student status for student perks (legitimate interests). Nothing is used for advertising.</p>
+          <p>To run the service you signed up for: saving your progress and showing it back to you (contract). To understand which parts of the site are useful and improve them, using totals only (legitimate interests). To confirm student status for student perks (legitimate interests). To email you about new materials and student offers, only if you tick the box asking for them (consent); you can unsubscribe at any time. Nothing is used for advertising.</p>
 
           <H>Who can see it</H>
           <p>Only you can read your saved data. If you add a practice partner, they see a short weekly summary: your name, tracker score, cases logged, average score and latest fix. The site owner can see the activity totals and student list described above, and nothing else of yours. Your data is not sold or shared with anyone for marketing.</p>
@@ -39,6 +39,9 @@ export default function Privacy() {
 
           <H>Your rights</H>
           <p>Under UK data protection law you can ask for a copy of your data, ask for it to be corrected or deleted, or object to how it is used. If you are unhappy with how your data is handled, you can complain to the Information Commissioner's Office at ico.org.uk.</p>
+
+          <H>Who it's for</H>
+          <p>PrepForCase is meant for university students and working adults. It isn't designed for children, and if you're under 16 you shouldn't create an account.</p>
 
           <H>Changes</H>
           <p>If this notice changes in a way that matters, the date at the top will change and signed-in users will be told on the site.</p>

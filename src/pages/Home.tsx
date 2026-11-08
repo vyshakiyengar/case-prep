@@ -12,8 +12,8 @@ type Item = { to: string; label: string; icon: string }
 const ABOUT: Record<string, string> = {
   '/learn': 'Start here: 11 short lessons',
   '/perfect-casing': 'What to say at every stage',
-  '/frameworks': '10 trees to structure any case',
-  '/casebook': '15 cases to practise',
+  '/frameworks': '11 trees to structure any case',
+  '/casebook': `${CASE_COUNT} cases to practise`,
   '/interviewer': 'Give a case to a friend',
   '/graphs': '64 charts to read',
   '/drills': 'Quick timed drills',
@@ -26,7 +26,7 @@ const ABOUT: Record<string, string> = {
   '/cases': 'Every case, and one fix',
   '/stories': 'Your behavioural stories',
   '/partners': 'Practise with friends',
-  '/perks': 'Free extras for students',
+  '/perks': 'Verify your school email',
 }
 
 const GRAPH_KEY = 'case-prep-graph-library-v1'

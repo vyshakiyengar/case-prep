@@ -6,7 +6,7 @@ import { LESSONS } from '../content/course'
 import { uid } from '../lib/dates'
 import { Button, Field, inputCls, PageHeader, Section } from '../components/ui'
 import { Loading } from '../App'
-import { useIsAdmin } from '../lib/admin'
+import { useIsAdminState } from '../lib/admin'
 
 
 const csvCell = (v: unknown) => `"${String(v ?? '').replace(/"/g, '""')}"`
@@ -328,7 +328,8 @@ function Analytics({ stats, students, updated }: { stats: UserStats[]; students:
 
 export default function Admin() {
   const { backend } = useStore()
-  const isAdmin = useIsAdmin()
+  const adminState = useIsAdminState()
+  const isAdmin = adminState === true
   const [rows, setRows] = useState<StudentRecord[] | null>(null)
   const [stats, setStats] = useState<UserStats[] | null>(null)
   const [err, setErr] = useState<string | null>(null)
@@ -348,6 +349,7 @@ export default function Admin() {
     const m = new Map<string, number>(); (rows || []).forEach((r) => m.set(r.school, (m.get(r.school) || 0) + 1))
     return [...m.entries()].sort((a, b) => b[1] - a[1])
   }, [rows])
+  if (adminState === undefined) return <p className="text-muted">Checking access…</p>
   if (!isAdmin) return <Navigate to="/today" replace />
   if (err) return <p className="text-signal-d">{err}</p>
   if (!rows || !stats) return <Loading />

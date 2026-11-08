@@ -58,8 +58,7 @@ export default function About() {
       </section>
 
       <p className="mt-6 text-[13.5px] leading-relaxed text-muted">
-        PrepForCase is an independent, personal project. It is not affiliated with or endorsed by BCG, Meta, Accenture,
-        London Business School or any other firm or school. See the <Link to="/privacy" className="underline hover:text-ink">privacy policy</Link> for how your data is handled.
+        PrepForCase is an independent, personal project. It is not affiliated with or endorsed by BCG, Meta, London Business School or any other firm or school. See the <Link to="/privacy" className="underline hover:text-ink">privacy policy</Link> for how your data is handled.
       </p>
 
       <div className="mt-8 flex flex-wrap items-center justify-between gap-4">
