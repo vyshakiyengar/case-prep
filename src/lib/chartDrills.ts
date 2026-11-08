@@ -60,7 +60,14 @@ const GEN: Record<ChartQ['family'], () => ChartQ | null> = {
     const total = sum(values)
     const title = `${co}: revenue by ${labels === REGIONS ? 'region' : 'product line'}, $M`
     const chart: ChartSpec = { kind: 'bar', title, unit: '$M', labels, values }
-    if (rnd() < 0.5) {
+    const tb = rnd()
+    if (tb < 0.25) {
+      const avg = total / labels.length
+      return { id: id('bar'), family: 'Bar', context: `${co} wants a simple benchmark for each ${labels === REGIONS ? 'region' : 'product line'}.`, chart,
+        q: `What is the average revenue per ${labels === REGIONS ? 'region' : 'product line'}, in $M?`, answer: avg, unit: '$M', tol: 0.5, show: `$${n(avg, 1)}M`,
+        why: `Total ÷ count = $${n(total)}M ÷ ${labels.length} = $${n(avg, 1)}M. Shortcut: ÷ 5 is × 2 ÷ 10.` }
+    }
+    if (tb < 0.6) {
       const i = int(0, labels.length - 1), share = (values[i] / total) * 100
       return { id: id('bar'), family: 'Bar', context: `${co} wants to know how dependent it is on one ${labels === REGIONS ? 'region' : 'product line'}.`, chart,
         q: `What share of total revenue comes from ${labels[i]}?`, answer: share, unit: '%', tol: 1, show: `${n(share, 1)}%`,
@@ -82,7 +89,13 @@ const GEN: Record<ChartQ['family'], () => ChartQ | null> = {
     growth.forEach((g) => values.push(Math.round(values[values.length - 1] * (1 + g / 100))))
     const chart: ChartSpec = { kind: 'line', title: `${co}: revenue, $M`, unit: '$M', labels: YEARS, values }
     const t = rnd()
-    if (t < 0.4) {
+    if (t < 0.2) {
+      const a = int(0, 2), b = a + int(2, 3), g = (values[b] / values[a] - 1) * 100
+      return { id: id('line'), family: 'Line', context: `${co} is comparing two years for its annual report.`, chart,
+        q: `By what percentage did revenue change from ${YEARS[a]} to ${YEARS[b]}?`, answer: g, unit: '%', tol: 1, show: `${g >= 0 ? '+' : '−'}${n(Math.abs(g), 1)}%`,
+        why: `(${n(values[b])} − ${n(values[a])}) ÷ ${n(values[a])} = ${g >= 0 ? '' : '−'}${n(Math.abs(values[b] - values[a]))} ÷ ${n(values[a])} = ${g >= 0 ? '+' : '−'}${n(Math.abs(g), 1)}%. Always divide by the earlier year.` }
+    }
+    if (t < 0.5) {
       const yrs = YEARS.length - 1, c = ((values[yrs] / values[0]) ** (1 / yrs) - 1) * 100
       return { id: id('line'), family: 'Line', context: `The CEO says ${co} has "grown fast for five years".`, chart,
         q: `What is the compound annual growth rate (CAGR) from ${YEARS[0]} to ${YEARS[yrs]}?`, answer: c, unit: '%', tol: 1, show: `${n(c, 1)}%`,
@@ -108,7 +121,13 @@ const GEN: Record<ChartQ['family'], () => ChartQ | null> = {
     const chart: ChartSpec = { kind: 'stack', title: `${co}: revenue by segment, $M`, unit: '$M', labels: ['2023', '2025'], series: names.map((s, i) => ({ name: s, values: [y1[i], y2[i]] })) }
     const add = y2.map((v, i) => v - y1[i]), pctG = y2.map((v, i) => (v / y1[i] - 1) * 100)
     const t = rnd()
-    if (t < 0.35) {
+    if (t < 0.2) {
+      const g = (sum(y2) / sum(y1) - 1) * 100
+      return { id: id('stack'), family: 'Stacked bar', context: `${co}'s CEO wants one number for growth.`, chart,
+        q: 'By what percentage did total revenue change from 2023 to 2025?', answer: g, unit: '%', tol: 1, show: `${g >= 0 ? '+' : '−'}${n(Math.abs(g), 1)}%`,
+        why: `Use the totals on top of the bars: ${sum(y2)} ÷ ${sum(y1)} − 1 = ${g >= 0 ? '+' : '−'}${n(Math.abs(g), 1)}%. Don't average the segments' growth rates: bigger segments count for more.` }
+    }
+    if (t < 0.45) {
       const i = int(0, 2), share = (y2[i] / sum(y2)) * 100
       return { id: id('stack'), family: 'Stacked bar', context: `${co} is updating its investor slide.`, chart,
         q: `What share of 2025 revenue comes from ${names[i]}?`, answer: share, unit: '%', tol: 1, show: `${n(share, 1)}%`,
@@ -135,7 +154,14 @@ const GEN: Record<ChartQ['family'], () => ChartQ | null> = {
     const end = start + sum(steps.map((s) => s[1]))
     if (end <= 5) return null
     const base: Omit<Extract<ChartSpec, { kind: 'waterfall' }>, 'hidden'> = { kind: 'waterfall', title: `${co}: operating profit bridge, 2024 to 2025, $M`, unit: '$M', start: ['2024', start], steps, end: ['2025', end] }
-    if (rnd() < 0.55) {
+    const tw = rnd()
+    if (tw < 0.25) {
+      const g = (end / start - 1) * 100
+      return { id: id('wf'), family: 'Waterfall', context: `${co}'s board wants the headline change in profit.`, chart: base,
+        q: 'By what percentage did operating profit change from 2024 to 2025?', answer: g, unit: '%', tol: 1, show: `${g >= 0 ? '+' : '−'}${n(Math.abs(g), 1)}%`,
+        why: `Only the first and last bars matter: (${end} − ${start}) ÷ ${start} = ${g >= 0 ? '+' : '−'}${n(Math.abs(g), 1)}%.` }
+    }
+    if (tw < 0.65) {
       const h = int(0, 3)
       return { id: id('wf'), family: 'Waterfall', context: `One bar of ${co}'s profit bridge was left blank in the draft.`, chart: { ...base, hidden: h },
         q: `What is the missing "${steps[h][0]}" bar, in $M?`, answer: steps[h][1], unit: '$M', tol: 0.01, show: signedM(steps[h][1]),
@@ -155,7 +181,14 @@ const GEN: Record<ChartQ['family'], () => ChartQ | null> = {
     const profit = revenue.map((r, i) => (r * margin[i]) / 100)
     const chart: ChartSpec = { kind: 'mekko', title: `${co}: revenue (width, $M) and operating margin (height, %) by business`, labels, revenue, margin }
     const sorted = [...profit].sort((a, b) => b - a)
-    if (rnd() < 0.5) {
+    const tm = rnd()
+    if (tm < 0.3) {
+      const i = int(0, 3), sh = (profit[i] / sum(profit)) * 100
+      return { id: id('mekko'), family: 'Bar Mekko', context: `${co} is checking how much it relies on one business for profit.`, chart,
+        q: `What share of total operating profit comes from ${labels[i]}?`, answer: sh, unit: '%', tol: 1, show: `${n(sh, 1)}%`,
+        why: `${labels[i]}: ${revenue[i]} × ${margin[i]}% = $${n(profit[i], 2)}M, out of $${n(sum(profit), 2)}M in total (${labels.map((_, k) => `$${n(profit[k], 2)}M`).join(' + ')}) = ${n(sh, 1)}%. Compare with its ${n((revenue[i] / sum(revenue)) * 100, 0)}% share of revenue.` }
+    }
+    if (tm < 0.65) {
       if (sorted[0] - sorted[1] < 2) return null
       const best = profit.indexOf(sorted[0])
       return { id: id('mekko'), family: 'Bar Mekko', context: `${co} is deciding which business to protect first.`, chart,
