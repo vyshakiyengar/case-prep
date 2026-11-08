@@ -44,7 +44,7 @@ function FirstSteps() {
   const trained = Object.keys(data!.profile?.trainer || {}).length
   const hasCase = data!.cases.length > 0
   const steps = [
-    { t: 'Do the first three lessons', d: 'How cases work, the opening, and structuring (with the eleven core frameworks). About 35 minutes.', done: ['how-case-interviews-work', 'the-opening', 'structuring'].every((s) => learned.has(s)), to: '/learn/how-case-interviews-work' },
+    { t: 'Do the first three lessons', d: 'How cases work, the opening, and structuring (with the eleven core frameworks). About 27 minutes.', done: ['how-case-interviews-work', 'the-opening', 'structuring'].every((s) => learned.has(s)), to: '/learn/how-case-interviews-work' },
     { t: 'Train your first perfect-casing phrases', d: 'A 5-minute session. Say each line out loud.', done: trained >= 5, to: '/perfect-casing#trainer' },
     { t: 'Do case 1 alone, with the timer', d: 'Coastal Brew, an easy profitability case. Talk out loud.', done: hasCase, to: '/casebook/coastal-brew' },
     { t: 'Score it and write one fix', d: 'The last step of the case saves it to your case log.', done: hasCase && data!.cases.some((c) => c.fix), to: '/cases' },
@@ -52,15 +52,19 @@ function FirstSteps() {
   const n = steps.filter((s) => s.done).length
   return (
     <Section title="Your first steps" aside={<span className="text-[14px] text-muted tabular-nums">{n} of {steps.length} done</span>}>
-      <ol className="space-y-2">
-        {steps.map((s, i) => (
-          <li key={s.t}>
-            <Link to={s.to} className={`flex items-start gap-3 rounded-lg border px-4 py-3 ${s.done ? 'border-good/40 bg-good-l/40' : 'border-line bg-white hover:border-faint'}`}>
-              <span className={`mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-[12px] font-semibold ${s.done ? 'bg-good text-white' : 'bg-canvas text-muted'}`}>{s.done ? '✓' : i + 1}</span>
-              <span><span className={`block font-medium ${s.done ? 'text-muted line-through' : 'text-ink'}`}>{s.t}</span><span className="block text-[13.5px] text-muted">{s.d}</span></span>
-            </Link>
-          </li>
-        ))}
+      <ol className="path space-y-1">
+        {steps.map((s, i) => {
+          const next = !s.done && steps.slice(0, i).every((x) => x.done)
+          return (
+            <li key={s.t} className={s.done ? 'is-done' : next ? 'is-next' : ''}>
+              <span className="path-node" aria-hidden>{s.done ? '✓' : i + 1}</span>
+              <Link to={s.to} className="-mx-2 block rounded-md px-2 py-1.5 hover:bg-canvas">
+                <span className={`block text-[14.5px] font-medium ${s.done ? 'text-muted line-through decoration-faint' : 'text-ink'}`}>{s.t}{s.done && <span className="sr-only"> (done)</span>}</span>
+                <span className="block text-[13.5px] leading-snug text-muted">{s.d}</span>
+              </Link>
+            </li>
+          )
+        })}
       </ol>
       <p className="mt-3 text-[13.5px] text-muted">After your first case, this space shows your weakest stage and what to do about it.</p>
     </Section>
@@ -86,7 +90,7 @@ export default function Today() {
 
   const title = dayN < 1 ? `Your prep starts in ${-dayN + 1} day${-dayN + 1 === 1 ? '' : 's'}` : `Day ${dayN} of your prep`
   const sub = [
-    toGo !== null && (toGo > 0 ? `${toGo} days until your interview.` : toGo === 0 ? 'Your interview is today. You have done the work.' : null),
+    toGo !== null && (toGo > 0 ? `${toGo} day${toGo === 1 ? '' : 's'} until your interview.` : toGo === 0 ? 'Your interview is today. You have done the work.' : null),
     st > 1 ? `You've practised ${st} days in a row.` : null,
   ].filter(Boolean).join(' ')
 
@@ -104,8 +108,8 @@ export default function Today() {
           </Section>
 
           {weak && (
-            <section className="rounded-xl border border-signal bg-signal-l p-5">
-              <h2 className="text-[19px] font-semibold text-signal-d">Next focus: {weak.label.toLowerCase()}</h2>
+            <section className="rounded-lg border border-signal bg-signal-l p-5">
+              <h2 className="text-[17px] font-semibold text-signal-d">Next focus: {weak.label.toLowerCase()}</h2>
               <p className="mt-1 text-ink-2">It's your weakest stage so far, averaging {weak.avg?.toFixed(1)} out of 5. {weak.great}</p>
               <div className="mt-3 flex flex-wrap gap-2">
                 <LinkButton to={`/learn/${LESSON_FOR[weak.key].slug}`} variant="secondary">Re-read the lesson: {LESSON_FOR[weak.key].title}</LinkButton>
@@ -136,7 +140,7 @@ export default function Today() {
                 </div>
               ))}
             </div>
-            <p className="mt-3 text-[13.5px] text-muted">A strong week scores 35 or more: five-plus habits on most days.</p>
+            <p className="mt-3 text-[13.5px] text-muted">A strong week scores 35 or more: an average of five habits a day.</p>
           </Section>}
         </div>
 
@@ -159,12 +163,12 @@ export default function Today() {
 
           {cases.length > 0 && <Section title="Are you improving?">
             <dl className="grid grid-cols-2 gap-4">
-              <div><dt className="text-[13px] text-muted">First 5 cases</dt><dd className="font-serif text-[26px] font-semibold text-ink">{imp.first?.toFixed(1) ?? '–'}</dd></div>
-              <div><dt className="text-[13px] text-muted">Last 5 cases</dt><dd className="font-serif text-[26px] font-semibold text-ink">{imp.last?.toFixed(1) ?? '–'}</dd></div>
-              <div><dt className="text-[13px] text-muted">Change</dt><dd className={`font-serif text-[26px] font-semibold ${imp.change && imp.change > 0 ? 'text-good' : imp.change && imp.change < 0 ? 'text-signal-d' : 'text-ink'}`}>{imp.change === null ? '–' : `${imp.change > 0 ? '+' : ''}${imp.change.toFixed(1)}`}</dd></div>
-              <div><dt className="text-[13px] text-muted">Fixes that stuck</dt><dd className="font-serif text-[26px] font-semibold text-ink">{imp.stuck === null ? '–' : `${Math.round(imp.stuck * 100)}%`}</dd></div>
+              <div><dt className="text-[13px] text-muted">First 5 cases</dt><dd className="font-serif text-[22px] font-semibold text-ink">{imp.first?.toFixed(1) ?? '–'}</dd></div>
+              <div><dt className="text-[13px] text-muted">Last 5 cases</dt><dd className="font-serif text-[22px] font-semibold text-ink">{imp.last?.toFixed(1) ?? '–'}</dd></div>
+              <div><dt className="text-[13px] text-muted">Change</dt><dd className={`font-serif text-[22px] font-semibold ${imp.change && imp.change > 0 ? 'text-good' : imp.change && imp.change < 0 ? 'text-signal-d' : 'text-ink'}`}>{imp.change === null ? '–' : `${imp.change > 0 ? '+' : ''}${imp.change.toFixed(1)}`}</dd></div>
+              <div><dt className="text-[13px] text-muted">Fixes that stuck</dt><dd className="font-serif text-[22px] font-semibold text-ink">{imp.stuck === null ? '–' : `${Math.round(imp.stuck * 100)}%`}</dd></div>
             </dl>
-            {imp.last === null && <p className="mt-3 text-[13.5px] text-muted">Log five cases to see your trend.</p>}
+            {imp.last === null && <p className="mt-3 text-[13.5px] text-muted">Log ten cases to see your trend.</p>}
           </Section>}
 
           {cases.length > 0 && <Section title="Case types covered">

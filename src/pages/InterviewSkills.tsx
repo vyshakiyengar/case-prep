@@ -8,7 +8,7 @@ const ROUTINES = [
   ], why: 'A case asks you to remember an objective, interpret information and speak at the same time. The most useful practice looks like those real tasks. Brain-training games can be enjoyable extras, but improving at the game does not guarantee better interview performance.' },
   { number: '02', name: 'Speech and clear communication', time: '5–10 minutes a day', examples: [
     ['Warm up your speech', 'Use SpeechOn.app (free) for a short guided warm-up. Relax your jaw, practise articulation and read a few business sentences aloud.'],
-    ['Give a 30-second recommendation', 'Answer first, explain two reasons, mention a risk and finish with a next step. Record yourself and listen for confusing sentences.'],
+    ['Give a 60-second recommendation', 'Answer first, explain two reasons, mention a risk and finish with a next step. Record yourself and listen for confusing sentences.'],
     ['Replace rush with pauses', 'Practise saying a sentence, pausing briefly, and continuing. It is fine to take thinking time. Aim for clarity rather than sounding unusually formal.'],
   ], why: 'The interviewer needs to follow your reasoning. Calm, understandable explanations are more valuable than impressive-sounding language.' },
   { number: '03', name: 'Business judgement and language', time: '15–20 minutes a day', examples: [
@@ -61,13 +61,13 @@ export default function InterviewSkills() {
   return <>
     <PageHeader title="Interview skills" intro="The case is only half the interview. The other half is thinking clearly, speaking calmly and sounding commercial. Pick one exercise from each of the three parts below, most days." />
     {ROUTINES.map((r) => <div id={r.number} key={r.number} className="scroll-mt-24"><Section title={`${r.number} · ${r.name} (${r.time})`} className="mb-5">
-      <p className="text-[14.5px] text-muted">{r.why}</p><ol className="mt-4 space-y-3">{r.examples.map(([name, detail], i) => <li key={name} className="flex gap-3"><span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-violet-l text-[12px] font-semibold text-violet-d">{i + 1}</span><div><h3 className="font-sans text-[15px] font-semibold text-ink">{name}</h3><p className="mt-0.5 text-[14.5px] text-ink-2">{detail}</p></div></li>)}</ol>
+      <p className="text-[14.5px] text-muted">{r.why}</p><ol className="mt-4 space-y-3">{r.examples.map(([name, detail], i) => <li key={name} className="flex gap-3"><span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-violet-l text-[12px] font-semibold text-violet-d">{i + 1}</span><div><h3 className="font-sans text-[14.5px] font-semibold text-ink">{name}</h3><p className="mt-0.5 text-[14.5px] text-ink-2">{detail}</p></div></li>)}</ol>
       <Tools n={r.number} />
     </Section></div>)}
     <Section title="The 30-minute pre-interview warm-up" className="mb-5"><p className="text-[14.5px] text-muted">This follows the idea of refreshing your business vocabulary just before an interview, without trying to learn a whole new topic at the last minute.</p><ol className="mt-4 grid gap-3 sm:grid-cols-2">{[
       ['10 minutes: familiar reading', 'Skim a book such as Blitzscaling or your own vocabulary notes. Look for ideas you already understand, not new jargon.'],
       ['5 minutes: speech warm-up', 'Do a short routine on SpeechOn.app (free) or read one paragraph aloud. Practise clear articulation and a natural pace.'],
-      ['10 minutes: one short mock', 'Recap a prompt, outline three useful branches and deliver a 30-second recommendation. Focus on one improvement.'],
+      ['10 minutes: one short mock', 'Recap a prompt, outline three useful branches and deliver a 60-second recommendation. Focus on one improvement.'],
       ['5 minutes: settle in', 'Check your materials, breathe normally and avoid introducing a new framework. Being rested matters more than cramming.'],
     ].map(([title, detail]) => <li key={title} className="rounded-lg bg-canvas p-4"><h3 className="font-sans text-[14px] font-semibold text-ink">{title}</h3><p className="mt-1 text-[14px] text-muted">{detail}</p></li>)}</ol></Section>
   </>

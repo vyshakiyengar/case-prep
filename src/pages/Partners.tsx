@@ -6,19 +6,19 @@ import { Avatar, Button, Empty, PageHeader, Section } from '../components/ui'
 
 function PartnerCard({ s, you = false, onRemove }: { s: Summary; you?: boolean; onRemove?: () => void }) {
   return (
-    <div className={`rounded-xl border bg-white p-5 ${you ? 'border-ink' : 'border-line'}`}>
+    <div className={`rounded-lg border bg-white p-5 ${you ? 'border-ink' : 'border-line'}`}>
       <div className="flex items-center gap-3">
         <Avatar name={s.name} photo={s.photoURL} size={40} />
         <div className="min-w-0 flex-1">
-          <div className="truncate font-serif text-[19px] font-semibold text-ink">{s.name}{you && <span className="ml-2 font-sans text-[13px] font-normal text-muted">you</span>}</div>
+          <div className="truncate font-serif text-[17px] font-semibold text-ink">{s.name}{you && <span className="ml-2 font-sans text-[13px] font-normal text-muted">you</span>}</div>
           <div className="text-[12.5px] text-muted">Updated {new Date(s.updatedAt).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' })}</div>
         </div>
         {onRemove && <button onClick={onRemove} className="text-[13px] text-muted hover:text-signal-d">Remove</button>}
       </div>
       <dl className="mt-4 grid grid-cols-3 gap-3">
-        <div><dt className="text-[12.5px] text-muted">Last 7 days</dt><dd className="font-serif text-[24px] font-semibold text-ink">{s.weekScore}</dd></div>
-        <div><dt className="text-[12.5px] text-muted">Prep days 5+</dt><dd className="font-serif text-[24px] font-semibold text-ink">{s.realPrepDays7}/7</dd></div>
-        <div><dt className="text-[12.5px] text-muted">Avg case</dt><dd className="font-serif text-[24px] font-semibold text-ink">{s.avgScore?.toFixed(1) ?? '–'}</dd></div>
+        <div><dt className="text-[12.5px] text-muted">Habits, last 7 days</dt><dd className="font-serif text-[21px] font-semibold text-ink">{s.weekScore}<span className="text-[13px] font-normal text-muted">/56</span></dd></div>
+        <div><dt className="text-[12.5px] text-muted">Prep days 5+</dt><dd className="font-serif text-[21px] font-semibold text-ink">{s.realPrepDays7}/7</dd></div>
+        <div><dt className="text-[12.5px] text-muted">Avg case</dt><dd className="font-serif text-[21px] font-semibold text-ink">{s.avgScore?.toFixed(1) ?? '–'}</dd></div>
       </dl>
       <p className="mt-3 text-[14px] text-ink-2"><span className="text-muted">Cases logged:</span> {s.casesLogged}{s.weakestStage && <>. <span className="text-muted">Working on:</span> {s.weakestStage.toLowerCase()}</>}</p>
       {s.lastFix && <p className="mt-2 rounded bg-marker-l px-2 py-1 text-[13.5px] text-ink">Latest fix: {s.lastFix}</p>}
@@ -51,8 +51,8 @@ export default function Partners() {
   if (backend?.mode === 'demo') return (
     <>
       <PageHeader title="Practice partners" />
-      <div className="max-w-xl rounded-xl border border-line bg-white p-6">
-        <h2 className="text-[20px] font-semibold">Coming with Google sign-in</h2>
+      <div className="max-w-xl rounded-lg border border-line bg-white p-5">
+        <h2 className="text-[17.5px] font-semibold">Coming with Google sign-in</h2>
         <p className="mt-1 text-ink-2">Inviting a partner needs an account in the cloud, so it switches on together with Google sign-in. Everything else works now, and your progress is saved in this browser.</p>
       </div>
     </>
@@ -74,7 +74,7 @@ export default function Partners() {
 
   return (
     <>
-      <PageHeader title="Practice partners" intro="Prep is easier when someone can see whether you showed up. Partners see each other's weekly summary: scores, cases logged and latest fix. Never the details of your case log."
+      <PageHeader title="Practice partners" intro="Prep is easier when someone can see whether you showed up. Partners see each other's weekly summary: tracker score, prep days, cases logged, average score, the stage you're working on and your latest fix. They never see your full case log, notes or stories."
         action={<Button onClick={invite}>Invite a partner</Button>} />
       {link && (
         <Section title="Send this link to your partner" className="mb-5">
@@ -90,7 +90,7 @@ export default function Partners() {
       <div className="grid gap-4 md:grid-cols-2">
         <PartnerCard s={me} you />
         {partners === null ? null : partners.map((p) => 'pending' in p
-          ? <div key={p.uid} className="rounded-xl border border-dashed border-line bg-white p-5 text-muted">A partner has joined. Their summary appears after they next open the app.</div>
+          ? <div key={p.uid} className="rounded-lg border border-dashed border-line bg-white p-5 text-muted">A partner has joined. Their summary appears after they next open the app.</div>
           : <PartnerCard key={p.uid} s={p} onRemove={() => remove(p.uid)} />)}
       </div>
       {partners !== null && partners.length === 0 && (

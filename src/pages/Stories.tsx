@@ -14,8 +14,8 @@ function StoryBuilder() {
     <Field label={label} hint={hint}><textarea rows={rows} className={inputCls} value={edit![k] as string} onChange={(e) => setEdit({ ...edit!, [k]: e.target.value })} /></Field>
   )
   return (
-    <Section title="Your FIT stories" aside={<Button variant="secondary" onClick={() => setEdit(blank())}>Add a story</Button>}>
-      <p className="mb-4 text-[14px] text-muted">Build 6-8 stories using STAR-L. One good story can answer three or four questions. Rehearse each out loud in 90-120 seconds.</p>
+    <Section title="Your fit stories" aside={<Button variant="secondary" onClick={() => setEdit(blank())}>Add a story</Button>}>
+      <p className="mb-4 text-[14px] text-muted">Build 6-8 stories using STAR-L (Situation, Task, Action, Result, Learning). One good story can answer three or four different questions, but use a different story in each round with the same firm. Rehearse each out loud in 90-120 seconds.</p>
       {edit && (
         <form className="mb-5 space-y-3 rounded-lg border border-violet bg-violet-l/40 p-4" onSubmit={async (e) => { e.preventDefault(); await saveStory(edit); setEdit(null) }}>
           <Field label="Story name"><input className={inputCls} required value={edit.title} onChange={(e) => setEdit({ ...edit, title: e.target.value })} placeholder="e.g. Rescuing the pricing project" /></Field>
@@ -52,8 +52,8 @@ function StoryBuilder() {
 export default function Stories() {
   return (
     <>
-      <PageHeader title="FIT stories" intro="Build 6-8 stories once, and use each for several questions. Rehearse them out loud every week."
-        action={<LinkButton to="/learn/fit-interview" variant="secondary">Lesson: the FIT interview</LinkButton>} />
+      <PageHeader title="Fit stories" intro="Build 6-8 stories once, and use each for several questions. Rehearse them out loud every week."
+        action={<LinkButton to="/learn/fit-interview" variant="secondary">Lesson: the fit interview</LinkButton>} />
       <div className="space-y-5">
         <StoryBuilder />
         <Section title="The questions you'll be asked">

@@ -28,22 +28,22 @@ export default function Notes() {
   return (
     <>
       <PageHeader title="My notes" intro="Everything you've written on the course pages, in course order. Edit a note on its page, or keep anything else in the box at the bottom."
-        action={filled.length > 0 ? <div className="flex gap-2"><Button variant="secondary" onClick={copy}>{copied ? 'Copied' : 'Copy all'}</Button><Button variant="secondary" onClick={download}>Download</Button></div> : undefined} />
+        action={(filled.length > 0 || notes.general?.text.trim()) ? <div className="flex gap-2"><Button variant="secondary" onClick={copy}>{copied ? 'Copied' : 'Copy all'}</Button><Button variant="secondary" onClick={download}>Download</Button></div> : undefined} />
 
       {filled.length === 0 ? (
-        <div className="rounded-2xl border border-line bg-white p-6">
+        <div className="rounded-xl border border-line bg-white p-5">
           <p className="text-ink-2">No course notes yet. Every page of the course has a notes box at the bottom. What you write there appears here.</p>
           <LinkButton to="/learn" className="mt-4">Open the course</LinkButton>
         </div>
       ) : (
         <ol className="space-y-3">
           {filled.map((p) => (
-            <li key={p.id} className="rounded-2xl border border-line bg-white p-5 sm:p-6">
+            <li key={p.id} className="rounded-xl border border-line bg-white p-4 sm:p-5">
               <div className="flex flex-wrap items-baseline justify-between gap-2">
-                <h2 className="text-[20px]">{pageTitle(p.id, p.i)}</h2>
+                <h2 className="text-[17.5px]">{pageTitle(p.id, p.i)}</h2>
                 <span className="text-[13px] text-muted">{fmt(p.note!.updatedAt)} · <Link to={p.to} className="font-medium text-violet-d hover:underline">Open page to edit</Link></span>
               </div>
-              <p className="mt-2 whitespace-pre-wrap text-[15.5px] leading-relaxed text-ink">{p.note!.text.trim()}</p>
+              <p className="mt-2 whitespace-pre-wrap text-[14.5px] leading-relaxed text-ink">{p.note!.text.trim()}</p>
             </li>
           ))}
         </ol>

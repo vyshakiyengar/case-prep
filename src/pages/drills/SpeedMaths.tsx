@@ -7,7 +7,7 @@ import { isCorrect, LEVELS, makeQuestion, SKILLS } from '../../lib/speedMaths'
 import type { Level, Skill, SpeedQ } from '../../lib/speedMaths'
 import { Button, PageHeader } from '../../components/ui'
 import { mmss } from '../../components/Timer'
-import { DrillCrumbs, HowItWorks, Seg, readBest, writeBest } from './shared'
+import { DrillCrumbs, HowItWorks, Seg, readBest, writeBest, Tally } from './shared'
 
 type Mode = 'ten' | 'pace' | 'sprint'
 const MODES: { key: Mode; label: string; long: string }[] = [
@@ -119,23 +119,23 @@ export default function SpeedMaths() {
   return (
     <>
       <DrillCrumbs here="Case maths" />
-      {phase === 'run' ? <h1 className="mb-4 text-[26px] leading-tight sm:text-[30px]">Case maths</h1> : <PageHeader title="Case maths" intro="Quick sums like the ones in a case: percentages, big numbers, margins, growth. Type your answer and see straight away whether it's right, with the fastest way to work it out." />}
+      {phase === 'run' ? <h1 className="mb-4 text-[22px] leading-tight sm:text-[26px]">Case maths</h1> : <PageHeader title="Case maths" intro="Quick sums like the ones in a case: percentages, big numbers, margins, growth. Type your answer and see straight away whether it's right. If not, you see the quickest way to work it out." />}
 
       {phase === 'ready' && (
         <div className="max-w-3xl">
-          <div className="graph-paper rounded-xl border border-line p-6 sm:p-8">
+          <div className="graph-paper rounded-lg border border-line p-4 sm:p-5">
             <p className="text-[13.5px] text-muted">Example question</p>
-            <p className="mt-1 font-serif text-[26px] leading-snug font-semibold text-ink">What is 15% of 240?</p>
+            <p className="mt-1 font-serif text-[22px] leading-snug font-semibold text-ink">What is 15% of 240?</p>
             <p className="mt-1 text-[14.5px] text-ink-2">You'd type <b className="font-semibold">36</b>. No calculator: work it out in your head or on paper, as you would in an interview.</p>
             <div className="mt-6 flex flex-wrap items-center gap-x-4 gap-y-2">
-              <Button className="px-7 py-3 text-[16px]" onClick={start}>Start</Button>
+              <Button className="px-7 py-3 text-[15px]" onClick={start}>Start</Button>
               <span className="text-[14px] text-muted">{summary}</span>
             </div>
-            {best !== null && <p className="mt-3 text-[13.5px] text-muted">Your best with these options: <b className="font-semibold text-ink">{best}</b> right</p>}
+            {best !== null && <p className="mt-3 text-[13.5px] text-muted">Your best at this length and difficulty: <b className="font-semibold text-ink">{best}</b> right</p>}
           </div>
-          <HowItWorks steps={['Read the question.', 'Type your answer (the unit is shown next to the box) and press Enter.', 'See if you were right, and the quickest way to do it.']} />
-          <details className="mt-4 rounded-xl border border-line bg-white px-5 py-3">
-            <summary className="cursor-pointer text-[15px] font-medium text-ink">Options: length, difficulty, topics</summary>
+          <HowItWorks steps={['Read the question.', 'Type your answer (the unit is shown next to the box) and press Enter.', 'See if you were right. If not, you see the quickest way to do it.']} />
+          <details className="mt-4 rounded-lg border border-line bg-white px-5 py-3">
+            <summary className="cursor-pointer text-[14.5px] font-medium text-ink">Options: length, difficulty, topics</summary>
             <div className="space-y-5 py-3">
               <div><p className="mb-2 text-[14px] font-medium text-ink">Length</p><Seg label="Length" value={mode} onChange={setMode} items={MODES.map((m) => ({ value: m.key, label: m.label }))} /></div>
               <div><p className="mb-2 text-[14px] font-medium text-ink">Difficulty</p><Seg label="Difficulty" value={level} onChange={(v) => setLevel(v as Level)} items={LEVELS.map((l) => ({ value: l.key, label: l.label, sub: l.blurb }))} /></div>
@@ -171,16 +171,16 @@ export default function SpeedMaths() {
             {mode === 'pace' && !fb && <Clock left={qLeft} total={PER_Q} />}
             {mode === 'ten' && <span className="font-medium tabular-nums text-ink" aria-label="Time taken">{mmss(Math.floor(elapsed))}</span>}
           </div>
-          <div className={`graph-paper rounded-xl border p-6 transition-colors sm:p-8 ${fb ? (fb.ok ? 'border-good' : 'border-signal') : 'border-line'}`}>
+          <div className={`graph-paper rounded-lg border p-5 transition-colors sm:p-5 ${fb ? (fb.ok ? 'border-good' : 'border-signal') : 'border-line'}`}>
             <p className="text-[13px] text-muted">{SKILLS.find((s) => s.key === q.skill)!.label}</p>
-            <p className="mt-1 font-serif text-[26px] leading-snug font-semibold text-ink sm:text-[30px]" aria-live="polite">{q.q}</p>
+            <p className="mt-1 font-serif text-[22px] leading-snug font-semibold text-ink sm:text-[26px]" aria-live="polite">{q.q}</p>
             <form className="mt-5" onSubmit={(e) => { e.preventDefault(); submit() }}>
-              <label className="mb-1.5 block text-[13.5px] text-muted" htmlFor="sm-answer">Your answer{q.unit.label ? `, in ${q.unit.label}` : ''}</label>
+              <label className="mb-1.5 block text-[13.5px] text-muted" htmlFor="sm-answer">Your answer{q.unit.label ? `, in ${['thousand', 'million', 'billion'].includes(q.unit.label) ? q.unit.label + 's' : q.unit.label}` : ''}</label>
               <div className="flex flex-wrap items-center gap-2">
                 <div className="flex items-center rounded-lg border border-line bg-white focus-within:border-teal focus-within:ring-2 focus-within:ring-teal/15">
                   <input id="sm-answer" ref={input} value={guess} onChange={(e) => setGuess(e.target.value)} readOnly={!!fb} inputMode="decimal" autoComplete="off"
-                    className="w-40 rounded-lg bg-transparent px-3 py-2.5 text-[18px] text-ink tabular-nums outline-none sm:w-52" />
-                  {q.unit.label && <span className="pr-3 text-[15px] text-muted">{q.unit.label}</span>}
+                    className="w-40 rounded-lg bg-transparent px-3 py-2.5 text-[16.5px] text-ink tabular-nums outline-none sm:w-52" />
+                  {q.unit.label && <span className="pr-3 text-[14.5px] text-muted">{q.unit.label}</span>}
                 </div>
                 {!(fb && fb.ok) && <Button type="submit" className="py-2.5">{fb ? (counted && log.length >= ROUND ? 'See my score' : 'Next question') : 'Check'}</Button>}
                 {!fb && mode !== 'pace' && <button type="button" onClick={() => record(false, '')} className="px-2 text-[14px] text-muted hover:text-ink">I don't know</button>}
@@ -188,7 +188,7 @@ export default function SpeedMaths() {
             </form>
             {fb && (
               <div className="mt-4 rounded-lg bg-white/90 p-4" role="status">
-                <p className={`text-[15.5px] font-semibold ${fb.ok ? 'text-good' : 'text-signal'}`}>{fb.ok ? 'Right!' : fb.timeout ? 'Out of time.' : 'Not quite.'} <span className="font-normal text-ink">The answer is <b className="font-semibold">{q.show}</b>.</span></p>
+                <p className={`text-[14.5px] font-semibold ${fb.ok ? 'text-good' : 'text-signal'}`}>{fb.ok ? 'Right!' : fb.timeout ? 'Out of time.' : 'Not quite.'} <span className="font-normal text-ink">The answer is <b className="font-semibold">{q.show}</b>.</span></p>
                 {!fb.ok && <p className="mt-1 text-[14.5px] text-ink-2"><b className="font-medium text-ink">Quick way:</b> {q.method}</p>}
               </div>
             )}
@@ -202,9 +202,10 @@ export default function SpeedMaths() {
 
       {phase === 'done' && (
         <div className="max-w-3xl">
-          <div className="graph-paper rounded-xl border border-line p-6 text-center sm:p-8">
+          <div className="graph-paper rounded-lg border border-line p-5 text-center sm:p-5">
             <p className="text-[14px] text-muted">Your score</p>
-            <p className="font-serif text-[52px] leading-none font-semibold text-ink">{right}<span className="text-[26px] text-muted"> / {log.length}</span></p>
+            <p className="font-serif text-[42px] leading-none font-semibold text-ink">{right}<span className="text-[22px] text-muted"> / {log.length}</span></p>
+            {log.length > 0 && <Tally results={log.map((d) => d.ok)} />}
             <p className="mt-2 text-ink-2">{newBest ? 'A new personal best. ' : ''}{log.length ? `About ${Math.max(1, Math.round(avgSecs))} second${Math.round(avgSecs) > 1 ? 's' : ''} a question. ${right === log.length ? 'Try a harder level next.' : 'Go through the ones you missed below.'}` : ''}</p>
             <div className="mt-5 flex flex-wrap justify-center gap-2">
               <Button onClick={start}>Another round</Button>
@@ -213,7 +214,7 @@ export default function SpeedMaths() {
           </div>
           {log.some((d) => !d.ok) && (
             <section className="mt-6">
-              <h2 className="text-[20px]">The ones you missed</h2>
+              <h2 className="text-[17.5px]">The ones you missed</h2>
               <p className="text-[14px] text-muted">Redo each one out loud using the quick way.</p>
               <ul className="mt-3 space-y-3">
                 {log.filter((d) => !d.ok).map((d) => (

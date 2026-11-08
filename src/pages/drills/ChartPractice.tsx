@@ -11,7 +11,7 @@ import { ExhibitView, Rich } from '../../components/CaseParts'
 import { DrillChart } from '../../components/DrillChart'
 import { Button, PageHeader, ScorePicker, Section } from '../../components/ui'
 import { Countdown } from '../../components/Timer'
-import { DrillCrumbs, StartCard, readBest, writeBest } from './shared'
+import { DrillCrumbs, StartCard, readBest, writeBest, Tally } from './shared'
 
 const SET = 8, SECS = 60
 type Fam = ChartQ['family'] | 'All'
@@ -65,14 +65,15 @@ function QuickReads({ fam }: { fam: Fam }) {
     const right = log.filter((d) => d.ok).length
     return (
       <div className="max-w-3xl">
-        <div className="graph-paper rounded-xl border border-line p-6 text-center sm:p-8">
+        <div className="graph-paper rounded-lg border border-line p-5 text-center sm:p-5">
           <p className="text-[14px] text-muted">Your score</p>
-          <p className="font-serif text-[48px] leading-none font-semibold text-ink">{right}<span className="text-[26px] text-muted"> / {log.length}</span></p>
+          <p className="font-serif text-[40px] leading-none font-semibold text-ink">{right}<span className="text-[22px] text-muted"> / {log.length}</span></p>
+          {log.length > 0 && <Tally results={log.map((d) => d.ok)} />}
           <p className="mt-2 text-ink-2">{right === log.length ? 'Every one right.' : right >= log.length * 0.75 ? 'Strong. Check the ones you missed below.' : 'Check the units, and what each percentage is a percentage of.'}</p>
           <div className="mt-5 flex flex-wrap justify-center gap-2"><Button onClick={start}>Another round</Button></div>
           {best !== null && <p className="mt-3 text-[13.5px] text-muted">Your best: {best} of {SET}</p>}
         </div>
-        {log.some((d) => !d.ok) && <section className="mt-6"><h2 className="text-[20px]">The ones you missed</h2><ul className="mt-3 space-y-3">{log.filter((d) => !d.ok).map((d) => <li key={d.q.id} className="rounded-lg border border-line bg-white p-4"><p className="font-medium text-ink">{d.q.chart.title}: {d.q.q}</p><p className="mt-1 text-[14px] text-ink-2">Answer: <b className="font-semibold text-ink">{d.q.show}</b>. {d.q.why}</p></li>)}</ul></section>}
+        {log.some((d) => !d.ok) && <section className="mt-6"><h2 className="text-[17.5px]">The ones you missed</h2><ul className="mt-3 space-y-3">{log.filter((d) => !d.ok).map((d) => <li key={d.q.id} className="rounded-lg border border-line bg-white p-4"><p className="font-medium text-ink">{d.q.chart.title}: {d.q.q}</p><p className="mt-1 text-[14px] text-ink-2">Answer: <b className="font-semibold text-ink">{d.q.show}</b>. {d.q.why}</p></li>)}</ul></section>}
       </div>
     )
   }
@@ -81,16 +82,16 @@ function QuickReads({ fam }: { fam: Fam }) {
   const last = log.length >= SET
   return (
     <div className="grid gap-5 lg:grid-cols-[1.6fr_1fr]">
-      <div className="min-w-0 rounded-xl border border-line bg-white p-4 sm:p-5">
+      <div className="min-w-0 rounded-lg border border-line bg-white p-4 sm:p-5">
         <p className="mb-3 text-[13px] text-muted">Exhibit {Math.min(log.length + (fb ? 0 : 1), SET)} of {SET} · {q.family}</p>
         <DrillChart spec={q.chart} />
         <p className="mt-2 text-[12.5px] text-muted">Fictional data, generated for practice.</p>
       </div>
       <div className="space-y-4">
         {!fb && <Countdown key={q.id} seconds={SECS} label="Time left" autoStart onEnd={onTimeout} />}
-        <div className={`rounded-xl border p-4 ${fb ? (fb.ok ? 'border-good' : 'border-signal') : 'border-line'} bg-white`}>
+        <div className={`rounded-lg border p-4 ${fb ? (fb.ok ? 'border-good' : 'border-signal') : 'border-line'} bg-white`}>
           <p className="text-[13.5px] text-muted">{q.context}</p>
-          <p className="mt-1 text-[17px] font-medium text-ink">{q.q}</p>
+          <p className="mt-1 text-[16px] font-medium text-ink">{q.q}</p>
           {q.options ? (
             <div className="mt-3 grid gap-2">
               {q.options.map((o, i) => (
@@ -101,7 +102,7 @@ function QuickReads({ fam }: { fam: Fam }) {
           ) : (
             <form className="mt-3 flex flex-wrap items-center gap-2" onSubmit={(e) => { e.preventDefault(); if (fb) { if (last) finish(); else next() } else if (guess.trim()) record(mark(q, guess), guess) }}>
               <div className="flex items-center rounded-lg border border-line bg-white focus-within:border-teal focus-within:ring-2 focus-within:ring-teal/15">
-                <input ref={input} aria-label="Your answer" value={guess} onChange={(e) => setGuess(e.target.value)} readOnly={!!fb} inputMode="decimal" autoComplete="off" className="w-32 rounded-lg bg-transparent px-3 py-2 text-[17px] tabular-nums outline-none" placeholder="Answer" />
+                <input ref={input} aria-label="Your answer" value={guess} onChange={(e) => setGuess(e.target.value)} readOnly={!!fb} inputMode="decimal" autoComplete="off" className="w-32 rounded-lg bg-transparent px-3 py-2 text-[16px] tabular-nums outline-none" placeholder="Answer" />
                 <span className="pr-3 text-[14px] text-muted">{q.unit}</span>
               </div>
               {!fb && <Button type="submit">Check</Button>}
@@ -109,7 +110,7 @@ function QuickReads({ fam }: { fam: Fam }) {
           )}
           {fb && (
             <div className="mt-3 border-t border-line pt-3" role="status">
-              <p className={`text-[15px] font-semibold ${fb.ok ? 'text-good' : 'text-signal'}`}>{fb.ok ? 'Right.' : fb.timeout ? 'Out of time.' : 'Not quite.'} <span className="font-normal text-ink">Answer: <b className="font-semibold">{q.show}</b></span></p>
+              <p className={`text-[14.5px] font-semibold ${fb.ok ? 'text-good' : 'text-signal'}`}>{fb.ok ? 'Right.' : fb.timeout ? 'Out of time.' : 'Not quite.'} <span className="font-normal text-ink">Answer: <b className="font-semibold">{q.show}</b></span></p>
               <p className="mt-1 text-[14px] text-ink-2">{q.why}</p>
               <Button className="mt-3" onClick={() => (last ? finish() : next())}>{last ? 'See results' : 'Next exhibit'}</Button>
             </div>
@@ -139,9 +140,9 @@ function Insight() {
   }
   return (
     <div className="grid gap-5 lg:grid-cols-[1.5fr_1fr]">
-      <div className="min-w-0 rounded-xl border border-line bg-white p-5">
+      <div className="min-w-0 rounded-lg border border-line bg-white p-5">
         <p className="text-[13px] text-muted">Exhibit {n + 1} of {items.length}, from case {it.c.id}: {it.c.title}</p>
-        <p className="mt-2 text-[15px] text-ink-2"><span className="font-medium text-ink">Context:</span> {it.c.sub} {it.q.q}</p>
+        <p className="mt-2 text-[14.5px] text-ink-2"><span className="font-medium text-ink">Context:</span> {it.c.sub} {it.q.q}</p>
         {it.q.exhibit && <ExhibitView ex={it.q.exhibit} />}
         {phase === 'review' && (
           <div className="mt-2 rounded-lg border border-good/40 p-4">
@@ -186,13 +187,13 @@ export default function ChartPractice() {
               body="You see a chart and one question about it. Type the answer or tap a choice, and you're told straight away if it's right and how to work it out."
               example={<>Example: a bar chart of revenue by region. "What share of total revenue comes from the North?"</>}
               meta={`${SET} charts · 60 seconds each`} />
-            <StartCard title="Charts from real cases" onStart={() => go('insight')}
-              body="You see an exhibit from one of our cases. In 90 seconds, say out loud what it tells you, then compare with a strong answer."
+            <StartCard title="Exhibits from the casebook" onStart={() => go('insight')}
+              body="You see a chart or table from one of our casebook cases. In 90 seconds, say out loud what it tells you, then compare with a strong answer."
               example={<>No typing needed: this one is about saying the "so what" clearly.</>}
               meta="90 seconds each" />
           </div>
-          <details className="mt-4 max-w-5xl rounded-xl border border-line bg-white px-5 py-3">
-            <summary className="cursor-pointer text-[15px] font-medium text-ink">Options: practise one chart type</summary>
+          <details className="mt-4 max-w-5xl rounded-lg border border-line bg-white px-5 py-3">
+            <summary className="cursor-pointer text-[14.5px] font-medium text-ink">Options: practise one chart type</summary>
             <div className="flex flex-wrap gap-2 py-3" role="group" aria-label="Chart type">
               {(['All', ...FAMILIES] as Fam[]).map((f) => <button key={f} onClick={() => setFam(f)} aria-pressed={fam === f}
                 className={`rounded-full border px-3.5 py-1.5 text-[13.5px] font-medium transition-colors ${fam === f ? 'border-ink bg-ink text-white' : 'border-line bg-white text-ink-2 hover:border-faint'}`}>{f === 'All' ? 'All types' : f}</button>)}
@@ -203,8 +204,8 @@ export default function ChartPractice() {
       )}
       {mode !== null && (
         <div className="mb-5 flex flex-wrap items-baseline gap-x-4 gap-y-2 border-b border-line pb-3">
-          <h1 className="text-[26px] leading-tight sm:text-[30px]">{mode === 'quick' ? `Quick chart questions${fam !== 'All' ? `: ${fam}` : ''}` : 'Charts from real cases'}</h1>
-          <button className="text-[14px] font-medium text-violet-d hover:underline" onClick={() => go(mode === 'quick' ? 'insight' : 'quick')}>{mode === 'quick' ? 'Switch to: charts from real cases' : 'Switch to: quick chart questions'}</button>
+          <h1 className="text-[22px] leading-tight sm:text-[26px]">{mode === 'quick' ? `Quick chart questions${fam !== 'All' ? `: ${fam}` : ''}` : 'Exhibits from the casebook'}</h1>
+          <button className="text-[14px] font-medium text-violet-d hover:underline" onClick={() => go(mode === 'quick' ? 'insight' : 'quick')}>{mode === 'quick' ? 'Switch to: exhibits from the casebook' : 'Switch to: quick chart questions'}</button>
           <button className="text-[14px] text-muted hover:text-ink" onClick={() => go(null)}>Back</button>
         </div>
       )}

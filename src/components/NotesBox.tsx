@@ -36,7 +36,7 @@ export function NotesBox({ pageId, title, compact = false }: { pageId: string; t
     </div>
   )
   return (
-    <section aria-labelledby={`notes-${pageId}`} className={`${compact ? 'rounded-2xl border border-line bg-white p-5 sm:p-6' : 'mt-8 border-t border-line pt-4'}`}>
+    <section aria-labelledby={`notes-${pageId}`} className={`${compact ? 'rounded-xl border border-line bg-white p-4 sm:p-5' : 'mt-8 border-t border-line pt-4'}`}>
       <div className="flex flex-wrap items-baseline justify-between gap-2">
         <h3 id={`notes-${pageId}`} className="font-sans text-[14px] font-medium text-ink-2">My notes{title && !compact ? <span className="font-normal text-muted"> · {title}</span> : null}</h3>
         <span className="text-[13px] text-muted" role="status">
@@ -46,7 +46,7 @@ export function NotesBox({ pageId, title, compact = false }: { pageId: string; t
       </div>
       <textarea value={text} onChange={(e) => onChange(e.target.value)} rows={compact ? 4 : 3} autoFocus={!compact && !saved}
         placeholder="What clicked, what to practise, phrases to remember…"
-        className={`${inputCls} mt-2 resize-y bg-white text-[15px] leading-relaxed`} aria-labelledby={`notes-${pageId}`} />
+        className={`${inputCls} mt-2 resize-y bg-white text-[14.5px] leading-relaxed`} aria-labelledby={`notes-${pageId}`} />
     </section>
   )
 }

@@ -11,23 +11,29 @@ import type { StatsBump } from '../lib/types'
  * Nothing is recorded for signed-out visitors.
  */
 
-// Remember where someone first arrived from (before they sign in), once per browser.
+// Where this visit came from. Held in memory only until the person signs in, so nothing
+// is written to the browser for visitors who never create an account.
 const SRC_KEY = 'pfc-source'
+const landingSource = (() => {
+  try {
+    const utm = new URLSearchParams(location.search).get('utm_source')
+    if (utm) return utm.slice(0, 60)
+    if (document.referrer) {
+      const host = new URL(document.referrer).hostname.replace(/^www\./, '')
+      if (host && host !== location.hostname) return host.slice(0, 60)
+    }
+  } catch { /* ignore */ }
+  return 'direct'
+})()
+/** Called only for signed-in users: keeps the first source seen on this device. */
 function firstSource(): string {
   try {
     const saved = localStorage.getItem(SRC_KEY)
     if (saved) return saved
-    const utm = new URLSearchParams(location.search).get('utm_source')
-    let src = utm || 'direct'
-    if (!utm && document.referrer) {
-      const host = new URL(document.referrer).hostname.replace(/^www\./, '')
-      if (host && host !== location.hostname) src = host
-    }
-    localStorage.setItem(SRC_KEY, src.slice(0, 60))
-    return src
-  } catch { return 'direct' }
+    localStorage.setItem(SRC_KEY, landingSource)
+  } catch { /* storage blocked */ }
+  return landingSource
 }
-firstSource() // capture on first load, even before sign-in
 
 const section = (path: string) => path.split('/')[1] || 'landing'
 

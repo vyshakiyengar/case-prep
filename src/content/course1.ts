@@ -9,7 +9,7 @@ export const LESSONS_1: Lesson[] = [
     sections: [
       {
         h: 'What you are actually being tested on',
-        body: `<p>A case interview is a 25-40 minute conversation about a business problem: <i>profits are falling, should we enter this market, what should we charge</i>. You are not expected to know the answer. You are expected to think like a consultant in front of the interviewer: break the problem into parts, find the part that matters, use numbers to test your ideas, and finish with a clear recommendation.</p>
+        body: `<p>A case interview is usually a 20-40 minute conversation about a business problem: <i>profits are falling, should we enter this market, what should we charge</i>. You are not expected to know the answer. You are expected to think like a consultant in front of the interviewer: break the problem into parts, find the part that matters, use numbers to test your ideas, and finish with a clear recommendation.</p>
 <p>Interviewers are really asking two questions. <b>Can this person solve the problem?</b> And <b>would I put this person in front of a client?</b> The second question is judged on every sentence you say, which is why this course spends a whole lesson on how you come across.</p>`,
       },
       {
@@ -19,8 +19,8 @@ export const LESSONS_1: Lesson[] = [
 <p>Prepare for both. The skills are the same; what changes is who holds the steering wheel.</p>`,
       },
       {
-        h: 'The six stages interviewers score',
-        body: `<p>Almost every firm's scorecard comes down to six things, and the PrepForCase case log scores you on exactly these:</p>
+        h: 'The six things interviewers score',
+        body: `<p>Firms' scorecards differ, but most cover these six things, and the PrepForCase case log scores you on exactly these:</p>
 <ul><li><b>Clarify and recap</b>: did you understand the problem and the goal?</li>
 <li><b>Structure and hypothesis</b>: did you break it down sensibly and say where you'd start?</li>
 <li><b>Maths and charts</b>: were your numbers right, and did you draw the insight?</li>
@@ -98,7 +98,7 @@ export const LESSONS_1: Lesson[] = [
       },
       {
         h: 'Make it specific to this client',
-        body: `<p>The most common feedback interviewers give is "too generic". A structure that would fit any company is a framework recited from a book. Tailor each branch: for a coffee chain, revenue isn't just "volume × price", it's <i>in-store vs delivery orders × average ticket</i>. That one change shows you're thinking about this business.</p>`,
+        body: `<p>The most common feedback interviewers give is "too generic". A structure that would fit any company is a framework recited from a book. Tailor each branch: for a coffee chain, revenue isn't just "volume × price", it's <i>in-store orders × in-store ticket, plus delivery orders × delivery ticket</i>. That one change shows you're thinking about this business.</p>`,
       },
       {
         h: 'Always finish with a hypothesis',
@@ -133,12 +133,12 @@ export const LESSONS_1: Lesson[] = [
     sections: [
       {
         h: 'Say the approach before the arithmetic',
-        body: `<p>Before you touch a number, say what you're going to calculate and how: "Profit from the new line is units × contribution per unit, minus the fixed launch cost. Does that make sense?" Getting agreement first means a slip in the arithmetic costs you little, because the interviewer can see your logic was right.</p>`,
+        body: `<p>Before you touch a number, say what you're going to calculate and how: "Profit from the new line is units × contribution per unit, minus the fixed launch cost. Does that make sense?" Getting agreement first means a slip in the arithmetic costs you less, because the interviewer can see your logic was right. Accuracy still counts, so check as you go.</p>`,
       },
       {
         h: 'Techniques that make it fast',
-        body: `<ul><li><b>Percentages</b>: build from 10% and 1%. 17% of 340 = 34 + 23.8 = 57.8.</li>
-<li><b>Big numbers</b>: separate digits from zeros. 3.5M × 240 = 3.5 × 24 = 84, then add zeros → 840M.</li>
+        body: `<ul><li><b>Percentages</b>: build from 10% and 1%. For 17% of 340: 10% = 34, 1% = 3.4, so 7% = 23.8. Total: 34 + 23.8 = 57.8.</li>
+<li><b>Big numbers</b>: separate digits from zeros. 3.5M × 240: 3.5 × 24 = 84, then add back the seven zeros (six from M, one from 240) → 840,000,000 = 840M.</li>
 <li><b>Division</b>: cancel zeros first. 4.5B ÷ 1.5M = 4,500 ÷ 1.5 = 3,000.</li>
 <li><b>Growth</b>: the rule of 72. At 10% a year, something doubles in about 7 years.</li>
 <li><b>Rounding</b>: round to make the maths easy, but say so, and don't round away the answer (5.5B is not 5B).</li></ul>`,
@@ -155,7 +155,7 @@ export const LESSONS_1: Lesson[] = [
     example: {
       title: 'A breakeven question, done well',
       body: `<p><b>Question:</b> A snack company spends $12M to launch a bar that sells for $1.50 with a variable cost of $0.70. How many bars does it need to sell to break even?</p>
-<p><b>Answer:</b> "Breakeven is fixed cost divided by contribution per unit. Contribution is $1.50 minus $0.70, so 80 cents. $12M ÷ 0.8 = 15M bars. Sanity check: 15M bars × 80 cents = $12M. ✓ So they need about 15M bars in year one. Next I'd want to know if that's realistic given the market size."</p>`,
+<p><b>Answer:</b> "Breakeven is fixed cost divided by contribution per unit. Contribution is $1.50 minus $0.70, so 80 cents. $12M ÷ 0.8 = 15M bars. Sanity check: 15M bars × 80 cents = $12M. ✓ So they need to sell about 15M bars in total to recover the launch cost. Next I'd want to know how many bars a year the market could take, which tells us how long payback would be."</p>`,
     },
     takeaways: ['State the formula and get agreement before calculating.', 'Talk while you work; sanity-check the size of every answer.', 'Finish every calculation with what it means for the client.'],
     quiz: [
@@ -173,7 +173,8 @@ export const LESSONS_1: Lesson[] = [
     sections: [
       {
         h: 'Ask for a moment, then read in order',
-        body: `<p>When you're handed a chart, say "May I take a moment?" and then read it in this order: <b>title</b>, <b>axes and units</b>, <b>legend</b>, and the <b>footnote</b>. Footnotes hide the answer surprisingly often: "excludes our new stores", "values in real terms".</p>`,
+        body: `<p>When you're handed a chart, say "May I take a moment?" and then read it in this order: <b>title</b>, <b>axes and units</b>, <b>legend</b>, and the <b>footnote</b>. Footnotes hide the answer surprisingly often: "excludes our new stores", "values in real terms".</p>
+<p>Then follow five steps: <b>read</b> the chart, <b>find</b> what stands out, <b>quantify</b> it, <b>link</b> it to the goal, and say your <b>next step</b>.</p>`,
       },
       {
         h: 'Insight, not description',
@@ -188,7 +189,7 @@ export const LESSONS_1: Lesson[] = [
       title: 'The five-step routine in one answer',
       body: `<p>"This shows bed occupancy for each of the client's 12 hospitals (1, read). Most sit between 60% and 78%, but three newer hospitals are around 40% (2, find the outlier). Those three drag the average down to 62% against a 75% benchmark (3, quantify). That matters because filling empty beds is the cheapest way to grow (4, link to goal). I'd like to understand why those three are empty: is it doctors or referrals? (5, next step)"</p>`,
     },
-    takeaways: ['Title, axes, legend, footnote, every time.', 'Lead with the insight, not a description.', 'Quantify it, link it to the goal, say where you’d go next.'],
+    takeaways: ['Title, axes and units, legend, footnote, every time.', 'Lead with the insight, not a description.', 'Quantify it, link it to the goal, say where you’d go next.'],
     quiz: [
       { q: 'What should you read before drawing any conclusion from a chart?', options: ['Only the biggest bar', 'Title, axes, units, legend and footnote', 'Nothing: speed matters most'], answer: 1, why: 'Units and footnotes change the meaning of a chart more often than you’d think.' },
       { q: 'Which is an insight rather than a description?', options: ['"The chart shows sales by region."', '"Sales fell in every region."', '"Two-thirds of the drop comes from one region, the North."'], answer: 2, why: 'It locates the problem and tells you where to dig next.' },

@@ -21,6 +21,7 @@ const CASES: Record<string, string[]> = {
   'Competitive response': ['freshmart'], 'Capacity / investment': ['desert-dairy'], 'Cost & operations': ['skyline-mro'], 'Market sizing': ['plugged-in'],
   'Valuation': ['packright', 'fithub-gyms'], 'Public sector': ['visit-al-noor'], 'Product: design': ['ridenow-drivers'],
   'Product: improve / grow': ['ridenow-drivers'], 'Product: metric drop': ['lingualeap'],
+  'Product launch': ['snackco-protein-bar', 'elm-home-security'],
 }
 const WHEN: Record<string, string> = {
   'Profitability': '"Profits are down. Why, and what should we do?" The most common case of all.',
@@ -39,6 +40,7 @@ const WHEN: Record<string, string> = {
   'Product: design': '"Design a product or feature for these users."',
   'Product: improve / grow': '"How would you improve our product?"',
   'Product: metric drop': '"Daily users fell 10%. Investigate."',
+  'Product launch': '"We have decided to launch this product. How should we do it?"',
 }
 
 function parse(build: string): Pick<Framework, 'mode' | 'branches' | 'steps'> {
@@ -59,7 +61,7 @@ function parse(build: string): Pick<Framework, 'mode' | 'branches' | 'steps'> {
 const CORE_FOR: Record<string, string> = {
   'Profitability': 'improve-profits', 'Revenue drop': 'improve-profits', 'Market entry': 'enter-market', 'Growth strategy': 'grow-business',
   'M&A': 'acquire-business', 'Private equity': 'pe-invest', 'Pricing': 'price-product', 'Competitive response': 'competitive-threat',
-  'Capacity / investment': 'make-investment', 'Cost & operations': 'reduce-costs', 'Valuation': 'acquire-business', 'Product: improve / grow': 'grow-business',
+  'Capacity / investment': 'make-investment', 'Cost & operations': 'reduce-costs', 'Valuation': 'acquire-business', 'Product launch': 'launch-product',
 }
 export const FRAMEWORKS: Framework[] = playbook.frameworks.map((f) => ({
   slug: slugify(f.type), type: f.type, ask: f.ask, trap: f.trap, ...parse(f.build), cases: CASES[f.type] || [], when: WHEN[f.type] || '', core: CORE_FOR[f.type],

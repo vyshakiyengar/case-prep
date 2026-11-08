@@ -42,7 +42,7 @@ export function IssueTree({ f, depth = 9 }: { f: CoreFramework; depth?: number }
   const root: CNode = { t: f.title, c: f.branches }
   const ref = useReveal<HTMLDivElement>(0.3)
   return (
-    <div ref={ref} className="graph-paper rounded-xl border border-line p-4 sm:p-5">
+    <div ref={ref} className="graph-paper rounded-lg border border-line p-4 sm:p-5">
       {f.example && depth > 1 && <p className="mb-2 text-[12.5px] font-medium text-muted">{f.example}</p>}
       <div className="hidden overflow-x-auto md:block"><div className="w-max py-1"><HNode n={root} level={0} depth={depth} /></div></div>
       <ul className="md:hidden"><Outline n={root} level={0} depth={depth} /></ul>
@@ -54,10 +54,10 @@ export function CoreBlock({ f, n }: { f: CoreFramework; n: number }) {
   return (
     <section id={f.id} className="scroll-mt-32">
       <div className="mb-2 flex flex-wrap items-baseline gap-x-3">
-        <span className="font-serif text-[15px] font-semibold text-teal-d">{String(n).padStart(2, '0')}</span>
-        <h3 className="text-[24px] font-semibold">{f.title}</h3>
+        <span className="font-serif text-[14.5px] font-semibold text-teal-d">{String(n).padStart(2, '0')}</span>
+        <h3 className="text-[21px] font-semibold">{f.title}</h3>
       </div>
-      <p className="mb-3 text-[15px] text-ink-2"><span className="text-muted">Use it when:</span> {f.when} <span className="font-medium text-violet-d">Ask first:</span> "{f.ask}"</p>
+      <p className="mb-3 text-[14.5px] text-ink-2"><span className="text-muted">Use it when:</span> {f.when} <span className="font-medium text-violet-d">Ask first:</span> "{f.ask}"</p>
       <IssueTree f={f} />
       <div className="mt-3 flex flex-wrap items-start justify-between gap-3">
         <p className="max-w-3xl flex-1 rounded-lg bg-teal-l/60 px-4 py-2.5 text-[14.5px] text-ink"><b className="font-semibold text-teal-d">Make it yours: </b>{f.tip}</p>
@@ -84,8 +84,8 @@ export function DriversGrid() {
 
 export function OtherCard({ f }: { f: OtherFramework }) {
   return (
-    <section id={f.id} className="min-w-0 scroll-mt-32 rounded-xl border border-line bg-white p-5">
-      <h3 className="text-[19px] font-semibold">{f.title}</h3>
+    <section id={f.id} className="min-w-0 scroll-mt-32 rounded-lg border border-line bg-white p-5">
+      <h3 className="text-[17px] font-semibold">{f.title}</h3>
       <p className="mt-0.5 mb-3 text-[14px] text-muted">{f.when}</p>
       {f.kind === 'groups' && (
         <div className="grid gap-2" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))' }}>
@@ -138,7 +138,7 @@ export function CoreFrameworksMini({ items }: { items: CoreFramework[] }) {
   return (
     <ol className="grid gap-3 lg:grid-cols-2">
       {items.map((f, i) => (
-        <li key={f.id} className="rounded-xl border border-line bg-white p-3">
+        <li key={f.id} className="rounded-lg border border-line bg-white p-3">
           <div className="mb-2 flex items-baseline justify-between gap-2">
             <span className="text-[14px] font-semibold text-ink"><span className="mr-1.5 text-teal-d">{i + 1}</span>{f.title}<span className="ml-2 text-[12px] font-medium capitalize text-muted">{f.family}</span></span>
             <Link to={`/frameworks#${f.id}`} className="shrink-0 text-[13px] font-medium text-violet-d hover:underline">Full tree</Link>

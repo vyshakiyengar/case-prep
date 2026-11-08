@@ -21,19 +21,19 @@ export default function Invite() {
   }
   let body: React.ReactNode
   if (inv === undefined) body = <p className="text-muted">Checking your invite…</p>
-  else if (inv === null) body = <><h1 className="text-[26px] font-semibold">This invite link doesn't work</h1><p className="mt-1 text-muted">Ask your partner to create a new one from their Partners page.</p></>
-  else if (inv.from === user?.uid) body = <><h1 className="text-[26px] font-semibold">This is your own invite</h1><p className="mt-1 text-muted">Send the link to your practice partner. When they accept, they appear on your Partners page.</p></>
-  else if (inv.acceptedBy && inv.acceptedBy !== user?.uid) body = <><h1 className="text-[26px] font-semibold">This invite has already been used</h1><p className="mt-1 text-muted">Ask {inv.fromName} for a new link.</p></>
+  else if (inv === null) body = <><h1 className="text-[22px] font-semibold">This invite link doesn't work</h1><p className="mt-1 text-muted">Ask your partner to create a new one from their Partners page.</p></>
+  else if (inv.from === user?.uid) body = <><h1 className="text-[22px] font-semibold">This is your own invite</h1><p className="mt-1 text-muted">Send the link to your practice partner. When they accept, they appear on your Partners page.</p></>
+  else if (inv.acceptedBy && inv.acceptedBy !== user?.uid) body = <><h1 className="text-[22px] font-semibold">This invite has already been used</h1><p className="mt-1 text-muted">Ask {inv.fromName} for a new link.</p></>
   else body = (
     <>
-      <h1 className="text-[26px] font-semibold">Practise with {inv.fromName}?</h1>
+      <h1 className="text-[22px] font-semibold">Practise with {inv.fromName}?</h1>
       <p className="mt-1 text-muted">You'll see each other's weekly summary: tracker score, cases logged, average score and latest fix. Your full case log stays private.</p>
       <Button className="mt-6 w-full py-3" onClick={accept} disabled={busy}>{busy ? 'Joining…' : `Become ${inv.fromName.split(' ')[0]}'s practice partner`}</Button>
     </>
   )
   return (
     <div className="graph-paper flex min-h-screen items-center justify-center px-4">
-      <div className="w-full max-w-md rounded-2xl border border-line bg-white p-7">
+      <div className="w-full max-w-md rounded-xl border border-line bg-white p-7">
         <Logo />
         <div className="mt-6">{body}</div>
         <Link to="/today" className="mt-6 inline-block text-[14px] text-muted hover:text-ink">Go to my prep</Link>

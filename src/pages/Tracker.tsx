@@ -13,7 +13,7 @@ export default function Tracker() {
     <>
       <PageHeader title="Tracker" intro="Tap a square when you complete a habit. Five or more in a day is a real prep day. Past days can be filled in if you forgot." />
       
-      <div className="overflow-x-auto rounded-xl border border-line bg-white">
+      <div className="overflow-x-auto rounded-lg border border-line bg-white">
         <table className="w-full min-w-[760px] border-collapse text-[14px]">
           <thead>
             <tr>

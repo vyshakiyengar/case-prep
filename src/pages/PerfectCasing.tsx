@@ -24,30 +24,30 @@ function useBoxes(): [Boxes, (b: Boxes) => void] {
 function Stage({ s, onTrain }: { s: ReturnType<typeof stageByN>; onTrain: (n: number) => void }) {
   const lesson = lessonBySlug(s.lesson)
   return (
-    <article id={`stage-${s.n}`} className="scroll-mt-32 rounded-2xl border border-line bg-white p-5 sm:p-7">
+    <article id={`stage-${s.n}`} className="scroll-mt-32 rounded-xl border border-line bg-white p-5 sm:p-7">
       <div className="flex items-baseline gap-3">
-        <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-ink font-serif text-[16px] font-semibold text-white">{s.n}</span>
+        <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-ink font-serif text-[15px] font-semibold text-white">{s.n}</span>
         <div>
-          <h2 className="text-[26px] leading-tight font-semibold">{s.title}</h2>
-          <p className="mt-1 text-[16px] text-ink-2">{s.why}</p>
+          <h2 className="text-[22px] leading-tight font-semibold">{s.title}</h2>
+          <p className="mt-1 text-[15px] text-ink-2">{s.why}</p>
         </div>
       </div>
       <ol className="mt-6 space-y-5">
         {s.moments.map((m) => (
-          <li key={m.name} className="grid gap-2 border-t border-line pt-5 first:border-t-0 first:pt-0 md:grid-cols-[1fr_1.1fr] md:gap-6">
+          <li key={m.name} className="grid gap-2 border-t border-line pt-5 first:border-t-0 first:pt-0 md:grid-cols-[1fr_1.1fr] md:gap-5">
             <div>
-              <h3 className="font-sans text-[16px] font-semibold text-ink">{m.name}</h3>
-              <p className="mt-1 text-[15px] text-ink-2">{m.do}</p>
+              <h3 className="font-sans text-[15px] font-semibold text-ink">{m.name}</h3>
+              <p className="mt-1 text-[14.5px] text-ink-2">{m.do}</p>
             </div>
             {m.say && (
-              <blockquote className="graph-paper rounded-lg border-l-4 border-teal px-4 py-3 font-serif text-[17px] leading-relaxed text-ink">
+              <blockquote className="graph-paper rounded-lg border-l-4 border-teal px-4 py-3 font-serif text-[16px] leading-relaxed text-ink">
                 <span className="mb-1 block font-sans text-[12.5px] font-medium text-teal-d">Say this</span>{m.say}
               </blockquote>
             )}
           </li>
         ))}
       </ol>
-      <p className="mt-6 rounded-lg bg-signal-l px-4 py-3 text-[15px] text-signal-d"><b className="font-semibold">Common mistake:</b> {s.mistake}</p>
+      <p className="mt-6 rounded-lg bg-signal-l px-4 py-3 text-[14.5px] text-signal-d"><b className="font-semibold">Common mistake:</b> {s.mistake}</p>
       <div className="mt-5 flex flex-wrap gap-2">
         <Button onClick={() => onTrain(s.n)}>Train these phrases</Button>
         {lesson && <Link to={`/learn/${lesson.slug}`} className="inline-flex items-center px-2 py-2 text-[14px] font-medium text-violet-d hover:underline">Read the lesson</Link>}
@@ -88,8 +88,8 @@ function Trainer({ stage }: { stage: number | null }) {
   if (!queue) return (
     <div className="grid gap-5 lg:grid-cols-[1.2fr_1fr]">
       <Section title={stage ? `Train stage ${stage}: ${stageByN(stage).title}` : 'Today’s phrase training'}>
-        <p className="text-ink-2">You'll see a moment from a real interview. Say your line <b className="font-semibold">out loud</b> within 10 seconds, then compare it with a model answer and repeat that out loud. Cards you miss come back sooner; cards you nail come back later.</p>
-        <p className="mt-3 text-[14px] text-muted">{stage ? `${CARDS.filter((c) => c.stage === stage).length} cards in this stage.` : `${dueCount} cards are due. A session is up to 10 cards, about 5 minutes.`}</p>
+        <p className="text-ink-2">You'll see a realistic interview moment. Say your line <b className="font-semibold">out loud</b> within 10 seconds, then compare it with a model answer and repeat that out loud. Cards you miss come back sooner; cards you nail come back later.</p>
+        <p className="mt-3 text-[14px] text-muted">{stage ? `${CARDS.filter((c) => c.stage === stage).length} cards in this stage.` : `${dueCount} cards to practise (new or due). A session is up to 10 cards, about 5 minutes.`}</p>
         <Button className="mt-4 px-6 py-3" onClick={() => { setQueue(build()); setI(0); setTally({ nailed: 0, almost: 0, missed: 0 }) }}>Start training</Button>
       </Section>
       <Section title="Your mastery by stage">
@@ -106,8 +106,8 @@ function Trainer({ stage }: { stage: number | null }) {
   )
 
   if (i >= queue.length) return (
-    <div className="graph-paper rounded-xl border border-line p-8 text-center">
-      <p className="font-serif text-[32px] font-semibold text-ink">{queue.length ? 'Session done' : 'Nothing due right now'}</p>
+    <div className="graph-paper rounded-lg border border-line p-5 text-center">
+      <p className="font-serif text-[27px] font-semibold text-ink">{queue.length ? 'Session done' : 'Nothing due right now'}</p>
       {queue.length > 0 && <p className="mt-1 text-ink-2">Nailed {tally.nailed}, almost {tally.almost}, missed {tally.missed}. Missed cards come back first next time.</p>}
       <div className="mt-5 flex justify-center gap-2">
         <Button onClick={() => setQueue(null)}>Back to training</Button>
@@ -124,9 +124,9 @@ function Trainer({ stage }: { stage: number | null }) {
         <span>Card {i + 1} of {queue.length}, stage {s.n}: {s.title}</span>
         <button onClick={() => setQueue(null)} className="hover:text-ink">End session</button>
       </div>
-      <div className="graph-paper rounded-xl border border-line p-6 sm:p-8">
+      <div className="graph-paper rounded-lg border border-line p-4 sm:p-5">
         <p className="text-[13px] font-medium text-muted">The moment</p>
-        <p className="mt-1 font-serif text-[22px] leading-snug font-semibold text-ink">{c.situation}</p>
+        <p className="mt-1 font-serif text-[19px] leading-snug font-semibold text-ink">{c.situation}</p>
         {!shown ? (
           <div className="mt-6 flex flex-wrap items-center gap-3">
             <Countdown key={c.id + i} seconds={10} label="Say it out loud" autoStart onEnd={() => setShown(true)} />
@@ -134,7 +134,7 @@ function Trainer({ stage }: { stage: number | null }) {
           </div>
         ) : (
           <>
-            <blockquote className="mt-5 rounded-lg border-l-4 border-teal bg-white px-4 py-3 font-serif text-[18px] leading-relaxed text-ink">{c.model}</blockquote>
+            <blockquote className="mt-5 rounded-lg border-l-4 border-teal bg-white px-4 py-3 font-serif text-[16.5px] leading-relaxed text-ink">{c.model}</blockquote>
             <p className="mt-2 text-[14px] text-muted">{c.why}</p>
             <p className="mt-3 rounded-md bg-marker-l px-3 py-2 text-[14px] text-ink">Now say the model line out loud twice, then once in your own words.</p>
             <div className="mt-5">
@@ -161,15 +161,14 @@ export default function PerfectCasing() {
   return (
     <>
       <PageHeader title="Perfect casing" intro="The choreography of a strong case, from the first sentence to the recommendation, with the exact words to use at each moment. Read it top to bottom once, then train the phrases daily until they come out on their own." />
-      <p className="mb-5 max-w-2xl text-[15.5px] text-ink-2">How to use it: read it once from top to bottom. Then say the lines out loud, and use the trainer at the bottom for five minutes a day.</p>
       <JumpBar items={nav} label="Jump to" />
-      <div className="space-y-6">
+      <div className="space-y-5">
         {STAGES_PC.slice(0, 2).map((s) => <Stage key={s.n} s={s} onTrain={train} />)}
         <Gate id="pc-gate" title="Sign in to see all 10 stages" body="Stages 3 to 10 cover clarifying, structuring, driving the case, charts, maths, brainstorming, the recommendation, and habits that matter throughout. Free.">
-          <div className="space-y-6">{STAGES_PC.slice(2).map((s) => <Stage key={s.n} s={s} onTrain={train} />)}</div>
+          <div className="space-y-5">{STAGES_PC.slice(2).map((s) => <Stage key={s.n} s={s} onTrain={train} />)}</div>
         </Gate>
         <section id="trainer" className="scroll-mt-32 pt-4">
-          <h2 className="mb-1 text-[28px] font-semibold">Phrase trainer</h2>
+          <h2 className="mb-1 text-[24px] font-semibold">Phrase trainer</h2>
           <p className="mb-4 text-muted">Five minutes a day. You see a moment from an interview, say your line out loud, then compare it with a model answer.</p>
           {user ? (
             <>
@@ -177,7 +176,7 @@ export default function PerfectCasing() {
               <Trainer key={stage ?? 'all'} stage={stage} />
             </>
           ) : (
-            <div className="flex flex-wrap items-center justify-between gap-4 rounded-xl border border-line bg-white p-5">
+            <div className="flex flex-wrap items-center justify-between gap-4 rounded-lg border border-line bg-white p-5">
               <p className="max-w-xl text-ink-2">The trainer remembers which phrases you've nailed and which you keep missing, so it needs you to sign in.</p>
               <SignInButton label="Sign in to train" />
             </div>

@@ -17,8 +17,8 @@ import { NotesBox } from '../components/NotesBox'
 function SectionBody({ s }: { s: Lesson['sections'][number] }) {
   return (
     <section>
-      <h3 className="text-[21px] font-semibold">{s.h}</h3>
-      <div className="rich mt-2 text-[16.5px] leading-[1.7] [&_p]:mb-3"><Rich html={s.body} /></div>
+      <h3 className="text-[18px] font-semibold">{s.h}</h3>
+      <div className="rich mt-2 text-[15.5px] leading-[1.7] [&_p]:mb-3"><Rich html={s.body} /></div>
     </section>
   )
 }
@@ -28,10 +28,10 @@ function LessonChapter({ l, n }: { l: Lesson; n: number }) {
   const done = !!data?.profile?.learned?.includes(l.slug)
   const freeCount = l.sections.length > 2 ? 2 : 1
   return (
-    <article id={l.slug} className="scroll-mt-32 rounded-2xl border border-line bg-white p-5 shadow-[0_1px_0_#E3E7ED,0_24px_48px_-36px_rgba(15,27,51,.4)] sm:p-9">
+    <article id={l.slug} className="scroll-mt-32 sm:rounded-xl sm:border sm:border-line sm:bg-white sm:p-9 sm:shadow-[0_1px_0_#E3E7ED,0_24px_48px_-36px_rgba(15,27,51,.4)]">
       <p className="text-[13.5px] text-muted">Lesson {n} of {LESSONS.length}, {l.minutes} min{done && <span className="ml-2 font-medium text-teal-d">Completed ✓</span>}</p>
-      <h2 className="mt-1 text-[30px] leading-tight font-semibold">{l.title}</h2>
-      <p className="mt-1 max-w-2xl text-[16.5px] text-muted">{l.summary}</p>
+      <h2 className="mt-1 text-[24px] leading-tight font-semibold sm:text-[26px]">{l.title}</h2>
+      <p className="mt-1 max-w-2xl text-[15.5px] text-muted">{l.summary}</p>
 
       <div className="mt-6 max-w-[68ch] space-y-7">
         {l.sections.slice(0, freeCount).map((s) => <SectionBody key={s.h} s={s} />)}
@@ -40,26 +40,26 @@ function LessonChapter({ l, n }: { l: Lesson; n: number }) {
             {l.sections.slice(freeCount).map((s) => <SectionBody key={s.h} s={s} />)}
 
             {l.example && (
-              <section className="graph-paper rounded-xl border border-line p-5 sm:p-6">
-                <h3 className="text-[19px] font-semibold">Worked example: {l.example.title.charAt(0).toLowerCase() + l.example.title.slice(1)}</h3>
-                <div className="mt-2 text-[16px] leading-[1.7]"><Rich html={l.example.body} /></div>
+              <section className="graph-paper rounded-lg border border-line p-4 sm:p-5">
+                <h3 className="text-[17px] font-semibold">Worked example: {l.example.title.charAt(0).toLowerCase() + l.example.title.slice(1)}</h3>
+                <div className="mt-2 text-[15px] leading-[1.7]"><Rich html={l.example.body} /></div>
                 {l.example.tree && <div className="mt-3"><StructureTree s={l.example.tree} /></div>}
               </section>
             )}
 
             {l.slug === 'structuring' && (
               <section id="core-frameworks" className="scroll-mt-32">
-                <h3 className="text-[21px] font-semibold">The eleven core frameworks</h3>
-                <p className="mt-1 mb-3 text-[16px] leading-relaxed text-ink-2">These eleven trees cover most cases you will get. Here is the first level of each. Learn them well enough to sketch from memory, then always rename the branches for your client. Each opens as a full tree on the frameworks page.</p>
+                <h3 className="text-[18px] font-semibold">The eleven core frameworks</h3>
+                <p className="mt-1 mb-3 text-[15px] leading-relaxed text-ink-2">These eleven trees cover most cases you will get. Here is the first level of each. Learn them well enough to sketch from memory, then always rename the branches for your client. Each opens as a full tree on the frameworks page.</p>
                 <CoreFrameworksMini items={CORE} />
-                <p className="mt-3 text-[14.5px] text-ink-2">Inside any branch, dig into the <Link to="/frameworks#drivers" className="font-medium text-violet-d hover:underline">second-order drivers</Link> (market, customers, competition, industry, execution, macro).</p>
+                <p className="mt-3 text-[14.5px] text-ink-2">Inside any branch, dig into the <Link to="/frameworks#drivers" className="font-medium text-violet-d hover:underline">second-order drivers</Link> (market, customers, competition, industry economics, our company, macro).</p>
               </section>
             )}
 
             {l.slug === 'charts-and-exhibits' && (
-              <section className="flex flex-wrap items-center justify-between gap-4 rounded-xl border-2 border-violet bg-white p-5">
+              <section className="flex flex-wrap items-center justify-between gap-4 rounded-lg border-2 border-violet bg-white p-5">
                 <div className="max-w-xl">
-                  <h3 className="text-[19px] font-semibold">Practise on 64 charts</h3>
+                  <h3 className="text-[17px] font-semibold">Practise on 64 charts</h3>
                   <p className="mt-1 text-ink-2">The graph library has bar, line, waterfall, scatter, Marimekko and more, each with a question, a model answer and the "so what". Do one of each type first.</p>
                 </div>
                 <LinkButton to="/graphs">Open the graph library</LinkButton>
@@ -68,9 +68,9 @@ function LessonChapter({ l, n }: { l: Lesson; n: number }) {
 
             {l.slug === 'how-you-come-across' && (
               <section id="exercises" className="scroll-mt-32">
-                <h3 className="text-[21px] font-semibold">The daily exercise menu</h3>
+                <h3 className="text-[18px] font-semibold">The daily exercise menu</h3>
                 <p className="mt-1 text-muted">Pick 2-3 a day. Tick them off in the tracker under mind, voice and reading. <Link to="/interview-skills" className="font-medium text-violet-d hover:underline">Full interview skills guide</Link></p>
-                <ul className="mt-3 divide-y divide-line rounded-xl border border-line bg-white">
+                <ul className="mt-3 divide-y divide-line rounded-lg border border-line bg-white">
                   {playbook.skills.map((s) => (
                     <li key={s.name} className="px-4 py-3">
                       <div className="flex flex-wrap items-baseline justify-between gap-2">
@@ -86,13 +86,13 @@ function LessonChapter({ l, n }: { l: Lesson; n: number }) {
 
             {l.tryIt && <TryIt t={l.tryIt} />}
 
-            <section className="rounded-xl border border-teal bg-teal-l/50 p-5">
-              <h3 className="text-[19px] font-semibold">Remember</h3>
-              <ul className="mt-2 list-disc space-y-1 pl-5 text-[16px] text-ink">{l.takeaways.map((t) => <li key={t}>{t}</li>)}</ul>
+            <section className="rounded-lg border border-teal bg-teal-l/50 p-5">
+              <h3 className="text-[17px] font-semibold">Remember</h3>
+              <ul className="mt-2 list-disc space-y-1 pl-5 text-[15px] text-ink">{l.takeaways.map((t) => <li key={t}>{t}</li>)}</ul>
             </section>
 
             <section>
-              <h3 className="text-[21px] font-semibold">Check yourself</h3>
+              <h3 className="text-[18px] font-semibold">Check yourself</h3>
               <div className="mt-3"><Quiz items={l.quiz} /></div>
             </section>
 
@@ -112,7 +112,7 @@ function PageTurner({ i, onTurn, top = false }: { i: number; onTurn: (to: number
   const prev = PAGES[i - 1], next = PAGES[i + 1]
   const pill = 'group inline-flex max-w-[48%] items-center gap-2 rounded-full border border-line bg-white px-3.5 py-1.5 text-[13.5px] text-ink-2 transition-[border-color,color,transform] duration-200 hover:border-teal hover:text-ink active:scale-[.98]'
   return (
-    <nav aria-label={top ? 'Course pages (top)' : 'Course pages'} className={`flex items-center justify-between gap-3 ${top ? 'mb-5' : 'mt-8'}`}>
+    <nav aria-label={top ? 'Course pages (top)' : 'Course pages'} className={`items-center justify-between gap-3 ${top ? 'mb-5 hidden sm:flex' : 'mt-8 flex'}`}>
       {prev ? (
         <button onClick={() => onTurn(i - 1)} className={pill}>
           <span aria-hidden className="text-teal-d transition-transform group-hover:-translate-x-0.5">←</span>
@@ -227,10 +227,10 @@ export default function Learn() {
         {i > 0 && <PageTurner i={i} onTurn={turn} top />}
         {page.id === 'case-map' && (
           <section id="case-map" className="scroll-mt-32">
-            <h2 className="text-[28px] leading-tight">First, the map: how a case interview flows</h2>
-            <p className="mt-1 mb-5 max-w-2xl text-[16px] text-ink-2">Every case has the same six steps and takes 30 to 40 minutes. Read these six lines, then turn the page to start lesson 1.</p>
+            <h2 className="text-[24px] leading-tight">First, the map: how a case interview flows</h2>
+            <p className="mt-1 mb-5 max-w-2xl text-[15px] text-ink-2">Most cases follow these six steps and take 20 to 40 minutes. Read these six lines, then turn the page to start lesson 1.</p>
             <CaseMap />
-            <p className="mt-4 text-[15px] text-ink-2">Want to see a whole case done well? <Link to="/perfect-casing" className="font-medium text-violet-d hover:underline">See the perfect case</Link></p>
+            <p className="mt-4 text-[14.5px] text-ink-2">Want to see a whole case done well? <Link to="/perfect-casing" className="font-medium text-violet-d hover:underline">See the perfect case</Link></p>
           </section>
         )}
 
@@ -243,19 +243,19 @@ export default function Learn() {
 
         {page.id === 'whats-next' && (
           <>
-            <section className="grid items-center gap-5 rounded-2xl border-2 border-teal bg-white p-6 md:grid-cols-[1fr_auto]">
+            <section className="grid items-center gap-5 rounded-xl border-2 border-teal bg-white p-5 md:grid-cols-[1fr_auto]">
               <div>
-                <h2 className="text-[24px] leading-tight">Next: perfect casing</h2>
+                <h2 className="text-[21px] leading-tight">Next: perfect casing</h2>
                 <p className="mt-1 text-ink-2">The course teaches each skill. Perfect casing puts them in order: the 10 stages of a strong case, the exact words to use at each, and a 5-minute daily trainer that makes those words automatic.</p>
               </div>
               <LinkButton to="/perfect-casing">Open perfect casing</LinkButton>
             </section>
             <Section title="Then: a 6-week practice plan" className="mt-6">
-              <p className="mb-4 text-muted">This is how to turn the course into an offer. The tracker in My prep follows the same plan.</p>
+              <p className="mb-4 text-muted">This is how to turn the course into steady, measurable practice. The tracker in My prep follows the same plan.</p>
               <ol className="grid gap-3 md:grid-cols-2 lg:grid-cols-3">
                 {playbook.plan.map((p, pi) => (
                   <li key={p.week} className="rounded-lg border border-line p-4">
-                    <div className={`font-serif text-[15px] font-semibold ${pi < 2 ? 'text-teal-d' : pi < 4 ? 'text-violet-d' : 'text-signal-d'}`}>{p.week}</div>
+                    <div className={`font-serif text-[14.5px] font-semibold ${pi < 2 ? 'text-teal-d' : pi < 4 ? 'text-violet-d' : 'text-signal-d'}`}>{p.week}</div>
                     <p className="mt-1 text-[14.5px] text-ink">{p.focus}</p>
                     <p className="mt-1.5 text-[13.5px] text-muted">Target: {p.volume}</p>
                   </li>

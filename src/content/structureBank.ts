@@ -1,39 +1,42 @@
-// The full structuring bank: every written problem, plus a "pick the best structure"
-// question built from each one. The three wrong options each carry one real flaw:
-// a missing bucket, two buckets that overlap, or a generic list that fits any case.
+// The full structuring bank: every written problem, the hand-written "pick the best
+// structure" questions, and a "find the overlap" question built from each problem:
+// the strong structure with one sub-item promoted to a bucket of its own. The student
+// has to name the bucket that really belongs inside another one.
 import { STRUCTURE_PICKS, STRUCTURE_PROMPTS } from './structureDrills'
 import type { StructPick, StructPrompt } from './structureDrills'
 import { MORE_PROMPTS } from './structureDrills2'
 
 export const ALL_PROMPTS: StructPrompt[] = [...STRUCTURE_PROMPTS, ...MORE_PROMPTS]
 
-const GENERIC: Record<StructPrompt['family'], string[][]> = {
-  diagnose: [['Internal factors', 'External factors', 'Other factors'], ['Market', 'Company', 'Competitors', 'Customers']],
-  decide: [['Pros', 'Cons', 'Risks'], ['Strategy', 'Operations', 'Finance', 'People']],
-  generate: [['Short-term ideas', 'Medium-term ideas', 'Long-term ideas'], ['People', 'Process', 'Technology']],
+export interface OverlapQ {
+  id: string
+  kind: 'overlap'
+  prompt: string
+  buckets: string[]
+  answer: number // index of the bucket that belongs inside another
+  parent: string
+  why: string
 }
-const hash = (s: string) => [...s].reduce((h, c) => (h * 31 + c.charCodeAt(0)) >>> 0, 7)
-/** "Rates and fees vs rivals" -> "Rates and fees vs rivals"; "Volume: x" -> "Volume" */
-const asBucket = (item: string) => { const t = item.split(/:|, | \(/)[0].trim(); return /^[a-z][A-Z]/.test(t) ? t : t.charAt(0).toUpperCase() + t.slice(1) }
+export type SpotQ = (StructPick & { kind: 'pick' }) | OverlapQ
 
-function derive(p: StructPrompt): StructPick {
-  const heads = p.tree.map((b) => b.head), n = heads.length, h = hash(p.id)
-  const gapAt = h % n
-  const overlapFrom = (gapAt + 1) % n            // the bucket whose sub-item gets promoted
-  const overlapDrop = (gapAt + 2) % n            // the bucket it pushes out
-  const sub = asBucket(p.tree[overlapFrom].items[0])
-  const overlap = heads.map((x, i) => (i === overlapDrop ? sub : x))
-  const generic = GENERIC[p.family][h % 2]
+const hash = (s: string) => [...s].reduce((h, c) => (h * 31 + c.charCodeAt(0)) >>> 0, 7)
+/** "Cost synergies: shared bakeries" -> "Cost synergies" */
+const asBucket = (item: string) => { const t = item.split(/:|, | \(|; /)[0].trim(); return /^[a-z][A-Z]/.test(t) ? t : t.charAt(0).toUpperCase() + t.slice(1) }
+
+function overlap(p: StructPrompt): OverlapQ {
+  const heads = p.tree.map((b) => b.head), h = hash(p.id)
+  // Every sub-item that reads as a bucket name: short, not a question, not a copy of a head.
+  const cands = p.tree.flatMap((b, bi) => b.items.map((it) => ({ bi, sub: asBucket(it) })))
+    .filter(({ sub }) => !sub.includes('?') && sub.length >= 4 && sub.length <= 40 && !heads.some((x) => x.toLowerCase() === sub.toLowerCase()))
+  const pick = cands.length ? cands[h % cands.length] : { bi: 0, sub: asBucket(p.tree[0].items[0]) }
+  const from = pick.bi, sub = pick.sub
+  const at = (h >>> 5) % (heads.length + 1)
+  const buckets = [...heads.slice(0, at), sub, ...heads.slice(at)]
   return {
-    id: `d-${p.id}`,
-    prompt: p.prompt,
-    options: [
-      { buckets: heads, flaw: 'good', why: `Covers the problem without overlaps, and is specific to it. ${p.start}` },
-      { buckets: heads.filter((_, i) => i !== gapAt), flaw: 'gap', why: `Leaves out "${heads[gapAt]}" (${p.tree[gapAt].items.join('; ').toLowerCase()}), which matters here.` },
-      { buckets: overlap, flaw: 'overlap', why: `"${sub}" is part of "${heads[overlapFrom]}", so two buckets cover the same ground, and "${heads[overlapDrop]}" drops out.` },
-      { buckets: generic, flaw: 'generic', why: 'Could open any case. It doesn\'t follow how this problem works, so it won\'t show you where to look.' },
-    ],
+    id: `o-${p.id}`, kind: 'overlap', prompt: p.prompt, buckets, answer: at, parent: heads[from],
+    why: `"${sub}" is part of "${heads[from]}", so those two buckets cover the same ground. Fold it back in and the structure is clean: ${heads.join(' / ')}.`,
   }
 }
 
-export const ALL_PICKS: StructPick[] = [...STRUCTURE_PICKS, ...ALL_PROMPTS.map(derive)]
+export const ALL_OVERLAPS: OverlapQ[] = ALL_PROMPTS.map(overlap)
+export const ALL_SPOT: SpotQ[] = [...STRUCTURE_PICKS.map((p) => ({ ...p, kind: 'pick' as const })), ...ALL_OVERLAPS]

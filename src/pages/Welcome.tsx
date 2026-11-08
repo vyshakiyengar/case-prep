@@ -19,10 +19,10 @@ export default function Welcome() {
     nav(next && next.startsWith('/') ? next : '/home', { replace: true })
   }
   return (
-    <div className="graph-paper flex min-h-screen items-center justify-center px-4 py-10">
-      <form onSubmit={submit} className="w-full max-w-md rounded-2xl border border-line bg-white p-7 shadow-[0_18px_40px_-24px_rgba(20,33,61,.35)]">
+    <div className="graph-paper flex min-h-screen items-center justify-center px-4 py-8">
+      <form onSubmit={submit} className="w-full max-w-md rounded-xl border border-line bg-white p-7 shadow-[0_18px_40px_-24px_rgba(20,33,61,.35)]">
         <Logo />
-        <h1 className="mt-6 text-[28px] font-semibold">Set up your prep</h1>
+        <h1 className="mt-6 text-[24px] font-semibold">Set up your prep</h1>
         <p className="mt-1 text-muted">Two dates are all it needs. You can change them later in Settings.</p>
         <div className="mt-6 space-y-4">
           <Field label="Your name"><input className={inputCls} value={name} onChange={(e) => setName(e.target.value)} required /></Field>

@@ -82,7 +82,7 @@ const G: Record<Skill, Gen> = {
     const p = l === 1 ? pick([5, 10, 20, 25, 50, 15]) : l === 2 ? pick([12, 15, 35, 45, 8, 18, 65, 85]) : pick([2.5, 7.5, 12.5, 17.5, 37.5, 62.5, 0.5])
     const base = l === 1 ? pick([40, 60, 80, 120, 240, 360, 480, 800]) : l === 2 ? pick([240, 340, 480, 620, 1200, 1240, 4500, 860]) : pick([1.2e6, 3.6e6, 840e3, 4.8e6, 16e6, 2.4e9])
     const a = (p * base) / 100
-    const unit = l === 3 ? (base >= 1e9 ? U.M : U.k) : U.none
+    const unit = l === 3 ? (base >= 1e9 ? U.M : a >= 1e4 ? U.k : U.none) : U.none
     const tens = p >= 10 ? `10% is ${short(base / 10)}` : `1% is ${short(base / 100)}`
     return mk('percent', l, `What is ${p}% of ${l === 3 ? short(base) : n(base)}?`, a / unit.scale, unit, short(a),
       `Build it from easy pieces: ${tens}, then scale to ${p}%.`)
@@ -99,8 +99,8 @@ const G: Record<Skill, Gen> = {
     const c = l === 1 ? pick([10, 20, 25, 50, -10, -20, -50, 100]) : l === 2 ? pick([15, 30, 40, 60, -15, -30, -40, 75]) : pick([12.5, 37.5, -12.5, -37.5, 62.5, 6.25, 87.5])
     const a = pick([40, 80, 120, 160, 200, 240, 320, 400, 480, 640, 800])
     const b = a * (1 + c / 100)
-    return mk('change', l, `Sales go from ${n(a)} to ${n(b)}. What's the percentage change?`, c, U.pct, signed(c),
-      `(new − old) ÷ old = ${b < a ? "−" : ""}${n(Math.abs(b - a))} ÷ ${n(a)} = ${signed(c)}.`, { abs: 0.1 })
+    return mk('change', l, `Sales go from ${n(a)} to ${n(b)}. What's the percentage change?`, c, U.pct, signed(c, 2),
+      `(new − old) ÷ old = ${b < a ? "−" : ""}${n(Math.abs(b - a))} ÷ ${n(a)} = ${signed(c, 2)}.`, { abs: 0.1 })
   },
   multiply: (l) => {
     let a: number, b: number
@@ -109,7 +109,7 @@ const G: Record<Skill, Gen> = {
     else { a = pick([1.8, 2.4, 3.6, 4.2, 0.35, 6.4]) * 1e6; b = pick([0.15, 0.25, 1.25, 12, 45, 0.075]) * pick([1, 10]) }
     const r = a * b
     const unit = r >= 1e9 ? U.B : r >= 1e6 ? U.M : r >= 1e4 ? U.k : U.none
-    return mk('multiply', l, `${short(a)} × ${short(b)} = ?`, r / unit.scale, unit, short(r),
+    return mk('multiply', l, `${short(a)} × ${short(b, 3)} = ?`, r / unit.scale, unit, short(r),
       `Multiply the digits, then count the zeros: write both as a number × a power of ten.`)
   },
   divide: (l) => {
@@ -118,8 +118,8 @@ const G: Record<Skill, Gen> = {
     else if (l === 2) { per = pick([80, 150, 250, 400, 1200, 75]); count = pick([1.2, 1.6, 2, 2.4, 3.2, 0.8]) * 1e6 }
     else { per = pick([12000, 2400, 350, 4500, 65]); count = pick([350e3, 1.4e6, 28e6, 72e3, 4.5e6]) }
     const total = per * count
-    return mk('divide', l, `${money(total)} of revenue from ${short(count)} customers. Revenue per customer?`, per, U.usd, money(per),
-      `Cancel the zeros first: ${short(total)} ÷ ${short(count)}.`)
+    return mk('divide', l, `${money(total, 4)} of revenue from ${short(count)} customers. Revenue per customer?`, per, U.usd, money(per),
+      `Cancel the zeros first: ${short(total, 4)} ÷ ${short(count)}.`)
   },
   fractions: (l) => {
     const pool: [number, number][] = l === 1 ? [[1, 4], [3, 4], [1, 5], [2, 5], [1, 8], [3, 8], [5, 8], [7, 8], [1, 20]]
@@ -127,8 +127,8 @@ const G: Record<Skill, Gen> = {
         : [[1, 7], [2, 7], [3, 7], [1, 11], [2, 11], [5, 12], [7, 12], [1, 15], [4, 9]]
     const [a, b] = pick(pool)
     const v = (a / b) * 100
-    const anchor = b % 7 === 0 ? '1/7 ≈ 14.3%' : b % 11 === 0 ? '1/11 ≈ 9.1%' : b % 9 === 0 ? '1/9 ≈ 11.1%' : b % 3 === 0 ? '1/3 ≈ 33.3%, 1/6 ≈ 16.7%' : '1/8 = 12.5%'
-    return mk('fractions', l, `${a}/${b} as a percentage?`, v, U.pct, pctS(v, 1), `Know the anchors (${anchor}) and multiply up.`, { abs: 0.15 })
+    const anchor = b % 7 === 0 ? '1/7 ≈ 14.3%' : b % 11 === 0 ? '1/11 ≈ 9.1%' : b % 9 === 0 ? '1/9 ≈ 11.1%' : b % 3 === 0 ? '1/3 ≈ 33.3%, 1/6 ≈ 16.7%, 1/12 ≈ 8.3%' : b % 5 === 0 ? '1/5 = 20%, 1/20 = 5%' : b === 4 ? '1/4 = 25%' : '1/8 = 12.5%'
+    return mk('fractions', l, `${a}/${b} as a percentage?`, v, U.pct, pctS(v, 2), `Know the anchors (${anchor}) and multiply up.`, { abs: 0.15 })
   },
   margin: (l) => {
     if (l === 1) {
@@ -149,8 +149,8 @@ const G: Record<Skill, Gen> = {
     if (l === 3) {
       const units = pick([100, 150, 200, 250, 400]) * 1000; const market = units / pick([0.05, 0.08, 0.1, 0.125, 0.2, 0.25])
       const fixed = c * units; const share = (units / market) * 100
-      return mk('breakeven', l, `Fixed costs ${money(fixed)}, price $${p}, variable cost $${n(v)}. The market is ${short(market)} units a year. What market share is needed to break even?`,
-        share, U.pct, pctS(share, 1), `Breakeven units = ${money(fixed)} ÷ $${n(c)} = ${short(units)}; ÷ ${short(market)} market.`, { abs: 0.2 })
+      return mk('breakeven', l, `Fixed costs ${money(fixed, 4)}, price $${p}, variable cost $${n(v)} per unit. The market is ${short(market, 4)} units a year. What market share is needed to break even?`,
+        share, U.pct, pctS(share, 1), `Breakeven units = ${money(fixed, 4)} ÷ $${n(c)} = ${short(units)}; ÷ ${short(market, 4)} market.`, { abs: 0.2 })
     }
     const units = (l === 1 ? pick([10, 20, 40, 50]) : pick([120, 150, 240, 360, 450])) * 1000
     const fixed = c * units
@@ -164,14 +164,14 @@ const G: Record<Skill, Gen> = {
         `Rule of 72: 72 ÷ ${r} ≈ ${n(72 / r, 1)}. (Exact: ${n(exact, 1)}.)`, { abs: 0.6 })
     }
     if (l === 2) {
-      const base = pick([100, 200, 400, 50]); const r = pick([10, 20, 5, 15]); const y = pick([2, 3]); const v = base * (1 + r / 100) ** y
+      const base = pick([100, 200, 400, 50]); const r = pick([10, 15, 20]); const y = pick([2, 3]); const v = base * (1 + r / 100) ** y
       return mk('growth', l, `${n(base)} grows ${r}% a year for ${y} years. Value at the end?`, v, U.none, n(v, 1),
-        `Compound, don't add: ${n(base)} × ${n(1 + r / 100)}^${y}.`, { rel: 0.01 })
+        `Compound, don't add: ${n(base)} × ${n(1 + r / 100)}^${y}.`, { rel: 0.007 })
     }
     const [a, b, y] = pick([[50, 80, 4], [100, 150, 3], [40, 100, 5], [200, 300, 4], [60, 90, 2], [100, 200, 6]] as [number, number, number][])
     const cagr = ((b / a) ** (1 / y) - 1) * 100
     return mk('growth', l, `Sales grew from $${a}M to $${b}M over ${y} years. CAGR?`, cagr, U.pct, pctS(cagr, 1),
-      `CAGR = (end ÷ start)^(1/years) − 1 = ${n(b / a, 2)}^(1/${y}) − 1. Check by compounding back.`, { abs: 0.5 })
+      `CAGR = (end ÷ start)^(1/years) − 1 = ${n(b / a, 2)}^(1/${y}) − 1. Check by compounding back.`, { abs: 1 })
   },
   mix: (l) => {
     if (l === 1) {
@@ -195,7 +195,7 @@ const G: Record<Skill, Gen> = {
     if (l === 1) {
       const pop = pick([20, 40, 60, 80]) * 1e6; const pen = pick([10, 20, 25, 50]); const spend = pick([20, 40, 50, 100, 120])
       const v = (pop * pen) / 100 * spend
-      return mk('sizing', l, `${short(pop)} people, ${pen}% buy, each spends $${spend} a year. Market size?`, v / 1e6, U.usdM, money(v),
+      return mk('sizing', l, `${short(pop)} people, ${pen}% buy, each spends $${spend} a year. Market size?`, v / (v >= 1e9 ? 1e9 : 1e6), v >= 1e9 ? U.usdB : U.usdM, money(v),
         `${short(pop)} × ${pen}% = ${short((pop * pen) / 100)} buyers × $${spend}.`)
     }
     const hh = pick([25, 30, 40, 50, 120]) * 1e6; const pen = pick([20, 30, 40, 60]); const freq = pick([2, 4, 6, 12]); const price = pick([15, 25, 30, 50, 8])
@@ -220,9 +220,9 @@ const G: Record<Skill, Gen> = {
       return mk('value', l, `Cash flow next year $${cf}M, growing ${g}% a year forever. Discount rate ${r}%. Value?`, cf / ((r - g) / 100), U.usdM, money((cf * 1e6) / ((r - g) / 100)),
         `Growing perpetuity = cash flow ÷ (rate − growth) = ${cf} ÷ ${n((r - g) / 100)}.`)
     }
-    const amt = pick([1, 2, 5, 10]); const r = pick([5, 10, 20]); const y = pick([1, 2, 3]); const v = amt / (1 + r / 100) ** y
+    const amt = pick([1, 2, 5, 10]); const r = pick([10, 20]); const y = pick([1, 2, 3]); const v = amt / (1 + r / 100) ** y
     return mk('value', l, `What is $${amt}M received in ${y} year${y > 1 ? 's' : ''} worth today at ${r}%?`, v, U.usdM, `$${n(v, 2)}M`,
-      `Divide by (1 + rate)^years: ${amt} ÷ ${n(1 + r / 100)}^${y}.`, { rel: 0.01 })
+      `Divide by (1 + rate)^years: ${amt} ÷ ${n(1 + r / 100)}^${y}.`, { rel: 0.007 })
   },
   payback: (l) => {
     if (l === 1) {
@@ -255,8 +255,12 @@ const SUFFIX: [RegExp, number][] = [
 ]
 /** Parse "1.2M", "$1,200,000", "37.5%", "2.5x", "4 years". Returns the value in the question's unit. */
 export function parseAnswer(raw: string, unit: Unit): number | null {
-  let s = raw.trim().toLowerCase().replace(/[,\s$£€]/g, '').replace(/[−–]/g, '-')
+  let s = raw.trim().toLowerCase()
+  // "37,5" written with a decimal comma
+  if (!s.includes('.') && /^[−–+-]?\d+,\d{1,2}(?!\d)/.test(s)) s = s.replace(',', '.')
+  s = s.replace(/[,\s$£€]/g, '').replace(/[−–]/g, '-').replace(/^\+/, '')
   s = s.replace(/(years?|yrs?|months?|mths?|units?|x|×|times)$/, '')
+  if (unit.label === 'months') s = s.replace(/mo?$/, '')
   const isPct = s.endsWith('%')
   if (isPct) s = s.slice(0, -1)
   let mult = 0
@@ -278,6 +282,9 @@ export function isCorrect(q: SpeedQ, raw: string): boolean {
     return d < 1e-9
   }
   if (ok(v)) return true
+  // A number typed out in full ("63,000" when the box is in thousands)
+  const bare = raw.toLowerCase().replace(/(years?|yrs?|months?|mths?|units?|%)\s*$/, '').trim()
+  if (q.unit.scale > 1 && !/(bn|billion|b|mn|million|mm|m|thousand|k)$/.test(bare) && ok(v / q.unit.scale)) return true
   // "0.375" for 37.5% is fine too
   if (q.unit.pct && Math.abs(v) <= 1.5 && !raw.includes('%') && ok(v * 100)) return true
   return false

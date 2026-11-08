@@ -35,7 +35,7 @@ export const PREP: Item[] = [
   { to: '/tracker', label: 'Tracker', icon: 'M4 5h16v14H4zM4 10h16M9 5v14' },
   { to: '/cases', label: 'Case log', icon: 'M6 4h12v16H6zM9 8h6M9 12h6M9 16h3' },
   { to: '/notes', label: 'My notes', icon: 'M6 3h9l3 3v15H6zM9 9h6M9 13h6M9 17h4' },
-  { to: '/stories', label: 'FIT stories', icon: 'M5 5h14v10H9l-4 4zM9 9h6M9 12h4' },
+  { to: '/stories', label: 'Fit stories', icon: 'M5 5h14v10H9l-4 4zM9 9h6M9 12h4' },
   { to: '/partners', label: 'Partners', icon: 'M9 11a3 3 0 1 0 0-6 3 3 0 0 0 0 6zM3 19c0-3 3-5 6-5s6 2 6 5M16 5a3 3 0 0 1 0 6M18 14c2 .6 3 2.4 3 5' },
   { to: '/perks', label: 'Student perks', icon: 'M3 9l9-5 9 5-9 5-9-5zM7 11.5V16c0 1.5 2.5 3 5 3s5-1.5 5-3v-4.5M21 9v6' },
 ]
@@ -46,14 +46,16 @@ export function Icon({ d }: { d: string }) {
 
 function NavGroup({ title, items }: { title: string; items: Item[] }) {
   return (
-    <div className={title ? 'mt-6' : 'mt-4'}>
-      {title && <div className="px-3 pb-1.5 font-serif text-[13.5px] italic text-[#8C98AE]">{title}</div>}
-      {items.map((n) => (
-        <NavLink key={n.to} to={n.to} end={n.end}
-          className={({ isActive }) => `relative flex items-center gap-3 rounded-md px-3 py-[7px] text-[14.5px] transition-colors ${isActive ? 'bg-white/[0.07] text-white before:absolute before:top-1/2 before:-left-1 before:h-5 before:w-[3px] before:-translate-y-1/2 before:rounded-full before:bg-teal' : 'text-[#B8C2D3] hover:bg-white/[0.05] hover:text-white'}`}>
-          <span className="opacity-80"><Icon d={n.icon} /></span>{n.label}
-        </NavLink>
-      ))}
+    <div className={title ? 'mt-4' : 'mt-3'}>
+      {title && <div className="flex items-center gap-2 px-2.5 pb-1 text-[11.5px] font-medium tracking-[0.02em] text-[#8C98AE]"><span aria-hidden className="h-[7px] w-[7px] rounded-[2px] border border-[#8C98AE]/70" />{title}</div>}
+      <div className={title ? 'nav-branch ml-[15px] pl-[11px]' : ''}>
+        {items.map((n) => (
+          <NavLink key={n.to} to={n.to} end={n.end}
+            className={({ isActive }) => `${title ? 'nav-twig' : ''} relative flex items-center gap-2.5 rounded-md px-2.5 py-[5px] text-[13.5px] transition-colors ${isActive ? 'is-active bg-white/[0.07] text-white' : 'text-[#B8C2D3] hover:bg-white/[0.05] hover:text-white'}`}>
+            <span className="opacity-75 [&_svg]:h-[16px] [&_svg]:w-[16px]"><Icon d={n.icon} /></span>{n.label}
+          </NavLink>
+        ))}
+      </div>
     </div>
   )
 }
@@ -167,11 +169,11 @@ export default function AppShell() {
         </div>
       </aside>
 
-      <header className="sticky top-0 z-20 flex items-center justify-between border-b border-line bg-white/95 px-4 py-3 backdrop-blur lg:hidden">
-        <Link to="/home"><Logo /></Link>
+      <header className="sticky top-0 z-20 flex items-center justify-between border-b border-line/80 bg-white/85 px-4 py-2 backdrop-blur-xl lg:hidden">
+        <Link to="/home"><Logo height={24} /></Link>
         <div className="flex items-center gap-3">
           <button type="button" onClick={() => setMobileOpen((o) => !o)} aria-expanded={mobileOpen} aria-controls="mobile-sections" aria-label={mobileOpen ? 'Close menu' : 'Open menu: all sections'}
-            className="grid h-10 w-10 place-items-center rounded-lg border border-line bg-white text-ink hover:border-violet"><Icon d={mobileOpen ? CLOSE : MENU} /></button>
+            className="grid h-9 w-9 place-items-center rounded-lg text-ink hover:bg-canvas"><Icon d={mobileOpen ? CLOSE : MENU} /></button>
           {user ? <NavLink to="/settings" aria-label="Settings"><Avatar name={name} photo={user.photoURL} /></NavLink> : <SignInLink />}
         </div>
       </header>
@@ -184,19 +186,25 @@ export default function AppShell() {
 
       {user?.provider === 'password' && !user.emailVerified && <VerifyBanner email={user.email} />}
 
-      <main className="mx-auto max-w-6xl px-4 pt-6 pb-28 sm:px-6 lg:px-10 lg:pt-10 lg:pb-16"><SignInWall><Outlet /></SignInWall></main>
+      <main className="mx-auto max-w-6xl px-4 pt-4 pb-28 sm:px-6 lg:px-9 lg:pt-7 lg:pb-14"><SignInWall><Outlet /></SignInWall></main>
 
       <MobileSheet open={mobileOpen} onClose={closeMenu} user={!!user} isAdmin={isAdmin} />
 
-      <nav aria-label="Main" className="fixed inset-x-0 bottom-0 z-40 grid grid-cols-5 border-t border-line bg-white pb-[env(safe-area-inset-bottom)] lg:hidden">
+      <nav aria-label="Main" className="tabbar fixed inset-x-2.5 bottom-[calc(8px+env(safe-area-inset-bottom))] z-40 grid grid-cols-5 rounded-2xl p-1 lg:hidden">
+        {(() => {
+          const tabs = TABS(!!user)
+          const idx = mobileOpen ? 4 : tabs.findIndex((t) => loc.pathname === t.to || loc.pathname.startsWith(t.to + '/'))
+          const at = idx < 0 ? 4 : idx
+          return <span aria-hidden className="tab-pill" style={{ transform: `translateX(${at * 100}%)` }} />
+        })()}
         {TABS(!!user).map((n) => (
           <NavLink key={n.to} to={n.to} end={n.end}
-            className={({ isActive }) => `flex flex-col items-center gap-0.5 py-2 text-[10.5px] font-medium ${isActive && !mobileOpen ? 'text-ink' : 'text-faint'}`}>
+            className={({ isActive }) => `relative z-[1] flex flex-col items-center gap-0.5 rounded-lg py-1.5 text-[10.5px] font-medium transition-colors ${isActive && !mobileOpen ? 'text-white' : 'text-muted'}`}>
             <Icon d={n.icon} /><span className="truncate">{n.label}</span>
           </NavLink>
         ))}
         <button type="button" onClick={() => setMobileOpen((o) => !o)} aria-expanded={mobileOpen} aria-controls="mobile-sections"
-          className={`flex flex-col items-center gap-0.5 py-2 text-[10.5px] font-medium ${mobileOpen || !TABS(!!user).some((t) => loc.pathname.startsWith(t.to)) ? 'text-ink' : 'text-faint'}`}>
+          className={`relative z-[1] flex flex-col items-center gap-0.5 rounded-lg py-1.5 text-[10.5px] font-medium transition-colors ${mobileOpen || !TABS(!!user).some((t) => loc.pathname === t.to || loc.pathname.startsWith(t.to + '/')) ? 'text-white' : 'text-muted'}`}>
           <Icon d={mobileOpen ? CLOSE : MENU} /><span>More</span>
         </button>
       </nav>

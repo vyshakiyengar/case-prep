@@ -43,35 +43,35 @@ export default function VerifySchool() {
   }, [backend, user]) // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
-    <div className="graph-paper flex min-h-screen items-center justify-center px-4 py-10">
-      <div className="w-full max-w-lg rounded-2xl border border-line bg-white p-7">
+    <div className="graph-paper flex min-h-screen items-center justify-center px-4 py-8">
+      <div className="w-full max-w-lg rounded-xl border border-line bg-white p-7">
         <Logo />
         <div className="mt-6">
           {state === 'working' && <p className="text-muted" role="status">Verifying your school email…</p>}
           {state === 'need-details' && (
             <>
-              <h1 className="text-[26px] font-semibold">Confirm your details</h1>
+              <h1 className="text-[22px] font-semibold">Confirm your details</h1>
               <p className="mt-1 mb-5 text-muted">You opened the link on a different device or browser, so enter the same school email again.</p>
               <SchoolForm submitLabel="Verify" onSubmit={finish} />
             </>
           )}
           {state === 'done' && (
             <>
-              <h1 className="text-[26px] font-semibold">You're verified</h1>
+              <h1 className="text-[22px] font-semibold">You're verified</h1>
               <p className="mt-1 text-muted">Your student perks are unlocked.</p>
               <Link to="/perks" className="mt-5 inline-flex rounded-lg bg-ink px-5 py-2.5 font-medium text-white">See my perks</Link>
             </>
           )}
           {state === 'error' && (
             <>
-              <h1 className="text-[26px] font-semibold">Verification didn't work</h1>
+              <h1 className="text-[22px] font-semibold">Verification didn't work</h1>
               <p className="mt-1 text-ink-2">{msg}</p>
               <Link to="/perks" className="mt-5 inline-flex rounded-lg bg-ink px-5 py-2.5 font-medium text-white">Back to Student perks</Link>
             </>
           )}
           {state === 'not-a-link' && (
             <>
-              <h1 className="text-[26px] font-semibold">This isn't a verification link</h1>
+              <h1 className="text-[22px] font-semibold">This isn't a verification link</h1>
               <p className="mt-1 text-muted">Open the link from the email we sent to your school address, or start again.</p>
               <Link to="/perks" className="mt-5 inline-flex rounded-lg bg-ink px-5 py-2.5 font-medium text-white">Go to Student perks</Link>
             </>

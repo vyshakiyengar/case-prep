@@ -40,7 +40,7 @@ const TRY: Record<string, Lesson['tryIt']> = {
     prompt: 'A UK university wants to attract more international students. Give your ideas in 2-3 buckets, then pick one to start with.',
     model: 'Attract: scholarships in priority countries, partnerships with schools abroad, better rankings visibility. Convert: faster offers, visa and accommodation support, alumni calls with applicants. Access: joint programmes and online pathway courses. Start with conversion: it\u2019s fast and works on students who already applied.' },
   'recommendation': { seconds: 60,
-    prompt: 'You found: the bakery chain\u2019s target cities are growing 8% a year; a new site breaks even in about 2 years; but opening five cities at once would mean moving three of your best managers. Give a 60-second recommendation out loud.',
+    prompt: 'You found: the bakery chain\u2019s target cities are growing 8% a year; a new site pays back its investment in about 2 years; but opening five cities at once would mean moving three of your best managers. Give a 60-second recommendation out loud.',
     model: '"I recommend expanding, but in two phases rather than all five cities at once. The market grows 8% a year and a site pays back in about two years, so the opportunity is real. The main risk is management: moving three top managers could hurt existing shops. So start with two cities, hire and train managers in parallel, and open the other three once those sites hit their numbers."' },
   'how-you-come-across': { seconds: 60,
     prompt: 'Record yourself answering "Why consulting?" for 60 seconds. Play it back and count your filler words (um, like, sort of). Then record it again with a silent pause wherever a filler was.',

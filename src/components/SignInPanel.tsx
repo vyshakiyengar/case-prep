@@ -33,7 +33,7 @@ export function SignInPanel({ compact = false }: { compact?: boolean }) {
     setErr(''); setNote('')
     if (mode === 'signup') {
       if (!name.trim()) return setErr('Add your name.')
-      if (look?.personal) return setErr('Use your school email, like name@london.edu. For a personal email, use Google instead.')
+      if (look?.personal) return setErr('Use your school email, like name@school.edu. For a personal email, use Google instead.')
       if (password.length < 8) return setErr('Use a password of at least 8 characters.')
     }
     setBusy(true)
@@ -46,7 +46,7 @@ export function SignInPanel({ compact = false }: { compact?: boolean }) {
     } finally { setBusy(false) }
   }
 
-  const btn = 'flex w-full items-center justify-center gap-3 rounded-lg px-5 py-3 text-[15px] font-medium transition-[transform,background-color,border-color] duration-150 active:scale-[.99]'
+  const btn = 'flex w-full items-center justify-center gap-3 rounded-lg px-5 py-3 text-[14.5px] font-medium transition-[transform,background-color,border-color] duration-150 active:scale-[.99]'
 
   if (mode === 'choose') return (
     <div className="space-y-2.5">
@@ -73,7 +73,7 @@ export function SignInPanel({ compact = false }: { compact?: boolean }) {
         </label>
       )}
       <label className="block text-[13.5px] text-ink-2">School email
-        <input className={`${inputCls} mt-1`} type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="name@london.edu" autoComplete="email" required />
+        <input className={`${inputCls} mt-1`} type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="name@school.edu" autoComplete="email" required />
         {mode === 'signup' && look?.school && <span className="mt-1 block text-[12.5px] text-teal-d">{look.school}</span>}
       </label>
       {mode !== 'reset' && (

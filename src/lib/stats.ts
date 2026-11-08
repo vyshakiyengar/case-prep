@@ -33,7 +33,7 @@ export const byDate = (cases: CaseEntry[]) => [...cases].sort((a, b) => (a.date 
 
 export function improvement(cases: CaseEntry[]) {
   const o = byDate(cases).map(caseOverall).filter((x): x is number => x !== null)
-  const first = avg(o.slice(0, 5)), last = o.length >= 5 ? avg(o.slice(-5)) : null
+  const first = avg(o.slice(0, 5)), last = o.length >= 10 ? avg(o.slice(-5)) : null
   const fixedRated = cases.filter((c) => c.fixed)
   const stuck = fixedRated.length ? fixedRated.filter((c) => c.fixed === 'Yes').length / fixedRated.length : null
   return { first, last, change: first !== null && last !== null ? Math.round((last - first) * 10) / 10 : null, stuck, best: o.length ? Math.max(...o) : null }

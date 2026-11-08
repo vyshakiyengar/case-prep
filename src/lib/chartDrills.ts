@@ -78,8 +78,8 @@ const GEN: Record<ChartQ['family'], () => ChartQ | null> = {
     if (values[a] === values[b]) return null
     const gap = (values[a] / values[b] - 1) * 100
     return { id: id('bar'), family: 'Bar', context: `${co} is comparing its biggest and a smaller ${labels === REGIONS ? 'region' : 'product line'}.`, chart,
-      q: `By what percentage is ${labels[a]}'s revenue higher than ${labels[b]}'s?`, answer: gap, unit: '%', tol: 1.5, show: `${n(gap, 0)}%`,
-      why: `Divide by the smaller one: ${n(values[a])} ÷ ${n(values[b])} = ${n(values[a] / values[b], 2)}, so ${n(gap, 0)}% higher. (Not ${n(values[a] - values[b])}%: that's the gap in $M.)` }
+      q: `By what percentage is ${labels[a]}'s revenue higher than ${labels[b]}'s?`, answer: gap, unit: '%', tol: Math.max(1.5, gap * 0.01), show: `${n(gap, 0)}%`,
+      why: `Divide by the smaller one: ${n(values[a])} ÷ ${n(values[b])} = ${n(values[a] / values[b], 2)}, so ${n(gap, 0)}% higher.${values[b] !== 100 ? ` (Not ${n(values[a] - values[b])}%: that's the gap in $M.)` : ''}` }
   },
   Line: () => {
     const co = pick(COMPANIES)
@@ -97,9 +97,11 @@ const GEN: Record<ChartQ['family'], () => ChartQ | null> = {
     }
     if (t < 0.5) {
       const yrs = YEARS.length - 1, c = ((values[yrs] / values[0]) ** (1 / yrs) - 1) * 100
+      // Skip charts where dividing total growth by the years lands within the tolerance
+      if (Math.abs(((values[yrs] / values[0] - 1) * 100) / yrs - c) <= 1) return null
       return { id: id('line'), family: 'Line', context: `The CEO says ${co} has "grown fast for five years".`, chart,
-        q: `What is the compound annual growth rate (CAGR) from ${YEARS[0]} to ${YEARS[yrs]}?`, answer: c, unit: '%', tol: 1, show: `${n(c, 1)}%`,
-        why: `(${n(values[yrs])} ÷ ${n(values[0])})^(1/${yrs}) − 1 = ${n(values[yrs] / values[0], 2)}^(0.2) − 1 = ${n(c, 1)}%. Quick check: ${yrs} years at ${n(c, 0)}% compounds to about ×${n((1 + c / 100) ** yrs, 2)}.` }
+        q: `What is the compound annual growth rate (CAGR) from ${YEARS[0]} to ${YEARS[yrs]}?`, answer: c, unit: '%', tol: 1, show: `${c < 0 ? '−' : ''}${n(Math.abs(c), 1)}%`,
+        why: `(${n(values[yrs])} ÷ ${n(values[0])})^(1/${yrs}) − 1 = ${n(values[yrs] / values[0], 3)}^(0.2) − 1 = ${c < 0 ? '−' : ''}${n(Math.abs(c), 1)}%. Quick check: ${yrs} years at ${n(r1(c), 1)}% compounds to about ×${n((1 + r1(c) / 100) ** yrs, 2)}, close to the ×${n(values[yrs] / values[0], 2)} on the chart.` }
     }
     const yoy = values.slice(1).map((v, i) => (v / values[i] - 1) * 100)
     const sorted = [...yoy].sort((a, b) => b - a)
@@ -136,15 +138,15 @@ const GEN: Record<ChartQ['family'], () => ChartQ | null> = {
     const absMax = add.indexOf(Math.max(...add)), pctMax = pctG.indexOf(Math.max(...pctG))
     const s1 = [...add].sort((a, b) => b - a), s2 = [...pctG].sort((a, b) => b - a)
     if (t < 0.7) {
-      if (s1[0] - s1[1] < 3) return null
+      if (s1[0] - s1[1] < 3 || s1[0] <= 0) return null
       return { id: id('stack'), family: 'Stacked bar', context: `${co} wants to know where its growth came from.`, chart,
         q: 'Which segment added the most revenue in dollars between 2023 and 2025?', options: names, correct: absMax, show: names[absMax],
-        why: `Change in $M: ${names.map((s, i) => `${s} ${signedM(add[i])}`).join(', ')}.${absMax !== pctMax ? ` ${names[pctMax]} grew fastest in %, but from a smaller base.` : ''}` }
+        why: `Change in $M: ${names.map((s, i) => `${s} ${signedM(add[i])}`).join(', ')}.${absMax !== pctMax && s2[0] !== s2[1] ? ` ${names[pctMax]} grew fastest in %, but from a smaller base.` : ''}` }
     }
-    if (s2[0] - s2[1] < 8) return null
+    if (s2[0] - s2[1] < 8 || s2[0] <= 0) return null
     return { id: id('stack'), family: 'Stacked bar', context: `${co} wants to know which segment is gaining momentum.`, chart,
       q: 'Which segment grew fastest in percentage terms?', options: names, correct: pctMax, show: names[pctMax],
-      why: `Growth: ${names.map((s, i) => `${s} ${pctG[i] >= 0 ? '+' : '−'}${n(Math.abs(pctG[i]), 0)}%`).join(', ')}.${absMax !== pctMax ? ` ${names[absMax]} added the most dollars, but that's a different question.` : ''}` }
+      why: `Growth: ${names.map((s, i) => `${s} ${pctG[i] >= 0 ? '+' : '−'}${n(Math.abs(pctG[i]), 0)}%`).join(', ')}.${absMax !== pctMax && s1[0] !== s1[1] ? ` ${names[absMax]} added the most dollars, but that's a different question.` : ''}` }
   },
   Waterfall: () => {
     const co = pick(COMPANIES)
@@ -153,6 +155,8 @@ const GEN: Record<ChartQ['family'], () => ChartQ | null> = {
     const steps: [string, number][] = labels.map((l) => [l, pick([-14, -11, -9, -7, -5, -3, 3, 4, 6, 8, 10, 12])])
     const end = start + sum(steps.map((s) => s[1]))
     if (end <= 5) return null
+    let run = start
+    if (steps.some(([, v]) => (run += v) < 0)) return null
     const base: Omit<Extract<ChartSpec, { kind: 'waterfall' }>, 'hidden'> = { kind: 'waterfall', title: `${co}: operating profit bridge, 2024 to 2025, $M`, unit: '$M', start: ['2024', start], steps, end: ['2025', end] }
     const tw = rnd()
     if (tw < 0.25) {

@@ -58,10 +58,10 @@ export default function Settings() {
             )}
           </Section>
           <Section title="More">
-            <ul className="space-y-2 text-[15px]">
+            <ul className="space-y-2 text-[14.5px]">
               <li><Link className="font-medium text-violet-d hover:underline" to="/perks">Student perks</Link> <span className="text-muted">Verify your business school email</span></li>
               <li><Link className="font-medium text-violet-d hover:underline" to="/partners">Practice partners</Link></li>
-              <li><Link className="font-medium text-violet-d hover:underline" to="/stories">FIT stories</Link></li>
+              <li><Link className="font-medium text-violet-d hover:underline" to="/stories">Fit stories</Link></li>
               <li><Link className="font-medium text-violet-d hover:underline" to="/privacy">Privacy notice</Link></li>
               {isAdmin && <li><Link className="font-medium text-signal-d hover:underline" to="/admin">Admin: students and perks</Link></li>}
             </ul>

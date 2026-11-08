@@ -2,7 +2,7 @@
  "stages": [
   {
    "stage": "1 · Listen & note",
-   "do": "Write the client's goal at the top of your page so every later answer can link back to it. If something isn't clear, interrupt politely and ask.",
+   "do": "Write the client's goal at the top of your page so every later answer can link back to it. If something isn't clear, note it and ask as soon as the prompt ends.",
    "say": "\"Sorry, before you go on: when you say X, do you mean…?\"",
    "mistake": "Faking understanding, then getting lost 10 minutes later."
   },
@@ -65,12 +65,12 @@
   {
    "stage": "Structure & hypothesis",
    "sprint": "30 structure drills in 5 days",
-   "how": "2-minute timer, draw a full structure, compare it to a model answer. Use the prompts in the Casebook."
+   "how": "2-minute timer, draw a full structure, compare it to a model answer. Use the Write your own mode in Drills > Structuring."
   },
   {
    "stage": "Maths & charts",
    "sprint": "30 chart reads in 5 days + 10 min speed maths daily",
-   "how": "90 seconds per chart: title, axes, footnote, 2 insights, so-what."
+   "how": "90 seconds per chart: title, axes, footnote, 2 insights, so-what. Use Drills > Reading charts and Drills > Case maths."
   },
   {
    "stage": "Recommendation",
@@ -96,7 +96,7 @@
  "plan": [
   {
    "week": "Week 1 · Foundations",
-   "focus": "Learn the case stages below, the core frameworks and formulas. Start both halves of the Daily Tracker.",
+   "focus": "Do the course, then learn the core frameworks and formulas. Start both halves of the Daily Tracker.",
    "volume": "4-5 self + 2-3 partner cases; a structure drill every day"
   },
   {
@@ -106,8 +106,8 @@
   },
   {
    "week": "Week 3 · Weak spots",
-   "focus": "Run a drill sprint on the weakest stage the Dashboard shows. Write your FIT stories.",
-   "volume": "6+ cases; 1 sprint; 6 FIT stories drafted"
+   "focus": "Run a drill sprint on the weakest stage your case log shows. Write your fit stories.",
+   "volume": "6+ cases; 1 sprint; 6 fit stories drafted"
   },
   {
    "week": "Week 4 · Polish",
@@ -116,7 +116,7 @@
   },
   {
    "week": "Week 5 · Simulation",
-   "focus": "Full interview conditions: FIT + case back to back, on video, dressed for it.",
+   "focus": "Full interview conditions: fit + case back to back, on video, dressed for it.",
    "volume": "5+ full mock interviews, all logged"
   },
   {
@@ -147,7 +147,7 @@
   {
    "type": "Growth strategy",
    "ask": "Growth from where: revenue split by business unit?",
-   "build": "Organic: existing customers, new segments, products, regions, channels · Inorganic: M&A, partnerships",
+   "build": "Organic: more from current customers, new segments or regions, new channels, new products · Inorganic: acquisitions, partnerships · Choose: size each option, rank by value and risk",
    "trap": "A list of ideas with no sizing or priority."
   },
   {
@@ -159,19 +159,19 @@
   {
    "type": "Private equity",
    "ask": "What return does the fund need, and over how long?",
-   "build": "Market (size and growth, margins, barriers to entry) · Company (position vs peers, performance, management team) · Value creation (revenue growth, margins, add-on deals) · Exit (buyers, exit multiple, timing) · Returns (money multiple and yearly return vs the fund's target)",
+   "build": "Market (size and growth, margins, barriers to entry) · Company (position vs peers, performance, management team) · Value creation (revenue growth, margins, add-on deals) · Deal (entry price, debt the business can carry) · Exit and returns (buyers, exit multiple, money multiple and yearly return vs the fund's target)",
    "trap": "No exit thinking."
   },
   {
    "type": "Pricing",
    "ask": "What is the product worth to the customer?",
-   "build": "Cost-based floor · Competitor reference · Value-based ceiling → strategy (penetration vs skimming)",
+   "build": "Floor: variable cost per unit, fixed costs to recover · Ceiling: value to the customer, price of their next best option · Reference: competitor prices, substitutes · Choose: penetration or skimming, volume at each price, effect on our other products",
    "trap": "Using only one lens; no volume assumption."
   },
   {
    "type": "Competitive response",
    "ask": "How big is the threat in revenue terms?",
-   "build": "Exposure (customers, revenue and margin at risk) · Rival's motive (segments targeted, can they sustain it) · Options (do nothing, defend, match, copy, partner or buy) · Choose on impact, cost, speed and risk vs doing nothing",
+   "build": "Exposure (customers, revenue and margin at risk) · Rival's motive (segments targeted, can they keep it up) · Options (do nothing, defend current customers, respond on price or product, partner or buy) · Choose on impact, cost, speed and risk vs doing nothing",
    "trap": "Not comparing to doing nothing."
   },
   {
@@ -183,7 +183,7 @@
   {
    "type": "Cost & operations",
    "ask": "Goal: lower cost, more capacity, or reliability?",
-   "build": "Map the process & cost base → biggest driver first → people / process / technology levers → benchmark",
+   "build": "Map the cost base → benchmark against peers → biggest gap first → levers (people, process, technology, suppliers) → check what each cut does to revenue",
    "trap": "Cutting costs that carry revenue."
   },
   {
@@ -191,6 +191,12 @@
    "ask": "Units or value? Which geography? Any limiting factor?",
    "build": "Hypothesis first → top-down or bottom-up → segment → round numbers → sanity-check the other way",
    "trap": "No answer hypothesis; no cross-check."
+  },
+  {
+   "type": "Product launch",
+   "ask": "Is the decision to launch made, and what must the launch achieve?",
+   "build": "Who to target (segment size and growth, unmet needs, competitors in the segment) · What to offer (product, price, channels, message) · How to roll it out (capabilities, pilot then scale) · Does it pay? (expected sales, costs, break-even, cannibalisation)",
+   "trap": "Choosing the 4Ps before choosing the customer."
   },
   {
    "type": "Valuation",
@@ -256,8 +262,8 @@
   },
   {
    "term": "ROI",
-   "formula": "Profit ÷ Investment",
-   "note": "Compare with the hurdle rate"
+   "formula": "Annual profit ÷ Investment",
+   "note": "A yearly rate: compare with the hurdle rate or cost of capital"
   },
   {
    "term": "EBITDA",
@@ -330,7 +336,7 @@
    "name": "MIND · Dual n-back",
    "how": "Any dual n-back app. Start at 2-back; move up only above 80% accuracy.",
    "dose": "10 min daily",
-   "trains": "Holding the structure, numbers and goal in your head at once."
+   "trains": "Holding several things in your head at once. Evidence that it improves interview performance is limited, so treat it as optional."
   },
   {
    "name": "MIND · 60-second recap",
@@ -340,13 +346,13 @@
   },
   {
    "name": "MIND · Structure recall",
-   "how": "Read one row of the Frameworks tab, close it, redraw it from memory, check the gaps.",
+   "how": "Read one of the core frameworks, close it, redraw it from memory, check the gaps.",
    "dose": "1-2 daily",
    "trains": "Recalling structures under stress."
   },
   {
    "name": "MIND · Speed maths",
-   "how": "Speed-maths app: percentages, big multiplications, breakevens. Accuracy first, then speed.",
+   "how": "The Case maths drill on this site: percentages, big multiplications, breakevens. Accuracy first, then speed.",
    "dose": "10 min daily",
    "trains": "Faster arithmetic leaves more attention for thinking."
   },
@@ -354,7 +360,7 @@
    "name": "VOICE · Articulation",
    "how": "2-3 tongue twisters: slow and exaggerated, then at speed.",
    "dose": "3 min pre-mock",
-   "trains": "Crisp diction. Mumbling is the first thing interviewers notice."
+   "trains": "Crisp diction, so every number you say is heard clearly."
   },
   {
    "name": "VOICE · Paced reading",

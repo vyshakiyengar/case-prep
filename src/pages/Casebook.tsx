@@ -20,11 +20,11 @@ export function Difficulty({ d }: { d: 1 | 2 | 3 }) {
 
 function Chips<T extends string | number>({ label, value, options, onChange }: { label: string; value: T; options: { v: T; label: string; n?: number }[]; onChange: (v: T) => void }) {
   return (
-    <div className="flex flex-wrap items-center gap-1.5" role="group" aria-label={label}>
-      <span className="mr-1 text-[13px] text-muted">{label}</span>
+    <div className="-mx-1 flex items-center gap-1.5 overflow-x-auto px-1 pb-0.5 [scrollbar-width:none] sm:flex-wrap sm:overflow-visible" role="group" aria-label={label}>
+      <span className="mr-1 shrink-0 text-[13px] text-muted">{label}</span>
       {options.map((o) => (
         <button key={String(o.v)} onClick={() => onChange(o.v)} aria-pressed={value === o.v}
-          className={`rounded-full border px-3 py-1 text-[13px] transition-colors ${value === o.v ? 'border-ink bg-ink text-white' : 'border-line bg-white text-ink-2 hover:border-faint'}`}>
+          className={`shrink-0 rounded-full border px-3 py-1 text-[13px] transition-colors ${value === o.v ? 'border-ink bg-ink text-white' : 'border-line bg-white text-ink-2 hover:border-faint'}`}>
           {o.label}{o.n !== undefined && <span className={`ml-1.5 tabular-nums ${value === o.v ? 'text-white/80' : 'text-muted'}`}>{o.n}</span>}
         </button>
       ))}
@@ -57,10 +57,10 @@ export default function Casebook() {
   return (
     <>
       <PageHeader title="Casebook" intro={`${cases.length} original practice cases. Do one alone with the timer, or give one to a friend and swap.`}
-        action={user ? <span className="text-[14px] text-muted"><b className="font-serif text-[22px] font-normal text-ink">{doneCount}</b> of {cases.length} practised</span> : undefined} />
+        action={user ? <span className="text-[14px] text-muted"><b className="font-serif text-[19px] font-normal text-ink">{doneCount}</b> of {cases.length} practised</span> : undefined} />
       <p className="mb-5 rounded-lg border border-teal bg-teal-l/50 px-4 py-3 text-[14.5px] text-ink">New to cases? Do the first three lessons of the course, then pick an <button onClick={() => { setDiff(1); setStatus('todo') }} className="font-medium underline">easy case you haven't done</button>.</p>
 
-      <div className="mb-5 space-y-3 rounded-xl border border-line bg-white p-4">
+      <div className="mb-5 space-y-3 rounded-lg border border-line bg-white p-4">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <Chips label="Level" value={diff} onChange={setDiff} options={[
             { v: 0, label: 'All' }, ...([1, 2, 3] as const).map((d) => ({ v: d as Diff, label: DIFF_LABEL[d], n: cases.filter((c) => c.diff === d && match(c, 'diff')).length }))]} />
@@ -80,31 +80,31 @@ export default function Casebook() {
         </div>
       </div>
 
-      <ol className="divide-y divide-line overflow-hidden rounded-xl border border-line bg-white">
+      <ol className="divide-y divide-line overflow-hidden rounded-lg border border-line bg-white">
         {shown.map((c) => {
           const done = isDone(c)
           return (
-            <li key={c.slug} className="grid gap-3 px-5 py-4 sm:grid-cols-[44px_1fr_auto] sm:items-center">
+            <li key={c.slug} className="grid grid-cols-[36px_1fr] items-start gap-x-3 gap-y-2.5 px-4 py-3.5 sm:grid-cols-[44px_1fr_auto] sm:items-center sm:px-5 sm:py-4">
               {user ? (
                 <button onClick={() => markCase(c.slug, !marked.has(c.slug))} aria-pressed={done} aria-label={done ? `${c.title}: practised (click to unmark)` : `Mark ${c.title} as practised`} title={done ? 'Practised. Click to unmark.' : 'Mark as practised'}
-                  className={`flex h-9 w-9 items-center justify-center rounded-full border transition-colors ${done ? 'border-good bg-good text-white' : 'border-line text-muted hover:border-good hover:text-good'}`}>
+                  className={`flex h-8 w-8 items-center justify-center rounded-full border transition-colors sm:h-9 sm:w-9 ${done ? 'border-good bg-good text-white' : 'border-line text-muted hover:border-good hover:text-good'}`}>
                   {done ? <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden><path d="m5 12 5 5 9-10" /></svg>
-                    : <span className="font-serif text-[15px] tabular-nums">{c.id}</span>}
+                    : <span className="font-serif text-[14.5px] tabular-nums">{c.id}</span>}
                 </button>
-              ) : <span className="font-serif text-[22px] text-muted tabular-nums">{c.id}</span>}
+              ) : <span className="pt-0.5 font-serif text-[17px] text-muted tabular-nums">{c.id}</span>}
               <div className="min-w-0">
                 <div className="flex flex-wrap items-center gap-x-2.5 gap-y-1">
-                  <h2 className="text-[19px]">{c.title}</h2>
+                  <h2 className="text-[16.5px]">{c.title}</h2>
                   <Difficulty d={c.diff} />
                   {done && <span className="rounded-full bg-good-l px-2 py-0.5 text-[12px] font-medium text-good">Practised</span>}
                 </div>
-                <p className="text-ink-2">{c.sub}</p>
+                <p className="text-[14.5px] leading-snug text-ink-2">{c.sub}</p>
                 <div className="mt-1 flex flex-wrap items-center gap-x-4 gap-y-1 text-[13px] text-muted">
                   <span>{c.type}</span><span>{c.industry}</span><span>{c.geo}</span><span>{c.time}</span>
                 </div>
               </div>
-              <div className="flex gap-2">
-                <Link to={`/casebook/${c.slug}`} className="btn-primary rounded-lg px-3.5 py-2 text-[14px] font-medium text-white">Practice</Link>
+              <div className="col-start-2 flex gap-2 sm:col-start-auto">
+                <Link to={`/casebook/${c.slug}`} className="btn-primary rounded-lg px-3.5 py-2 text-[14px] font-medium text-white">Practise</Link>
                 <Link to={`/casebook/${c.slug}?mode=interviewer`} className="rounded-lg border border-line bg-white px-3.5 py-2 text-[14px] font-medium text-ink hover:border-faint">Be the interviewer</Link>
               </div>
             </li>

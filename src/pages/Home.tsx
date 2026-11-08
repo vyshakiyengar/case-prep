@@ -12,7 +12,7 @@ type Item = { to: string; label: string; icon: string }
 const ABOUT: Record<string, string> = {
   '/learn': 'Start here: 11 short lessons',
   '/perfect-casing': 'What to say at every stage',
-  '/frameworks': '11 trees to structure any case',
+  '/frameworks': '11 trees that cover most cases',
   '/casebook': `${CASE_COUNT} cases to practise`,
   '/interviewer': 'Give a case to a friend',
   '/graphs': '64 charts to read',
@@ -21,13 +21,14 @@ const ABOUT: Record<string, string> = {
   '/drills/structure': 'Break a problem into parts',
   '/drills/charts': 'One chart, one question',
   '/interview-skills': 'Think and speak clearly',
-  '/case-types': 'The 16 kinds of case',
+  '/case-types': 'Each case type and how to approach it',
   '/formulas': '20 formulas for case maths',
   '/glossary': 'Business terms, plain English',
   '/today': 'Your day at a glance',
   '/tracker': 'Daily habits',
   '/cases': 'Every case, and one fix',
   '/stories': 'Your behavioural stories',
+  '/notes': 'Your course notes in one place',
   '/partners': 'Practise with friends',
   '/perks': 'Verify your school email',
 }
@@ -80,14 +81,14 @@ export default function Home() {
   return (
     <>
       <header className="mb-6">
-        <h1 className="text-[34px] leading-tight font-semibold">{user ? `Welcome back${name ? `, ${name}` : ''}` : 'Welcome to PrepForCase'}</h1>
-        <p className="mt-1 max-w-2xl text-[16.5px] text-muted">Learn it, practise it, look it up, track it. Start with your next step below.</p>
+        <h1 className="text-[28px] leading-tight font-semibold">{user ? `Welcome back${name ? `, ${name}` : ''}` : 'Welcome to PrepForCase'}</h1>
+        <p className="mt-1 max-w-2xl text-[15.5px] text-muted">Learn it, practise it, look it up, track it. Start with your next step below.</p>
       </header>
 
-      <section className="mb-8 flex flex-wrap items-center justify-between gap-4 rounded-2xl bg-ink p-5 text-white sm:p-6">
+      <section className="mb-6 flex flex-wrap items-center justify-between gap-4 rounded-xl bg-ink p-5 text-white sm:p-5">
         <div>
           <p className="text-[13px] font-semibold text-teal-l">Your next step</p>
-          <p className="mt-0.5 font-serif text-[22px] leading-snug font-semibold">{next.label}</p>
+          <p className="mt-0.5 font-serif text-[19px] leading-snug font-semibold">{next.label}</p>
 
         </div>
         <div className="flex flex-wrap gap-2">
@@ -96,15 +97,15 @@ export default function Home() {
         </div>
       </section>
 
-      <h2 className="mb-3 text-[22px] font-semibold">Everything on the site</h2>
+      <h2 className="mb-3 text-[19px] font-semibold">Everything on the site</h2>
       <div className="grid gap-4 lg:grid-cols-4">
         {COLS.map((col, ci) => (
-          <section key={col.n} className="relative flex flex-col rounded-2xl border border-line bg-white p-4">
+          <section key={col.n} className="relative flex flex-col rounded-xl border border-line bg-white p-4">
             {ci < COLS.length - 1 && <span aria-hidden className="absolute top-7 -right-[15px] z-10 hidden h-6 w-6 items-center justify-center rounded-full border border-line bg-white text-[13px] text-faint lg:flex">→</span>}
             <div className="mb-3 flex items-center gap-2.5">
-              <span className={`flex h-8 w-8 items-center justify-center rounded-full font-serif text-[16px] font-semibold text-white ${col.tone}`}>{col.n}</span>
+              <span className={`flex h-8 w-8 items-center justify-center rounded-full font-serif text-[15px] font-semibold text-white ${col.tone}`}>{col.n}</span>
               <div>
-                <h3 className="font-sans text-[17px] font-semibold text-ink">{col.title}</h3>
+                <h3 className="font-sans text-[16px] font-semibold text-ink">{col.title}</h3>
                 <p className="text-[12.5px] text-muted">{col.sub}</p>
               </div>
             </div>
@@ -117,7 +118,7 @@ export default function Home() {
                     <Link to={it.to} className="flex items-start gap-2.5 rounded-lg px-2 py-2 hover:bg-canvas">
                       <span className="mt-0.5 text-muted"><Icon d={it.icon} /></span>
                       <span className="min-w-0">
-                        <span className="block text-[15px] font-semibold text-ink">{it.label}{locked && <span className="ml-2 text-[11.5px] font-normal text-faint">sign in</span>}</span>
+                        <span className="block text-[14.5px] font-semibold text-ink">{it.label}{locked && <span className="ml-2 text-[11.5px] font-normal text-faint">sign in</span>}</span>
                         <span className="block text-[13px] text-muted">{pr && pr.v > 0 ? <span className="font-medium text-teal-d">{pr.text}</span> : ABOUT[it.to]}</span>
                       </span>
                     </Link>

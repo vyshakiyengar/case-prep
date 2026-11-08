@@ -62,16 +62,16 @@ const method = (s: UserStats) => s.provider === 'google' ? 'Google' : s.provider
 const SECTION: Record<string, string> = {
   learn: 'Course', 'perfect-casing': 'Perfect casing', frameworks: 'Frameworks', casebook: 'Casebook', case: 'Case player', interviewer: 'Interviewer mode',
   graphs: 'Graph library', drills: 'Drills', 'interview-skills': 'Interview skills', 'case-types': 'Case types', formulas: 'Formulas', glossary: 'Glossary',
-  today: 'Dashboard', tracker: 'Tracker', cases: 'Case log', notes: 'My notes', stories: 'FIT stories', partners: 'Partners', perks: 'Student perks',
+  today: 'Dashboard', tracker: 'Tracker', cases: 'Case log', notes: 'My notes', stories: 'Fit stories', partners: 'Partners', perks: 'Student perks',
   home: 'Home', landing: 'Landing', about: 'About', settings: 'Settings', admin: 'Admin',
 }
 
 function Kpi({ label, value, sub, delta }: { label: string; value: number | string; sub?: string; delta?: number }) {
   return (
-    <div className="rounded-xl border border-line bg-white px-4 py-3">
+    <div className="rounded-lg border border-line bg-white px-4 py-3">
       <div className="text-[13px] text-muted">{label}</div>
       <div className="flex items-baseline gap-2">
-        <span className="font-serif text-[30px] leading-tight text-ink tabular-nums">{value}</span>
+        <span className="font-serif text-[26px] leading-tight text-ink tabular-nums">{value}</span>
         {delta !== undefined && delta !== 0 && <span className={`text-[12.5px] font-medium tabular-nums ${delta > 0 ? 'text-good' : 'text-signal-d'}`}>{delta > 0 ? '▲' : '▼'} {Math.abs(delta)}</span>}
       </div>
       {sub && <div className="text-[12.5px] text-muted">{sub}</div>}
@@ -318,7 +318,7 @@ function Analytics({ stats, students, updated }: { stats: UserStats[]; students:
           {!users.length && <p className="py-4 text-muted">No users yet.</p>}
         </div>
       </Section>
-      <Section title="Visitors who don't sign in" className="mb-8">
+      <Section title="Visitors who don't sign in" className="mb-6">
         <p className="text-ink-2">Anonymous visits, top pages, countries and referrers are counted by Vercel Web Analytics (no cookies). Open the project in Vercel and choose the <b className="font-semibold">Analytics</b> tab.</p>
         <a href="https://vercel.com/dashboard" target="_blank" rel="noopener noreferrer" className="mt-3 inline-block text-[14px] font-medium text-violet-d hover:underline">Open Vercel ↗</a>
       </Section>
@@ -366,11 +366,11 @@ export default function Admin() {
     <>
       <PageHeader title="Admin" intro="Who signs up, how they use PrepForCase, and whether they come back. Updates live. Only you can see this page." />
       <Analytics stats={stats} students={rows} updated={updated} />
-      <div className="mb-3 flex flex-wrap items-center justify-between gap-3"><h2 className="text-[24px] font-semibold">Verified students</h2><Button onClick={exportCsv}>Export students CSV</Button></div>
+      <div className="mb-3 flex flex-wrap items-center justify-between gap-3"><h2 className="text-[21px] font-semibold">Verified students</h2><Button onClick={exportCsv}>Export students CSV</Button></div>
       <dl className="mb-6 flex flex-wrap gap-x-10 gap-y-3">
-        <div><dt className="text-[13px] text-muted">Verified students</dt><dd className="font-serif text-[30px] font-semibold text-ink">{rows.length}</dd></div>
-        <div><dt className="text-[13px] text-muted">Agreed to marketing</dt><dd className="font-serif text-[30px] font-semibold text-ink">{optIn}</dd></div>
-        <div><dt className="text-[13px] text-muted">Schools</dt><dd className="font-serif text-[30px] font-semibold text-ink">{bySchool.length}</dd></div>
+        <div><dt className="text-[13px] text-muted">Verified students</dt><dd className="font-serif text-[26px] font-semibold text-ink">{rows.length}</dd></div>
+        <div><dt className="text-[13px] text-muted">Agreed to marketing</dt><dd className="font-serif text-[26px] font-semibold text-ink">{optIn}</dd></div>
+        <div><dt className="text-[13px] text-muted">Schools</dt><dd className="font-serif text-[26px] font-semibold text-ink">{bySchool.length}</dd></div>
       </dl>
       <div className="grid gap-5 lg:grid-cols-[1fr_2fr]">
         <Section title="By school">

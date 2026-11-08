@@ -19,23 +19,22 @@ export function LinkButton({ to, variant = 'primary', children, className = '' }
 
 export function PageHeader({ title, intro, action }: { title: string; intro?: ReactNode; action?: ReactNode }) {
   return (
-    <header className="mb-8 flex flex-wrap items-end justify-between gap-4">
-      <div className="max-w-2xl">
-        <h1 className="text-[32px] leading-[1.1] sm:text-[40px]">{title}</h1>
-        <span aria-hidden className="mt-3 block h-[2px] w-10 bg-teal" />
-        {intro && <p className="mt-3 text-[16px] leading-relaxed text-muted">{intro}</p>}
+    <header className="mb-5 flex flex-wrap items-end justify-between gap-x-4 gap-y-3 sm:mb-6">
+      <div className="min-w-0 max-w-2xl">
+        <h1 className="text-[25px] leading-[1.12] tracking-[-0.01em] sm:text-[30px]">{title}</h1>
+        {intro && <p className="mt-1.5 text-[14.5px] leading-relaxed text-muted">{intro}</p>}
       </div>
-      {action}
+      {action && <div className="shrink-0">{action}</div>}
     </header>
   )
 }
 
 export function Section({ title, aside, children, className = '' }: { title?: string; aside?: ReactNode; children: ReactNode; className?: string }) {
   return (
-    <section className={`rounded-xl border border-line bg-white p-5 sm:p-6 ${className}`}>
+    <section className={`rounded-lg border border-line bg-white p-4 sm:p-5 ${className}`}>
       {(title || aside) && (
         <div className="mb-3 flex items-baseline justify-between gap-3">
-          {title && <h2 className="text-[21px]">{title}</h2>}
+          {title && <h2 className="text-[18px]">{title}</h2>}
           {aside}
         </div>
       )}
@@ -77,8 +76,8 @@ export function ScorePicker({ value, onChange, label }: { value?: number; onChan
 
 export function Empty({ title, children, action }: { title: string; children?: ReactNode; action?: ReactNode }) {
   return (
-    <div className="rounded-xl border border-dashed border-line bg-white/60 px-6 py-10 text-center">
-      <h3 className="text-[18px] font-semibold">{title}</h3>
+    <div className="rounded-lg border border-dashed border-line bg-white/60 px-6 py-8 text-center">
+      <h3 className="text-[16.5px] font-semibold">{title}</h3>
       {children && <p className="mx-auto mt-1 max-w-md text-muted">{children}</p>}
       {action && <div className="mt-4">{action}</div>}
     </div>

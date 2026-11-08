@@ -93,10 +93,10 @@ export const HABITS: { key: HabitKey; label: string; hint: string; track: 'A' | 
   { key: 'self', label: 'Self case', hint: 'Alone, out loud', track: 'A' },
   { key: 'drill', label: 'Drill', hint: 'Structure, charts or maths', track: 'A' },
   { key: 'review', label: 'Re-read your fixes', hint: 'Before each case', track: 'A' },
-  { key: 'mind', label: 'Mind exercise', hint: '10 minutes', track: 'B' },
-  { key: 'voice', label: 'Voice exercise', hint: '10 minutes', track: 'B' },
+  { key: 'mind', label: 'Mind exercise', hint: '10 minutes, from the "How you come across" lesson', track: 'B' },
+  { key: 'voice', label: 'Voice exercise', hint: '10 minutes, from the "How you come across" lesson', track: 'B' },
   { key: 'reading', label: 'Business reading', hint: 'Book, press or CEO interview', track: 'B' },
-  { key: 'fit', label: 'FIT story practice', hint: '3 times a week', track: 'B' },
+  { key: 'fit', label: 'Fit story practice', hint: 'Aim for 3 days a week', track: 'B' },
 ]
 
 export const STAGES: { key: StageKey; label: string; great: string }[] = [
@@ -109,7 +109,7 @@ export const STAGES: { key: StageKey; label: string; great: string }[] = [
 ]
 
 export const CASE_TYPES = ['Profitability', 'Market entry', 'Growth strategy', 'M&A', 'Private equity', 'Pricing',
-  'Competitive response', 'Investment / capacity', 'Cost & operations', 'Market sizing', 'Public sector', 'Product case', 'Other']
+  'Competitive response', 'Investment / capacity', 'Cost & operations', 'Market sizing', 'Public sector', 'Product launch', 'Product case', 'Other']
 
 export interface StudentRecord {
   uid: string

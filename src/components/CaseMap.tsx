@@ -32,7 +32,7 @@ export function CaseMap() {
         {CASE_FLOW.map((s, i) => (
           <li key={s.n} className="relative flex flex-col items-center px-1 text-center" style={{ '--i': i } as CSSProperties}>
             {i > 0 && <span className="rail-seg absolute top-[15px] right-1/2 h-[2px] w-full" />}
-            <span className={`rail-node relative z-10 flex h-8 w-8 items-center justify-center rounded-full font-serif text-[15px] font-semibold text-white ring-4 ring-canvas ${dot(i)}`}>{s.n}</span>
+            <span className={`rail-node relative z-10 flex h-8 w-8 items-center justify-center rounded-full font-serif text-[14.5px] font-semibold text-white ring-4 ring-canvas ${dot(i)}`}>{s.n}</span>
             <span className="mt-2 text-[13.5px] font-semibold leading-tight text-ink">{s.short}</span>
             <span className="text-[12px] leading-tight text-muted">{s.time}</span>
           </li>
@@ -40,11 +40,11 @@ export function CaseMap() {
       </ol>
       <ol className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
         {CASE_FLOW.map((s, i) => (
-          <li key={s.n} className="flow-card flex gap-3 rounded-xl border border-line bg-white p-4" style={{ '--i': i } as CSSProperties}>
-            <span className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full font-serif text-[15px] font-semibold text-white ${dot(i)}`}>{s.n}</span>
+          <li key={s.n} className="flow-card flex gap-3 rounded-lg border border-line bg-white p-4" style={{ '--i': i } as CSSProperties}>
+            <span className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full font-serif text-[14.5px] font-semibold text-white ${dot(i)}`}>{s.n}</span>
             <div className="min-w-0">
               <div className="flex flex-wrap items-baseline gap-x-2">
-                <h3 className="font-sans text-[16px] font-semibold text-ink">{s.short}</h3>
+                <h3 className="font-sans text-[15px] font-semibold text-ink">{s.short}</h3>
                 <span className="text-[12.5px] text-muted">{s.time}</span>
               </div>
               <p className="mt-0.5 text-[14.5px] text-ink-2">{s.what}</p>

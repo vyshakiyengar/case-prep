@@ -61,14 +61,14 @@ export const CORE: CoreFramework[] = [
     ask: 'Which outcome matters most: cost, speed, capacity or quality?',
     branches: [
       { t: 'Map it', c: [{ t: 'Steps and hand-offs' }, { t: 'Time, cost and errors at each step' }, { t: 'The bottleneck' }] },
-      { t: 'Fix the steps', c: [{ t: 'Eliminate' }, { t: 'Combine' }, { t: 'Re-order' }, { t: 'Simplify or automate' }], note: 'known as ECRS' },
+      { t: 'Fix the steps', c: [{ t: 'Eliminate' }, { t: 'Combine' }, { t: 'Re-order' }, { t: 'Simplify' }], note: 'known as ECRS; technology often does the simplifying' },
       { t: 'Fix what supports them', c: [{ t: 'People', note: 'skills · incentives · staffing' }, { t: 'Technology and systems' }] },
     ],
-    tip: 'The slowest step (the bottleneck) sets the output of the whole process. Fix it first, then check which step becomes the new bottleneck.',
-    practice: [{ label: 'SkyLine MRO', to: '/casebook/skyline-mro' }, { label: 'RideNow Drivers', to: '/casebook/ridenow-drivers' }],
+    tip: 'The slowest step (the bottleneck) sets the output of the whole process. Speeding up any other step adds nothing, so fix the bottleneck first, then check which step becomes the new one.',
+    practice: [{ label: 'Riverbend Bottling', to: '/casebook/riverbend-bottling' }, { label: 'SkyLine MRO', to: '/casebook/skyline-mro' }],
   },
   {
-    id: 'competitive-threat', family: 'diagnose', title: "How should the client respond to a rival's move?",
+    id: 'competitive-threat', family: 'decide', title: "How should the client respond to a rival's move?",
     when: 'A rival cuts prices, launches a product or enters the market.',
     ask: 'What exactly did they do, and which of our customers does it touch?',
     branches: [
@@ -132,7 +132,7 @@ export const CORE: CoreFramework[] = [
       { t: 'How can we add value?', c: [{ t: 'Grow revenue' }, { t: 'Raise margins' }, { t: 'Buy add-on companies' }] },
       { t: 'Can we exit well?', c: [{ t: 'Who would buy it' }, { t: 'Exit multiple' }, { t: 'Timing' }], note: 'gives the return' },
     ],
-    tip: 'Return = equity at exit ÷ equity at entry. A fund that triples its money in 6 years earns about 20% a year. No credible buyer at exit means no deal.',
+    tip: 'Return = equity at exit ÷ equity at entry. A fund that triples its money (a 3× multiple, or MOIC) in 6 years earns about 20% a year. No credible buyer at exit means no deal.',
     practice: [{ label: 'FitHub Gyms', to: '/casebook/fithub-gyms' }],
   },
   // ------------------------------------------------------------ Generate
@@ -165,14 +165,14 @@ export const CORE: CoreFramework[] = [
       { t: 'Does it pay?', c: [{ t: 'Expected sales' }, { t: 'Costs and break-even' }] },
     ],
     tip: 'Pick the segment first: the 4Ps (product, price, place, promotion) all follow from who you are selling to.',
-    practice: [{ label: 'SnackCo Protein Bar', to: '/casebook/snackco-protein-bar' }, { label: 'LinguaLeap', to: '/casebook/lingualeap' }],
+    practice: [{ label: 'SnackCo Protein Bar', to: '/casebook/snackco-protein-bar' }, { label: 'Elm Home Security', to: '/casebook/elm-home-security' }],
   },
   {
     id: 'price-product', family: 'generate', title: "What price should the client charge?",
     when: 'Setting or changing a price.',
     ask: 'What is the goal: profit, market share, or getting in fast?',
     branches: [
-      { t: 'Floor: our costs', c: [{ t: 'Variable cost per unit', note: 'never price below this' }, { t: 'Fixed costs and investment', note: 'recovered over expected volume' }] },
+      { t: 'Floor: our costs', c: [{ t: 'Variable cost per unit', note: 'stay above it, unless it is a deliberate loss leader' }, { t: 'Fixed costs and investment', note: 'recovered over expected volume' }] },
       { t: 'Ceiling: value to the customer', c: [{ t: 'Price of their next best option' }, { t: 'Extra value we add', note: 'savings · more revenue for them' }] },
       { t: 'Reference: the alternatives', c: [{ t: 'Competitor prices' }, { t: 'Substitutes' }], note: 'sit above or below them?' },
     ],
@@ -201,8 +201,8 @@ export const OTHER: OtherFramework[] = [
   {
     id: 'market-sizing', title: 'Market sizing', kind: 'groups', when: '"How big is the market for X?" Say your approach before any maths.',
     groups: [
-      { head: 'Top-down (start from people)', c: ['population', '× share in target segment', '× share who buy', '× units a year', '× price'] },
-      { head: 'Bottom-up (start from supply)', c: ['number of sellers or sites', '× sales or capacity each', '× price'] },
+      { head: 'Demand side (start from buyers)', c: ['population', '× share in target segment', '× share who buy', '× units a year', '× price'] },
+      { head: 'Supply side (start from sellers)', c: ['number of sellers or sites', '× sales or capacity each', '× price'] },
       { head: 'Sanity check', c: ['compare with a number you know', 'does the per-person figure feel right?'] },
     ],
   },
@@ -247,7 +247,7 @@ export const OTHER: OtherFramework[] = [
   {
     id: 'pricing-methods', title: 'Pricing methods', kind: 'groups', when: 'Ways to set a price once you know the floor and the ceiling.',
     groups: [
-      { head: 'Cost-plus', c: ['unit cost + target margin'] },
+      { head: 'Cost-plus', c: ['unit cost × (1 + target markup)'] },
       { head: 'Competitor-based', c: ['match, undercut or charge a premium'] },
       { head: 'Value-based', c: ['share of the value the customer gets'] },
       { head: 'Launch strategy', c: ['skim: start high', 'penetrate: start low'] },

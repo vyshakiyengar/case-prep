@@ -111,7 +111,7 @@ export default function CasePlayer() {
       <div className="mb-5 flex flex-wrap items-start justify-between gap-4">
         <div>
           <Link to="/casebook" className="text-[13.5px] text-muted hover:text-ink">Casebook</Link>
-          <h1 className="mt-1 text-[30px] leading-tight font-semibold">Case {c.id}: {c.title}</h1>
+          <h1 className="mt-1 text-[26px] leading-tight font-semibold">Case {c.id}: {c.title}</h1>
           <p className="text-ink-2">{c.sub}</p>
           <div className="mt-1 flex flex-wrap items-center gap-x-4 gap-y-1 text-[13px] text-muted">
             <span>{c.type}</span><span>{c.industry}, {c.geo}</span><Difficulty d={c.diff} /><span>{c.fmt}</span>
@@ -120,17 +120,17 @@ export default function CasePlayer() {
         </div>
         <div className="flex flex-col items-end gap-2">
           <div className="inline-flex overflow-hidden rounded-lg border border-line bg-white text-[13.5px]">
-            <button onClick={() => setParams({})} aria-pressed={!interviewer} className={`px-3 py-1.5 ${!interviewer ? 'bg-ink font-medium text-white' : 'text-muted'}`}>Practice</button>
+            <button onClick={() => setParams({})} aria-pressed={!interviewer} className={`px-3 py-1.5 ${!interviewer ? 'bg-ink font-medium text-white' : 'text-muted'}`}>Practise</button>
             <button onClick={() => setParams({ mode: 'interviewer' })} aria-pressed={interviewer} className={`px-3 py-1.5 ${interviewer ? 'bg-ink font-medium text-white' : 'text-muted'}`}>Be the interviewer</button>
           </div>
           <div className="flex items-center gap-2 text-[13.5px] text-muted">
-            <span className="tabular-nums">Elapsed <b className="font-serif text-[17px] text-ink">{mmss(watch.secs)}</b> of {c.time}</span>
+            <span className="tabular-nums">Elapsed <b className="font-serif text-[16px] text-ink">{mmss(watch.secs)}</b> of {c.time}</span>
             <button onClick={watch.toggle} className="rounded-md px-2 py-0.5 font-medium text-violet-d hover:bg-violet-l">{watch.running ? 'Pause' : 'Resume'}</button>
           </div>
         </div>
       </div>
 
-      <div className="grid grid-cols-[minmax(0,1fr)] gap-6 lg:grid-cols-[210px_minmax(0,1fr)]">
+      <div className="grid grid-cols-[minmax(0,1fr)] gap-5 lg:grid-cols-[210px_minmax(0,1fr)]">
         <nav aria-label="Case steps" className="min-w-0 lg:sticky lg:top-6 lg:self-start">
           <ol className="flex gap-1 overflow-x-auto pb-1 lg:flex-col lg:overflow-visible">
             {steps.map((s, k) => (
@@ -145,20 +145,20 @@ export default function CasePlayer() {
           </ol>
         </nav>
 
-        <article className="min-w-0 rounded-xl border border-line bg-white p-5 sm:p-7">
+        <article className="min-w-0 rounded-lg border border-line bg-white p-5 sm:p-7">
           {step.key === 'prompt' && (
             <>
-              <h2 className="text-[22px] font-semibold">{interviewer ? 'Read this aloud to your candidate' : 'Read the prompt'}</h2>
-              <blockquote className="graph-paper mt-4 rounded-lg border-l-4 border-teal p-5 font-serif text-[18px] leading-relaxed text-ink">{c.prompt}</blockquote>
+              <h2 className="text-[19px] font-semibold">{interviewer ? 'Read this aloud to your candidate' : 'Read the prompt'}</h2>
+              <blockquote className="graph-paper mt-4 rounded-lg border-l-4 border-teal p-5 font-serif text-[16.5px] leading-relaxed text-ink">{c.prompt}</blockquote>
               <p className="mt-4 text-muted">
-                {interviewer ? 'Let them recap it. A strong recap covers the key points only, then checks it understood the goal.' : 'Now recap it out loud in a few sentences: the client, the problem, and what success looks like. Then move on to your clarifying questions.'}
+                {interviewer ? 'Let them recap it. A strong recap covers only the key points, then confirms the goal.' : 'Now recap it out loud in a few sentences: the client, the problem, and what success looks like. Then move on to your clarifying questions.'}
               </p>
             </>
           )}
 
           {step.key === 'clarify' && (
             <>
-              <h2 className="text-[22px] font-semibold">{interviewer ? 'Give these facts only if asked' : 'Ask up to three clarifying questions'}</h2>
+              <h2 className="text-[19px] font-semibold">{interviewer ? 'Give these facts only if asked' : 'Ask up to three clarifying questions'}</h2>
               {!interviewer && <Coach key={`${c.slug}-clarify`} kind="clarify" />}
               <p className="mt-1 text-muted">{interviewer ? 'Good questions change the structure. Note which ones your candidate asks.' : 'Decide what you would ask before you look. Then open the answers to the questions you chose.'}</p>
               <ul className="mt-4 divide-y divide-line rounded-lg border border-line">
@@ -175,7 +175,7 @@ export default function CasePlayer() {
 
           {step.key === 'structure' && (
             <>
-              <h2 className="text-[22px] font-semibold">{interviewer ? 'What a strong structure looks like' : 'Draw your structure on paper'}</h2>
+              <h2 className="text-[19px] font-semibold">{interviewer ? 'What a strong structure looks like' : 'Draw your structure on paper'}</h2>
               {!interviewer && (
                 <>
                   <p className="mt-1 text-muted">Take up to two minutes. Aim for 3-4 buckets specific to this case, then say which one you'd start with, and why.</p>
@@ -195,7 +195,7 @@ export default function CasePlayer() {
             const q = c.questions[Number(step.key.slice(1))]
             return (
               <>
-                <h2 className="text-[21px] leading-snug font-semibold">{q.q}</h2>
+                <h2 className="text-[18px] leading-snug font-semibold">{q.q}</h2>
                 {q.exhibit && <ExhibitView ex={q.exhibit} />}
                 {!interviewer && !isOpen(step.key) && <Coach key={`${c.slug}-${step.key}`} kind={kindOf(q)} />}
                 <Reveal shown={isOpen(step.key)} onShow={() => show(step.key)} label="Show the strong answer">
@@ -207,13 +207,13 @@ export default function CasePlayer() {
 
           {step.key === 'reco' && (
             <>
-              <h2 className="text-[22px] font-semibold">{interviewer ? 'Ask for the recommendation' : 'Give your recommendation'}</h2>
+              <h2 className="text-[19px] font-semibold">{interviewer ? 'Ask for the recommendation' : 'Give your recommendation'}</h2>
               <p className="mt-1 text-muted">Start with the answer. Then 2-3 reasons with numbers, the main risk, and next steps. About 60 seconds.</p>
               {!interviewer && <div className="mt-4"><Countdown seconds={60} label="Recommendation" /></div>}
               {!interviewer && !isOpen('reco') && <Coach key={`${c.slug}-reco`} kind="reco" />}
               <Reveal shown={isOpen('reco')} onShow={() => show('reco')} label="Show the model recommendation">
-                <div className="rounded-lg bg-ink p-5 text-[15.5px] leading-relaxed text-white">{c.reco}</div>
-                <h3 className="mt-5 text-[17px] font-semibold">What separates a 5 from a 3</h3>
+                <div className="rounded-lg bg-ink p-5 text-[14.5px] leading-relaxed text-white">{c.reco}</div>
+                <h3 className="mt-5 text-[16px] font-semibold">What separates a 5 from a 3</h3>
                 <ul className="mt-2 list-disc space-y-1 pl-5 text-ink-2">{c.great.map((g) => <li key={g}>{g}</li>)}</ul>
               </Reveal>
             </>
@@ -221,18 +221,18 @@ export default function CasePlayer() {
 
           {step.key === 'score' && (interviewer ? (
             <>
-              <h2 className="text-[22px] font-semibold">Give feedback</h2>
+              <h2 className="text-[19px] font-semibold">Give feedback</h2>
               <p className="mt-1 text-muted">Score each stage 1-5 out loud, then agree on one fix together. Your candidate logs it in their own case log.</p>
               <ul className="mt-4 divide-y divide-line rounded-lg border border-line">
                 {STAGES.map((s) => <li key={s.key} className="px-4 py-3"><div className="font-medium text-ink">{s.label}</div><div className="text-[14px] text-muted">{s.great}</div></li>)}
               </ul>
-              <h3 className="mt-5 text-[17px] font-semibold">For this case, a 5 looks like</h3>
+              <h3 className="mt-5 text-[16px] font-semibold">For this case, a 5 looks like</h3>
               <ul className="mt-2 list-disc space-y-1 pl-5 text-ink-2">{c.great.map((g) => <li key={g}>{g}</li>)}</ul>
               <Button className="mt-5" variant="secondary" onClick={() => setParams({})}>Swap: practise this case yourself</Button>
             </>
           ) : (
             <>
-              <h2 className="text-[22px] font-semibold">Score yourself and pick one fix</h2>
+              <h2 className="text-[19px] font-semibold">Score yourself and pick one fix</h2>
               <p className="mt-1 mb-5 text-muted">Do it now, while the case is fresh. It goes straight into your case log.</p>
               {user ? <CaseForm initial={{ name: c.title, source: `Casebook #${c.id}`, type: c.type, with: 'Self' }} onDone={() => nav('/cases')} />
                 : <div className="rounded-lg border border-line bg-canvas/60 p-5">

@@ -5,7 +5,7 @@ export const LESSONS_2: Lesson[] = [
     slug: 'driving-the-case',
     title: 'Driving the case',
     minutes: 6,
-    summary: 'In most interviews you are expected to steer. Propose next steps, summarise as you go, and keep linking back to the goal.',
+    summary: 'In candidate-led cases you are expected to steer, and even in interviewer-led ones, proposing next steps earns credit. Summarise as you go, and keep linking back to the goal.',
     sections: [
       {
         h: 'Propose, don’t wait',
@@ -44,7 +44,7 @@ export const LESSONS_2: Lesson[] = [
     sections: [
       {
         h: 'Clarify what you are sizing',
-        body: `<p>Units or value? One year or the total stock? Which country? Consumers, businesses, or both? Pin this down first: "home EV chargers installed in the UK per year, in units and pounds" is a very different question from "EV chargers in the UK".</p>`,
+        body: `<p>Units or value? One year or the total stock? Which country? Consumers, businesses, or both? Pin this down first: "home EV chargers installed in the UK per year, in units and dollars" is a very different question from "EV chargers in the UK".</p>`,
       },
       {
         h: 'Guess first, then choose top-down or bottom-up',
@@ -60,7 +60,7 @@ export const LESSONS_2: Lesson[] = [
     ],
     example: {
       title: 'A clean top-down estimate',
-      body: `<p>"New cars sold per year, about 1.9M; about a quarter fully electric, so ~475k. Around 60% have off-street parking → ~285k, and most of those, say 80%, install a charger → ~230k. Add first-time EV owners buying used, roughly 60k. So about 290k units a year; at ~$1,000 installed, roughly $300M. The limit isn't demand, it's how many people have a driveway."</p>
+      body: `<p>"New cars sold per year, about 1.9M; about a quarter fully electric, so ~475k. Around 60% have off-street parking → ~285k, and most of those, say 80%, install a charger → ~230k. Add first-time EV owners buying used, roughly 60k. So about 290k units a year; at ~$1,000 installed, about $290M. The limiting factor is off-street parking: only about 60% of new EV buyers can fit a home charger."</p>
 <p><i>These are illustrative assumptions for practice, not real statistics.</i></p>`,
     },
     takeaways: ['Clarify units, time period and geography first.', 'State a rough guess before calculating.', 'Segment sensibly, round numbers, sanity-check, name the limiting factor.'],
@@ -82,7 +82,7 @@ export const LESSONS_2: Lesson[] = [
       },
       {
         h: 'Add one real-world example',
-        body: `<p>One concrete example from a real company lifts an answer from "good" to "memorable": "Airlines solved a similar problem by unbundling bags and seats." Use at most one or two per case, as seasoning. Keep an idea or two in reserve, because the interviewer will often ask "anything else?"</p>`,
+        body: `<p>One concrete example from a real company lifts an answer from "good" to "memorable": for a question about raising revenue per customer, "Airlines did this by charging separately for bags and seat choice." Use at most one or two per case, as seasoning. Keep an idea or two in reserve, because the interviewer will often ask "anything else?"</p>`,
       },
       {
         h: 'Prioritise before you stop',
@@ -125,7 +125,7 @@ export const LESSONS_2: Lesson[] = [
       { q: 'How should a recommendation begin?', options: ['With a summary of the case', 'With the recommendation itself', 'By thanking the interviewer'], answer: 1, why: 'Answer first. Reasons follow.' },
       { q: 'Where do unexplored parts of your structure belong?', options: ['Nowhere: don’t mention them', 'In next steps', 'At the start of the recommendation'], answer: 1, why: 'Naming them as next steps shows you tracked the whole problem.' },
     ],
-    practice: { label: 'Record yourself on case 4: PackRight', to: '/casebook/packright' },
+    practice: { label: 'Practise a 60-second recommendation on case 4: PackRight (record it on your phone)', to: '/casebook/packright' },
   },
   {
     slug: 'how-you-come-across',
@@ -145,7 +145,7 @@ export const LESSONS_2: Lesson[] = [
       },
       {
         h: 'Mind: hold more in your head',
-        body: `<p>Mid-case you are juggling the goal, your structure, three numbers and the next step, while talking. Working memory can be trained: dual n-back apps, a 60-second recap of a podcast clip, redrawing a framework from memory. Ten minutes a day helps you avoid going blank.</p>`,
+        body: `<p>Mid-case you are juggling the goal, your structure, three numbers and the next step, while talking. Practise the skills you actually use: recap a 2-minute podcast clip in 60 seconds, or redraw a framework from memory. Writing the goal and key numbers at the top of your page also helps you avoid going blank. (Brain-training apps improve the game itself, but there is little evidence they help in interviews.)</p>`,
       },
       {
         h: 'Fluency and calm',
@@ -156,7 +156,7 @@ export const LESSONS_2: Lesson[] = [
       title: 'The same answer, two ways',
       body: `<p><b>Rushed:</b> "So, um, I think like the main thing is basically costs, because, um, the delivery thing, like, they pay a lot of commission and stuff."</p>
 <p><b>Composed:</b> "The main driver is cost. [pause] Specifically, delivery commissions, which grew from 1.5% to 7.6% of revenue."</p>
-<p>Same idea. The second one gets the offer.</p>`,
+<p>Same idea. The second one sounds like someone you could put in front of a client.</p>`,
     },
     takeaways: ['Interviewers judge every sentence, not just your structure.', 'Replace filler words with pauses.', '10-20 minutes a day of voice and mind practice compounds quickly.'],
     quiz: [
@@ -166,13 +166,13 @@ export const LESSONS_2: Lesson[] = [
   },
   {
     slug: 'fit-interview',
-    title: 'The FIT interview',
+    title: 'The fit interview',
     minutes: 8,
     summary: 'Behavioural questions often count as much as the case. Build 6-8 stories once, and use each for several questions.',
     sections: [
       {
         h: 'What firms are looking for',
-        body: `<p>Most FIT questions test the same handful of qualities: <b>leadership</b> (do people follow you when it's hard?), <b>impact</b> (did things change because of you?), <b>initiative</b> (do you start things?), <b>persuasion</b> (can you bring people round?) and how you handle <b>failure</b>. McKinsey's version (the PEI) goes deep on one story at a time, so expect follow-up questions.</p>`,
+        body: `<p>Most fit questions test the same handful of qualities: <b>leadership</b> (do people follow you when it's hard?), <b>impact</b> (did things change because of you?), <b>initiative</b> (do you start things?), <b>persuasion</b> (can you bring people round?) and how you handle <b>failure</b>. McKinsey's version, the Personal Experience Interview (PEI), goes deep on one story at a time, so expect follow-up questions.</p>`,
       },
       {
         h: 'STAR-L: the story shape',
@@ -195,6 +195,6 @@ export const LESSONS_2: Lesson[] = [
     quiz: [
       { q: 'Which part of a STAR-L story deserves the most time?', options: ['Situation', 'Action', 'Learning'], answer: 1, why: 'The interviewer is assessing what you did. Keep context short.' },
     ],
-    practice: { label: 'Build your FIT stories', to: '/stories' },
+    practice: { label: 'Build your fit stories', to: '/stories' },
   },
 ]

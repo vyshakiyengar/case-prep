@@ -55,17 +55,17 @@ export function TryIt({ t }: { t: NonNullable<Lesson['tryIt']> }) {
   const [shown, setShown] = useState(false)
   const [mine, setMine] = useState('')
   return (
-    <section className="rounded-xl border-2 border-violet bg-white p-5 sm:p-6">
+    <section className="rounded-lg border-2 border-violet bg-white p-4 sm:p-5">
       <div className="flex flex-wrap items-start justify-between gap-3">
-        <h3 className="text-[20px] font-semibold">Try it now</h3>
+        <h3 className="text-[17.5px] font-semibold">Try it now</h3>
         <Countdown seconds={t.seconds} label="Suggested time" />
       </div>
-      <p className="mt-2 text-[16px] leading-relaxed text-ink">{t.prompt}</p>
+      <p className="mt-2 text-[15px] leading-relaxed text-ink">{t.prompt}</p>
       <textarea className={`${inputCls} mt-3`} rows={4} value={mine} onChange={(e) => setMine(e.target.value)} placeholder="Say or write your answer before you look. Typing is optional." />
       {shown ? (
         <div className="mt-3 rounded-lg bg-good-l/60 p-4">
           <div className="text-[13px] font-semibold text-good">One strong answer</div>
-          <p className="mt-1 text-[15.5px] leading-relaxed text-ink">{t.model}</p>
+          <p className="mt-1 text-[14.5px] leading-relaxed text-ink">{t.model}</p>
           <p className="mt-2 text-[13.5px] text-muted">Yours doesn't need to match. Check it has the same shape.</p>
         </div>
       ) : <Button className="mt-3" variant="secondary" onClick={() => setShown(true)}>Compare with a strong answer</Button>}

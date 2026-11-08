@@ -23,7 +23,7 @@ export default function Interviewer() {
         <ol className="grid gap-3 md:grid-cols-2 lg:grid-cols-3">
           {STEPS.map(([t, d], i) => (
             <li key={t} className="rounded-lg border border-line p-4">
-              <div className="text-[15px] font-semibold text-ink"><span className="mr-1.5 text-teal-d">{i + 1}</span>{t}</div>
+              <div className="text-[14.5px] font-semibold text-ink"><span className="mr-1.5 text-teal-d">{i + 1}</span>{t}</div>
               <p className="mt-1 text-[14px] text-muted">{d}</p>
             </li>
           ))}
