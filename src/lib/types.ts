@@ -43,6 +43,12 @@ export interface DrillEntry {
   seconds: number
   score?: number // structure: self score 1-5
   correct?: boolean // maths
+  // A round of auto-marked questions (speed maths, chart quick reads, spot the flaw)
+  mode?: string
+  level?: number
+  total?: number
+  right?: number
+  breakdown?: Record<string, [number, number]> // skill -> [right, total]
   date: string
   createdAt: number
 }

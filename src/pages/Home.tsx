@@ -1,10 +1,10 @@
 import { CASE_COUNT } from '../content/caseCount'
 import { Link } from 'react-router-dom'
 import { useStore } from '../lib/store'
-import { LEARN, PRACTISE, REFERENCE, PREP, Icon } from '../components/AppShell'
+import { LEARN, PRACTISE, DRILLS, REFERENCE, PREP, Icon } from '../components/AppShell'
 import { LESSONS } from '../content/course'
 import { CARDS } from '../content/perfectCasing'
-import { dayScore, streak } from '../lib/stats'
+import { dayScore, drillStats, streak } from '../lib/stats'
 import { todayIso } from '../lib/dates'
 import { SignInButton } from './SignIn'
 
@@ -16,7 +16,10 @@ const ABOUT: Record<string, string> = {
   '/casebook': `${CASE_COUNT} cases to practise`,
   '/interviewer': 'Give a case to a friend',
   '/graphs': '64 charts to read',
-  '/drills': 'Quick timed drills',
+  '/drills': 'A 10-minute daily routine',
+  '/drills/maths': 'Timed case maths, marked instantly',
+  '/drills/structure': '30 prompts with model answers',
+  '/drills/charts': 'Read exhibits against the clock',
   '/interview-skills': 'Think and speak clearly',
   '/case-types': 'The 16 kinds of case',
   '/formulas': '20 formulas for case maths',
@@ -44,13 +47,16 @@ export default function Home() {
   const today = data ? dayScore(data.days[todayIso()]) : 0
   const st = data ? streak(data.days) : 0
   const g = graphsDone()
+  const ds = drillStats(data?.drills || [])
 
   const progress: Record<string, { v: number; max?: number; text: string } | undefined> = user ? {
     '/learn': { v: lessonsDone, max: LESSONS.length, text: `${lessonsDone} of ${LESSONS.length} lessons` },
     '/perfect-casing': { v: mastered, max: CARDS.length, text: `${mastered} of ${CARDS.length} phrases mastered` },
     '/casebook': { v: casebookDone, max: CASE_COUNT, text: `${casebookDone} of ${CASE_COUNT} cases practised` },
     '/graphs': { v: g, max: 64, text: `${g} of 64 charts done` },
-    '/drills': { v: data?.drills.length || 0, text: `${data?.drills.length || 0} drills done` },
+    '/drills/maths': ds.mathsQuestions ? { v: ds.mathsQuestions, text: `${ds.mathsQuestions} questions, ${Math.round((ds.mathsAccuracy || 0) * 100)}% right` } : undefined,
+    '/drills/structure': ds.structureCount ? { v: ds.structureCount, text: `${ds.structureCount} structures done` } : undefined,
+    '/drills/charts': ds.chartsCount ? { v: ds.chartsCount, text: `${ds.chartsCount} chart rounds done` } : undefined,
     '/today': { v: today, max: 8, text: `${today} of 8 habits today${st > 1 ? `, ${st}-day streak` : ''}` },
     '/cases': { v: cases.length, text: `${cases.length} case${cases.length === 1 ? '' : 's'} logged` },
     '/stories': { v: data?.stories.length || 0, text: `${data?.stories.length || 0} stories written` },
@@ -65,7 +71,7 @@ export default function Home() {
 
   const COLS: { n: number; title: string; sub: string; items: Item[]; tone: string }[] = [
     { n: 1, title: 'Learn', sub: 'Understand how a case works', items: LEARN, tone: 'bg-teal' },
-    { n: 2, title: 'Practise', sub: 'Build the skill until it is automatic', items: PRACTISE, tone: 'bg-violet' },
+    { n: 2, title: 'Practise', sub: 'Build the skill until it is automatic', items: [...PRACTISE, ...DRILLS.filter((d) => d.to !== '/drills')], tone: 'bg-violet' },
     { n: 3, title: 'Look things up', sub: 'Quick reference, any time', items: REFERENCE, tone: 'bg-ink' },
     { n: 4, title: 'Track and improve', sub: 'Log it, find the weak spot, fix one thing', items: PREP, tone: 'bg-signal' },
   ]

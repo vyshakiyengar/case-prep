@@ -71,7 +71,7 @@ function makeExercises(): Exercise[] {
         const second = [100, 112 + i, 118 + i * 2, 135 + i * 2, 155 + i * 3, 165 + i * 4]
         const third = [100, 94, 105, 103 + i, 99 + i, 110 + i]
         const calc = [values, second, third].map((s) => s[s.length - 1] - s[0]), win = maxIndex(calc)
-        out.push({ ...base, values, second, third, labels: QUARTERS, question: 'Which business line grew the most relative to its starting point?', answer: SERIES[win] + ' grew by ' + fmt(calc[win]) + '% from the indexed starting level of 100. An index compares growth rates, but it does not tell us which line is biggest in pounds.', followUp: 'Request absolute revenue by business line before prioritising investment.' })
+        out.push({ ...base, values, second, third, labels: QUARTERS, question: 'Which business line grew the most relative to its starting point?', answer: SERIES[win] + ' grew by ' + fmt(calc[win]) + '% from the indexed starting level of 100. An index compares growth rates, but it does not tell us which line is biggest in dollars.', followUp: 'Request absolute revenue by business line before prioritising investment.' })
       } else {
         const values = [12, 21, 29, 38, 47, 56, 67, 76]
         const second = values.map((v, j) => fmt(42 + i + v * .45 + [-3, 4, -1, 2, -4, 5, -2, 7][j]))

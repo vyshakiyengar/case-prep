@@ -46,7 +46,7 @@ export function Formulas() {
           </div>
         ))}
       </div>
-      <p className="mt-5 text-[14.5px] text-ink-2">Use them: <Link to="/drills?tab=maths" className="font-medium text-violet-d hover:underline">mental maths drill</Link> · <Link to="/learn/case-maths" className="font-medium text-violet-d hover:underline">case maths lesson</Link> · <Link to="/glossary" className="font-medium text-violet-d hover:underline">glossary</Link></p>
+      <p className="mt-5 text-[14.5px] text-ink-2">Use them: <Link to="/drills/maths" className="font-medium text-violet-d hover:underline">mental maths drill</Link> · <Link to="/learn/case-maths" className="font-medium text-violet-d hover:underline">case maths lesson</Link> · <Link to="/glossary" className="font-medium text-violet-d hover:underline">glossary</Link></p>
     </>
   )
 }

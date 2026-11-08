@@ -78,13 +78,23 @@ export function streak(days: Record<string, DayEntry>) {
 }
 
 export function drillStats(drills: DrillEntry[]) {
-  const s = drills.filter((d) => d.kind === 'structure' || d.kind === 'charts'), m = drills.filter((d) => d.kind === 'maths')
+  const s = drills.filter((d) => (d.kind === 'structure' || d.kind === 'charts') && typeof d.score === 'number'), m = drills.filter((d) => d.kind === 'maths')
   const weekAgo = addDays(todayIso(), -6)
+  const tally = (xs: DrillEntry[]) => xs.reduce((a, d) => [a[0] + (d.total ? d.right || 0 : d.correct ? 1 : 0), a[1] + (d.total || 1)], [0, 0])
+  const [mr, mt] = tally(m)
+  const charts = drills.filter((d) => d.kind === 'charts' && d.total)
+  const [cr, ct] = tally(charts)
+  const bySkill: Record<string, [number, number]> = {}
+  for (const d of m) for (const [k, [r, t]] of Object.entries(d.breakdown || {})) { const b = bySkill[k] || [0, 0]; bySkill[k] = [b[0] + r, b[1] + t] }
   return {
-    structureCount: s.length,
+    structureCount: drills.filter((d) => d.kind === 'structure').length,
     structureAvg: avg(s.map((d) => d.score).filter((x): x is number => typeof x === 'number')),
     mathsCount: m.length,
-    mathsAccuracy: m.length ? m.filter((d) => d.correct).length / m.length : null,
+    mathsQuestions: mt,
+    mathsAccuracy: mt ? mr / mt : null,
+    mathsBySkill: bySkill,
+    chartsCount: drills.filter((d) => d.kind === 'charts').length,
+    chartAccuracy: ct ? cr / ct : null,
     thisWeek: drills.filter((d) => d.date >= weekAgo).length,
   }
 }
@@ -96,8 +106,8 @@ export const LESSON_FOR: Record<StageKey, { slug: string; title: string }> = {
 
 export const SPRINT_FOR: Record<StageKey, { label: string; to: string }> = {
   clarify: { label: 'Practise case openings: recap + 3 questions', to: '/casebook' },
-  structure: { label: 'Run structure drills: 2 minutes each', to: '/drills?tab=structure' },
-  maths: { label: 'Run maths drills: 30 seconds each', to: '/drills?tab=maths' },
+  structure: { label: 'Run structure drills: 2 minutes each', to: '/drills/structure' },
+  maths: { label: 'Run a 2-minute speed maths sprint', to: '/drills/maths' },
   leadership: { label: 'Do a live case and announce the next step after every answer', to: '/casebook' },
   reco: { label: 'Record yourself giving 60-second recommendations', to: '/casebook' },
   comms: { label: 'Daily voice exercises for a week', to: '/learn/how-you-come-across#exercises' },

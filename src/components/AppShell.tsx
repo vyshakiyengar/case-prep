@@ -5,7 +5,7 @@ import { useStore } from '../lib/store'
 import { Avatar, Logo } from './ui'
 import { useIsAdmin } from '../lib/admin'
 
-type Item = { to: string; label: string; icon: string }
+type Item = { to: string; label: string; icon: string; end?: boolean }
 export const HOME: Item = { to: '/home', label: 'Home', icon: 'M3 11l9-7 9 7M5 10v10h5v-6h4v6h5V10' }
 export const LEARN: Item[] = [
   { to: '/learn', label: 'Course', icon: 'M12 6c-2-1.5-5-2-8-1.5v13c3-.5 6 0 8 1.5 2-1.5 5-2 8-1.5v-13c-3-.5-6 0-8 1.5zM12 6v13' },
@@ -15,9 +15,14 @@ export const LEARN: Item[] = [
 export const PRACTISE: Item[] = [
   { to: '/casebook', label: 'Casebook', icon: 'M5 4h9a3 3 0 0 1 3 3v13H8a3 3 0 0 1-3-3zM17 7h2v13' },
   { to: '/interviewer', label: 'Interviewer mode', icon: 'M9 8a3 3 0 1 0 0-.01M3 20c0-3 3-5 6-5s6 2 6 5M17 7h4M17 11h4M19 15h2' },
-  { to: '/graphs', label: 'Graph library', icon: 'M4 20V4M4 20h16M7 16l4-6 3 3 5-8' },
-  { to: '/drills', label: 'Drills', icon: 'M12 7v5l3 2M12 21a8 8 0 1 0 0-16 8 8 0 0 0 0 16zM10 2h4' },
   { to: '/interview-skills', label: 'Interview skills', icon: 'M8 8a4 4 0 0 1 8 0c0 3-4 4-4 7M12 19h.01M4 21h16' },
+]
+export const DRILLS: Item[] = [
+  { to: '/drills', label: 'All drills', icon: 'M12 7v5l3 2M12 21a8 8 0 1 0 0-16 8 8 0 0 0 0 16zM10 2h4', end: true },
+  { to: '/drills/maths', label: 'Speed maths', icon: 'M5 7h6M8 4v6M14 7h5M5 17l4 4M9 17l-4 4M14 16h5M14 20h5' },
+  { to: '/drills/structure', label: 'Structuring', icon: 'M12 4v5M5 9h14M5 9v4M12 9v4M19 9v4M3 13h4v6H3zM10 13h4v6h-4zM17 13h4v6h-4z' },
+  { to: '/drills/charts', label: 'Chart reading', icon: 'M4 20V4M4 20h16M8 16v-4M12 16V8M16 16v-6' },
+  { to: '/graphs', label: 'Graph library', icon: 'M4 20V4M4 20h16M7 16l4-6 3 3 5-8' },
 ]
 export const REFERENCE: Item[] = [
   { to: '/case-types', label: 'Case types', icon: 'M4 5h16M4 12h16M4 19h10' },
@@ -44,7 +49,7 @@ function NavGroup({ title, items }: { title: string; items: Item[] }) {
     <div className={title ? 'mt-6' : 'mt-4'}>
       {title && <div className="px-3 pb-1.5 font-serif text-[13.5px] italic text-[#8C98AE]">{title}</div>}
       {items.map((n) => (
-        <NavLink key={n.to} to={n.to}
+        <NavLink key={n.to} to={n.to} end={n.end}
           className={({ isActive }) => `relative flex items-center gap-3 rounded-md px-3 py-[7px] text-[14.5px] transition-colors ${isActive ? 'bg-white/[0.07] text-white before:absolute before:top-1/2 before:-left-1 before:h-5 before:w-[3px] before:-translate-y-1/2 before:rounded-full before:bg-teal' : 'text-[#B8C2D3] hover:bg-white/[0.05] hover:text-white'}`}>
           <span className="opacity-80"><Icon d={n.icon} /></span>{n.label}
         </NavLink>
@@ -76,7 +81,7 @@ const MENU = 'M4 7h16M4 12h16M4 17h16'
 const CLOSE = 'M6 6l12 12M18 6L6 18'
 const SIGN_IN: Item = { to: '/signin', label: 'Sign in', icon: 'M15 3h4v18h-4M10 17l5-5-5-5M15 12H3' }
 // The four sections in the phone tab bar; everything else lives behind More
-const TABS = (signedIn: boolean): Item[] => [LEARN[0], PRACTISE[0], PRACTISE.find((n) => n.to === '/drills')!, signedIn ? PREP[0] : SIGN_IN]
+const TABS = (signedIn: boolean): Item[] => [LEARN[0], PRACTISE[0], { to: '/drills', label: 'Drills', icon: DRILLS[0].icon }, signedIn ? PREP[0] : SIGN_IN]
 
 /** Phone menu: a panel that slides up from the tab bar with every section, grouped. */
 function MobileSheet({ open, onClose, user, isAdmin }: { open: boolean; onClose: () => void; user: boolean; isAdmin: boolean }) {
@@ -88,7 +93,7 @@ function MobileSheet({ open, onClose, user, isAdmin }: { open: boolean; onClose:
     return () => { document.removeEventListener('keydown', onKey); document.body.style.overflow = prev }
   }, [open, onClose])
   if (!open) return null
-  const groups: [string, Item[]][] = [['Learn', LEARN], ['Practise', PRACTISE], ['Reference', REFERENCE], ...(user ? [['My prep', isAdmin ? [...PREP, ADMIN] : PREP] as [string, Item[]]] : [])]
+  const groups: [string, Item[]][] = [['Learn', LEARN], ['Practise', PRACTISE], ['Drills', DRILLS], ['Reference', REFERENCE], ...(user ? [['My prep', isAdmin ? [...PREP, ADMIN] : PREP] as [string, Item[]]] : [])]
   return (
     <div className="lg:hidden">
       <button type="button" aria-label="Close menu" onClick={onClose} className="sheet-fade fixed inset-0 z-30 bg-ink/40" />
@@ -100,7 +105,7 @@ function MobileSheet({ open, onClose, user, isAdmin }: { open: boolean; onClose:
             <p className="px-2 pb-1 font-serif text-[13.5px] italic text-muted">{title}</p>
             <div className="grid grid-cols-2 gap-x-2">
               {items.map((n) => (
-                <NavLink key={n.to} to={n.to} onClick={onClose}
+                <NavLink key={n.to} to={n.to} end={n.end} onClick={onClose}
                   className={({ isActive }) => `flex items-center gap-2.5 rounded-lg px-2 py-2.5 text-[14px] font-medium ${isActive ? 'bg-canvas text-ink' : 'text-ink-2 hover:bg-canvas'}`}>
                   <span className="text-teal-d"><Icon d={n.icon} /></span>{n.label}
                 </NavLink>
@@ -135,6 +140,7 @@ export default function AppShell() {
           <NavGroup title="" items={[HOME]} />
           <NavGroup title="Learn" items={LEARN} />
           <NavGroup title="Practise" items={PRACTISE} />
+          <NavGroup title="Drills" items={DRILLS} />
           <NavGroup title="Reference" items={REFERENCE} />
           <NavGroup title="My prep" items={isAdmin ? [...PREP, ADMIN] : PREP} />
         </nav>
@@ -184,7 +190,7 @@ export default function AppShell() {
 
       <nav aria-label="Main" className="fixed inset-x-0 bottom-0 z-40 grid grid-cols-5 border-t border-line bg-white pb-[env(safe-area-inset-bottom)] lg:hidden">
         {TABS(!!user).map((n) => (
-          <NavLink key={n.to} to={n.to}
+          <NavLink key={n.to} to={n.to} end={n.end}
             className={({ isActive }) => `flex flex-col items-center gap-0.5 py-2 text-[10.5px] font-medium ${isActive && !mobileOpen ? 'text-ink' : 'text-faint'}`}>
             <Icon d={n.icon} /><span className="truncate">{n.label}</span>
           </NavLink>

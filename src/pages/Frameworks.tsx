@@ -154,7 +154,7 @@ export default function Framework() {
 
       <section className="mt-8 flex flex-wrap gap-3 border-t border-line pt-6">
         {linked.map((c) => <LinkButton key={c.slug} to={`/casebook/${c.slug}`}>Practise: case {c.id}, {c.title}</LinkButton>)}
-        <LinkButton to="/drills?tab=structure" variant="secondary">Structuring drills</LinkButton>
+        <LinkButton to="/drills/structure" variant="secondary">Structuring drills</LinkButton>
       </section>
       <nav className="mt-8 flex justify-between gap-4 text-[14.5px]">
         {FRAMEWORKS[i - 1] ? <Link className="text-muted hover:text-ink" to={`/frameworks/${FRAMEWORKS[i - 1].slug}`}>Previous: {FRAMEWORKS[i - 1].type}</Link> : <span />}

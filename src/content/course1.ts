@@ -123,7 +123,7 @@ export const LESSONS_1: Lesson[] = [
       { q: 'What should you say right after presenting your structure?', options: ['"Where would you like me to start?"', 'Which branch you think matters most, and why', 'A summary of the prompt'], answer: 1, why: 'Stating a hypothesis shows you’re solving the problem, not just organising it.' },
       { q: 'A "should we enter this market" question is usually best structured by...', options: ['Factors (drivers)', 'Steps (a sequence of questions)', 'The 4Ps of marketing'], answer: 1, why: 'Attractiveness → can we win → economics → how to enter is a natural sequence.' },
     ],
-    practice: { label: 'Run 5 structuring drills', to: '/drills?tab=structure' },
+    practice: { label: 'Run 5 structuring drills', to: '/drills/structure' },
   },
   {
     slug: 'case-maths',
@@ -163,7 +163,7 @@ export const LESSONS_1: Lesson[] = [
       { q: 'Fixed costs $3M, price $25, variable cost $10. Breakeven volume?', options: ['120,000', '200,000', '300,000'], answer: 1, why: 'Contribution = $15. $3M ÷ $15 = 200,000 units.' },
       { q: 'Cost $80, price $100. Which is true?', options: ['Margin 25%, markup 20%', 'Margin 20%, markup 25%', 'Both 20%'], answer: 1, why: 'Margin is on price (20/100); markup is on cost (20/80).' },
     ],
-    practice: { label: 'Do a 10-question maths round', to: '/drills?tab=maths' },
+    practice: { label: 'Do a 10-question maths round', to: '/drills/maths' },
   },
   {
     slug: 'charts-and-exhibits',
