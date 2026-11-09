@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+Disallow: /admin
+Disallow: /settings
+Disallow: /invite/
+
+Sitemap: https://prepforcase.com/sitemap.xml

@@ -4,8 +4,10 @@ import { useStore } from '../lib/store'
 import { SignInPanel } from './SignInPanel'
 import { LogoMark } from './ui'
 
-// Pages a signed-out visitor can read in full.
-const OPEN = ['/home', '/about']
+// Pages a signed-out visitor (and a search engine) can read. Pages with a members-only part
+// mark it themselves with <Gate>, or lock it (case steps after the clarifying questions).
+const OPEN = ['/home', '/about', '/casebook', '/learn', '/frameworks', '/perfect-casing', '/glossary', '/interview-formats']
+const OPEN_PREFIX = ['/casebook/', '/learn/']
 
 /**
  * Signed-out visitors see the first screen of a page. Below that the page blurs out
@@ -14,7 +16,7 @@ const OPEN = ['/home', '/about']
 export function SignInWall({ children }: { children: ReactNode }) {
   const { user, ready } = useStore()
   const { pathname } = useLocation()
-  if (user || !ready || OPEN.includes(pathname)) return <>{children}</>
+  if (user || !ready || OPEN.includes(pathname) || OPEN_PREFIX.some((p) => pathname.startsWith(p))) return <>{children}</>
   return (
     <div>
       <div className="relative">

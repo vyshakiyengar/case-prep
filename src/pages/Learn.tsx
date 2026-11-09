@@ -1,8 +1,9 @@
-import { ArtCourse, ArtMap, ArtInterviewer, ArtStructure, ArtMaths, ArtCharts, ArtPractise, ArtReference, ArtThink, ArtImprove, ArtVoice, ArtStories } from '../components/Art'
+import { lessonMeta } from '../lib/seo'
+import { ArtCourse, ArtMap, ArtInterviewer, ArtStructure, ArtMaths, ArtCharts, ArtPractise, ArtThink, ArtImprove, ArtVoice, ArtStories, ArtSizing } from '../components/Art'
 
 const LESSON_ART: Record<string, typeof ArtMap> = {
   'how-case-interviews-work': ArtMap, 'the-opening': ArtInterviewer, structuring: ArtStructure, 'case-maths': ArtMaths,
-  'charts-and-exhibits': ArtCharts, 'driving-the-case': ArtPractise, 'market-sizing': ArtReference, brainstorming: ArtThink,
+  'charts-and-exhibits': ArtCharts, 'driving-the-case': ArtPractise, 'market-sizing': ArtSizing, brainstorming: ArtThink,
   recommendation: ArtImprove, 'how-you-come-across': ArtVoice, 'fit-interview': ArtStories,
 }
 import { useEffect, useRef } from 'react'
@@ -196,6 +197,9 @@ export default function Learn() {
   const dir = useRef<'next' | 'prev'>('next')
   if (i !== last.current) dir.current = i > last.current ? 'next' : 'prev'
   useEffect(() => { last.current = i }, [i])
+
+  // tab title for lesson pages
+  useEffect(() => { const k = LESSONS.findIndex((l) => l.slug === page.id); if (k >= 0) document.title = lessonMeta(LESSONS[k], k + 1).title }, [page.id])
 
   // deep links like /learn/structuring#core-frameworks
   useEffect(() => {

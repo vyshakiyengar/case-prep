@@ -1,4 +1,5 @@
 import { SectorTile } from '../components/Art'
+import { caseMeta } from '../lib/seo'
 import { useEffect, useState } from 'react'
 import { Link, useNavigate, useParams, useSearchParams } from 'react-router-dom'
 import { loadCases } from '../content'
@@ -12,6 +13,7 @@ import { Difficulty } from './Casebook'
 import { STAGES } from '../lib/types'
 import { useStore } from '../lib/store'
 import { SignInButton } from './SignIn'
+import { SignInPanel } from '../components/SignInPanel'
 import type { CaseQuestion } from '../content'
 
 type Kind = 'clarify' | 'structure' | 'chart' | 'maths' | 'ideas' | 'reco' | 'judge' | 'sizing'
@@ -82,7 +84,7 @@ export default function CasePlayer() {
   const { slug } = useParams()
   const [params, setParams] = useSearchParams()
   const nav = useNavigate()
-  const { user, markCase } = useStore()
+  const { user, ready, markCase } = useStore()
   const interviewer = params.get('mode') === 'interviewer'
   const [cases, setCases] = useState<CaseDef[] | null>(null)
   const [i, setI] = useState(0)
@@ -90,6 +92,8 @@ export default function CasePlayer() {
   const watch = useStopwatch(true)
   useEffect(() => { loadCases().then(setCases) }, [])
   useEffect(() => { setI(0); setRevealed({}); watch.reset() }, [slug, interviewer]) // eslint-disable-line react-hooks/exhaustive-deps
+  const found = cases?.find((x) => x.slug === slug)
+  useEffect(() => { if (found) document.title = caseMeta(found).title }, [found])
   if (!cases) return <Loading label="Loading case…" />
   const c = cases.find((x) => x.slug === slug)
   if (!c) return <p>That case doesn't exist. <Link className="underline" to="/casebook">Back to the casebook</Link></p>
@@ -106,6 +110,8 @@ export default function CasePlayer() {
   const show = (k: string) => { setRevealed((r) => ({ ...r, [k]: true })); if (k === 'reco' && user && slug) markCase(slug, true) }
   const isOpen = (k: string) => interviewer || !!revealed[k]
   const go = (n: number) => { setI(n); window.scrollTo({ top: 0, behavior: 'smooth' }) }
+  // Signed-out visitors can read the prompt and clarifying questions; the rest needs an account
+  const locked = (k: number) => !user && ready && k >= 2
 
   return (
     <div>
@@ -142,7 +148,7 @@ export default function CasePlayer() {
                 <button onClick={() => go(k)} aria-current={k === i ? 'step' : undefined}
                   className={`flex w-full items-center gap-2.5 rounded-lg px-3 py-2 text-left text-[14px] ${k === i ? 'bg-white font-medium text-ink shadow-[inset_0_0_0_1px_var(--color-line)]' : k < i ? 'text-ink-2 hover:bg-white/70' : 'text-muted hover:bg-white/70'}`}>
                   <span className={`flex h-5 w-5 shrink-0 items-center justify-center rounded-full text-[11px] font-semibold ${k < i ? 'bg-teal text-white' : k === i ? 'bg-ink text-white' : 'bg-line text-muted'}`}>{k < i ? '✓' : k + 1}</span>
-                  <span className="whitespace-nowrap">{s.label}</span>
+                  <span className="whitespace-nowrap">{s.label}</span>{locked(k) && <svg aria-label="needs sign-in" width="12" height="12" viewBox="0 0 24 24" className="shrink-0 text-faint"><path fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" d="M6 11h12v9H6zM8.5 11V8a3.5 3.5 0 0 1 7 0v3" /></svg>}
                 </button>
               </li>
             ))}
@@ -150,7 +156,14 @@ export default function CasePlayer() {
         </nav>
 
         <article className="min-w-0 rounded-lg border border-line bg-white p-5 sm:p-7">
-          {step.key === 'prompt' && (
+          {locked(i) && (
+            <div className="mx-auto max-w-[420px] py-4 text-center">
+              <h2 className="text-[21px] leading-tight">Sign in to keep going with {c.title}</h2>
+              <p className="mt-1.5 mb-5 text-[14.5px] text-muted">You've seen the prompt and the clarifying questions. Sign in, free, for the structure, every question with a worked answer, the exhibits and the recommendation.</p>
+              <SignInPanel />
+            </div>
+          )}
+          {!locked(i) && step.key === 'prompt' && (
             <>
               <h2 className="text-[19px] font-semibold">{interviewer ? 'Read this aloud to your candidate' : 'Read the prompt'}</h2>
               <blockquote className="graph-paper mt-4 rounded-lg border-l-4 border-teal p-5 font-serif text-[16.5px] leading-relaxed text-ink">{c.prompt}</blockquote>
@@ -160,7 +173,7 @@ export default function CasePlayer() {
             </>
           )}
 
-          {step.key === 'clarify' && (
+          {!locked(i) && step.key === 'clarify' && (
             <>
               <h2 className="text-[19px] font-semibold">{interviewer ? 'Give these facts only if asked' : 'Ask up to three clarifying questions'}</h2>
               {!interviewer && <Coach key={`${c.slug}-clarify`} kind="clarify" />}
@@ -177,7 +190,7 @@ export default function CasePlayer() {
             </>
           )}
 
-          {step.key === 'structure' && (
+          {!locked(i) && step.key === 'structure' && (
             <>
               <h2 className="text-[19px] font-semibold">{interviewer ? 'What a strong structure looks like' : 'Draw your structure on paper'}</h2>
               {!interviewer && (
@@ -195,7 +208,7 @@ export default function CasePlayer() {
             </>
           )}
 
-          {step.key.startsWith('q') && (() => {
+          {!locked(i) && step.key.startsWith('q') && (() => {
             const q = c.questions[Number(step.key.slice(1))]
             return (
               <>
@@ -209,7 +222,7 @@ export default function CasePlayer() {
             )
           })()}
 
-          {step.key === 'reco' && (
+          {!locked(i) && step.key === 'reco' && (
             <>
               <h2 className="text-[19px] font-semibold">{interviewer ? 'Ask for the recommendation' : 'Give your recommendation'}</h2>
               <p className="mt-1 text-muted">Start with the answer. Then 2-3 reasons with numbers, the main risk, and next steps. About 60 seconds.</p>
@@ -223,7 +236,7 @@ export default function CasePlayer() {
             </>
           )}
 
-          {step.key === 'score' && (interviewer ? (
+          {!locked(i) && step.key === 'score' && (interviewer ? (
             <>
               <h2 className="text-[19px] font-semibold">Give feedback</h2>
               <p className="mt-1 text-muted">Score each stage 1-5 out loud, then agree on one fix together. Your candidate logs it in their own case log.</p>
@@ -246,7 +259,7 @@ export default function CasePlayer() {
             </>
           ))}
 
-          {step.key !== 'score' && (
+          {step.key !== 'score' && !locked(i) && (
             <div className="mt-8 flex items-center justify-between border-t border-line pt-4">
               <Button variant="quiet" disabled={i === 0} onClick={() => go(i - 1)}>Back</Button>
               <Button onClick={() => go(i + 1)}>Next: {steps[i + 1].label.toLowerCase()}</Button>

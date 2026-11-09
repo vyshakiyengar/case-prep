@@ -1,3 +1,4 @@
+import { PAGES } from '../lib/seo'
 import { useCallback, useEffect, useState } from 'react'
 import { Link, NavLink, Outlet, useLocation } from 'react-router-dom'
 import { SignInWall } from './SignInWall'
@@ -137,6 +138,7 @@ export default function AppShell() {
   const closeMenu = useCallback(() => setMobileOpen(false), [])
   const isAdmin = useIsAdmin()
   useEffect(() => { if (!loc.hash) window.scrollTo(0, 0); setMobileOpen(false) }, [loc.pathname, loc.hash])
+  useEffect(() => { const m = PAGES[loc.pathname]; if (m) document.title = m.title }, [loc.pathname])
   const name = data?.profile?.name || user?.name || ''
   return (
     <div className="min-h-screen lg:pl-60">

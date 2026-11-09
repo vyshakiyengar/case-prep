@@ -509,3 +509,15 @@ export function IndustryCardBody({ label, title, sub, industry, meta, done }: { 
     </div>
   </>
 }
+
+export const ArtSizing = (p: { className?: string }) => (
+  <Frame {...p}>
+    {[0, 1, 2, 3, 4].map((i) => <Head key={i} x={42 + i * 22} y={50} c={i === 2 ? T : TL} r={7} />)}
+    {[0, 1, 2, 3, 4].map((i) => <Head key={`b${i}`} x={42 + i * 22} y={86} c={i % 2 ? AL : TL} r={7} />)}
+    <text x={156} y={78} fontFamily={SERIF} fontSize="22" fill={N}>×</text>
+    <rect x={172} y={56} width={46} height={30} rx="6" fill={W} {...S} /><text x={195} y={76} textAnchor="middle" fontFamily={SERIF} fontSize="14" fontWeight="600" fill={N}>$40</text>
+    <path d="M36 124h176" {...S} />
+    <rect x={92} y={110} width={76} height={28} rx="8" fill={N} />
+    <text x={130} y={129} textAnchor="middle" fontFamily={SERIF} fontSize="15" fontWeight="600" fill="#5ED3DC">≈ $2.4B</text>
+  </Frame>
+)

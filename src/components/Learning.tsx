@@ -2,14 +2,25 @@ import { useEffect, useRef, useState } from 'react'
 import type { ReactNode } from 'react'
 import { Button, inputCls } from './ui'
 import { Countdown } from './Timer'
+import { useStore } from '../lib/store'
+import { SignInPanel } from './SignInPanel'
 import type { Lesson } from '../content/course'
 
 /**
- * Section-level gate. Gating now happens once per page in SignInWall (after the first
- * screen), so this simply renders its children. Kept so pages can mark where the
- * members-only part begins.
+ * Marks where the members-only part of an open page begins. Signed-out visitors (and search
+ * engines) read everything above it, then see a sign-in card instead of what's inside.
  */
-export function Gate({ children, id }: { children: ReactNode; title?: string; body?: string; id?: string }) {
+export function Gate({ children, id, title, body }: { children: ReactNode; title?: string; body?: string; id?: string }) {
+  const { user, ready } = useStore()
+  if (!user && ready && title) return (
+    <section id={id} aria-labelledby={id ? `${id}-t` : undefined} className="rounded-xl border border-line bg-white p-5 text-center shadow-[0_24px_48px_-32px_rgba(15,27,51,.45)] sm:p-7">
+      <div className="mx-auto max-w-[420px]">
+        <h2 id={id ? `${id}-t` : undefined} className="text-[21px] leading-tight">{title}</h2>
+        {body && <p className="mt-1.5 mb-5 text-[14.5px] text-muted">{body}</p>}
+        <SignInPanel />
+      </div>
+    </section>
+  )
   return id ? <div id={id}>{children}</div> : <>{children}</>
 }
 
