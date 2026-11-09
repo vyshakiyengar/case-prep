@@ -7,6 +7,7 @@ import { useIsAdmin } from '../lib/admin'
 
 type Item = { to: string; label: string; icon: string; end?: boolean }
 export const HOME: Item = { to: '/home', label: 'Home', icon: 'M3 11l9-7 9 7M5 10v10h5v-6h4v6h5V10' }
+export const ABOUT: Item = { to: '/about', label: 'About PrepForCase', icon: 'M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18zM12 11v5M12 8h.01' }
 export const LEARN: Item[] = [
   { to: '/learn', label: 'Course', icon: 'M12 6c-2-1.5-5-2-8-1.5v13c3-.5 6 0 8 1.5 2-1.5 5-2 8-1.5v-13c-3-.5-6 0-8 1.5zM12 6v13' },
   { to: '/perfect-casing', label: 'Perfect casing', icon: 'M4 17l4-4 3 3 6-7 3 3M4 20h16' },
@@ -115,8 +116,11 @@ function MobileSheet({ open, onClose, user, isAdmin }: { open: boolean; onClose:
             </div>
           </div>
         ))}
-        <div className="mt-4 flex gap-5 border-t border-line px-2 pt-3 text-[13.5px] text-muted">
-          <NavLink to="/about" onClick={onClose} className="hover:text-ink">About</NavLink>
+        <NavLink to="/about" onClick={onClose}
+          className={({ isActive }) => `mt-4 flex items-center gap-3 rounded-lg border border-line px-3 py-2.5 text-[14px] font-medium ${isActive ? 'bg-canvas text-ink' : 'text-ink-2 hover:bg-canvas'}`}>
+          <span className="text-teal-d"><Icon d={ABOUT.icon} /></span>About PrepForCase
+        </NavLink>
+        <div className="mt-3 flex gap-5 border-t border-line px-2 pt-3 text-[13.5px] text-muted">
           <NavLink to="/privacy" onClick={onClose} className="hover:text-ink">Privacy</NavLink>
           <NavLink to="/terms" onClick={onClose} className="hover:text-ink">Terms</NavLink>
           {user && <NavLink to="/settings" onClick={onClose} className="hover:text-ink">Settings</NavLink>}
@@ -145,10 +149,10 @@ export default function AppShell() {
           <NavGroup title="Drills" items={DRILLS} />
           <NavGroup title="Reference" items={REFERENCE} />
           <NavGroup title="My prep" items={isAdmin ? [...PREP, ADMIN] : PREP} />
+          <div className="mt-4 border-t border-white/10 pt-3"><NavGroup title="" items={[ABOUT]} /></div>
         </nav>
         <div className="mt-auto pt-6">
           <div className="mb-3 flex gap-4 px-3 text-[12.5px] text-[#8C98AE]">
-            <NavLink to="/about" className={({ isActive }) => isActive ? 'text-white' : 'hover:text-white'}>About</NavLink>
             <Link to="/privacy" className="hover:text-white">Privacy</Link>
             <Link to="/terms" className="hover:text-white">Terms</Link>
           </div>

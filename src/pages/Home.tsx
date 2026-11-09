@@ -82,7 +82,7 @@ export default function Home() {
     <>
       <header className="mb-6">
         <h1 className="text-[25px] leading-[1.12] font-semibold sm:text-[30px]">{user ? `Welcome back${name ? `, ${name}` : ''}` : 'Welcome to PrepForCase'}</h1>
-        <p className="mt-1.5 max-w-2xl text-[14.5px] leading-relaxed text-muted">{user ? 'Learn it, practise it, look it up, track it. Start with your next step below.' : 'Learn it, practise it, look it up, track it. Everything is free; sign in to open every page in full.'}</p>
+        <p className="mt-1.5 max-w-3xl text-[14.5px] leading-relaxed text-muted">Everything you need for case interviews, free: a short course and the core frameworks to learn the method, 102 cases to practise alone or with a partner, drills for maths, structuring and charts, guides on how you think and speak, and a tracker that shows how you are improving. {user ? 'Start with your next step below.' : 'Sign in to open every page in full.'}</p>
       </header>
 
       <section className="mb-6 flex flex-wrap items-center justify-between gap-4 rounded-xl bg-ink p-5 text-white sm:p-5">

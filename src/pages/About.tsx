@@ -2,12 +2,23 @@ import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { LinkButton } from '../components/ui'
 
-/** Photo if /vyshak.jpg is present, otherwise initials. */
+const LINKEDIN = 'https://www.linkedin.com/in/vyshakiyengar/'
+
+/** Small photo for the sign-off; initials if /vyshak.jpg is missing. */
 function Portrait() {
   const [ok, setOk] = useState(true)
   return ok
-    ? <img src="/vyshak.jpg" alt="Vyshak K Iyengar" width={64} height={64} onError={() => setOk(false)} className="h-16 w-16 rounded-full object-cover ring-2 ring-teal/30 ring-offset-2 ring-offset-canvas" />
-    : <span aria-hidden className="flex h-16 w-16 items-center justify-center rounded-full bg-ink font-serif text-[17px] text-white ring-2 ring-teal/30 ring-offset-2 ring-offset-canvas">VI</span>
+    ? <img src="/vyshak.jpg" alt="" width={36} height={36} onError={() => setOk(false)} className="h-9 w-9 shrink-0 rounded-full object-cover grayscale-[35%]" />
+    : <span aria-hidden className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-ink font-serif text-[13px] text-white">VI</span>
+}
+
+function LinkedInIcon() {
+  return (
+    <svg width="15" height="15" viewBox="0 0 24 24" aria-hidden className="shrink-0">
+      <rect width="24" height="24" rx="4" fill="currentColor" />
+      <path fill="#fff" d="M7.1 9.6h2.6V18H7.1zM8.4 5.5a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3zM11.2 9.6h2.5v1.2c.4-.7 1.3-1.4 2.6-1.4 2.7 0 3.2 1.8 3.2 4.1V18h-2.6v-4c0-1 0-2.2-1.3-2.2s-1.6 1-1.6 2.1V18h-2.6z" />
+    </svg>
+  )
 }
 
 export default function About() {
@@ -20,14 +31,6 @@ export default function About() {
     <article className="rise mx-auto max-w-[640px] pt-2 pb-8">
       <p className="text-[14px] font-medium text-teal-d">About PrepForCase</p>
       <h1 className="mt-2 text-[30px] leading-[1.1] sm:text-[38px]">Built from what helped me, so it can help you</h1>
-      <a href="https://vyshak.me" target="_blank" rel="noopener noreferrer me" className="group mt-6 flex w-fit items-center gap-3">
-        <Portrait />
-        <span>
-          <span className="block text-[14.5px] font-medium text-ink group-hover:underline">Vyshak K Iyengar</span>
-          <span className="block text-[13.5px] text-muted">London · vyshak.me</span>
-        </span>
-      </a>
-
       <div className="mt-7 space-y-5 font-serif text-[17px] leading-[1.65] text-ink">
         <p>
           Hi, I'm Vyshak. I'm an alum of London Business School and BCG, and I recently led product strategy for a multi-billion-dollar ads product at Meta.
@@ -53,7 +56,7 @@ export default function About() {
           <li>The cases, wording and examples are written for this site. They are not copied from any firm or casebook.</li>
         </ul>
         <p className="mt-4 text-[14px] text-muted">
-          Spotted a mistake or have an idea? I'd really like to hear it. You can reach me through <a href="https://vyshak.me" target="_blank" rel="noopener noreferrer" className="font-medium text-violet-d hover:underline">vyshak.me</a>.
+          Spotted a mistake or have an idea? I'd really like to hear it. You can reach me on <a href={LINKEDIN} target="_blank" rel="noopener noreferrer" className="font-medium text-violet-d hover:underline">LinkedIn</a> or through <a href="https://vyshak.me" target="_blank" rel="noopener noreferrer" className="font-medium text-violet-d hover:underline">vyshak.me</a>.
         </p>
       </section>
 
@@ -61,9 +64,15 @@ export default function About() {
         PrepForCase is an independent, personal project. It is not affiliated with or endorsed by BCG, Meta, London Business School or any other firm or school. See the <Link to="/privacy" className="underline hover:text-ink">privacy policy</Link> for how your data is handled.
       </p>
 
-      <div className="mt-8 flex flex-wrap items-center justify-between gap-4">
-        <LinkButton to="/learn" className="px-5 py-2.5 text-[14.5px]">Start the course <span aria-hidden>→</span></LinkButton>
-        <p className="text-[14px] text-muted">Made by <a href="https://vyshak.me" target="_blank" rel="noopener noreferrer me" className="font-medium text-ink hover:underline">Vyshak K Iyengar</a>, London</p>
+      <div className="mt-8 flex flex-wrap items-center justify-between gap-4 border-t border-line pt-6">
+        <div className="flex items-center gap-3">
+          <Portrait />
+          <div className="text-[13.5px] leading-snug">
+            <p className="text-ink">Made by <a href="https://vyshak.me" target="_blank" rel="noopener noreferrer me" className="font-medium hover:underline">Vyshak K Iyengar</a>, London</p>
+            <a href={LINKEDIN} target="_blank" rel="noopener noreferrer me" className="mt-0.5 inline-flex items-center gap-1.5 text-muted hover:text-[#0A66C2]"><LinkedInIcon />Connect on LinkedIn</a>
+          </div>
+        </div>
+        <LinkButton to="/learn" className="px-5 py-2.5 text-[14.5px]">Start the course</LinkButton>
       </div>
     </article>
   )
