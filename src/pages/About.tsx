@@ -8,8 +8,8 @@ const LINKEDIN = 'https://www.linkedin.com/in/vyshakiyengar/'
 function Portrait() {
   const [ok, setOk] = useState(true)
   return ok
-    ? <img src="/vyshak.jpg" alt="" width={40} height={40} onError={() => setOk(false)} className="h-10 w-10 shrink-0 rounded-[4px] object-cover grayscale-[35%]" />
-    : <span aria-hidden className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[4px] bg-ink font-serif text-[13px] text-white">VI</span>
+    ? <img src="/vyshak.jpg" alt="" width={80} height={80} onError={() => setOk(false)} className="h-20 w-20 shrink-0 rounded-[6px] object-cover" />
+    : <span aria-hidden className="flex h-20 w-20 shrink-0 items-center justify-center rounded-[6px] bg-ink font-serif text-[20px] text-white">VI</span>
 }
 
 function LinkedInIcon() {
@@ -65,9 +65,9 @@ export default function About() {
       </p>
 
       <div className="mt-8 flex flex-wrap items-center justify-between gap-4 border-t border-line pt-6">
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-4">
           <Portrait />
-          <div className="text-[13.5px] leading-snug">
+          <div className="text-[14.5px] leading-snug">
             <p className="text-ink">Made by <a href="https://vyshak.me" target="_blank" rel="noopener noreferrer me" className="font-medium hover:underline">Vyshak K Iyengar</a>, London</p>
             <a href={LINKEDIN} target="_blank" rel="noopener noreferrer me" className="mt-0.5 inline-flex items-center gap-1.5 text-muted hover:text-[#0A66C2]"><LinkedInIcon />Connect on LinkedIn</a>
           </div>
