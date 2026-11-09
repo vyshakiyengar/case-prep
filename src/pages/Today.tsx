@@ -1,3 +1,4 @@
+import { ArtDashboard } from '../components/Art'
 import { Link } from 'react-router-dom'
 import { useStore } from '../lib/store'
 import { HABITS, CASE_TYPES } from '../lib/types'
@@ -96,7 +97,7 @@ export default function Today() {
 
   return (
     <>
-      <PageHeader title={title} intro={sub || 'Tick off what you do today, and log every case you practise.'}
+      <PageHeader title={title} art={<ArtDashboard />} intro={sub || 'Tick off what you do today, and log every case you practise.'}
         action={<LinkButton to="/cases?new=1">Log a case</LinkButton>} />
 
       <div className="grid gap-5 lg:grid-cols-[1.6fr_1fr]">

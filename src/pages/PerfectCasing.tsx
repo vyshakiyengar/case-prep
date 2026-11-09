@@ -1,3 +1,4 @@
+import { ArtInterviewer } from '../components/Art'
 import { useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { CARDS, STAGES_PC, stageByN } from '../content/perfectCasing'
@@ -160,7 +161,7 @@ export default function PerfectCasing() {
   const nav = [...STAGES_PC.map((x) => ({ id: `stage-${x.n}`, label: `Stage ${x.n}: ${x.title.replace(/ \(.*\)/, "")}${!user && x.n > 2 ? ' (sign in)' : ''}`, locked: !user && x.n > 2 })), { id: 'trainer', label: 'Phrase trainer', locked: !user }]
   return (
     <>
-      <PageHeader title="Perfect casing" intro="The choreography of a strong case, from the first sentence to the recommendation, with the exact words to use at each moment. Read it top to bottom once, then train the phrases daily until they come out on their own." />
+      <PageHeader title="Perfect casing" art={<ArtInterviewer />} intro="The choreography of a strong case, from the first sentence to the recommendation, with the exact words to use at each moment. Read it top to bottom once, then train the phrases daily until they come out on their own." />
       <JumpBar items={nav} label="Jump to" />
       <div className="space-y-5">
         {STAGES_PC.slice(0, 2).map((s) => <Stage key={s.n} s={s} onTrain={train} />)}

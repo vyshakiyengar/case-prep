@@ -1,3 +1,4 @@
+import { ArtInterviewer } from '../components/Art'
 import { useEffect, useState } from 'react'
 
 import { loadCases } from '../content'
@@ -18,7 +19,7 @@ export default function Interviewer() {
   useEffect(() => { loadCases().then(setCases) }, [])
   return (
     <>
-      <PageHeader title="Interviewer mode" intro="Give a case to a friend, then swap. Each case shows you what to read aloud, what to reveal when asked, and the model answers." />
+      <PageHeader title="Interviewer mode" art={<ArtInterviewer />} intro="Give a case to a friend, then swap. Each case shows you what to read aloud, what to reveal when asked, and the model answers." />
       <Section title="How to run a case for a partner" className="mb-6">
         <ol className="grid gap-3 md:grid-cols-2 lg:grid-cols-3">
           {STEPS.map(([t, d], i) => (

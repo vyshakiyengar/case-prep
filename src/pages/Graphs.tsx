@@ -1,3 +1,4 @@
+import { ArtGraphs } from '../components/Art'
 import { useEffect, useMemo, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import type { ReactNode } from 'react'
@@ -213,7 +214,7 @@ export default function Graphs() {
     setDone(next); try { window.localStorage.setItem(STORAGE, JSON.stringify(next)) } catch { /* optional */ }
   }
   return <>
-    <PageHeader title="Graph library" intro={`${FAMILIES.length} chart types you'll meet in case exhibits, each with ${BUSINESSES.length} sets of practice data. Practise them one at a time, or browse them all first to get familiar. For new questions every time, use the chart drills.`}
+    <PageHeader title="Graph library" art={<ArtGraphs />} intro={`${FAMILIES.length} chart types you'll meet in case exhibits, each with ${BUSINESSES.length} sets of practice data. Practise them one at a time, or browse them all first to get familiar. For new questions every time, use the chart drills.`}
       action={<span className="rounded-lg bg-teal-l px-3 py-2 text-[14px] font-medium text-teal-d">{done.length} of {all.length} practised</span>} />
     <div className="mb-6 flex flex-col gap-3 sm:flex-row" role="group" aria-label="How do you want to use the library?">
       <ModeCard active={!browse} onClick={() => setBrowse(false)} title="Practise one at a time"

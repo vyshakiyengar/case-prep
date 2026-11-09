@@ -1,3 +1,4 @@
+import { ArtCasebook } from '../components/Art'
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { loadCases, DIFF_LABEL } from '../content'
@@ -56,7 +57,7 @@ export default function Casebook() {
   const doneCount = cases.filter(isDone).length
   return (
     <>
-      <PageHeader title="Casebook" intro={`${cases.length} original practice cases. Do one alone with the timer, or give one to a friend and swap.`}
+      <PageHeader title="Casebook" art={<ArtCasebook />} intro={`${cases.length} original practice cases. Do one alone with the timer, or give one to a friend and swap.`}
         action={user ? <span className="text-[14px] text-muted"><b className="font-serif text-[19px] font-normal text-ink">{doneCount}</b> of {cases.length} practised</span> : undefined} />
       <p className="mb-5 rounded-lg border border-teal bg-teal-l/50 px-4 py-3 text-[14.5px] text-ink">New to cases? Do the first three lessons of the course, then pick an <button onClick={() => { setDiff(1); setStatus('todo') }} className="font-medium underline">easy case you haven't done</button>.</p>
 

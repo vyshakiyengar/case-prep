@@ -1,45 +1,35 @@
 import { CASE_COUNT } from '../content/caseCount'
 import { Link } from 'react-router-dom'
 import { Logo } from '../components/ui'
+import { ArtCourse, ArtPractise, ArtReference, ArtImprove } from '../components/Art'
 import { MODULES, lessonBySlug, LESSONS, totalMinutes } from '../content/course'
 
-function Notepad() {
-  // the candidate's page, drawn as it would be in an interview: prompt, objective, issue tree, where to start
-  const L = (d: string, len: number, delay: number, color = 'rgba(255,255,255,.55)') =>
-    <path className="tree-line" d={d} stroke={color} strokeWidth="1.6" fill="none" strokeLinecap="round" style={{ ['--len' as string]: len, animationDelay: `${delay}s` }} />
-  const N = (x: number, y: number, w: number, label: string, delay: number, tone: 'root' | 'focus' | 'plain' = 'plain') => (
-    <g className="tree-node" style={{ animationDelay: `${delay}s` }}>
-      <rect x={x} y={y} width={w} height="34" rx="5" fill={tone === 'root' ? '#FFFFFF' : tone === 'focus' ? '#0E8C96' : 'transparent'} stroke={tone === 'plain' ? 'rgba(255,255,255,.35)' : 'none'} />
-      <text x={x + w / 2} y={y + 22} textAnchor="middle" fontSize="13.5" fontFamily="IBM Plex Sans, sans-serif" fontWeight={tone === 'plain' ? 400 : 500} fill={tone === 'root' ? '#0F1B33' : '#FFFFFF'}>{label}</text>
-    </g>
-  )
+/** A phone showing a real screen from the site. */
+export function Phone({ src, alt, className = '', eager = false }: { src: string; alt: string; className?: string; eager?: boolean }) {
   return (
-    <div className="relative">
-      <p className="font-serif text-[16.5px] italic leading-relaxed text-[#D5DCE7]">
-        &ldquo;Our client runs 120 coffee shops. Revenue grew slightly, but operating profit fell from $12M to $4.5M in two years. Why, and what should they do?&rdquo;
-      </p>
-      <p className="mt-3 text-[13.5px] text-[#8C98AE]">Objective: back to $10M profit within two years</p>
-      <svg viewBox="0 0 480 250" className="mt-6 w-full" role="img" aria-label="An issue tree: profit decline split into revenue and costs, with app commissions under costs marked as the place to start">
-        {N(150, 6, 160, 'Why is profit down?', 0.15, 'root')}
-        {L('M230 40 V62 M120 62 H340 M120 62 V80 M340 62 V80', 280, 0.45)}
-        {N(60, 80, 120, 'Revenue', 0.9)}
-        {N(280, 80, 120, 'Costs', 1.0, 'focus')}
-        {L('M120 114 V196 M120 140 H134 M120 168 H134 M120 196 H134', 160, 1.3, 'rgba(255,255,255,.3)')}
-        {L('M340 114 V196 M340 140 H354 M340 168 H354 M340 196 H354', 160, 1.4, '#3FB3BC')}
-        <g className="tree-node" style={{ animationDelay: '1.6s' }} fontFamily="IBM Plex Sans, sans-serif" fontSize="12.5" fill="#B8C2D3">
-          <text x="140" y="144">Volume</text><text x="140" y="172">Price</text><text x="140" y="200">Channel mix</text>
-          <text x="360" y="144">Ingredients</text><text x="360" y="172">Staff, rent</text><text x="360" y="200" fontWeight="500" fill="#FFFFFF">App commissions</text>
-          <line x1="360" y1="206" x2="476" y2="206" stroke="#3FB3BC" strokeWidth="1.6" />
-        </g>
-        <g className="tree-node" style={{ animationDelay: '2s' }}>
-          <path d="M366 222 q14 12 34 6" stroke="#7FD8DF" strokeWidth="1.4" fill="none" />
-          <text x="404" y="238" fontSize="14" fontFamily="Newsreader Variable, Georgia, serif" fontStyle="italic" fill="#7FD8DF">start here</text>
-          <text x="10" y="238" fontSize="12.5" fontFamily="IBM Plex Sans, sans-serif" fill="#8C98AE">First ask: is it just us, or the whole market?</text>
-        </g>
-      </svg>
+    <div className={`rounded-[34px] bg-[#0B1428] p-[7px] shadow-[0_30px_60px_-28px_rgba(0,0,0,.6),0_0_0_1px_rgba(255,255,255,.08)] ${className}`}>
+      <div className="relative overflow-hidden rounded-[28px] bg-white">
+        <span aria-hidden className="absolute top-[7px] left-1/2 z-10 h-[15px] w-[62px] -translate-x-1/2 rounded-full bg-[#0B1428]" />
+        <img src={src} alt={alt} width={585} height={1266} loading={eager ? 'eager' : 'lazy'} decoding="async" className="block h-auto w-full pt-[18px]" />
+      </div>
     </div>
   )
 }
+
+function HeroPhones() {
+  return (
+    <div className="relative mx-auto h-[420px] w-full max-w-[440px] sm:h-[520px]">
+      <Phone src="/shots/phone-structuring.webp" alt="The structuring drill on a phone: a furniture factory's defect rate, with the overlapping bucket found" className="absolute top-8 right-0 w-[48%] rotate-[5deg] opacity-95" />
+      <Phone src="/shots/phone-casebook.webp" alt="The casebook on a phone: 102 practice cases with filters by level and type" className="absolute top-0 left-[6%] w-[52%] -rotate-[3deg]" eager />
+      <div className="absolute bottom-6 left-0 rounded-lg bg-white px-3.5 py-2.5 text-ink shadow-[0_18px_40px_-18px_rgba(0,0,0,.55)] sm:bottom-14">
+        <p className="font-serif text-[22px] leading-tight font-semibold">{CASE_COUNT} cases</p>
+        <p className="text-[12.5px] text-muted">each with a full worked answer</p>
+      </div>
+    </div>
+  )
+}
+
+const ART = [ArtCourse, ArtPractise, ArtReference, ArtImprove]
 
 const PATH = [
   { t: 'Learn', d: 'The map of a case, 11 short lessons, what to say at each stage (perfect casing) and 11 core frameworks.', to: '/learn', cta: 'Start the course' },
@@ -80,7 +70,7 @@ export default function Landing() {
               <Link to="/casebook" className="rounded-lg border border-white/25 px-5 py-3 text-[14.5px] font-medium text-white hover:border-white/60">Browse the casebook</Link>
             </div>
           </div>
-          <Notepad />
+          <HeroPhones />
         </section>
       </div>
 
@@ -90,9 +80,9 @@ export default function Landing() {
           <h2 className="text-[30px]">How it works</h2>
           <ol className="mt-8 grid gap-x-8 gap-y-8 md:grid-cols-2 lg:grid-cols-4">
             {PATH.map((p, i) => (
-              <li key={p.t} className="flex flex-col border-t border-ink/70 pt-5">
-                <span className="font-serif text-[32px] leading-none italic text-teal">{i + 1}</span>
-                <h3 className="mt-3 text-[19px]">{p.t}</h3>
+              <li key={p.t} className="flex flex-col">
+                <div className="mb-4 rounded-xl bg-canvas px-4 pt-3 pb-2"><div className="mx-auto max-w-[240px] md:max-w-none">{(() => { const A = ART[i]; return <A /> })()}</div></div>
+                <h3 className="text-[19px]"><span className="mr-2 font-serif italic text-teal">{i + 1}</span>{p.t}</h3>
                 <p className="mt-1 flex-1 text-[14.5px] text-muted">{p.d}</p>
                 <Link to={p.to} className="mt-3 text-[14px] font-medium text-violet-d hover:underline">{p.cta}</Link>
               </li>
@@ -101,7 +91,30 @@ export default function Landing() {
         </div>
       </section>
 
-      <section className="mx-auto max-w-6xl border-t border-line px-5 py-20 sm:px-6">
+      <section className="bg-canvas">
+        <div className="mx-auto max-w-6xl px-5 py-20 sm:px-6">
+          <h2 className="text-[30px]">Drills that take a few minutes</h2>
+          <p className="mt-1 max-w-2xl text-muted">Real screens from the site. Each drill tells you straight away whether you were right, and why.</p>
+          <div className="mt-10 grid gap-10 sm:grid-cols-3">
+            {[
+              { src: '/shots/phone-maths.webp', t: 'Case maths', d: 'Percentages, margins, growth and break-even, marked as you go.', alt: 'A case maths question answered correctly on a phone' },
+              { src: '/shots/phone-structuring.webp', t: 'Structuring', d: 'Spot the weak structure, or write your own against the clock.', alt: 'A structuring question on a phone' },
+              { src: '/shots/phone-charts.webp', t: 'Reading charts', d: 'One chart, one question, sixty seconds.', alt: 'A chart question with a 60-second timer on a phone' },
+            ].map((x) => (
+              <figure key={x.t} className="flex flex-col items-center text-center">
+                <Phone src={x.src} alt={x.alt} className="w-[62%] max-w-[230px]" />
+                <figcaption className="mt-5">
+                  <h3 className="text-[19px]">{x.t}</h3>
+                  <p className="mt-1 text-[14.5px] text-muted">{x.d}</p>
+                </figcaption>
+              </figure>
+            ))}
+          </div>
+          <Link to="/drills" className="mt-10 inline-block rounded-lg bg-ink px-4 py-2.5 text-[14.5px] font-medium text-white hover:bg-[#1C2B4A]">Try a drill</Link>
+        </div>
+      </section>
+
+      <section className="mx-auto max-w-6xl px-5 py-20 sm:px-6">
         <div className="flex flex-wrap items-end justify-between gap-4">
           <div>
             <h2 className="text-[30px]">The course</h2>

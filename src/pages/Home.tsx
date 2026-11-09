@@ -1,3 +1,4 @@
+import { ArtCourse, ArtPractise, ArtReference, ArtImprove, ArtMap } from '../components/Art'
 import { CASE_COUNT } from '../content/caseCount'
 import { Link } from 'react-router-dom'
 import { useStore } from '../lib/store'
@@ -85,13 +86,14 @@ export default function Home() {
         <p className="mt-1.5 max-w-3xl text-[14.5px] leading-relaxed text-muted">Everything you need for case interviews, free: a short course and the core frameworks to learn the method, 102 cases to practise alone or with a partner, drills for maths, structuring and charts, guides on how you think and speak, and a tracker that shows how you are improving. {user ? 'Start with your next step below.' : 'Sign in to open every page in full.'}</p>
       </header>
 
-      <section className="mb-6 flex flex-wrap items-center justify-between gap-4 rounded-xl bg-ink p-5 text-white sm:p-5">
+      <section className="relative mb-6 flex flex-wrap items-center justify-between gap-4 overflow-hidden rounded-xl bg-ink p-5 text-white sm:p-5 md:pr-56">
+        <div aria-hidden className="pointer-events-none absolute -right-2 -bottom-6 hidden w-56 opacity-90 md:block [&_path:first-of-type]:opacity-0">{<ArtMap />}</div>
         <div>
           <p className="text-[13px] font-semibold text-teal-l">Your next step</p>
           <p className="mt-0.5 font-serif text-[19px] leading-snug font-semibold">{next.label}</p>
 
         </div>
-        <div className="flex flex-wrap gap-2">
+        <div className="relative flex flex-wrap gap-2">
           <Link to={next.to} className="rounded-lg bg-white px-4 py-2.5 text-[14.5px] font-semibold text-ink hover:bg-teal-l">Go</Link>
           {!user && <SignInButton label="Sign in to track progress" />}
         </div>
@@ -101,7 +103,8 @@ export default function Home() {
       <div className="grid gap-4 lg:grid-cols-4">
         {COLS.map((col, ci) => (
           <section key={col.n} className="relative flex flex-col rounded-xl border border-line bg-white p-4">
-            {ci < COLS.length - 1 && <span aria-hidden className="absolute top-7 -right-[15px] z-10 hidden h-6 w-6 items-center justify-center rounded-full border border-line bg-white text-[13px] text-faint lg:flex">→</span>}
+            <div aria-hidden className="-mx-4 -mt-4 mb-3 rounded-t-xl border-b border-line bg-canvas px-6 pt-1 sm:px-8 lg:px-3"><div className="mx-auto max-w-[200px] lg:max-w-none">{(() => { const A = [ArtCourse, ArtPractise, ArtReference, ArtImprove][ci]; return <A /> })()}</div></div>
+            {ci < COLS.length - 1 && <span aria-hidden className="absolute top-[30%] -right-[15px] z-10 hidden h-6 w-6 items-center justify-center rounded-full border border-line bg-white text-[13px] text-faint lg:flex">→</span>}
             <div className="mb-3 flex items-center gap-2.5">
               <span className={`flex h-8 w-8 items-center justify-center rounded-full font-serif text-[15px] font-semibold text-white ${col.tone}`}>{col.n}</span>
               <div>

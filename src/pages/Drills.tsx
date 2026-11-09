@@ -1,3 +1,4 @@
+import { ArtPractise, ArtMaths, ArtStructure, ArtCharts } from '../components/Art'
 import { Link, Navigate, useNavigate, useSearchParams } from 'react-router-dom'
 import { useStore } from '../lib/store'
 import { drillStats } from '../lib/stats'
@@ -17,17 +18,17 @@ export default function Drills() {
   const pct = (x: number | null) => (x === null ? '' : `, ${Math.round(x * 100)}% right`)
   return (
     <>
-      <PageHeader title="Drills" intro="Short exercises for three skills almost every case uses. Each takes a few minutes. Pick one and press Start: there's nothing to set up." />
+      <PageHeader title="Drills" art={<ArtPractise />} intro="Short exercises for three skills almost every case uses. Each takes a few minutes. Pick one and press Start: there's nothing to set up." />
       <div className="grid max-w-6xl gap-4 lg:grid-cols-3">
-        <StartCard title="Case maths" onStart={() => nav('/drills/maths?go=1')}
+        <StartCard title="Case maths" art={<ArtMaths />} onStart={() => nav('/drills/maths?go=1')}
           body="Quick sums like the ones in a case. Type the answer and see straight away if it's right. If not, you see the quickest way to do it."
           example={<>"What is 15% of 240?"</>}
           meta={s.mathsQuestions ? `You: ${s.mathsQuestions} done${pct(s.mathsAccuracy)}` : 'New questions every round · 10 per round'} />
-        <StartCard title="Structuring" onStart={() => nav('/drills/structure?mode=pick')}
+        <StartCard title="Structuring" art={<ArtStructure />} onStart={() => nav('/drills/structure?mode=pick')}
           body="Break a business problem into a few clear parts. Start with quick spot-the-flaw questions, then write your own."
           example={<>"A clinic's wait for appointments has risen from 5 to 12 days. How would you break this down?"</>}
           meta={s.structureCount ? `You: ${s.structureCount} done` : `${ALL_SPOT.length} quick questions · ${ALL_PROMPTS.length} to write`} />
-        <StartCard title="Reading charts" onStart={() => nav('/drills/charts?mode=quick')}
+        <StartCard title="Reading charts" art={<ArtCharts />} onStart={() => nav('/drills/charts?mode=quick')}
           body="See a chart, answer one question about it. You're told straight away if you're right and how to work it out."
           example={<>"What share of total revenue comes from the North?"</>}
           meta={s.chartsCount ? `You: ${s.chartsCount} rounds${pct(s.chartAccuracy)}` : 'New charts every round · 8 per round'} />

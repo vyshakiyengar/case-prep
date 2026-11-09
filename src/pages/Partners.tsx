@@ -1,3 +1,4 @@
+import { ArtPartners } from '../components/Art'
 import { useEffect, useState } from 'react'
 import { useStore } from '../lib/store'
 import type { Summary } from '../lib/types'
@@ -50,7 +51,7 @@ export default function Partners() {
 
   if (backend?.mode === 'demo') return (
     <>
-      <PageHeader title="Practice partners" />
+      <PageHeader title="Practice partners" art={<ArtPartners />} />
       <div className="max-w-xl rounded-lg border border-line bg-white p-5">
         <h2 className="text-[17.5px] font-semibold">Coming with Google sign-in</h2>
         <p className="mt-1 text-ink-2">Inviting a partner needs an account in the cloud, so it switches on together with Google sign-in. Everything else works now, and your progress is saved in this browser.</p>
@@ -74,7 +75,7 @@ export default function Partners() {
 
   return (
     <>
-      <PageHeader title="Practice partners" intro="Prep is easier when someone can see whether you showed up. Partners see each other's weekly summary: tracker score, prep days, cases logged, average score, the stage you're working on and your latest fix. They never see your full case log, notes or stories."
+      <PageHeader title="Practice partners" art={<ArtPartners />} intro="Prep is easier when someone can see whether you showed up. Partners see each other's weekly summary: tracker score, prep days, cases logged, average score, the stage you're working on and your latest fix. They never see your full case log, notes or stories."
         action={<Button onClick={invite}>Invite a partner</Button>} />
       {link && (
         <Section title="Send this link to your partner" className="mb-5">

@@ -1,3 +1,4 @@
+import { ArtFrameworks } from '../components/Art'
 import { useEffect, useState } from 'react'
 import { Link, Navigate, useParams } from 'react-router-dom'
 import { FRAMEWORKS, frameworkBySlug } from '../content/frameworks'
@@ -60,7 +61,7 @@ export function FrameworksIndex() {
   ]
   return (
     <>
-      <PageHeader title="Frameworks" intro="Eleven core frameworks cover most cases you will get. Learn these first; the rest of the page is for later." />
+      <PageHeader title="Frameworks" art={<ArtFrameworks />} intro="Eleven core frameworks cover most cases you will get. Learn these first; the rest of the page is for later." />
       <p className="mb-5 max-w-2xl text-[14.5px] text-ink-2">How to use them: pick the tree closest to the question, rename every branch for your client, and say which branch you would test first. New to this? Read the <Link to="/learn/structuring" className="font-medium text-violet-d hover:underline">structuring lesson</Link> first.</p>
       <JumpBar items={nav} label="Jump to" />
       <div className="space-y-14">

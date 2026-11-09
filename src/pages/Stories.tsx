@@ -1,3 +1,4 @@
+import { ArtStories } from '../components/Art'
 import { useState } from 'react'
 import { playbook } from '../content'
 import { useStore } from '../lib/store'
@@ -52,7 +53,7 @@ function StoryBuilder() {
 export default function Stories() {
   return (
     <>
-      <PageHeader title="Fit stories" intro="Build 6-8 stories once, and use each for several questions. Rehearse them out loud every week."
+      <PageHeader title="Fit stories" art={<ArtStories />} intro="Build 6-8 stories once, and use each for several questions. Rehearse them out loud every week."
         action={<LinkButton to="/learn/fit-interview" variant="secondary">Lesson: the fit interview</LinkButton>} />
       <div className="space-y-5">
         <StoryBuilder />

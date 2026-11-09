@@ -17,7 +17,17 @@ export function LinkButton({ to, variant = 'primary', children, className = '' }
   return <Link to={to} className={`${btnBase} ${btnVar[variant]} ${className}`}>{children}</Link>
 }
 
-export function PageHeader({ title, intro, action }: { title: string; intro?: ReactNode; action?: ReactNode }) {
+export function PageHeader({ title, intro, action, art }: { title: string; intro?: ReactNode; action?: ReactNode; art?: ReactNode }) {
+  if (art) return (
+    <header className="mb-5 grid items-center gap-x-6 sm:mb-6 sm:grid-cols-[1fr_200px] lg:grid-cols-[1fr_230px]">
+      <div className="min-w-0 max-w-2xl">
+        <h1 className="text-[25px] leading-[1.12] tracking-[-0.01em] sm:text-[30px]">{title}</h1>
+        {intro && <p className="mt-1.5 text-[14.5px] leading-relaxed text-muted">{intro}</p>}
+        {action && <div className="mt-3">{action}</div>}
+      </div>
+      <div aria-hidden className="hidden sm:block">{art}</div>
+    </header>
+  )
   return (
     <header className="mb-5 flex flex-wrap items-end justify-between gap-x-4 gap-y-3 sm:mb-6">
       <div className="min-w-0 max-w-2xl">

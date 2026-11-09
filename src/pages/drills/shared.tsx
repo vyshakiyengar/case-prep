@@ -59,9 +59,10 @@ export function HowItWorks({ steps }: { steps: string[] }) {
 }
 
 /** A big, self-explaining choice: what it is, what happens, and one Start button. */
-export function StartCard({ title, tag, body, example, meta, onStart, cta = 'Start' }: { title: string; tag?: string; body: string; example?: React.ReactNode; meta: string; onStart: () => void; cta?: string }) {
+export function StartCard({ title, tag, body, example, meta, onStart, cta = 'Start', art }: { title: string; tag?: string; body: string; example?: React.ReactNode; meta: string; onStart: () => void; cta?: string; art?: React.ReactNode }) {
   return (
-    <div className="flex flex-col rounded-lg border border-line bg-white p-4 sm:p-5">
+    <div className="flex flex-col overflow-hidden rounded-lg border border-line bg-white p-4 sm:p-5">
+      {art && <div aria-hidden className="-mx-4 -mt-4 mb-4 border-b border-line bg-canvas px-8 pt-2 sm:-mx-5 sm:-mt-5 sm:px-10"><div className="mx-auto max-w-[220px] lg:max-w-none">{art}</div></div>}
       <div className="flex flex-wrap items-baseline gap-x-2">
         <h2 className="text-[19px]">{title}</h2>
         {tag && <span className="rounded-full bg-teal-l px-2 py-0.5 text-[12px] font-medium text-teal-d">{tag}</span>}

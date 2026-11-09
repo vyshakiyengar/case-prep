@@ -1,3 +1,4 @@
+import { ArtStructure } from '../../components/Art'
 import { useCallback, useMemo, useRef, useState } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
 import { useStore } from '../../lib/store'
@@ -178,7 +179,7 @@ export default function StructurePractice() {
   return (
     <>
       <DrillCrumbs here="Structuring" />
-      {mode === null && <PageHeader title="Structuring" intro="In a case you're asked to break a problem into a few clear parts before you dive in. Interviewers watch this skill closely. Practise it here in two ways." />}
+      {mode === null && <PageHeader title="Structuring" art={<ArtStructure />} intro="In a case you're asked to break a problem into a few clear parts before you dive in. Interviewers watch this skill closely. Practise it here in two ways." />}
       {mode === null && (
         <div className="grid max-w-5xl gap-4 md:grid-cols-2">
           <StartCard title="Spot the flaw" tag="Start here" onStart={() => go('pick')}

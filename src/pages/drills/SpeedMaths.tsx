@@ -1,3 +1,4 @@
+import { ArtMaths } from '../../components/Art'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
 import { useStore } from '../../lib/store'
@@ -119,7 +120,7 @@ export default function SpeedMaths() {
   return (
     <>
       <DrillCrumbs here="Case maths" />
-      {phase === 'run' ? <h1 className="mb-4 text-[22px] leading-tight sm:text-[26px]">Case maths</h1> : <PageHeader title="Case maths" intro="Quick sums like the ones in a case: percentages, big numbers, margins, growth. Type your answer and see straight away whether it's right. If not, you see the quickest way to work it out." />}
+      {phase === 'run' ? <h1 className="mb-4 text-[22px] leading-tight sm:text-[26px]">Case maths</h1> : <PageHeader title="Case maths" art={<ArtMaths />} intro="Quick sums like the ones in a case: percentages, big numbers, margins, growth. Type your answer and see straight away whether it's right. If not, you see the quickest way to work it out." />}
 
       {phase === 'ready' && (
         <div className="max-w-3xl">

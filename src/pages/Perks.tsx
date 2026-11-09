@@ -1,3 +1,4 @@
+import { ArtPerks } from '../components/Art'
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useStore } from '../lib/store'
@@ -76,7 +77,7 @@ export default function Perks() {
   }, [backend, user])
   if (backend?.mode === 'demo') return (
     <>
-      <PageHeader title="Student perks" />
+      <PageHeader title="Student perks" art={<ArtPerks />} />
       <div className="max-w-xl rounded-lg border border-line bg-white p-5">
         <h2 className="text-[17.5px] font-semibold">Coming with Google sign-in</h2>
         <p className="mt-1 text-ink-2">Verifying your business school email needs an account in the cloud, so it switches on together with Google sign-in. Everything else works now, and your progress is saved in this browser.</p>
@@ -96,7 +97,7 @@ export default function Perks() {
 
   if (student && isAcademicDomain(student.domain)) return (
     <>
-      <PageHeader title="Student perks" intro="Free materials and offers for verified business school students." />
+      <PageHeader title="Student perks" art={<ArtPerks />} intro="Free materials and offers for verified business school students." />
       <div className="mb-5 flex flex-wrap items-center gap-3 rounded-lg border border-good/40 bg-good-l px-5 py-3">
         <svg width="22" height="22" viewBox="0 0 24 24" aria-hidden><circle cx="12" cy="12" r="11" fill="#1E8E3E" /><path d="M7 12.5l3.2 3L17 9" stroke="#fff" strokeWidth="2.2" fill="none" strokeLinecap="round" /></svg>
         <span className="text-ink"><b className="font-semibold">School email confirmed:</b> {student.school}{student.program ? `, ${student.program} ${student.gradYear}` : ''}</span>
@@ -111,7 +112,7 @@ export default function Perks() {
 
   return (
     <>
-      <PageHeader title="Student perks" intro="Business school student? Verify your school email to unlock free downloads and student offers." />
+      <PageHeader title="Student perks" art={<ArtPerks />} intro="Business school student? Verify your school email to unlock free downloads and student offers." />
       <div className="grid items-start gap-5 lg:grid-cols-[1.2fr_1fr]">
         <Section title={sent ? 'Check your school inbox' : 'Verify your school email'}>
           {sent ? (

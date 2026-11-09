@@ -1,3 +1,10 @@
+import { ArtCourse, ArtMap, ArtInterviewer, ArtStructure, ArtMaths, ArtCharts, ArtPractise, ArtReference, ArtThink, ArtImprove, ArtVoice, ArtStories } from '../components/Art'
+
+const LESSON_ART: Record<string, typeof ArtMap> = {
+  'how-case-interviews-work': ArtMap, 'the-opening': ArtInterviewer, structuring: ArtStructure, 'case-maths': ArtMaths,
+  'charts-and-exhibits': ArtCharts, 'driving-the-case': ArtPractise, 'market-sizing': ArtReference, brainstorming: ArtThink,
+  recommendation: ArtImprove, 'how-you-come-across': ArtVoice, 'fit-interview': ArtStories,
+}
 import { useEffect, useRef } from 'react'
 import { Link, useLocation, useNavigate, useParams } from 'react-router-dom'
 import { LESSONS, lessonBySlug, totalMinutes } from '../content/course'
@@ -29,9 +36,14 @@ function LessonChapter({ l, n }: { l: Lesson; n: number }) {
   const freeCount = l.sections.length > 2 ? 2 : 1
   return (
     <article id={l.slug} className="scroll-mt-32 sm:rounded-xl sm:border sm:border-line sm:bg-white sm:p-9 sm:shadow-[0_1px_0_#E3E7ED,0_24px_48px_-36px_rgba(15,27,51,.4)]">
-      <p className="text-[13.5px] text-muted">Lesson {n} of {LESSONS.length}, {l.minutes} min{done && <span className="ml-2 font-medium text-teal-d">Completed ✓</span>}</p>
-      <h2 className="mt-1 text-[24px] leading-tight font-semibold sm:text-[26px]">{l.title}</h2>
-      <p className="mt-1 max-w-2xl text-[15.5px] text-muted">{l.summary}</p>
+      <div className="sm:flex sm:items-start sm:justify-between sm:gap-6">
+        <div>
+          <p className="text-[13.5px] text-muted">Lesson {n} of {LESSONS.length}, {l.minutes} min{done && <span className="ml-2 font-medium text-teal-d">Completed ✓</span>}</p>
+          <h2 className="mt-1 text-[24px] leading-tight font-semibold sm:text-[26px]">{l.title}</h2>
+          <p className="mt-1 max-w-2xl text-[15.5px] text-muted">{l.summary}</p>
+        </div>
+        {LESSON_ART[l.slug] && <div aria-hidden className="mt-3 w-44 shrink-0 sm:-mt-3 sm:w-48">{(() => { const A = LESSON_ART[l.slug]; return <A /> })()}</div>}
+      </div>
 
       <div className="mt-6 max-w-[68ch] space-y-7">
         {l.sections.slice(0, freeCount).map((s) => <SectionBody key={s.h} s={s} />)}
@@ -216,7 +228,7 @@ export default function Learn() {
   return (
     <>
       {i === 0 && (
-        <PageHeader title="The case interview course"
+        <PageHeader title="The case interview course" art={<ArtCourse />}
           intro={`${LESSONS.length} short lessons, about ${Math.round(totalMinutes / 5) * 5} minutes in total. One lesson per page: turn with the buttons or your arrow keys.`}
           action={<LinkButton to={`/learn/${nextLesson.slug}`}>{done ? 'Continue where I left off' : 'Start lesson 1'}</LinkButton>} />
       )}

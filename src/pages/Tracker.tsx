@@ -1,3 +1,4 @@
+import { ArtTracker } from '../components/Art'
 import { useStore } from '../lib/store'
 import { HABITS } from '../lib/types'
 import { fmtDow, fmtShort, todayIso } from '../lib/dates'
@@ -11,7 +12,7 @@ export default function Tracker() {
   const cons = habitConsistency(data!.profile, data!.days)
   return (
     <>
-      <PageHeader title="Tracker" intro="Tap a square when you complete a habit. Five or more in a day is a real prep day. Past days can be filled in if you forgot." />
+      <PageHeader title="Tracker" art={<ArtTracker />} intro="Tap a square when you complete a habit. Five or more in a day is a real prep day. Past days can be filled in if you forgot." />
       
       <div className="overflow-x-auto rounded-lg border border-line bg-white">
         <table className="w-full min-w-[760px] border-collapse text-[14px]">

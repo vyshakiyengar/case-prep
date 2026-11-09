@@ -1,3 +1,4 @@
+import { ArtCharts } from '../../components/Art'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
 import { useStore } from '../../lib/store'
@@ -179,7 +180,7 @@ export default function ChartPractice() {
   return (
     <>
       <DrillCrumbs here="Reading charts" />
-      {mode === null && <PageHeader title="Reading charts" intro="Most cases hand you a chart or table and ask what it tells you. Practise reading them quickly and getting to the number that matters." />}
+      {mode === null && <PageHeader title="Reading charts" art={<ArtCharts />} intro="Most cases hand you a chart or table and ask what it tells you. Practise reading them quickly and getting to the number that matters." />}
       {mode === null && (
         <>
           <div className="grid max-w-5xl gap-4 md:grid-cols-2">

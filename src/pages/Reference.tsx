@@ -1,3 +1,4 @@
+import { ArtFrameworks, ArtReference, ArtGlossary } from '../components/Art'
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { FRAMEWORKS } from '../content/frameworks'
@@ -10,7 +11,7 @@ import { useScrollToTarget } from '../components/Learning'
 export function CaseTypes() {
   return (
     <>
-      <PageHeader title="Case types" intro="The 17 kinds of case you can get. For each: the question to ask first, the skeleton, the same skeleton tailored to a casebook case, and the trap to avoid. If you're new, learn the eleven core frameworks first." />
+      <PageHeader title="Case types" art={<ArtFrameworks />} intro="The 17 kinds of case you can get. For each: the question to ask first, the skeleton, the same skeleton tailored to a casebook case, and the trap to avoid. If you're new, learn the eleven core frameworks first." />
       <p className="mb-5 text-[14.5px] text-ink-2">Not sure which type you're facing? Read the prompt, then ask: is the client trying to <b>diagnose</b> a problem (falling profits, rising costs, a slow process), <b>decide</b> something (enter, buy, invest, respond to a rival), or <b>generate</b> options (grow, launch, set a price)?</p>
       <ul className="grid gap-3 md:grid-cols-2">
         {FRAMEWORKS.map((f) => (
@@ -33,7 +34,7 @@ export function Formulas() {
   const [open, setOpen] = useState<Record<number, boolean>>({})
   return (
     <>
-      <PageHeader title="Formulas" intro="The 20 formulas that come up again and again in case maths. Learn them until you can say each one without thinking, then test yourself." action={<Button variant="secondary" onClick={() => { setHide((h) => !h); setOpen({}) }}>{hide ? 'Show all formulas' : 'Hide formulas to test myself'}</Button>} />
+      <PageHeader title="Formulas" art={<ArtReference />} intro="The 20 formulas that come up again and again in case maths. Learn them until you can say each one without thinking, then test yourself." action={<Button variant="secondary" onClick={() => { setHide((h) => !h); setOpen({}) }}>{hide ? 'Show all formulas' : 'Hide formulas to test myself'}</Button>} />
       {hide && <p className="mb-3 text-muted">Say each formula out loud, then click Reveal to check.</p>}
       <div className="overflow-hidden rounded-lg border border-line bg-white">
         {playbook.formulas.map((f, i) => (
@@ -57,7 +58,7 @@ export function Glossary() {
   const items = GLOSSARY.filter((g) => !q || `${g.term} ${g.plain}`.toLowerCase().includes(q.toLowerCase()))
   return (
     <>
-      <PageHeader title="Glossary" intro="Business terms you'll meet in cases, in plain English, each with an example." />
+      <PageHeader title="Glossary" art={<ArtGlossary />} intro="Business terms you'll meet in cases, in plain English, each with an example." />
       <input className="mb-4 w-full max-w-sm rounded-lg border border-line bg-white px-3 py-2 text-[14.5px]" placeholder="Search terms" value={q} onChange={(e) => setQ(e.target.value)} aria-label="Search the glossary" />
       <dl className="divide-y divide-line overflow-hidden rounded-lg border border-line bg-white">
         {items.map((g) => (
