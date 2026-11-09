@@ -1,3 +1,4 @@
+import { SectorTile } from '../components/Art'
 import { useEffect, useState } from 'react'
 import { Link, useNavigate, useParams, useSearchParams } from 'react-router-dom'
 import { loadCases } from '../content'
@@ -109,6 +110,8 @@ export default function CasePlayer() {
   return (
     <div>
       <div className="mb-5 flex flex-wrap items-start justify-between gap-4">
+        <div className="flex min-w-0 gap-4">
+        <SectorTile industry={c.industry} className="hidden h-[84px] w-[104px] shrink-0 rounded-xl bg-canvas p-1.5 md:block" />
         <div>
           <Link to="/casebook" className="text-[13.5px] text-muted hover:text-ink">Casebook</Link>
           <h1 className="mt-1 text-[26px] leading-tight font-semibold">Case {c.id}: {c.title}</h1>
@@ -117,6 +120,7 @@ export default function CasePlayer() {
             <span>{c.type}</span><span>{c.industry}, {c.geo}</span><Difficulty d={c.diff} /><span>{c.fmt}</span>
             <Link to="/glossary" className="text-violet-d hover:underline">Unfamiliar term? Glossary</Link>
           </div>
+        </div>
         </div>
         <div className="flex flex-col items-end gap-2">
           <div className="inline-flex overflow-hidden rounded-lg border border-line bg-white text-[13.5px]">

@@ -1,7 +1,8 @@
 import { CASE_COUNT } from '../content/caseCount'
 import { Link } from 'react-router-dom'
 import { Logo } from '../components/ui'
-import { ArtCourse, ArtPractise, ArtReference, ArtImprove } from '../components/Art'
+import { ArtCourse, ArtPractise, ArtReference, ArtImprove, ArtMap, ArtStructure, ArtVoice, ArtPerks, IndustryCardBody, INDUSTRY_CARD } from '../components/Art'
+import { CASE_PICKS, DIFF_WORD } from '../content/casePicks'
 import { MODULES, lessonBySlug, LESSONS, totalMinutes } from '../content/course'
 
 /** A phone showing a real screen from the site. */
@@ -30,6 +31,20 @@ function HeroPhones() {
 }
 
 const ART = [ArtCourse, ArtPractise, ArtReference, ArtImprove]
+const MODULE_ART = [ArtMap, ArtStructure, ArtVoice]
+
+/** A desktop browser window showing a real screen from the site. */
+function Browser({ src, alt, className = '' }: { src: string; alt: string; className?: string }) {
+  return (
+    <div className={`overflow-hidden rounded-xl border border-line bg-white shadow-[0_30px_60px_-30px_rgba(15,27,51,.45)] ${className}`}>
+      <div className="flex items-center gap-1.5 border-b border-line bg-canvas px-3 py-2">
+        <span className="h-2.5 w-2.5 rounded-full bg-[#E5E7EB]" /><span className="h-2.5 w-2.5 rounded-full bg-[#E5E7EB]" /><span className="h-2.5 w-2.5 rounded-full bg-[#E5E7EB]" />
+        <span className="ml-3 rounded-md bg-white px-3 py-0.5 text-[11.5px] text-muted">prepforcase.com</span>
+      </div>
+      <img src={src} alt={alt} width={1440} height={900} loading="lazy" decoding="async" className="block h-auto w-full" />
+    </div>
+  )
+}
 
 const PATH = [
   { t: 'Learn', d: 'The map of a case, 11 short lessons, what to say at each stage (perfect casing) and 11 core frameworks.', to: '/learn', cta: 'Start the course' },
@@ -91,6 +106,40 @@ export default function Landing() {
         </div>
       </section>
 
+      <section className="mx-auto max-w-6xl px-5 pb-20 sm:px-6">
+        <div className="grid items-center gap-12 lg:grid-cols-[1fr_1.35fr]">
+          <div>
+            <h2 className="text-[30px]">Practise it like the real interview</h2>
+            <p className="mt-2 text-[15.5px] leading-relaxed text-ink-2">Every case runs the way an interviewer would run it: the prompt, your clarifying questions, your structure, the exhibits and the maths, then your recommendation. A strong answer is waiting at each step, so you always know what good looks like.</p>
+            <p className="mt-3 text-[15.5px] leading-relaxed text-ink-2">Practising with a friend? Switch to interviewer mode and they get the script.</p>
+            <Link to="/casebook" className="mt-6 inline-block rounded-lg bg-ink px-4 py-2.5 text-[14.5px] font-medium text-white hover:bg-[#1C2B4A]">Open the casebook</Link>
+          </div>
+          <div className="relative pb-16 sm:pb-24">
+            <Browser src="/shots/desktop-case.webp" alt="A case on the site: the Coastal Brew prompt, with the steps of the case listed on the left" />
+            <Browser src="/shots/desktop-fw.webp" alt="The frameworks page: an issue tree for how a client can make more profit" className="absolute right-[-4%] bottom-0 w-[58%] sm:right-[-6%]" />
+          </div>
+        </div>
+      </section>
+
+      <section className="border-y border-line bg-white">
+        <div className="mx-auto max-w-6xl px-5 py-20 sm:px-6">
+          <div className="flex flex-wrap items-end justify-between gap-4">
+            <div>
+              <h2 className="text-[30px]">Cases from every industry</h2>
+              <p className="mt-1 max-w-2xl text-muted">Coffee chains to hospitals, airlines to city councils. Every case is original, with a full worked answer.</p>
+            </div>
+            <Link to="/casebook" className="text-[14.5px] font-medium text-violet-d hover:underline">See all {CASE_COUNT} cases</Link>
+          </div>
+          <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            {CASE_PICKS.slice(0, 8).map((c) => (
+              <Link key={c.slug} to={`/casebook/${c.slug}`} className={INDUSTRY_CARD}>
+                <IndustryCardBody label={c.label} title={c.title} sub={c.sub} industry={c.industry} meta={DIFF_WORD[c.diff]} />
+              </Link>
+            ))}
+          </div>
+        </div>
+      </section>
+
       <section className="bg-canvas">
         <div className="mx-auto max-w-6xl px-5 py-20 sm:px-6">
           <h2 className="text-[30px]">Drills that take a few minutes</h2>
@@ -125,6 +174,7 @@ export default function Landing() {
         <div className="mt-8 grid gap-6 md:grid-cols-3">
           {MODULES.map((m, mi) => (
             <div key={m.title}>
+              <div aria-hidden className="mb-4 rounded-xl bg-canvas px-6 pt-2"><div className="mx-auto max-w-[240px]">{(() => { const A = MODULE_ART[mi] ?? ArtMap; return <A /> })()}</div></div>
               <h3 className="text-[17.5px]"><span className="mr-2 italic text-teal">{mi + 1}</span>{m.title}</h3>
               <ul className="mt-2 divide-y divide-line border-y border-line">
                 {m.slugs.map((s) => { const l = lessonBySlug(s)!; return (
@@ -138,7 +188,8 @@ export default function Landing() {
 
 
       <section className="mx-auto max-w-6xl px-5 py-14 sm:px-6">
-        <div className="grid items-center gap-5 rounded-xl bg-canvas p-5 md:grid-cols-[1fr_auto]">
+        <div className="grid items-center gap-5 rounded-xl bg-canvas p-5 md:grid-cols-[140px_1fr_auto]">
+          <div aria-hidden className="hidden md:block"><ArtPerks /></div>
           <div>
             <h2 className="text-[26px]">At business school?</h2>
             <p className="mt-1 max-w-2xl text-ink-2">Verify your school email to unlock student downloads and offers when they're available.</p>

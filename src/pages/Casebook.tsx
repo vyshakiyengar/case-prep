@@ -1,4 +1,4 @@
-import { ArtCasebook } from '../components/Art'
+import { ArtCasebook, SectorTile } from '../components/Art'
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { loadCases, DIFF_LABEL } from '../content'
@@ -93,7 +93,9 @@ export default function Casebook() {
                     : <span className="font-serif text-[14.5px] tabular-nums">{c.id}</span>}
                 </button>
               ) : <span className="pt-0.5 font-serif text-[17px] text-muted tabular-nums">{c.id}</span>}
-              <div className="min-w-0">
+              <div className="flex min-w-0 gap-3.5">
+                <SectorTile industry={c.industry} className="mt-0.5 hidden h-[54px] w-[66px] shrink-0 rounded-lg bg-canvas p-1 sm:block" />
+                <div className="min-w-0">
                 <div className="flex flex-wrap items-center gap-x-2.5 gap-y-1">
                   <h2 className="text-[16.5px]">{c.title}</h2>
                   <Difficulty d={c.diff} />
@@ -102,6 +104,7 @@ export default function Casebook() {
                 <p className="text-[14.5px] leading-snug text-ink-2">{c.sub}</p>
                 <div className="mt-1 flex flex-wrap items-center gap-x-4 gap-y-1 text-[13px] text-muted">
                   <span>{c.type}</span><span>{c.industry}</span><span>{c.geo}</span><span>{c.time}</span>
+                </div>
                 </div>
               </div>
               <div className="col-start-2 flex gap-2 sm:col-start-auto">

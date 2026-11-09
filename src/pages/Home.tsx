@@ -1,4 +1,5 @@
-import { ArtCourse, ArtPractise, ArtReference, ArtImprove, ArtMap } from '../components/Art'
+import { ArtCourse, ArtPractise, ArtReference, ArtImprove, ArtMap, ArtMaths, ArtStructure, ArtCharts, ArtSkills, IndustryCardBody, INDUSTRY_CARD } from '../components/Art'
+import { CASE_PICKS, DIFF_WORD } from '../content/casePicks'
 import { CASE_COUNT } from '../content/caseCount'
 import { Link } from 'react-router-dom'
 import { useStore } from '../lib/store'
@@ -133,6 +134,46 @@ export default function Home() {
         ))}
       </div>
 
+      <section className="mt-9">
+        <div className="mb-3 flex flex-wrap items-baseline justify-between gap-2">
+          <h2 className="text-[19px] font-semibold">Try a case today</h2>
+          <Link to="/casebook" className="text-[14px] font-medium text-violet-d hover:underline">All {CASE_COUNT} cases</Link>
+        </div>
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          {todaysPicks(data?.profile?.practised || []).map((c) => (
+            <Link key={c.slug} to={`/casebook/${c.slug}`} className={INDUSTRY_CARD}>
+              <IndustryCardBody label={c.label} title={c.title} sub={c.sub} industry={c.industry} meta={DIFF_WORD[c.diff]} done={(data?.profile?.practised || []).includes(c.slug)} />
+            </Link>
+          ))}
+        </div>
+      </section>
+
+      <section className="mt-9">
+        <h2 className="mb-3 text-[19px] font-semibold">Ten-minute warm-ups</h2>
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          {[
+            { to: '/drills/maths?go=1', t: 'Case maths', d: '10 quick sums, marked as you go', A: ArtMaths },
+            { to: '/drills/structure?mode=pick', t: 'Structuring', d: 'Spot the flaw in a structure', A: ArtStructure },
+            { to: '/drills/charts?mode=quick', t: 'Reading charts', d: '8 charts, 60 seconds each', A: ArtCharts },
+            { to: '/interview-skills', t: 'Think and speak', d: 'Exercises for how you come across', A: ArtSkills },
+          ].map(({ to, t, d, A }) => (
+            <Link key={to} to={to} className="group flex items-center gap-3 overflow-hidden rounded-xl border border-line bg-white p-2 pr-4 hover:border-ink/40">
+              <div aria-hidden className="w-28 shrink-0 rounded-lg bg-canvas px-1"><A /></div>
+              <div className="min-w-0">
+                <h3 className="font-sans text-[15px] font-semibold text-ink group-hover:text-violet-d">{t}</h3>
+                <p className="text-[13px] leading-snug text-muted">{d}</p>
+              </div>
+            </Link>
+          ))}
+        </div>
+      </section>
     </>
   )
+}
+
+/** Four cases from different industries, rotating daily, unpractised ones first. */
+function todaysPicks(practised: string[]) {
+  const day = Math.floor(Date.now() / 86400000)
+  const rotated = CASE_PICKS.map((_, i) => CASE_PICKS[(i + day * 4) % CASE_PICKS.length])
+  return [...rotated.filter((c) => !practised.includes(c.slug)), ...rotated.filter((c) => practised.includes(c.slug))].slice(0, 4)
 }

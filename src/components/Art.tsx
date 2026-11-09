@@ -367,3 +367,145 @@ export const ArtImprove = (p: { className?: string }) => (
     {[[60, 104], [84, 96], [108, 100], [132, 78], [156, 70], [180, 48]].map(([x, y], i) => <circle key={i} cx={x} cy={y} r="4.5" fill={i === 5 ? O : W} {...S} />)}
   </Frame>
 )
+
+/* ---------------- industries (casebook cards and case pages) ---------------- */
+export type Sector = 'food' | 'retail' | 'tech' | 'health' | 'energy' | 'transport' | 'finance' | 'factory' | 'leisure' | 'public' | 'education' | 'telecom' | 'property'
+const SECTOR_RULES: [Sector, RegExp][] = [
+  ['tech', /software|tech|digital|cyber|online education|fintech|financial technology/i],
+  ['health', /health|medical|pharma(?!cy)|veterinary/i],
+  ['food', /food|beverage|grocery|coffee|produce|restaurant|snack/i],
+  ['finance', /bank|financ|insurance|private equity/i],
+  ['transport', /aviation|airline|transport|logistic|port|shipping|parcel|delivery|travel/i],
+  ['energy', /energy|mining|chemical|oil|power|utilit/i],
+  ['telecom', /telecom|media|broadband/i],
+  ['property', /real estate|office|property/i],
+  ['leisure', /hospitality|hotel|leisure|tourism|entertainment|fitness|arts|sport/i],
+  ['education', /education|school|universit/i],
+  ['public', /government|public/i],
+  ['factory', /manufactur|industrial|building|packaging|automotive|equipment|furniture|durable|appliance|recycl|electronics|paper/i],
+  ['retail', /retail|marketplace|consumer|beauty|pharmacy|shop/i],
+]
+export const sectorOf = (industry = ''): Sector => SECTOR_RULES.find(([, r]) => r.test(industry))?.[0] ?? 'retail'
+
+function SectorScene({ s }: { s: Sector }) {
+  switch (s) {
+    case 'food': return <g>
+      <path d="M84 62h64l-6 64a8 8 0 0 1-8 7h-36a8 8 0 0 1-8-7z" fill={W} {...S} />
+      <path d="M80 54h72v10H80z" fill={N} {...S} />
+      <path d="M90 82h52l-2 22H92z" fill={AL} />
+      <path d="M148 76h10a12 12 0 0 1 0 24h-12" fill="none" {...S} />
+      <path d="M104 44c-4-6 4-10 0-16M118 44c-4-6 4-10 0-16" fill="none" stroke={T} strokeWidth="2.4" strokeLinecap="round" />
+      <ellipse cx={116} cy={136} rx="44" ry="6" fill={N} opacity=".1" />
+    </g>
+    case 'retail': return <g>
+      <rect x={58} y={64} width={124} height={70} rx="4" fill={W} {...S} />
+      <path d="M52 64l10-26h116l10 26z" fill={W} {...S} />
+      {[0, 1, 2, 3].map((i) => <path key={i} d={`M${52 + i * 34} 64c0 10 17 10 17 0 0 10 17 10 17 0`} fill={i % 2 ? TL : T} {...S} />)}
+      <rect x={72} y={86} width={40} height={48} rx="2" fill={TL} {...S} />
+      <rect x={124} y={86} width={44} height={28} rx="2" fill={AL} {...S} />
+      <circle cx={104} cy={112} r="2.5" fill={N} />
+    </g>
+    case 'tech': return <g>
+      <rect x={56} y={38} width={128} height={80} rx="6" fill={N} />
+      <rect x={64} y={46} width={112} height={64} rx="2" fill={W} />
+      <rect x={72} y={54} width={36} height={48} rx="3" fill={TL} />
+      <Line x={116} y={58} w={50} c={N} /><Line x={116} y={70} w={40} /><Line x={116} y={82} w={46} />
+      <rect x={116} y={92} width={26} height={10} rx="3" fill={T} />
+      <path d="M44 120h152l-10 12H54z" fill={W} {...S} />
+    </g>
+    case 'health': return <g>
+      <rect x={66} y={34} width={108} height={100} rx="12" fill={W} {...S} />
+      <path d="M108 58h24v18h18v24h-18v18h-24v-18H90V76h18z" fill={T} {...S} />
+      <rect x={160} y={96} width={40} height={18} rx="9" fill={OL} {...S} transform="rotate(-30 180 105)" />
+      <path d="M172 112l12-20" stroke={N} strokeWidth="1.75" />
+    </g>
+    case 'energy': return <g>
+      <path d="M118 66l-6 70h16l-6-70z" fill={W} {...S} />
+      <circle cx={120} cy={62} r="6" fill={N} />
+      <path d="M120 62l-4-38c8 0 12 30 4 38zM120 62l34 18c-4 6-30-6-34-18zM120 62l-32 22c-4-6 20-24 32-22z" fill={TL} {...S} />
+      <path d="M160 96l-12 22h12l-8 20 22-28h-12l8-14z" fill={A} {...S} />
+      <path d="M60 136h120" {...S} />
+    </g>
+    case 'transport': return <g>
+      <path d="M44 92c40-10 110-30 140-36 12-2 18 6 8 12L92 108z" fill={W} {...S} />
+      <path d="M120 72L96 44h-14l18 36zM98 98l-10 22h12l22-26z" fill={TL} {...S} />
+      <path d="M48 90l-8-16h10l14 12z" fill={T} {...S} />
+      <path d="M40 128h160" stroke={G} strokeWidth="3" strokeLinecap="round" strokeDasharray="14 10" />
+    </g>
+    case 'finance': return <g>
+      <path d="M60 64l60-30 60 30z" fill={N} {...S} />
+      <rect x={60} y={64} width={120} height={8} fill={W} {...S} />
+      {[72, 98, 124, 150].map((x) => <rect key={x} x={x} y={76} width={14} height={44} fill={W} {...S} />)}
+      <rect x={54} y={120} width={132} height={12} rx="2" fill={W} {...S} />
+      <circle cx={186} cy={52} r="14" fill={AL} {...S} /><text x={186} y={57} textAnchor="middle" fontFamily={SERIF} fontSize="14" fontWeight="600" fill={A}>$</text>
+    </g>
+    case 'factory': return <g>
+      <path d="M48 134V84l30-18v18l30-18v18l30-18v68z" fill={W} {...S} />
+      <rect x={140} y={46} width={18} height={88} fill={TL} {...S} />
+      <rect x={164} y={70} width={30} height={64} fill={W} {...S} />
+      {[60, 90, 120].map((x) => <rect key={x} x={x} y={100} width={14} height={14} fill={AL} stroke={N} strokeWidth="1.4" />)}
+      <path d="M150 40c-6-8 8-12 2-20M160 34c-4-6 6-8 2-14" fill="none" stroke={G} strokeWidth="3" strokeLinecap="round" />
+    </g>
+    case 'leisure': return <g>
+      <path d="M72 116a48 48 0 0 1 96 0z" fill={TL} {...S} />
+      <path d="M84 106a36 36 0 0 1 26-30" fill="none" stroke={W} strokeWidth="4" strokeLinecap="round" />
+      <rect x={62} y={116} width={116} height={14} rx="3" fill={N} />
+      <circle cx={120} cy={64} r="6" fill={A} {...S} /><path d="M120 70v-2" {...S} />
+      <path d="M170 52l3 7 7 1-5 5 1 7-6-3-6 3 1-7-5-5 7-1zM62 58l2 4 4 .6-3 3 .7 4-3.7-2-3.7 2 .7-4-3-3 4-.6z" fill={A} {...S} />
+    </g>
+    case 'public': return <g>
+      <path d="M56 66l64-26 64 26z" fill={W} {...S} />
+      <rect x={56} y={66} width={128} height={8} fill={TL} {...S} />
+      {[70, 96, 122, 148].map((x) => <rect key={x} x={x} y={78} width={14} height={42} fill={W} {...S} />)}
+      <rect x={50} y={120} width={140} height={12} rx="2" fill={W} {...S} />
+      <path d="M120 40V18" {...S} /><path d="M120 18h22l-6 6 6 6h-22" fill={O} {...S} />
+    </g>
+    case 'education': return <g>
+      <rect x={64} y={104} width={112} height={14} rx="2" fill={TL} {...S} />
+      <rect x={70} y={118} width={100} height={14} rx="2" fill={AL} {...S} />
+      <path d="M120 40l58 22-58 22-58-22z" fill={N} {...S} />
+      <path d="M92 74v18c0 8 56 8 56 0V74" fill={N} {...S} />
+      <path d="M172 64v24" {...S} /><circle cx={172} cy={90} r="4" fill={A} {...S} />
+    </g>
+    case 'telecom': return <g>
+      <path d="M120 54l-24 82M120 54l24 82M104 108h32M100 122h40" fill="none" {...S} />
+      <circle cx={120} cy={50} r="8" fill={T} {...S} />
+      <path d="M100 34a28 28 0 0 0 0 32M140 34a28 28 0 0 1 0 32M90 24a42 42 0 0 0 0 52M150 24a42 42 0 0 1 0 52" fill="none" stroke={T} strokeWidth="2.4" strokeLinecap="round" />
+      <path d="M70 136h100" {...S} />
+    </g>
+    case 'property': return <g>
+      <rect x={70} y={30} width={60} height={104} fill={W} {...S} />
+      <rect x={130} y={62} width={44} height={72} fill={TL} {...S} />
+      {[0, 1, 2, 3, 4].map((r) => [0, 1, 2].map((c) => <rect key={`${r}${c}`} x={80 + c * 16} y={40 + r * 16} width={10} height={10} fill={(r + c) % 3 ? AL : W} stroke={N} strokeWidth="1.3" />))}
+      <rect x={92} y={118} width={16} height={16} fill={N} />
+      <path d="M60 134h124" {...S} />
+    </g>
+  }
+}
+export function ArtSector({ industry, className }: { industry?: string; className?: string }) {
+  return <Frame className={className}><SectorScene s={sectorOf(industry)} /></Frame>
+}
+export function SectorTile({ industry, className = '' }: { industry?: string; className?: string }) {
+  return (
+    <svg viewBox="40 20 160 130" className={`block ${className}`} aria-hidden>
+      <SectorScene s={sectorOf(industry)} />
+    </svg>
+  )
+}
+
+/** Inside of a case card with its industry picture (the page wraps it in a link). */
+export const INDUSTRY_CARD = 'group flex flex-col overflow-hidden rounded-xl border border-line bg-white transition-colors hover:border-ink/40'
+export function IndustryCardBody({ label, title, sub, industry, meta, done }: { label: string; title: string; sub: string; industry: string; meta?: string; done?: boolean }) {
+  return <>
+    <div className="relative border-b border-line bg-canvas px-6 pt-2">
+      <ArtSector industry={industry} />
+      <span className="absolute top-3 left-3 rounded-full bg-white px-2.5 py-0.5 text-[12px] font-medium text-ink-2 shadow-[0_1px_0_#E1E6ED]">{label}</span>
+      {done && <span className="absolute top-3 right-3 rounded-full bg-teal px-2.5 py-0.5 text-[12px] font-medium text-white">Practised</span>}
+    </div>
+    <div className="flex flex-1 flex-col p-4">
+      <h3 className="text-[16.5px] group-hover:text-violet-d">{title}</h3>
+      <p className="mt-1 flex-1 text-[14px] leading-snug text-ink-2">{sub}</p>
+      {meta && <p className="mt-2 text-[12.5px] text-muted">{meta}</p>}
+    </div>
+  </>
+}
