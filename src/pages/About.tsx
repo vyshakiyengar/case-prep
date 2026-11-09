@@ -8,8 +8,8 @@ const LINKEDIN = 'https://www.linkedin.com/in/vyshakiyengar/'
 function Portrait() {
   const [ok, setOk] = useState(true)
   return ok
-    ? <img src="/vyshak.jpg" alt="" width={36} height={36} onError={() => setOk(false)} className="h-9 w-9 shrink-0 rounded-full object-cover grayscale-[35%]" />
-    : <span aria-hidden className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-ink font-serif text-[13px] text-white">VI</span>
+    ? <img src="/vyshak.jpg" alt="" width={40} height={40} onError={() => setOk(false)} className="h-10 w-10 shrink-0 rounded-[4px] object-cover grayscale-[35%]" />
+    : <span aria-hidden className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[4px] bg-ink font-serif text-[13px] text-white">VI</span>
 }
 
 function LinkedInIcon() {
