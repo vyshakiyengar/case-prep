@@ -90,21 +90,23 @@ function TryOne() {
 }
 
 type CaseRow = { id: number; slug: string; title: string; type: string }
-/** Every case in the casebook, drifting past in two rows. Pauses on hover. */
+/** Every case in the casebook, in two rows you can swipe or scroll sideways. Nothing moves on its own. */
 function CaseTicker() {
   const rows = [CASE_INDEX.slice(0, 51), CASE_INDEX.slice(51)] as CaseRow[][]
   return (
-    <div className="lp-band relative space-y-2.5 overflow-hidden py-6" aria-label={`All ${CASE_COUNT} cases`}>
-      {rows.map((row, r) => (
-        <div key={r} className={`lp-marquee ${r ? 'rev' : ''}`} style={{ ['--t' as string]: r ? '230s' : '200s' }}>
-          {[...row, ...row].map((c, k) => (
-            <Link key={`${c.slug}-${k}`} to={`/casebook/${c.slug}`} tabIndex={k >= row.length ? -1 : undefined} aria-hidden={k >= row.length || undefined}
-              className="mr-2.5 flex shrink-0 items-baseline gap-2 rounded-full border border-white/12 px-4 py-1.5 text-[13.5px] text-white/85 hover:border-white/40 hover:text-white">
-              <span className="font-serif text-[12px] text-teal-l italic">{c.id}</span>{c.title}<span className="text-[12px] text-white/45">{c.type}</span>
-            </Link>
-          ))}
-        </div>
-      ))}
+    <div className="lp-band overflow-x-auto py-6 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden" aria-label={`All ${CASE_COUNT} cases`}>
+      <div className="w-max space-y-2.5 px-5 sm:px-6">
+        {rows.map((row, r) => (
+          <div key={r} className="flex">
+            {row.map((c) => (
+              <Link key={c.slug} to={`/casebook/${c.slug}`}
+                className="mr-2.5 flex shrink-0 items-baseline gap-2 rounded-full border border-white/12 px-4 py-1.5 text-[13.5px] text-white/85 hover:border-white/40 hover:text-white">
+                <span className="font-serif text-[12px] text-teal-l italic">{c.id}</span>{c.title}<span className="text-[12px] text-white/45">{c.type}</span>
+              </Link>
+            ))}
+          </div>
+        ))}
+      </div>
     </div>
   )
 }
@@ -148,15 +150,101 @@ function CaseSteps() {
   )
 }
 
+const Arrow = () => <svg aria-hidden viewBox="0 0 16 16" className="lp-arrow ml-1.5 h-3.5 w-3.5 fill-none stroke-current stroke-2"><path d="M3 8h9M8.5 4.5 12 8l-3.5 3.5" /></svg>
+
+/** True once the element has scrolled into view (stays true). */
+function useSeen<T extends Element>(threshold = 0.35) {
+  const ref = useRef<T>(null)
+  const [seen, setSeen] = useState(false)
+  useEffect(() => {
+    const el = ref.current
+    if (!el) return
+    if (reducedMotion() || !('IntersectionObserver' in window)) { setSeen(true); return }
+    const io = new IntersectionObserver(([e]) => { if (e.isIntersecting) { setSeen(true); io.disconnect() } }, { threshold })
+    io.observe(el)
+    return () => io.disconnect()
+  }, [threshold])
+  return [ref, seen] as const
+}
+
+const PATH_STOPS = [
+  { t: 'Lesson 1', d: 'How case interviews work', to: '/learn/how-case-interviews-work' },
+  { t: 'Your first case', d: 'Coastal Brew, about 25 minutes', to: '/casebook/coastal-brew' },
+  { t: 'A ten-minute drill', d: 'Case maths, marked as you go', to: '/drills/maths' },
+  { t: 'Ten cases in', d: 'Your weakest stage is clear', to: '/casebook' },
+  { t: 'Case with a friend', d: 'They get the interviewer script', to: '/interviewer' },
+]
+/** The road from here to an offer: the line draws itself and each stop appears in turn, once. */
+function PathToOffer() {
+  const [ref, seen] = useSeen<HTMLOListElement>(0.3)
+  return (
+    <ol ref={ref} className={`lp-path relative mt-9 grid gap-5 md:grid-cols-6 md:gap-3 ${seen ? 'is-in' : ''}`}>
+      <svg aria-hidden className="pointer-events-none absolute top-[9px] left-[9px] hidden h-[2px] w-[calc(100%-18px)] md:block" preserveAspectRatio="none" viewBox="0 0 1000 2">
+        <line className="lp-line" x1="0" y1="1" x2="1000" y2="1" stroke="#2DD4BF" strokeWidth="2" style={{ ['--len' as string]: 1000 }} />
+      </svg>
+      <svg aria-hidden className="pointer-events-none absolute top-[9px] left-[9px] h-[calc(100%-18px)] w-[2px] md:hidden" preserveAspectRatio="none" viewBox="0 0 2 1000">
+        <line className="lp-line" x1="1" y1="0" x2="1" y2="1000" stroke="#2DD4BF" strokeWidth="2" style={{ ['--len' as string]: 1000 }} />
+      </svg>
+      {PATH_STOPS.map((p, k) => (
+        <li key={p.t} className="lp-stop relative flex gap-3 md:block" style={{ ['--d' as string]: `${0.3 + k * 0.4}s` }}>
+          <span aria-hidden className="relative z-[1] mt-0.5 block h-5 w-5 shrink-0 rounded-full border-2 border-teal-l bg-ink md:mt-0" />
+          <Link to={p.to} className="group block md:mt-3">
+            <span className="block text-[15px] font-medium text-white group-hover:underline">{p.t}</span>
+            <span className="block text-[13px] leading-snug text-[#9FB0C6]">{p.d}</span>
+          </Link>
+        </li>
+      ))}
+      <li className="lp-stop relative flex gap-3 md:block" style={{ ['--d' as string]: `${0.3 + PATH_STOPS.length * 0.4}s` }}>
+        <span aria-hidden className="relative z-[1] flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-teal-l md:mt-0">
+          <svg viewBox="0 0 16 16" className="h-3 w-3 fill-none stroke-ink stroke-2"><path d="M4 14V2.5M4 3h7l-1.5 2.5L11 8H4" /></svg>
+        </span>
+        <div className="md:mt-3">
+          <span className="block font-serif text-[18px] leading-tight text-teal-l italic">The offer</span>
+          <span className="block text-[13px] leading-snug text-[#9FB0C6]">Then pass it on</span>
+        </div>
+      </li>
+    </ol>
+  )
+}
+
+/** A small bar that offers the first case once the hero has scrolled away. It slides in once and can be closed. */
+function StartDock() {
+  const [show, setShow] = useState(false)
+  const [closed, setClosed] = useState(false)
+  useEffect(() => {
+    const end = () => document.getElementById('start-now')
+    const on = () => {
+      const e = end()
+      const nearEnd = e ? e.getBoundingClientRect().top < window.innerHeight : false
+      setShow(window.scrollY > 900 && !nearEnd)
+    }
+    on()
+    window.addEventListener('scroll', on, { passive: true })
+    return () => window.removeEventListener('scroll', on)
+  }, [])
+  if (closed) return null
+  return (
+    <div className={`lp-dock fixed inset-x-3 bottom-3 z-40 mx-auto max-w-[520px] ${show ? 'translate-y-0 opacity-100' : 'pointer-events-none translate-y-[140%] opacity-0'}`} aria-hidden={!show}>
+      <div className="flex items-center gap-3 rounded-xl bg-ink px-4 py-3 text-white shadow-[0_24px_50px_-18px_rgba(0,0,0,.6)]">
+        <p className="min-w-0 flex-1 text-[14px] leading-snug"><span className="font-medium">Try a case now.</span> <span className="text-[#B9C4D3]">Free, no sign-up.</span></p>
+        <Link to="/casebook/coastal-brew" tabIndex={show ? undefined : -1} className="lp-cta inline-flex shrink-0 items-center rounded-lg bg-white px-3.5 py-2 text-[14px] font-medium text-ink hover:bg-teal-l">Start Coastal Brew<Arrow /></Link>
+        <button type="button" onClick={() => setClosed(true)} tabIndex={show ? undefined : -1} aria-label="Close" className="-mr-1 shrink-0 rounded p-1 text-[#9FB0C6] hover:text-white">
+          <svg aria-hidden viewBox="0 0 16 16" className="h-4 w-4 fill-none stroke-current stroke-2"><path d="M4 4l8 8M12 4l-8 8" /></svg>
+        </button>
+      </div>
+    </div>
+  )
+}
+
 function HeroScreens() {
   return (
     <div className="relative mx-auto w-full max-w-[640px] pb-10 sm:pb-16 lg:mr-[-60px]">
       <div aria-hidden className="pointer-events-none absolute -inset-16 rounded-full bg-[radial-gradient(closest-side,rgba(45,212,191,.22),transparent)] blur-2xl" />
       <div className="lp-window" style={{ ['--d' as string]: '.35s' }}>
-        <div className="lp-float"><Browser src="/shots/desktop-home.webp" path="home" eager alt="The PrepForCase home page in a browser: the next lesson, the case of the day and a readiness score" /></div>
+        <div><Browser src="/shots/desktop-home.webp" path="home" eager alt="The PrepForCase home page in a browser: the next lesson, the case of the day and a readiness score" /></div>
       </div>
       <div className="lp-slide absolute bottom-0 left-[-8%] hidden w-[44%] sm:block" style={{ ['--d' as string]: '.75s' }}>
-        <div className="lp-float" style={{ ['--f' as string]: '-3s' }}><Browser src="/shots/desktop-charts.webp" path="drills/charts" alt="The chart drill: a stacked bar exhibit with a question and a 60-second timer" /></div>
+        <div><Browser src="/shots/desktop-charts.webp" path="drills/charts" alt="The chart drill: a stacked bar exhibit with a question and a 60-second timer" /></div>
       </div>
       <div className="lp-pop absolute top-[-40px] right-[-24px] z-[1] hidden w-[300px] lg:block" style={{ ['--d' as string]: '1.2s' }}>
         <TryOne />
@@ -246,7 +334,7 @@ export default function Landing() {
               {CASE_COUNT} practice cases with full worked answers, and quick drills for maths, structuring, charts and market sizing. All free.
             </p>
             <div className="lp-in mt-9 flex flex-wrap items-center gap-3" style={{ ['--d' as string]: '.45s' }}>
-              <Link to="/casebook/coastal-brew" className="rounded-lg bg-white px-5 py-3 text-[14.5px] font-medium text-ink hover:bg-teal-l">Try a free case</Link>
+              <Link to="/casebook/coastal-brew" className="lp-cta inline-flex items-center rounded-lg bg-white px-5 py-3 text-[14.5px] font-medium text-ink hover:bg-teal-l">Try a free case<Arrow /></Link>
               <Link to="/learn" className="rounded-lg border border-white/25 px-5 py-3 text-[14.5px] font-medium text-white hover:border-white/60">Start the course</Link>
             </div>
             <div className="lp-in mt-8 lg:hidden" style={{ ['--d' as string]: '.55s' }}><TryOne /></div>
@@ -407,15 +495,14 @@ export default function Landing() {
         </div>
       </section>
 
-      <section className="relative overflow-hidden bg-ink">
+      <section id="start-now" className="relative overflow-hidden bg-ink">
         <div aria-hidden className="pointer-events-none absolute -top-24 right-[10%] h-72 w-72 rounded-full bg-[radial-gradient(closest-side,rgba(45,212,191,.25),transparent)] blur-2xl" />
-        <div className="relative mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-6 px-5 py-16 sm:px-6">
-          <div>
-            <h2 className="text-[30px] text-white">Try your first case now</h2>
-            <p className="mt-1 max-w-xl text-[#B9C4D3]">Coastal Brew is a friendly first case: a coffee chain that's growing but making less money. About 25 minutes, every step open, no sign-up.</p>
-          </div>
-          <div className="flex flex-wrap gap-3">
-            <Link to="/casebook/coastal-brew" className="rounded-lg bg-white px-5 py-3 text-[14.5px] font-medium text-ink hover:bg-teal-l">Start Coastal Brew</Link>
+        <div className="relative mx-auto max-w-6xl px-5 py-16 sm:px-6">
+          <h2 className="text-[30px] text-white sm:text-[34px]">Your road to an offer starts with one case</h2>
+          <p className="mt-1 max-w-2xl text-[#B9C4D3]">Coastal Brew is a friendly first case: a coffee chain that's growing but making less money. About 25 minutes, every step open, no sign-up.</p>
+          <PathToOffer />
+          <div className="mt-10 flex flex-wrap gap-3">
+            <Link to="/casebook/coastal-brew" className="lp-cta inline-flex items-center rounded-lg bg-white px-5 py-3 text-[14.5px] font-medium text-ink hover:bg-teal-l">Start Coastal Brew<Arrow /></Link>
             <Link to="/learn/how-case-interviews-work" className="rounded-lg border border-white/25 px-5 py-3 text-[14.5px] font-medium text-white hover:border-white/60">Or start with lesson 1</Link>
           </div>
         </div>
@@ -424,6 +511,7 @@ export default function Landing() {
         <span>© {new Date().getFullYear()} PrepForCase · <Link to="/about" className="underline">About</Link> · <Link to="/privacy" className="underline">Privacy</Link> · <Link to="/terms" className="underline">Terms</Link></span>
         <span>All cases are original and fictional, written for practice. Not affiliated with any consulting firm or school.</span>
       </footer>
+      <StartDock />
     </div>
   )
 }

@@ -192,23 +192,34 @@ h1:not(.font-sans) { letter-spacing: -0.02em; }
 @media (prefers-reduced-motion: reduce) { .tally-mark { animation: none; } }
 
 /* ---------- Landing page motion ---------- */
-@keyframes lp-rise { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: none; } }
+@keyframes lp-rise { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
 @keyframes lp-rule { from { transform: scaleX(0); } to { transform: scaleX(1); } }
-@keyframes lp-window { from { opacity: 0; transform: perspective(1600px) translateY(48px) rotateX(10deg); } to { opacity: 1; transform: none; } }
-@keyframes lp-slide { from { opacity: 0; transform: translate(-36px, 24px); } to { opacity: 1; transform: none; } }
-@keyframes lp-float { from { transform: translateY(0); } to { transform: translateY(-7px); } }
-@keyframes lp-marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+@keyframes lp-window { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+@keyframes lp-slide { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
 @keyframes lp-pop { 0% { opacity: 0; transform: scale(.92) translateY(6px); } 100% { opacity: 1; transform: none; } }
 .lp-in { animation: lp-rise .8s cubic-bezier(.2,.7,.2,1) both; animation-delay: var(--d, 0s); }
 .lp-rule { transform-origin: left; animation: lp-rule .9s cubic-bezier(.6,0,.2,1) both; animation-delay: var(--d, 0s); }
 .lp-window { animation: lp-window 1.1s cubic-bezier(.2,.7,.2,1) both; animation-delay: var(--d, 0s); }
 .lp-slide { animation: lp-slide 1s cubic-bezier(.2,.7,.2,1) both; animation-delay: var(--d, 0s); }
 .lp-pop { animation: lp-pop .5s cubic-bezier(.2,.7,.2,1) both; animation-delay: var(--d, 0s); }
-.lp-float { animation: lp-float 6s ease-in-out infinite alternate; animation-delay: var(--f, 0s); }
-.lp-marquee { display: flex; width: max-content; animation: lp-marquee var(--t, 200s) linear infinite; }
-.lp-marquee.rev { animation-direction: reverse; }
-.lp-band:hover .lp-marquee { animation-play-state: paused; }
-.lp-band { mask-image: linear-gradient(to right, transparent, #000 6%, #000 94%, transparent); }
+@keyframes lp-shine { from { transform: translateX(-120%) skewX(-20deg); } to { transform: translateX(260%) skewX(-20deg); } }
+@keyframes lp-ring { 0% { box-shadow: 0 0 0 0 rgba(94,234,212,.55); } 100% { box-shadow: 0 0 0 14px rgba(94,234,212,0); } }
+@keyframes lp-dash { from { stroke-dashoffset: var(--len); } to { stroke-dashoffset: 0; } }
+/* Primary call to action: one sheen and one soft ring once the hero has settled, and again on hover */
+.lp-cta { position: relative; overflow: hidden; isolation: isolate; animation: lp-ring 1.4s ease-out 1.9s 1; }
+.lp-cta::after { content: ''; position: absolute; inset: 0 auto 0 0; width: 40%; z-index: -1; background: linear-gradient(90deg, transparent, rgba(94,234,212,.45), transparent); transform: translateX(-120%) skewX(-20deg); animation: lp-shine 1.1s ease-in-out 1.6s 1; }
+.lp-cta:hover::after { animation: lp-shine .9s ease-in-out 1; }
+.lp-cta .lp-arrow { display: inline-block; transition: transform .25s ease; }
+.lp-cta:hover .lp-arrow { transform: translateX(3px); }
+.lp-path .lp-line { stroke-dasharray: var(--len); stroke-dashoffset: var(--len); }
+.lp-path.is-in .lp-line { animation: lp-dash 2.4s cubic-bezier(.5,0,.2,1) .2s both; }
+.lp-path .lp-stop { opacity: 0; transform: scale(.6); transform-box: fill-box; transform-origin: center; transition: opacity .4s ease, transform .4s cubic-bezier(.2,.9,.3,1.4); transition-delay: var(--d); }
+.lp-path.is-in .lp-stop { opacity: 1; transform: none; }
+.lp-dock { transition: transform .45s cubic-bezier(.2,.8,.2,1), opacity .3s ease; }
+.lp-band { mask-image: linear-gradient(to right, #000 92%, transparent); }
 @media (prefers-reduced-motion: reduce) {
-  .lp-in, .lp-rule, .lp-window, .lp-slide, .lp-pop, .lp-float, .lp-marquee { animation: none; }
+  .lp-in, .lp-rule, .lp-window, .lp-slide, .lp-pop, .lp-cta, .lp-cta::after, .lp-path.is-in .lp-line { animation: none; }
+  .lp-path .lp-line { stroke-dashoffset: 0; }
+  .lp-path .lp-stop { opacity: 1; transform: none; transition: none; }
+  .lp-dock, .lp-cta .lp-arrow { transition: none; }
 }

@@ -494,11 +494,11 @@ export function SectorTile({ industry, className = '' }: { industry?: string; cl
 }
 
 /** Inside of a case card with its industry picture (the page wraps it in a link). */
-export const INDUSTRY_CARD = 'group flex flex-col overflow-hidden rounded-xl border border-line bg-white transition-colors hover:border-ink/40'
+export const INDUSTRY_CARD = 'group flex flex-col overflow-hidden rounded-xl border border-line bg-white transition-[border-color,transform,box-shadow] duration-300 hover:-translate-y-0.5 hover:border-ink/40 hover:shadow-[0_18px_36px_-24px_rgba(15,27,51,.45)] motion-reduce:hover:translate-y-0'
 export function IndustryCardBody({ label, title, sub, industry, meta, done }: { label: string; title: string; sub: string; industry: string; meta?: string; done?: boolean }) {
   return <>
-    <div className="relative border-b border-line bg-canvas px-6 pt-2">
-      <ArtSector industry={industry} />
+    <div className="relative overflow-hidden border-b border-line bg-canvas px-6 pt-2">
+      <div className="transition-transform duration-500 ease-out group-hover:scale-[1.06] motion-reduce:group-hover:scale-100"><ArtSector industry={industry} /></div>
       <span className="absolute top-3 left-3 rounded-full bg-white px-2.5 py-0.5 text-[12px] font-medium text-ink-2 shadow-[0_1px_0_#E1E6ED]">{label}</span>
       {done && <span className="absolute top-3 right-3 rounded-full bg-teal px-2.5 py-0.5 text-[12px] font-medium text-white">Practised</span>}
     </div>
