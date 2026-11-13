@@ -27,8 +27,8 @@ export function SignInWall({ children }: { children: ReactNode }) {
       <div className="relative z-[1] -mt-48 flex justify-center px-1 pb-4">
         <section aria-labelledby="wall-title" className="w-full max-w-[420px] rounded-xl border border-line bg-white p-5 text-center shadow-[0_30px_60px_-30px_rgba(15,27,51,.55)] sm:p-7">
           <div className="flex justify-center"><LogoMark size={36} /></div>
-          <h2 id="wall-title" className="mt-3 text-[22px] leading-tight">Sign in to get started</h2>
-          <p className="mt-1.5 mb-5 text-[14.5px] text-muted">It's free. You get every lesson, framework, case and drill, and your progress is saved.</p>
+          <h2 id="wall-title" className="mt-3 text-[22px] leading-tight">Sign in to see it all, free</h2>
+          <p className="mt-1.5 mb-5 text-[14.5px] text-muted">Only a sign-in is needed. No payment, no trial. You'll get every lesson, framework, case and drill, and your progress is saved.</p>
           <SignInPanel />
         </section>
       </div>

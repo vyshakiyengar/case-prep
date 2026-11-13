@@ -71,7 +71,7 @@ export function FrameworksIndex() {
           <FamilyGuide />
           <div className="mt-8 space-y-12">
             <TreeList list={CORE.slice(0, 2)} start={0} />
-            <Gate id="frameworks-gate" title="Sign in to see all eleven core frameworks" body="Process, competitive threats, market entry, investment, acquisitions, private equity, growth, product launch and pricing. Free.">
+            <Gate id="frameworks-gate" what="all eleven core frameworks">
               <div className="space-y-12"><TreeList list={CORE.slice(2)} start={2} /></div>
             </Gate>
           </div>

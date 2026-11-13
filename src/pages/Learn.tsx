@@ -48,7 +48,7 @@ function LessonChapter({ l, n }: { l: Lesson; n: number }) {
 
       <div className="mt-6 max-w-[68ch] space-y-7">
         {l.sections.slice(0, freeCount).map((s) => <SectionBody key={s.h} s={s} />)}
-        <Gate title="Sign in to finish this lesson" body="The rest of the lesson, the worked example, the timed exercise and the quiz. Free.">
+        <Gate what="the rest of the lesson, the worked example, the exercise and the quiz">
           <div className="space-y-7">
             {l.sections.slice(freeCount).map((s) => <SectionBody key={s.h} s={s} />)}
 

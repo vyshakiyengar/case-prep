@@ -6,21 +6,37 @@ import { useStore } from '../lib/store'
 import { SignInPanel } from './SignInPanel'
 import type { Lesson } from '../content/course'
 
-/**
- * Marks where the members-only part of an open page begins. Signed-out visitors (and search
- * engines) read everything above it, then see a sign-in card instead of what's inside.
- */
-export function Gate({ children, id, title, body }: { children: ReactNode; title?: string; body?: string; id?: string }) {
-  const { user, ready } = useStore()
-  if (!user && ready && title) return (
-    <section id={id} aria-labelledby={id ? `${id}-t` : undefined} className="rounded-xl border border-line bg-white p-5 text-center shadow-[0_24px_48px_-32px_rgba(15,27,51,.45)] sm:p-7">
-      <div className="mx-auto max-w-[420px]">
-        <h2 id={id ? `${id}-t` : undefined} className="text-[21px] leading-tight">{title}</h2>
-        {body && <p className="mt-1.5 mb-5 text-[14.5px] text-muted">{body}</p>}
-        <SignInPanel />
-      </div>
+/** Card shown over locked content. Signing in is free; nothing else is needed. */
+export function SignInCard({ id, what }: { id?: string; what?: string }) {
+  return (
+    <section aria-labelledby={id ? `${id}-t` : undefined} className="relative mx-auto w-full max-w-[420px] rounded-xl border border-line bg-white p-5 text-center shadow-[0_30px_60px_-30px_rgba(15,27,51,.55)] sm:p-7">
+      <span aria-hidden className="mx-auto flex h-10 w-10 items-center justify-center rounded-full bg-canvas text-ink">
+        <svg width="18" height="18" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" d="M6 11h12v9H6zM8.5 11V8a3.5 3.5 0 0 1 7 0v3" /></svg>
+      </span>
+      <h2 id={id ? `${id}-t` : undefined} className="mt-3 text-[22px] leading-tight">Sign in to see it all, free</h2>
+      <p className="mt-1.5 mb-5 text-[14.5px] text-muted">Only a sign-in is needed. No payment, no trial.{what ? ` You'll get ${what}.` : ''}</p>
+      <SignInPanel />
     </section>
   )
+}
+
+/** Shows content blurred and locked behind a sign-in card. */
+export function Locked({ children, id, what }: { children: ReactNode; id?: string; what?: string }) {
+  return (
+    <div id={id} className="relative min-h-[520px]">
+      <div aria-hidden inert className="pointer-events-none max-h-[640px] select-none overflow-hidden blur-[5px] [mask-image:linear-gradient(to_bottom,#000_55%,transparent)]">{children}</div>
+      <div className="absolute inset-x-0 top-6 flex justify-center px-1 sm:top-10"><SignInCard id={id} what={what} /></div>
+    </div>
+  )
+}
+
+/**
+ * Marks where the members-only part of an open page begins. Signed-out visitors (and search
+ * engines) read everything above it; what's inside shows blurred behind a sign-in card.
+ */
+export function Gate({ children, id, what }: { children: ReactNode; id?: string; what?: string }) {
+  const { user, ready } = useStore()
+  if (!user && ready) return <Locked id={id} what={what}>{children}</Locked>
   return id ? <div id={id}>{children}</div> : <>{children}</>
 }
 

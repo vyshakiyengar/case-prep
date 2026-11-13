@@ -1,3 +1,4 @@
+import { CaseOfTheDay, Readiness } from '../components/Daily'
 import { ArtCourse, ArtPractise, ArtReference, ArtImprove, ArtMap, ArtMaths, ArtStructure, ArtCharts, ArtSkills, IndustryCardBody, INDUSTRY_CARD } from '../components/Art'
 import { CASE_PICKS, DIFF_WORD } from '../content/casePicks'
 import { CASE_COUNT } from '../content/caseCount'
@@ -22,6 +23,7 @@ const ABOUT: Record<string, string> = {
   '/drills/maths': 'Quick sums, marked instantly',
   '/drills/structure': 'Break a problem into parts',
   '/drills/charts': 'One chart, one question',
+  '/drills/sizing': 'Estimate a market, step by step',
   '/interview-skills': 'Think and speak clearly',
   '/case-types': 'Each case type and how to approach it',
   '/formulas': '20 formulas for case maths',
@@ -84,7 +86,7 @@ export default function Home() {
     <>
       <header className="mb-6">
         <h1 className="text-[25px] leading-[1.12] font-semibold sm:text-[30px]">{user ? `Welcome back${name ? `, ${name}` : ''}` : 'Welcome to PrepForCase'}</h1>
-        <p className="mt-1.5 max-w-3xl text-[14.5px] leading-relaxed text-muted">Everything you need for case interviews, free: a short course and the core frameworks to learn the method, 102 cases to practise alone or with a partner, drills for maths, structuring and charts, guides on how you think and speak, and a tracker that shows how you are improving. {user ? 'Start with your next step below.' : 'Sign in to open every page in full.'}</p>
+        <p className="mt-1.5 max-w-3xl text-[14.5px] leading-relaxed text-muted">Everything you need for case interviews, free: a short course and the core frameworks to learn the method, 102 cases to practise alone or with a partner, drills for maths, structuring, charts and market sizing, guides on how you think and speak, and a tracker that shows how you are improving. {user ? 'Start with your next step below.' : 'Sign in to open every page in full.'}</p>
       </header>
 
       <section className="relative mb-6 flex flex-wrap items-center justify-between gap-4 overflow-hidden rounded-xl bg-ink p-5 text-white sm:p-5 md:pr-56">
@@ -99,6 +101,11 @@ export default function Home() {
           {!user && <SignInButton label="Sign in to track progress" />}
         </div>
       </section>
+
+      <div className={`mb-8 grid gap-4 ${user ? 'xl:grid-cols-[1.15fr_1fr]' : ''}`}>
+        <CaseOfTheDay />
+        {user && <Readiness />}
+      </div>
 
       <h2 className="mb-3 text-[19px] font-semibold">Everything on the site</h2>
       <div className="grid gap-4 lg:grid-cols-4">

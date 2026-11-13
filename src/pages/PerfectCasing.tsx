@@ -165,7 +165,7 @@ export default function PerfectCasing() {
       <JumpBar items={nav} label="Jump to" />
       <div className="space-y-5">
         {STAGES_PC.slice(0, 2).map((s) => <Stage key={s.n} s={s} onTrain={train} />)}
-        <Gate id="pc-gate" title="Sign in to see all 10 stages" body="Stages 3 to 10 cover clarifying, structuring, driving the case, charts, maths, brainstorming, the recommendation, and habits that matter throughout. Free.">
+        <Gate id="pc-gate" what="all 10 stages">
           <div className="space-y-5">{STAGES_PC.slice(2).map((s) => <Stage key={s.n} s={s} onTrain={train} />)}</div>
         </Gate>
         <section id="trainer" className="scroll-mt-32 pt-4">

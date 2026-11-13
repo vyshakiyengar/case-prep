@@ -11,6 +11,7 @@ export interface Profile {
   partners?: string[]
   learned?: string[]
   practised?: string[] // casebook slugs the person has worked through
+  daily?: string[] // dates (YYYY-MM-DD) the person did that day's case of the day
   trainer?: Record<string, { box: number; due: string }>
   /** Personal notes, keyed by course page id ('case-map', a lesson slug, 'whats-next', 'general'). */
   notes?: Record<string, { text: string; updatedAt: number }>
@@ -38,7 +39,7 @@ export interface CaseEntry {
 
 export interface DrillEntry {
   id: string
-  kind: 'structure' | 'maths' | 'charts'
+  kind: 'structure' | 'maths' | 'charts' | 'sizing'
   prompt: string
   seconds: number
   score?: number // structure: self score 1-5

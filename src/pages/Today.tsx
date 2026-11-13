@@ -1,3 +1,5 @@
+import { readiness } from '../lib/readiness'
+import { CaseOfTheDay, Readiness } from '../components/Daily'
 import { ArtDashboard } from '../components/Art'
 import { Link } from 'react-router-dom'
 import { useStore } from '../lib/store'
@@ -99,6 +101,11 @@ export default function Today() {
     <>
       <PageHeader title={title} art={<ArtDashboard />} intro={sub || 'Tick off what you do today, and log every case you practise.'}
         action={<LinkButton to="/cases?new=1">Log a case</LinkButton>} />
+
+      <div className={`mb-5 grid gap-4 ${readiness(data).score > 0 ? 'xl:grid-cols-[1fr_1.15fr]' : ''}`}>
+        <Readiness hideWhenEmpty />
+        <CaseOfTheDay compact />
+      </div>
 
       <div className="grid gap-5 lg:grid-cols-[1.6fr_1fr]">
         <div className="space-y-5">

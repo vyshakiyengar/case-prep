@@ -13,7 +13,7 @@ import { Difficulty } from './Casebook'
 import { STAGES } from '../lib/types'
 import { useStore } from '../lib/store'
 import { SignInButton } from './SignIn'
-import { SignInPanel } from '../components/SignInPanel'
+import { Locked } from '../components/Learning'
 import type { CaseQuestion } from '../content'
 
 type Kind = 'clarify' | 'structure' | 'chart' | 'maths' | 'ideas' | 'reco' | 'judge' | 'sizing'
@@ -78,6 +78,10 @@ function Answer({ html, note, interviewer }: { html: string; note?: string; inte
       {interviewer && note && <p className="mt-2 rounded-md bg-signal-l px-3 py-2 text-[13.5px] text-signal-d"><b className="font-semibold">Interviewer note:</b> {note}</p>}
     </div>
   )
+}
+
+function LockWhen({ on, what, children }: { on: boolean; what: string; children: React.ReactNode }) {
+  return on ? <Locked what={what}>{children}</Locked> : <>{children}</>
 }
 
 export default function CasePlayer() {
@@ -156,14 +160,8 @@ export default function CasePlayer() {
         </nav>
 
         <article className="min-w-0 rounded-lg border border-line bg-white p-5 sm:p-7">
-          {locked(i) && (
-            <div className="mx-auto max-w-[420px] py-4 text-center">
-              <h2 className="text-[21px] leading-tight">Sign in to keep going with {c.title}</h2>
-              <p className="mt-1.5 mb-5 text-[14.5px] text-muted">You've seen the prompt and the clarifying questions. Sign in, free, for the structure, every question with a worked answer, the exhibits and the recommendation.</p>
-              <SignInPanel />
-            </div>
-          )}
-          {!locked(i) && step.key === 'prompt' && (
+          <LockWhen on={locked(i)} what={`the structure, every question with a worked answer, the exhibits and the recommendation for ${c.title}`}>
+          {step.key === 'prompt' && (
             <>
               <h2 className="text-[19px] font-semibold">{interviewer ? 'Read this aloud to your candidate' : 'Read the prompt'}</h2>
               <blockquote className="graph-paper mt-4 rounded-lg border-l-4 border-teal p-5 font-serif text-[16.5px] leading-relaxed text-ink">{c.prompt}</blockquote>
@@ -173,7 +171,7 @@ export default function CasePlayer() {
             </>
           )}
 
-          {!locked(i) && step.key === 'clarify' && (
+          {step.key === 'clarify' && (
             <>
               <h2 className="text-[19px] font-semibold">{interviewer ? 'Give these facts only if asked' : 'Ask up to three clarifying questions'}</h2>
               {!interviewer && <Coach key={`${c.slug}-clarify`} kind="clarify" />}
@@ -190,7 +188,7 @@ export default function CasePlayer() {
             </>
           )}
 
-          {!locked(i) && step.key === 'structure' && (
+          {step.key === 'structure' && (
             <>
               <h2 className="text-[19px] font-semibold">{interviewer ? 'What a strong structure looks like' : 'Draw your structure on paper'}</h2>
               {!interviewer && (
@@ -208,7 +206,7 @@ export default function CasePlayer() {
             </>
           )}
 
-          {!locked(i) && step.key.startsWith('q') && (() => {
+          {step.key.startsWith('q') && (() => {
             const q = c.questions[Number(step.key.slice(1))]
             return (
               <>
@@ -222,7 +220,7 @@ export default function CasePlayer() {
             )
           })()}
 
-          {!locked(i) && step.key === 'reco' && (
+          {step.key === 'reco' && (
             <>
               <h2 className="text-[19px] font-semibold">{interviewer ? 'Ask for the recommendation' : 'Give your recommendation'}</h2>
               <p className="mt-1 text-muted">Start with the answer. Then 2-3 reasons with numbers, the main risk, and next steps. About 60 seconds.</p>
@@ -236,7 +234,7 @@ export default function CasePlayer() {
             </>
           )}
 
-          {!locked(i) && step.key === 'score' && (interviewer ? (
+          {step.key === 'score' && (interviewer ? (
             <>
               <h2 className="text-[19px] font-semibold">Give feedback</h2>
               <p className="mt-1 text-muted">Score each stage 1-5 out loud, then agree on one fix together. Your candidate logs it in their own case log.</p>
@@ -258,6 +256,8 @@ export default function CasePlayer() {
                   </div>}
             </>
           ))}
+
+          </LockWhen>
 
           {step.key !== 'score' && !locked(i) && (
             <div className="mt-8 flex items-center justify-between border-t border-line pt-4">

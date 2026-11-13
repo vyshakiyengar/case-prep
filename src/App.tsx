@@ -26,6 +26,7 @@ const Drills = lazy(() => import('./pages/Drills'))
 const SpeedMaths = lazy(() => import('./pages/drills/SpeedMaths'))
 const StructurePractice = lazy(() => import('./pages/drills/StructurePractice'))
 const ChartPractice = lazy(() => import('./pages/drills/ChartPractice'))
+const SizingPractice = lazy(() => import('./pages/drills/SizingPractice'))
 const Graphs = lazy(() => import('./pages/Graphs'))
 const InterviewSkills = lazy(() => import('./pages/InterviewSkills'))
 const Stories = lazy(() => import('./pages/Stories'))
@@ -94,6 +95,7 @@ export default function App() {
           <Route path="/drills/maths" element={<SpeedMaths />} />
           <Route path="/drills/structure" element={<StructurePractice />} />
           <Route path="/drills/charts" element={<ChartPractice />} />
+          <Route path="/drills/sizing" element={<SizingPractice />} />
           {/* my prep: signed in */}
           <Route path="/today" element={<RequireUser onboard><Today /></RequireUser>} />
           <Route path="/tracker" element={<RequireUser onboard><Tracker /></RequireUser>} />

@@ -1,3 +1,4 @@
+import { caseOfDay } from './daily'
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react'
 import type { ReactNode } from 'react'
 import { AuthError, getBackend } from './backend'
@@ -178,9 +179,13 @@ export function StoreProvider({ children }: { children: ReactNode }) {
       markCase: async (slug, done) => {
         if (!user) return
         const cur = dataRef.current?.profile?.practised || []
-        if (done === cur.includes(slug)) return
-        const practised = done ? [...cur, slug] : cur.filter((x) => x !== slug)
-        const next = { ...(dataRef.current?.profile || { name: user.name }), practised } as Profile
+        const today = todayIso(), days = dataRef.current?.profile?.daily || []
+        // finishing today's case of the day counts towards the daily streak, even if done before
+        const dailyCredit = done && caseOfDay(today).slug === slug && !days.includes(today)
+        if (done === cur.includes(slug) && !dailyCredit) return
+        const practised = done ? Array.from(new Set([...cur, slug])) : cur.filter((x) => x !== slug)
+        const daily = dailyCredit ? [...days, today].slice(-400) : days
+        const next = { ...(dataRef.current?.profile || { name: user.name }), practised, daily } as Profile
         patch((d) => ({ ...d, profile: next }))
         await guard(() => backend!.saveProfile(uid, next))
       },

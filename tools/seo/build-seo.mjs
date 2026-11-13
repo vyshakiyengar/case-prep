@@ -10,7 +10,8 @@ const root = join(dirname(fileURLToPath(import.meta.url)), '../..')
 const dist = join(root, 'dist')
 // Load the site's own TypeScript content through Vite (no extra dependencies)
 const vite = await createServer({ root, logLevel: 'error', server: { middlewareMode: true, hmr: false }, appType: 'custom', optimizeDeps: { noDiscovery: true, include: [] } })
-const { routes, SITE } = await vite.ssrLoadModule('/tools/seo/entry.ts')
+const { routes, SITE, indexInSync } = await vite.ssrLoadModule('/tools/seo/entry.ts')
+if (!indexInSync) throw new Error('build-seo: src/content/caseIndex.json is out of date. Run python3 tools/casegen/index.py')
 await vite.close()
 
 const esc = (s) => s.replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
@@ -35,7 +36,8 @@ for (const r of routes) {
       inLanguage: 'en-GB', provider: { '@type': 'Organization', name: 'PrepForCase', url: SITE }, author: { '@id': 'https://vyshak.me/#person' } }
     h = h.replace('</head>', `    <script type="application/ld+json">${JSON.stringify(ld)}</script>\n  </head>`)
   }
-  const out = r.path === '/' ? join(dist, 'index.html') : join(dist, r.path, 'index.html')
+  // /casebook/x is served from casebook/x.html (vercel.json has cleanUrls on)
+  const out = r.path === '/' ? join(dist, 'index.html') : join(dist, `${r.path}.html`)
   mkdirSync(dirname(out), { recursive: true }); writeFileSync(out, h); n++
 }
 const today = new Date().toISOString().slice(0, 10)

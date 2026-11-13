@@ -17,7 +17,7 @@ Every number in a generated case is calculated in Python, and `assert` lines che
 
 1. Change the inputs or text in its module.
 2. `python3 show.py <module> <title>` to read it back.
-3. From this folder: `python3 export.py && python3 fix_original15.py`
+3. From this folder: `python3 export.py && python3 fix_original15.py && python3 index.py`
 4. From the repo root: `npm run build`, then commit `src/content/cases.json`.
 
 Needs Python 3 with matplotlib and numpy. Charts use IBM Plex Sans if its `.ttf` files are in `~/.fonts`; otherwise matplotlib's default font is used, which will change how the charts look.

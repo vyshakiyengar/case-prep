@@ -24,6 +24,7 @@ export const DRILLS: Item[] = [
   { to: '/drills/maths', label: 'Case maths', icon: 'M5 7h6M8 4v6M14 7h5M5 17l4 4M9 17l-4 4M14 16h5M14 20h5' },
   { to: '/drills/structure', label: 'Structuring', icon: 'M12 4v5M5 9h14M5 9v4M12 9v4M19 9v4M3 13h4v6H3zM10 13h4v6h-4zM17 13h4v6h-4z' },
   { to: '/drills/charts', label: 'Reading charts', icon: 'M4 20V4M4 20h16M8 16v-4M12 16V8M16 16v-6' },
+  { to: '/drills/sizing', label: 'Market sizing', icon: 'M7 8a2 2 0 1 0 0-.01M17 8a2 2 0 1 0 0-.01M3 16c0-2 2-3.5 4-3.5s4 1.5 4 3.5M13 16c0-2 2-3.5 4-3.5s4 1.5 4 3.5M5 20h14' },
   { to: '/graphs', label: 'Graph library', icon: 'M4 20V4M4 20h16M7 16l4-6 3 3 5-8' },
 ]
 export const REFERENCE: Item[] = [
