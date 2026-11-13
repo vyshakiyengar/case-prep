@@ -7,7 +7,7 @@ import { Avatar, Logo } from './ui'
 import { useIsAdmin } from '../lib/admin'
 
 type Item = { to: string; label: string; icon: string; end?: boolean }
-export const HOME: Item = { to: '/home', label: 'Home', icon: 'M3 11l9-7 9 7M5 10v10h5v-6h4v6h5V10' }
+export const HOME: Item = { to: '/', end: true, label: 'Home', icon: 'M3 11l9-7 9 7M5 10v10h5v-6h4v6h5V10' }
 export const ABOUT: Item = { to: '/about', label: 'About PrepForCase', icon: 'M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18zM12 11v5M12 8h.01' }
 export const LEARN: Item[] = [
   { to: '/learn', label: 'Course', icon: 'M12 6c-2-1.5-5-2-8-1.5v13c3-.5 6 0 8 1.5 2-1.5 5-2 8-1.5v-13c-3-.5-6 0-8 1.5zM12 6v13' },
@@ -104,7 +104,7 @@ function MobileSheet({ open, onClose, user, isAdmin }: { open: boolean; onClose:
       <button type="button" aria-label="Close menu" onClick={onClose} className="sheet-fade fixed inset-0 z-30 bg-ink/40" />
       <nav id="mobile-sections" aria-label="All sections" className="sheet-up fixed inset-x-0 bottom-[calc(57px+env(safe-area-inset-bottom))] z-30 max-h-[calc(100svh-140px)] overflow-y-auto rounded-t-2xl border-t border-line bg-white px-4 pt-3 pb-4 shadow-[0_-12px_40px_rgba(15,27,51,.18)]">
         <div aria-hidden className="mx-auto mb-3 h-1 w-10 rounded-full bg-line" />
-        <NavLink to="/home" onClick={onClose} className="mb-1 flex items-center gap-3 rounded-lg px-2 py-2 text-[14.5px] font-medium text-ink hover:bg-canvas"><Icon d={HOME.icon} />Home</NavLink>
+        <NavLink to="/" end onClick={onClose} className="mb-1 flex items-center gap-3 rounded-lg px-2 py-2 text-[14.5px] font-medium text-ink hover:bg-canvas"><Icon d={HOME.icon} />Home</NavLink>
         {groups.map(([title, items]) => (
           <div key={title} className="mt-3">
             <p className="px-2 pb-1 font-serif text-[13.5px] italic text-muted">{title}</p>
@@ -193,7 +193,7 @@ export default function AppShell() {
 
       {user?.provider === 'password' && !user.emailVerified && <VerifyBanner email={user.email} />}
 
-      {loc.pathname === '/'
+      {loc.pathname === '/' && !user
         ? <main className="pb-24 lg:pb-0"><Outlet /></main>
         : <main className="mx-auto max-w-6xl px-4 pt-4 pb-28 sm:px-6 lg:px-9 lg:pt-7 lg:pb-14"><SignInWall><Outlet /></SignInWall></main>}
 

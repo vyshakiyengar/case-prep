@@ -55,6 +55,13 @@ function RequireUser({ children, onboard = false }: { children: ReactNode; onboa
   return <>{children}</>
 }
 
+/** One front page: your Home when signed in, the introduction to the site when not. */
+function Front() {
+  const { ready, user, data } = useStore()
+  if (!ready || (user && !data)) return <Loading />
+  return user ? <SiteHome /> : <Landing />
+}
+
 export default function App() {
   return (
     <Suspense fallback={<Loading />}>
@@ -68,14 +75,14 @@ export default function App() {
         <Route path="/verify-school" element={<RequireUser><VerifySchool /></RequireUser>} />
         <Route element={<AppShell />}>
           {/* open to everyone */}
-          <Route path="/" element={<Landing />} />
+          <Route path="/" element={<Front />} />
           <Route path="/learn" element={<Learn />} />
           <Route path="/learn/:slug" element={<Learn />} />
           <Route path="/perfect-casing" element={<PerfectCasing />} />
           <Route path="/frameworks" element={<FrameworksIndex />} />
           <Route path="/frameworks/:slug" element={<Framework />} />
           <Route path="/graphs" element={<Graphs />} />
-          <Route path="/home" element={<SiteHome />} />
+          <Route path="/home" element={<Navigate to="/" replace />} />
           <Route path="/about" element={<About />} />
           <Route path="/case-types" element={<CaseTypes />} />
           <Route path="/formulas" element={<Formulas />} />

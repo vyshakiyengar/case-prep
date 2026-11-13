@@ -18,7 +18,7 @@ export default function SignIn() {
   const { ready, user } = useStore()
   const loc = useLocation()
   const next = new URLSearchParams(loc.search).get('next')
-  if (ready && user) return <Navigate to={next && next.startsWith('/') && !next.startsWith('//') && next !== '/signin' ? next : '/home'} replace />
+  if (ready && user) return <Navigate to={next && next.startsWith('/') && !next.startsWith('//') && next !== '/signin' ? next : '/'} replace />
   return (
     <div className="graph-paper flex min-h-screen items-center justify-center px-4 py-8">
       <div className="rise w-full max-w-[420px] rounded-xl border border-line bg-white p-7 shadow-[0_30px_60px_-30px_rgba(15,27,51,.45)]">

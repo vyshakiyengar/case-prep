@@ -107,7 +107,7 @@ async function makeFirebase(): Promise<Backend> {
       createdAt: u.metadata.creationTime ? Date.parse(u.metadata.creationTime) : undefined,
     }
   }
-  const verifyUrl = () => ({ url: `${window.location.origin}/home?verified=1` })
+  const verifyUrl = () => ({ url: `${window.location.origin}/?verified=1` })
 
   return {
     mode: 'firebase',

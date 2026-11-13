@@ -2,6 +2,8 @@ import { CASE_COUNT } from '../content/caseCount'
 import { Link } from 'react-router-dom'
 import { useEffect, useRef, useState } from 'react'
 import { useStore } from '../lib/store'
+import { caseOfDay } from '../lib/daily'
+import { todayIso } from '../lib/dates'
 import { ArtCourse, ArtCasebook, ArtMaths, ArtReference, ArtImprove, IndustryCardBody, INDUSTRY_CARD } from '../components/Art'
 import { CASE_PICKS, DIFF_WORD } from '../content/casePicks'
 import { LESSONS } from '../content/course'
@@ -259,7 +261,7 @@ const GROUPS: { t: string; art: (p: { className?: string }) => React.ReactElemen
   ] },
   { t: 'Practise cases', art: ArtCasebook, items: [
     { t: 'Casebook', d: `${CASE_COUNT} original cases across every industry, each with a full worked answer.`, to: '/casebook' },
-    { t: 'Case of the day', d: 'One case for everyone each day. Keep a streak going.', to: '/home' },
+    { t: 'Case of the day', d: 'One case for everyone each day. Keep a streak going.', to: `/casebook/${caseOfDay(todayIso()).slug}` },
     { t: 'Interviewer mode', d: 'Give a case to a friend, with the script and the facts to share.', to: '/interviewer' },
     { t: 'Graph library', d: '64 exhibit charts, each with the insight to look for.', to: '/graphs' },
   ] },
@@ -283,18 +285,11 @@ const GROUPS: { t: string; art: (p: { className?: string }) => React.ReactElemen
 ]
 
 export default function Landing() {
-  const { user, data } = useStore()
-  const firstName = (data?.profile?.name || user?.name || '').split(' ')[0]
+  const { user } = useStore()
   return (
     <div className="bg-white">
       <div className="relative overflow-hidden bg-ink text-white lg:border-l lg:border-white/10">
         <div aria-hidden className="pointer-events-none absolute inset-0 opacity-[.07] [background-image:radial-gradient(circle_at_1px_1px,#fff_1px,transparent_1.2px)] [background-size:22px_22px]" />
-        {user && (
-          <div className="relative mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-3 px-5 pt-6 sm:px-6">
-            <p className="text-[14.5px] text-[#C9D2E0]">Welcome back{firstName ? `, ${firstName}` : ''}.</p>
-            <Link to="/home" className="lp-cta inline-flex items-center rounded-lg bg-white/10 px-4 py-2 text-[14px] font-medium text-white hover:bg-white/20">Continue your prep<Arrow /></Link>
-          </div>
-        )}
 
         <section className="relative mx-auto grid max-w-6xl items-center gap-14 px-5 pt-10 pb-24 sm:px-6 lg:grid-cols-[1.1fr_1fr] lg:pt-20 lg:pb-20">
           <div>
@@ -350,7 +345,7 @@ export default function Landing() {
               <h3 className="text-[19px]">No app, no card, no trial</h3>
               <p className="mt-2 text-[14.5px] leading-relaxed text-ink-2">The course, frameworks and casebook open straight away. A free sign-in with Google or any email unlocks every step of every case and saves your progress on any device.</p>
               <div className="mt-5 flex flex-wrap gap-3">
-                <Link to={user ? '/home' : '/signin'} className="rounded-lg bg-ink px-4 py-2.5 text-[14.5px] font-medium text-white hover:bg-[#1C2B4A]">{user ? 'Go to my Home' : 'Sign in free'}</Link>
+                <Link to={user ? '/' : '/signin'} className="rounded-lg bg-ink px-4 py-2.5 text-[14.5px] font-medium text-white hover:bg-[#1C2B4A]">{user ? 'Go to my Home' : 'Sign in free'}</Link>
                 <Link to="/learn" className="rounded-lg border border-line px-4 py-2.5 text-[14.5px] font-medium text-ink hover:border-ink/40">Start the course</Link>
               </div>
             </div>

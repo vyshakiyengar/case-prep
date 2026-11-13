@@ -8,7 +8,6 @@ const IMG = (name: string) => `${SITE}/og/${name}.jpg`
 
 export const PAGES: Record<string, Meta> = {
   '/': { title: 'PrepForCase · Free case interview prep', description: 'Learn the case interview, then practise it 102 times. A free course, 11 core frameworks, 102 cases with worked answers, and drills for maths, structuring, charts and market sizing.', image: IMG('home') },
-  '/home': { title: 'PrepForCase · Free case interview prep', description: 'Everything you need for case interviews, free: a course, frameworks, 102 cases, drills and a tracker.', image: IMG('home') },
   '/casebook': { title: 'Casebook: 102 free practice cases with worked answers · PrepForCase', description: '102 original consulting case interviews across every industry, each with clarifying facts, a structure, exhibits, maths and a model recommendation. Free.', image: IMG('casebook') },
   '/learn': { title: 'The case interview course · PrepForCase', description: 'Eleven short lessons on how consultants solve cases: the opening, structuring, case maths, charts, market sizing, brainstorming and the recommendation.', image: IMG('learn') },
   '/frameworks': { title: 'Case interview frameworks: 11 core issue trees · PrepForCase', description: 'Eleven core frameworks that cover most consulting cases, drawn as issue trees, with when to use each and what to ask first.', image: IMG('frameworks') },

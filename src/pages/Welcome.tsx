@@ -16,7 +16,7 @@ export default function Welcome() {
   const submit = async (e: React.FormEvent) => {
     e.preventDefault(); setSaving(true)
     await saveProfile({ name: name.trim() || 'You', startDate: start, interviewDate: iv || undefined })
-    nav(next && next.startsWith('/') ? next : '/home', { replace: true })
+    nav(next && next.startsWith('/') ? next : '/', { replace: true })
   }
   return (
     <div className="graph-paper flex min-h-screen items-center justify-center px-4 py-8">
