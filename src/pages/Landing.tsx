@@ -42,7 +42,7 @@ const TRY = [
  * A real question to try on the spot. Until someone taps it, it plays itself: an answer is
  * typed, checked and marked right. Then it's theirs to answer.
  */
-function TryOne() {
+export function TryOne() {
   const [live, setLive] = useState(false)
   const [qi, setQi] = useState(0)
   const [val, setVal] = useState('')
