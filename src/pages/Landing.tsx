@@ -30,33 +30,62 @@ function CountUp({ to, delay = 0 }: { to: number; delay?: number }) {
   return <>{n}</>
 }
 
-/** A small live demo of the drills: an answer is typed, checked and marked, on a loop. */
-function MarkingChip() {
-  const ANSWER = '20'
-  const [phase, setPhase] = useState(() => (reducedMotion() ? 4 : 0)) // 0 empty, 1-2 typing, 3 checking, 4 right
+const TRY = [
+  { topic: 'Break-even', q: 'Fixed costs are $400k. Each unit sold adds $20 of profit. Break-even volume?', unit: 'thousand', a: 20, say: '20k units', how: 'Fixed costs ÷ profit per unit = $400k ÷ $20.' },
+  { topic: 'Margin', q: 'Price $50, cost $20. What is the gross margin?', unit: '%', a: 60, say: '60%', how: 'Margin = (price − cost) ÷ price = 30 ÷ 50.' },
+  { topic: 'Growth', q: 'Revenue grew from $100M to $121M over two years. Growth per year?', unit: '%', a: 10, say: '10% a year', how: '1.1 × 1.1 = 1.21, so 10% each year.' },
+  { topic: 'Fractions', q: 'What is 1/8 as a percentage?', unit: '%', a: 12.5, say: '12.5%', how: 'Learn the anchors: 1/8 = 12.5%, 1/6 ≈ 16.7%.' },
+]
+
+/**
+ * A real question to try on the spot. Until someone taps it, it plays itself: an answer is
+ * typed, checked and marked right. Then it's theirs to answer.
+ */
+function TryOne() {
+  const [live, setLive] = useState(false)
+  const [qi, setQi] = useState(0)
+  const [val, setVal] = useState('')
+  const [fb, setFb] = useState<null | boolean>(null)
+  const [phase, setPhase] = useState(() => (reducedMotion() ? 4 : 0)) // demo: 0 empty, 1-2 typing, 3 checking, 4 right
+  const input = useRef<HTMLInputElement>(null)
   useEffect(() => {
-    if (reducedMotion()) return
-    const times = [1400, 260, 500, 700, 3200]
+    if (live || reducedMotion()) return
+    const times = [1500, 260, 500, 700, 3200]
     const t = setTimeout(() => setPhase((p) => (p + 1) % 5), times[phase])
     return () => clearTimeout(t)
-  }, [phase])
-  const typed = phase >= 2 ? ANSWER : phase === 1 ? ANSWER[0] : ''
+  }, [phase, live])
+  const q = TRY[qi]
+  const take = () => { if (!live) { setLive(true); setVal(''); setFb(null); requestAnimationFrame(() => input.current?.focus()) } }
+  const check = (e: React.FormEvent) => {
+    e.preventDefault()
+    if (!live) return take()
+    if (fb !== null) { setQi((i) => (i + 1) % TRY.length); setVal(''); setFb(null); input.current?.focus(); return }
+    const n = parseFloat(val.replace(/[^0-9.]/g, ''))
+    if (Number.isNaN(n)) return
+    setFb(Math.abs(n - q.a) < 0.051)
+  }
+  const shown = live ? val : phase >= 2 ? String(q.a) : phase === 1 ? String(q.a)[0] : ''
+  const right = live ? fb === true : phase === 4
   return (
-    <div className="w-[262px] rounded-xl border border-line bg-white p-3.5 text-left text-ink shadow-[0_24px_50px_-20px_rgba(0,0,0,.55)]">
-      <p className="text-[11.5px] text-muted">Case maths</p>
-      <p className="mt-0.5 font-serif text-[15.5px] leading-snug font-semibold">Fixed costs $400k. Each unit adds $20 of profit. Break-even volume?</p>
-      <div className="mt-2.5 flex items-center gap-2">
-        <span className={`flex h-8 flex-1 items-center justify-between rounded-md border px-2.5 text-[13.5px] transition-colors ${phase === 4 ? 'border-teal' : 'border-line'}`}>
-          <span>{typed}<span className={`ml-px inline-block h-4 w-px align-middle bg-ink ${phase >= 3 ? 'opacity-0' : 'animate-pulse'}`} /></span>
-          <span className="text-[12px] text-faint">thousand</span>
-        </span>
-        <span className={`rounded-md px-2.5 py-1.5 text-[12.5px] font-medium text-white transition-colors ${phase === 3 ? 'bg-teal-d' : 'bg-ink'}`}>Check</span>
+    <form onSubmit={check} onPointerDown={take} className="w-full max-w-[300px] rounded-xl border border-line bg-white p-4 text-left text-ink shadow-[0_24px_50px_-20px_rgba(0,0,0,.55)]">
+      <p className="flex items-center justify-between text-[12px] text-muted"><span>{q.topic}</span><span className="font-medium text-teal-d">{live ? `Question ${qi + 1} of ${TRY.length}` : 'Try one'}</span></p>
+      <p className="mt-1 font-serif text-[16px] leading-snug font-semibold">{q.q}</p>
+      <div className="mt-3 flex items-center gap-2">
+        <label className={`flex h-9 flex-1 items-center rounded-md border px-2.5 text-[14px] transition-colors ${right ? 'border-teal' : fb === false ? 'border-signal' : 'border-line'} ${live ? 'focus-within:border-ink' : ''}`}>
+          <span className="sr-only">Your answer</span>
+          <input ref={input} value={shown} onChange={(e) => { setVal(e.target.value); setFb(null) }} onFocus={take} inputMode="decimal" readOnly={!live}
+            placeholder={live ? 'Your answer' : ''} className="w-full min-w-0 bg-transparent outline-none placeholder:text-faint" />
+          <span className="ml-1 shrink-0 text-[12px] text-faint">{q.unit}</span>
+        </label>
+        <button type="submit" className={`rounded-md px-3 py-2 text-[13px] font-medium text-white transition-colors ${!live && phase === 3 ? 'bg-teal-d' : 'bg-ink hover:bg-[#1C2B4A]'}`}>{live && fb !== null ? 'Next' : 'Check'}</button>
       </div>
-      <p className={`mt-2 flex items-center gap-1.5 text-[13px] transition-opacity duration-300 ${phase === 4 ? 'opacity-100' : 'opacity-0'}`} aria-live="polite">
-        <svg aria-hidden viewBox="0 0 24 24" className="h-4 w-4 fill-none stroke-teal-d stroke-[2.5]"><path d="M5 12.5l4.5 4.5L19 7.5" /></svg>
-        <span><b className="font-semibold text-teal-d">Right.</b> 20k units.</span>
-      </p>
-    </div>
+      <div className="mt-2 min-h-[38px] text-[13px] leading-snug" aria-live="polite">
+        {right && <p className="flex items-start gap-1.5"><svg aria-hidden viewBox="0 0 24 24" className="mt-px h-4 w-4 shrink-0 fill-none stroke-teal-d stroke-[2.5]"><path d="M5 12.5l4.5 4.5L19 7.5" /></svg><span><b className="font-semibold text-teal-d">Right.</b> {q.say}.{live && <> {q.how}</>}</span></p>}
+        {live && fb === false && <p><b className="font-semibold text-signal-d">Not quite.</b> It's {q.say}. {q.how}</p>}
+        {!live && !right && <p className="text-muted">Tap to answer it yourself.</p>}
+        {live && fb === null && <p className="text-muted">Type a number, then Check. <Link to="/drills/maths" className="font-medium text-violet-d hover:underline">More in the maths drill</Link></p>}
+      </div>
+    </form>
   )
 }
 
@@ -122,14 +151,15 @@ function CaseSteps() {
 function HeroScreens() {
   return (
     <div className="relative mx-auto w-full max-w-[640px] pb-10 sm:pb-16 lg:mr-[-60px]">
+      <div aria-hidden className="pointer-events-none absolute -inset-16 rounded-full bg-[radial-gradient(closest-side,rgba(45,212,191,.22),transparent)] blur-2xl" />
       <div className="lp-window" style={{ ['--d' as string]: '.35s' }}>
         <div className="lp-float"><Browser src="/shots/desktop-home.webp" path="home" eager alt="The PrepForCase home page in a browser: the next lesson, the case of the day and a readiness score" /></div>
       </div>
       <div className="lp-slide absolute bottom-0 left-[-8%] hidden w-[44%] sm:block" style={{ ['--d' as string]: '.75s' }}>
         <div className="lp-float" style={{ ['--f' as string]: '-3s' }}><Browser src="/shots/desktop-charts.webp" path="drills/charts" alt="The chart drill: a stacked bar exhibit with a question and a 60-second timer" /></div>
       </div>
-      <div className="lp-pop absolute top-[-34px] right-[-18px] hidden lg:block" style={{ ['--d' as string]: '1.2s' }}>
-        <div className="lp-float" style={{ ['--f' as string]: '-1.5s' }}><MarkingChip /></div>
+      <div className="lp-pop absolute top-[-40px] right-[-24px] z-[1] hidden w-[300px] lg:block" style={{ ['--d' as string]: '1.2s' }}>
+        <TryOne />
       </div>
       <div className="lp-pop absolute right-3 bottom-1 rounded-lg bg-white px-3.5 py-2.5 text-ink shadow-[0_18px_40px_-18px_rgba(0,0,0,.55)] sm:bottom-6" style={{ ['--d' as string]: '1s' }}>
         <p className="font-serif text-[22px] leading-tight font-semibold tabular-nums"><CountUp to={CASE_COUNT} delay={1000} /> cases</p>
@@ -212,16 +242,17 @@ export default function Landing() {
             </h1>
             <span aria-hidden className="lp-rule mt-7 block h-[2px] w-16 bg-teal" style={{ ['--d' as string]: '.45s' }} />
             <p className="lp-in mt-6 max-w-lg text-[16.5px] leading-relaxed text-[#C9D2E0]" style={{ ['--d' as string]: '.3s' }}>
-              A free course on how consultants solve cases, {CASE_COUNT} practice cases with full worked answers,
-              and drills for maths, structuring, charts and market sizing. Made by a London Business School and BCG alum.
+              Got a case interview coming up? Start here. A short course on how consultants solve cases,{' '}
+              {CASE_COUNT} practice cases with full worked answers, and quick drills for maths, structuring, charts and market sizing. All free.
             </p>
             <div className="lp-in mt-9 flex flex-wrap items-center gap-3" style={{ ['--d' as string]: '.45s' }}>
-              <Link to="/learn" className="rounded-lg bg-white px-5 py-3 text-[14.5px] font-medium text-ink hover:bg-teal-l">Start the free course</Link>
-              <Link to="/casebook" className="rounded-lg border border-white/25 px-5 py-3 text-[14.5px] font-medium text-white hover:border-white/60">Browse the casebook</Link>
+              <Link to="/casebook/coastal-brew" className="rounded-lg bg-white px-5 py-3 text-[14.5px] font-medium text-ink hover:bg-teal-l">Try a free case</Link>
+              <Link to="/learn" className="rounded-lg border border-white/25 px-5 py-3 text-[14.5px] font-medium text-white hover:border-white/60">Start the course</Link>
             </div>
+            <div className="lp-in mt-8 lg:hidden" style={{ ['--d' as string]: '.55s' }}><TryOne /></div>
             <p className="lp-in mt-6 flex max-w-lg items-start gap-2.5 text-[14px] leading-snug text-[#B8C2D3]" style={{ ['--d' as string]: '.6s' }}>
               <svg aria-hidden viewBox="0 0 24 24" className="mt-px h-[18px] w-[18px] shrink-0 fill-none stroke-teal-l stroke-2"><rect x="3" y="4" width="18" height="13" rx="2" /><path d="M8 21h8M12 17v4" /></svg>
-              <span>It all works in your browser, on a laptop or a phone. Nothing to download, nothing to pay. Sign in with Google or any email to save your progress.</span>
+              <span>No sign-up for your first two cases. It all works in your browser on a laptop or phone, with nothing to download. Sign in free with Google or any email when you want to save your progress.</span>
             </p>
           </div>
           <HeroScreens />
@@ -349,6 +380,22 @@ export default function Landing() {
       </section>
 
 
+      <section className="mx-auto max-w-6xl px-5 pt-6 pb-4 sm:px-6">
+        <figure className="grid items-center gap-6 border-y border-line py-10 md:grid-cols-[150px_1fr] md:gap-10">
+          <img src="/vyshak.jpg" alt="Vyshak K Iyengar" width={150} height={150} loading="lazy" decoding="async" className="h-28 w-28 rounded-[8px] object-cover md:h-[150px] md:w-[150px]" />
+          <div>
+            <blockquote className="max-w-3xl font-serif text-[21px] leading-[1.45] text-ink sm:text-[24px]">
+              “I built PrepForCase from what helped me: classmates who practised cases with me late into the evening, and consultants who told me honestly what wasn't working. It's free because this is my way of giving back. If it moves you one step closer to an offer, it has done its job.”
+            </blockquote>
+            <figcaption className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-1 text-[14.5px]">
+              <span className="text-ink">Vyshak K Iyengar, London Business School and BCG alum</span>
+              <Link to="/about" className="font-medium text-violet-d hover:underline">Read the story</Link>
+              <a href="https://www.linkedin.com/in/vyshakiyengar/" target="_blank" rel="noopener noreferrer" className="font-medium text-violet-d hover:underline">Say hello on LinkedIn</a>
+            </figcaption>
+          </div>
+        </figure>
+      </section>
+
       <section className="mx-auto max-w-6xl px-5 py-14 sm:px-6">
         <div className="grid items-center gap-5 rounded-xl bg-canvas p-5 md:grid-cols-[140px_1fr_auto]">
           <div aria-hidden className="hidden md:block"><ArtPerks /></div>
@@ -360,13 +407,17 @@ export default function Landing() {
         </div>
       </section>
 
-      <section className="bg-ink">
-        <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-5 px-5 py-14 sm:px-6">
+      <section className="relative overflow-hidden bg-ink">
+        <div aria-hidden className="pointer-events-none absolute -top-24 right-[10%] h-72 w-72 rounded-full bg-[radial-gradient(closest-side,rgba(45,212,191,.25),transparent)] blur-2xl" />
+        <div className="relative mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-6 px-5 py-16 sm:px-6">
           <div>
-            <h2 className="text-[28px] text-white">Start with lesson 1 today</h2>
-            <p className="mt-1 text-[#B9C4D3]">It takes eight minutes, and you'll know what interviewers are actually scoring.</p>
+            <h2 className="text-[30px] text-white">Try your first case now</h2>
+            <p className="mt-1 max-w-xl text-[#B9C4D3]">Coastal Brew is a friendly first case: a coffee chain that's growing but making less money. About 25 minutes, every step open, no sign-up.</p>
           </div>
-          <Link to="/learn/how-case-interviews-work" className="rounded-lg bg-white px-5 py-3 text-[14.5px] font-medium text-ink hover:bg-paper">Start lesson 1</Link>
+          <div className="flex flex-wrap gap-3">
+            <Link to="/casebook/coastal-brew" className="rounded-lg bg-white px-5 py-3 text-[14.5px] font-medium text-ink hover:bg-teal-l">Start Coastal Brew</Link>
+            <Link to="/learn/how-case-interviews-work" className="rounded-lg border border-white/25 px-5 py-3 text-[14.5px] font-medium text-white hover:border-white/60">Or start with lesson 1</Link>
+          </div>
         </div>
       </section>
       <footer className="mx-auto flex max-w-6xl flex-wrap justify-between gap-2 px-5 py-6 text-[13px] text-muted sm:px-6">
