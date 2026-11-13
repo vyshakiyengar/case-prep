@@ -162,7 +162,7 @@ export default function PerfectCasing() {
   const nav = [...STAGES_PC.map((x) => ({ id: `stage-${x.n}`, label: `Stage ${x.n}: ${x.title.replace(/ \(.*\)/, "")}${!user && !pageFree && x.n > 2 ? ' (sign in)' : ''}`, locked: !user && !pageFree && x.n > 2 })), { id: 'trainer', label: 'Phrase trainer', locked: !user && !pageFree }]
   return (
     <>
-      <PageHeader title="Perfect casing" art={<ArtInterviewer />} intro="The choreography of a strong case, from the first sentence to the recommendation, with the exact words to use at each moment. Read it top to bottom once, then train the phrases daily until they come out on their own." />
+      <PageHeader title="Perfect casing" art={<ArtInterviewer />} intro="What to say at each stage of a case. Read it once, then train the phrases." />
       <JumpBar items={nav} label="Jump to" />
       <div className="space-y-5">
         {STAGES_PC.slice(0, 2).map((s) => <Stage key={s.n} s={s} onTrain={train} />)}

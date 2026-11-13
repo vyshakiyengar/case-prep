@@ -24,12 +24,12 @@ export function CaseOfTheDay({ compact = false }: { compact?: boolean }) {
         <p className="mt-1.5 font-serif text-[21px] leading-tight font-semibold text-ink">{c.title}</p>
         <p className="mt-1 text-[14.5px] text-ink-2">{c.sub}</p>
         <p className="mt-2 text-[13px] text-muted">{c.type}, {c.industry}. {DIFF[c.diff]}, {c.time}.</p>
-        {!compact && <p className="mt-2 text-[13.5px] text-muted">Everyone on PrepForCase gets the same case today. Do it for your streak; a new one comes tomorrow.</p>}
+        {!compact && <p className="mt-2 text-[13.5px] text-muted">Same case for everyone today. A new one tomorrow.</p>}
         <div className="mt-4 flex flex-wrap items-center gap-3">
           {doneToday
             ? <span className="rounded-lg bg-good-l px-3.5 py-2 text-[14px] font-medium text-good">Done today. See you tomorrow.</span>
             : <Link to={`/casebook/${c.slug}`} className="btn-primary rounded-lg px-4 py-2.5 text-[14.5px] font-medium text-white">Start today's case</Link>}
-          {user && !doneToday && <span className="text-[13px] text-muted">Counts when you open the recommendation.</span>}
+
         </div>
       </div>
       <div aria-hidden className="hidden border-l border-line bg-canvas px-4 pt-6 sm:block"><ArtSector industry={c.industry} /></div>
@@ -69,7 +69,7 @@ export function Readiness({ hideWhenEmpty = false }: { hideWhenEmpty?: boolean }
         <Ring value={score} />
         <div className="min-w-[200px] flex-1">
           <h2 id="ready" className="font-sans text-[13px] font-semibold text-teal-d">Readiness score</h2>
-          <p className="mt-1 text-[14.5px] text-ink-2">A guide to how prepared you are, from the course, your cases, your drills and how often you prepare. It's a nudge, not a prediction.</p>
+          <p className="mt-1 text-[14.5px] text-ink-2">How prepared you are, from four things. A nudge, not a prediction.</p>
           <p className="mt-2 text-[14px]"><span className="text-muted">Biggest gain next: </span><Link to={next.to} className="font-medium text-violet-d hover:underline">{next.tip}</Link></p>
         </div>
       </div>

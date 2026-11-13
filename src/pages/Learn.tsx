@@ -233,7 +233,7 @@ export default function Learn() {
     <>
       {i === 0 && (
         <PageHeader title="The case interview course" art={<ArtCourse />}
-          intro={`${LESSONS.length} short lessons, about ${Math.round(totalMinutes / 5) * 5} minutes in total. One lesson per page: turn with the buttons or your arrow keys.`}
+          intro={`${LESSONS.length} short lessons, about ${Math.round(totalMinutes / 5) * 5} minutes in all.`}
           action={<LinkButton to={`/learn/${nextLesson.slug}`}>{done ? 'Continue where I left off' : 'Start lesson 1'}</LinkButton>} />
       )}
 

@@ -1,11 +1,10 @@
 import { CASE_COUNT } from '../content/caseCount'
 import { Link } from 'react-router-dom'
 import { useEffect, useRef, useState } from 'react'
-import CASE_INDEX from '../content/caseIndex.json'
 import { useStore } from '../lib/store'
-import { ArtCourse, ArtCasebook, ArtMaths, ArtReference, ArtImprove, ArtMap, ArtStructure, ArtVoice, ArtPerks, IndustryCardBody, INDUSTRY_CARD } from '../components/Art'
+import { ArtCourse, ArtCasebook, ArtMaths, ArtReference, ArtImprove, IndustryCardBody, INDUSTRY_CARD } from '../components/Art'
 import { CASE_PICKS, DIFF_WORD } from '../content/casePicks'
-import { MODULES, lessonBySlug, LESSONS, totalMinutes } from '../content/course'
+import { LESSONS } from '../content/course'
 
 
 const reducedMotion = () => typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches
@@ -86,28 +85,6 @@ function TryOne() {
         {live && fb === null && <p className="text-muted">Type a number, then Check. <Link to="/drills/maths" className="font-medium text-violet-d hover:underline">More in the maths drill</Link></p>}
       </div>
     </form>
-  )
-}
-
-type CaseRow = { id: number; slug: string; title: string; type: string }
-/** Every case in the casebook, in two rows you can swipe or scroll sideways. Nothing moves on its own. */
-function CaseTicker() {
-  const rows = [CASE_INDEX.slice(0, 51), CASE_INDEX.slice(51)] as CaseRow[][]
-  return (
-    <div className="lp-band overflow-x-auto py-6 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden" aria-label={`All ${CASE_COUNT} cases`}>
-      <div className="w-max space-y-2.5 px-5 sm:px-6">
-        {rows.map((row, r) => (
-          <div key={r} className="flex">
-            {row.map((c) => (
-              <Link key={c.slug} to={`/casebook/${c.slug}`}
-                className="mr-2.5 flex shrink-0 items-baseline gap-2 rounded-full border border-white/12 px-4 py-1.5 text-[13.5px] text-white/85 hover:border-white/40 hover:text-white">
-                <span className="font-serif text-[12px] text-teal-l italic">{c.id}</span>{c.title}<span className="text-[12px] text-white/45">{c.type}</span>
-              </Link>
-            ))}
-          </div>
-        ))}
-      </div>
-    </div>
   )
 }
 
@@ -257,7 +234,6 @@ function HeroScreens() {
   )
 }
 
-const MODULE_ART = [ArtMap, ArtStructure, ArtVoice]
 
 /** A desktop browser window showing a real screen from the site. `crop` trims empty space below the content. */
 function Browser({ src, alt, path = '', className = '', eager = false, crop = false }: { src: string; alt: string; path?: string; className?: string; eager?: boolean; crop?: boolean }) {
@@ -338,19 +314,18 @@ export default function Landing() {
             <div className="lp-in mt-8 lg:hidden" style={{ ['--d' as string]: '.55s' }}><TryOne /></div>
             <p className="lp-in mt-6 flex max-w-lg items-start gap-2.5 text-[14px] leading-snug text-[#B8C2D3]" style={{ ['--d' as string]: '.6s' }}>
               <svg aria-hidden viewBox="0 0 24 24" className="mt-px h-[18px] w-[18px] shrink-0 fill-none stroke-teal-l stroke-2"><rect x="3" y="4" width="18" height="13" rx="2" /><path d="M8 21h8M12 17v4" /></svg>
-              <span>{user ? 'It all works in your browser on a laptop or phone, with nothing to download, and your progress is saved to your account.' : 'No sign-up for your first two cases. It all works in your browser on a laptop or phone, with nothing to download. Sign in free with Google or any email when you want to save your progress.'}</span>
+              <span>{user ? 'Works in any browser. Your progress is saved to your account.' : 'No sign-up for your first two cases. Works in any browser, nothing to download.'}</span>
             </p>
           </div>
           <HeroScreens />
         </section>
-        <div className="relative border-t border-white/10"><CaseTicker /></div>
       </div>
 
 
       <section id="everything">
         <div className="mx-auto max-w-6xl px-5 py-20 sm:px-6">
           <h2 className="text-[30px]">Everything on PrepForCase</h2>
-          <p className="mt-1 max-w-2xl text-muted">The whole site at a glance. Open any of it right now in this browser tab.</p>
+          <p className="mt-1 max-w-2xl text-muted">The whole site at a glance.</p>
           <div className="mt-9 grid gap-x-8 gap-y-11 md:grid-cols-2 lg:grid-cols-3">
             {GROUPS.map((g) => (
               <div key={g.t}>
@@ -387,7 +362,7 @@ export default function Landing() {
         <div className="grid items-center gap-12 lg:grid-cols-[1fr_1.35fr]">
           <div>
             <h2 className="text-[30px]">Practise it like the real interview</h2>
-            <p className="mt-2 text-[15.5px] leading-relaxed text-ink-2">Every case runs the way an interviewer would run it, one stage at a time, with a strong answer waiting at each step so you always know what good looks like.</p>
+            <p className="mt-2 text-[15.5px] leading-relaxed text-ink-2">Each case runs stage by stage, like the real thing, with a strong answer at every step.</p>
             <CaseSteps />
             <p className="mt-5 text-[15.5px] leading-relaxed text-ink-2">Practising with a friend? Switch to interviewer mode and they get the script.</p>
             <Link to="/casebook" className="mt-6 inline-block rounded-lg bg-ink px-4 py-2.5 text-[14.5px] font-medium text-white hover:bg-[#1C2B4A]">Open the casebook</Link>
@@ -404,12 +379,12 @@ export default function Landing() {
           <div className="flex flex-wrap items-end justify-between gap-4">
             <div>
               <h2 className="text-[30px]">Cases from every industry</h2>
-              <p className="mt-1 max-w-2xl text-muted">Coffee chains to hospitals, airlines to city councils. Every case is original, with a full worked answer.</p>
+              <p className="mt-1 max-w-2xl text-muted">Coffee chains to hospitals, airlines to city councils.</p>
             </div>
             <Link to="/casebook" className="text-[14.5px] font-medium text-violet-d hover:underline">See all {CASE_COUNT} cases</Link>
           </div>
           <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            {CASE_PICKS.slice(0, 8).map((c) => (
+            {CASE_PICKS.slice(0, 4).map((c) => (
               <Link key={c.slug} to={`/casebook/${c.slug}`} className={INDUSTRY_CARD}>
                 <IndustryCardBody label={c.label} title={c.title} sub={c.sub} industry={c.industry} meta={DIFF_WORD[c.diff]} />
               </Link>
@@ -421,7 +396,7 @@ export default function Landing() {
       <section className="bg-canvas">
         <div className="mx-auto max-w-6xl px-5 py-20 sm:px-6">
           <h2 className="text-[30px]">Drills that take a few minutes</h2>
-          <p className="mt-1 max-w-2xl text-muted">Real screens from the site. Each drill tells you straight away whether you were right, and why.</p>
+          <p className="mt-1 max-w-2xl text-muted">Each drill tells you straight away whether you were right, and why.</p>
           <div className="mt-10 grid gap-x-8 gap-y-10 md:grid-cols-2">
             {[
               { src: '/shots/desktop-maths.webp', path: 'drills/maths', to: '/drills/maths', t: 'Case maths', d: 'Percentages, margins, growth and break-even, marked as you go.', alt: 'A break-even question in the case maths drill, answered correctly' },
@@ -442,30 +417,6 @@ export default function Landing() {
         </div>
       </section>
 
-      <section className="mx-auto max-w-6xl px-5 py-20 sm:px-6">
-        <div className="flex flex-wrap items-end justify-between gap-4">
-          <div>
-            <h2 className="text-[30px]">The course</h2>
-            <p className="mt-1 text-muted">{LESSONS.length} lessons, about {Math.round(totalMinutes / 5) * 5} minutes. Each one teaches a skill, shows a weak and a strong answer, and makes you try it.</p>
-          </div>
-          <Link to="/learn/how-case-interviews-work" className="rounded-lg bg-ink px-4 py-2.5 text-[14.5px] font-medium text-white hover:bg-[#1C2B4A]">Start lesson 1</Link>
-        </div>
-        <div className="mt-8 grid gap-6 md:grid-cols-3">
-          {MODULES.map((m, mi) => (
-            <div key={m.title}>
-              <div aria-hidden className="mb-4 rounded-xl bg-canvas px-6 pt-2"><div className="mx-auto max-w-[240px]">{(() => { const A = MODULE_ART[mi] ?? ArtMap; return <A /> })()}</div></div>
-              <h3 className="text-[17.5px]"><span className="mr-2 italic text-teal">{mi + 1}</span>{m.title}</h3>
-              <ul className="mt-2 divide-y divide-line border-y border-line">
-                {m.slugs.map((s) => { const l = lessonBySlug(s)!; return (
-                  <li key={s}><Link to={`/learn/${s}`} className="flex justify-between gap-3 py-2.5 text-[14.5px] text-ink hover:text-violet-d"><span>{l.title}</span><span className="text-[13px] text-faint">{l.minutes} min</span></Link></li>
-                ) })}
-              </ul>
-            </div>
-          ))}
-        </div>
-      </section>
-
-
       <section className="mx-auto max-w-6xl px-5 pt-6 pb-4 sm:px-6">
         <figure className="grid items-center gap-6 border-y border-line py-10 md:grid-cols-[150px_1fr] md:gap-10">
           <img src="/vyshak.jpg" alt="Vyshak K Iyengar" width={150} height={150} loading="lazy" decoding="async" className="h-28 w-28 rounded-[8px] object-cover md:h-[150px] md:w-[150px]" />
@@ -480,17 +431,6 @@ export default function Landing() {
             </figcaption>
           </div>
         </figure>
-      </section>
-
-      <section className="mx-auto max-w-6xl px-5 py-14 sm:px-6">
-        <div className="grid items-center gap-5 rounded-xl bg-canvas p-5 md:grid-cols-[140px_1fr_auto]">
-          <div aria-hidden className="hidden md:block"><ArtPerks /></div>
-          <div>
-            <h2 className="text-[26px]">At business school?</h2>
-            <p className="mt-1 max-w-2xl text-ink-2">Verify your school email to unlock student downloads and offers when they're available.</p>
-          </div>
-          <Link to="/signin?next=/perks" className="rounded-lg bg-ink px-5 py-3 text-[14.5px] font-medium text-white hover:bg-[#1C2B4A]">Verify your school email</Link>
-        </div>
       </section>
 
       <section id="start-now" className="relative overflow-hidden bg-ink">

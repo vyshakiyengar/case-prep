@@ -60,7 +60,7 @@ function Tools({ n }: { n: string }) {
 
 export default function InterviewSkills() {
   return <>
-    <PageHeader title="Interview skills" art={<ArtSkills />} intro="The case is only half the interview. The other half is thinking clearly, speaking calmly and sounding commercial. Pick one exercise from each of the three parts below, most days." />
+    <PageHeader title="Interview skills" art={<ArtSkills />} intro="Think clearly, speak calmly, sound commercial. Do one exercise from each part, most days." />
     {ROUTINES.map((r) => <div id={r.number} key={r.number} className="scroll-mt-24"><Section title={`${r.number} · ${r.name} (${r.time})`} className="mb-5">
       <div className="sm:flex sm:items-start sm:gap-6"><p className="flex-1 text-[14.5px] text-muted">{r.why}</p><div aria-hidden className="mx-auto mt-2 w-40 shrink-0 sm:mx-0 sm:-mt-10 sm:w-44">{(() => { const A = [ArtThink, ArtVoice, ArtBusiness][ROUTINES.indexOf(r)] ?? ArtThink; return <A /> })()}</div></div><ol className="mt-4 space-y-3">{r.examples.map(([name, detail], i) => <li key={name} className="flex gap-3"><span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-violet-l text-[12px] font-semibold text-violet-d">{i + 1}</span><div><h3 className="font-sans text-[14.5px] font-semibold text-ink">{name}</h3><p className="mt-0.5 text-[14.5px] text-ink-2">{detail}</p></div></li>)}</ol>
       <Tools n={r.number} />

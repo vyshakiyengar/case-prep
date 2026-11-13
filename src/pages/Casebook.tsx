@@ -57,9 +57,8 @@ export default function Casebook() {
   const doneCount = cases.filter(isDone).length
   return (
     <>
-      <PageHeader title="Casebook" art={<ArtCasebook />} intro={`${cases.length} original practice cases. Do one alone with the timer, or give one to a friend and swap.`}
+      <PageHeader title="Casebook" art={<ArtCasebook />} intro={`${cases.length} original cases with worked answers. Do one alone, or give one to a friend.`}
         action={user ? <span className="text-[14px] text-muted"><b className="font-serif text-[19px] font-normal text-ink">{doneCount}</b> of {cases.length} practised</span> : undefined} />
-      <p className="mb-5 rounded-lg border border-teal bg-teal-l/50 px-4 py-3 text-[14.5px] text-ink">New to cases? Do the first three lessons of the course, then pick an <button onClick={() => { setDiff(1); setStatus('todo') }} className="font-medium underline">easy case you haven't done</button>.</p>
 
       <div className="mb-5 space-y-3 rounded-lg border border-line bg-white p-4">
         <div className="flex flex-wrap items-center justify-between gap-3">
@@ -97,19 +96,17 @@ export default function Casebook() {
                 <SectorTile industry={c.industry} className="mt-0.5 hidden h-[54px] w-[66px] shrink-0 rounded-lg bg-canvas p-1 sm:block" />
                 <div className="min-w-0">
                 <div className="flex flex-wrap items-center gap-x-2.5 gap-y-1">
-                  <h2 className="text-[16.5px]">{c.title}</h2>
+                  <h2 className="text-[16.5px]"><Link to={`/casebook/${c.slug}`} className="hover:text-violet-d">{c.title}</Link></h2>
                   <Difficulty d={c.diff} />
-                  {done && <span className="rounded-full bg-good-l px-2 py-0.5 text-[12px] font-medium text-good">Practised</span>}
                 </div>
                 <p className="text-[14.5px] leading-snug text-ink-2">{c.sub}</p>
                 <div className="mt-1 flex flex-wrap items-center gap-x-4 gap-y-1 text-[13px] text-muted">
-                  <span>{c.type}</span><span>{c.industry}</span><span>{c.geo}</span><span>{c.time}</span>
+                  <span>{c.type}</span><span>{c.industry}</span><span>{c.time}</span>
                 </div>
                 </div>
               </div>
               <div className="col-start-2 flex gap-2 sm:col-start-auto">
                 <Link to={`/casebook/${c.slug}`} className="btn-primary rounded-lg px-3.5 py-2 text-[14px] font-medium text-white">Practise</Link>
-                <Link to={`/casebook/${c.slug}?mode=interviewer`} className="rounded-lg border border-line bg-white px-3.5 py-2 text-[14px] font-medium text-ink hover:border-faint">Be the interviewer</Link>
               </div>
             </li>
           )

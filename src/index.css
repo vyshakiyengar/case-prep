@@ -216,7 +216,6 @@ h1:not(.font-sans) { letter-spacing: -0.02em; }
 .lp-path .lp-stop { opacity: 0; transform: scale(.6); transform-box: fill-box; transform-origin: center; transition: opacity .4s ease, transform .4s cubic-bezier(.2,.9,.3,1.4); transition-delay: var(--d); }
 .lp-path.is-in .lp-stop { opacity: 1; transform: none; }
 .lp-dock { transition: transform .45s cubic-bezier(.2,.8,.2,1), opacity .3s ease; }
-.lp-band { mask-image: linear-gradient(to right, #000 92%, transparent); }
 @media (prefers-reduced-motion: reduce) {
   .lp-in, .lp-rule, .lp-window, .lp-slide, .lp-pop, .lp-cta, .lp-cta::after, .lp-path.is-in .lp-line { animation: none; }
   .lp-path .lp-line { stroke-dashoffset: 0; }

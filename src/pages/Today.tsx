@@ -1,5 +1,5 @@
 import { readiness } from '../lib/readiness'
-import { CaseOfTheDay, Readiness } from '../components/Daily'
+import { Readiness } from '../components/Daily'
 import { ArtDashboard } from '../components/Art'
 import { Link } from 'react-router-dom'
 import { useStore } from '../lib/store'
@@ -69,7 +69,6 @@ function FirstSteps() {
           )
         })}
       </ol>
-      <p className="mt-3 text-[13.5px] text-muted">After your first case, this space shows your weakest stage and what to do about it.</p>
     </Section>
   )
 }
@@ -102,17 +101,13 @@ export default function Today() {
       <PageHeader title={title} art={<ArtDashboard />} intro={sub || 'Tick off what you do today, and log every case you practise.'}
         action={<LinkButton to="/cases?new=1">Log a case</LinkButton>} />
 
-      <div className={`mb-5 grid gap-4 ${readiness(data).score > 0 ? 'xl:grid-cols-[1fr_1.15fr]' : ''}`}>
-        <Readiness hideWhenEmpty />
-        <CaseOfTheDay compact />
-      </div>
+      {readiness(data).score > 0 && <div className="mb-5"><Readiness hideWhenEmpty /></div>}
 
-      <div className="grid gap-5 lg:grid-cols-[1.6fr_1fr]">
+      <div className={`grid gap-5 ${cases.length > 0 ? 'lg:grid-cols-[1.6fr_1fr]' : 'max-w-3xl'}`}>
         <div className="space-y-5">
           {cases.length === 0 && <FirstSteps />}
           <Section title="Today's habits" aside={<span className={`text-[14px] font-semibold tabular-nums ${score >= 5 ? 'text-good' : score >= 3 ? 'text-[#8A6A00]' : 'text-muted'}`}>{score} of 8{score >= 5 ? ', a real prep day' : ''}</span>}>
             <HabitChecklist date={t} />
-            <p className="mt-4 text-[13.5px] text-muted">Five or more is a real prep day. Not every day has to be.</p>
           </Section>
 
           {weak && (
@@ -148,13 +143,13 @@ export default function Today() {
                 </div>
               ))}
             </div>
-            <p className="mt-3 text-[13.5px] text-muted">A strong week scores 35 or more: an average of five habits a day.</p>
+            
           </Section>}
         </div>
 
         <div className="space-y-5">
-          <Section title="Before your next case">
-            {fixes.length ? (
+          {fixes.length > 0 && <Section title="Before your next case">
+            {(
               <>
                 <p className="mb-3 text-[13.5px] text-muted">Read these out loud. Pick one to focus on.</p>
                 <ul className="space-y-2">
@@ -166,8 +161,8 @@ export default function Today() {
                   ))}
                 </ul>
               </>
-            ) : <p className="text-muted">The fixes you write in your case log appear here, so you see them right before you practise.</p>}
-          </Section>
+            )}
+          </Section>}
 
           {cases.length > 0 && <Section title="Are you improving?">
             <dl className="grid grid-cols-2 gap-4">

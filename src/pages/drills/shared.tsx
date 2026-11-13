@@ -43,20 +43,6 @@ export function writeBest(kind: string, key: string, v: number) {
   try { const all = JSON.parse(localStorage.getItem(KEY) || '{}'); all[`${kind}:${key}`] = v; localStorage.setItem(KEY, JSON.stringify(all)) } catch { /* storage is optional */ }
 }
 
-export function HowItWorks({ steps }: { steps: string[] }) {
-  return (
-    <section className="mt-5" aria-label="How it works">
-      <h2 className="font-sans text-[14.5px] font-semibold text-ink">How it works</h2>
-      <ol className="mt-2 grid gap-2 sm:grid-cols-3">
-        {steps.map((s, i) => (
-          <li key={s} className="flex gap-3 rounded-lg border border-line bg-white p-3 text-[14px] text-ink-2">
-            <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-teal-l text-[13px] font-semibold text-teal-d">{i + 1}</span>{s}
-          </li>
-        ))}
-      </ol>
-    </section>
-  )
-}
 
 /** A big, self-explaining choice: what it is, what happens, and one Start button. */
 export function StartCard({ title, tag, body, example, meta, onStart, cta = 'Start', art }: { title: string; tag?: string; body: string; example?: React.ReactNode; meta: string; onStart: () => void; cta?: string; art?: React.ReactNode }) {

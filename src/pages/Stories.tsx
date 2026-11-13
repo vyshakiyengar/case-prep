@@ -16,7 +16,7 @@ function StoryBuilder() {
   )
   return (
     <Section title="Your fit stories" aside={<Button variant="secondary" onClick={() => setEdit(blank())}>Add a story</Button>}>
-      <p className="mb-4 text-[14px] text-muted">Build 6-8 stories using STAR-L (Situation, Task, Action, Result, Learning). One good story can answer three or four different questions, but use a different story in each round with the same firm. Rehearse each out loud in 90-120 seconds.</p>
+      <p className="mb-4 text-[14px] text-muted">Use STAR-L: Situation, Task, Action, Result, Learning. Aim for 90 to 120 seconds each.</p>
       {edit && (
         <form className="mb-5 space-y-3 rounded-lg border border-violet bg-violet-l/40 p-4" onSubmit={async (e) => { e.preventDefault(); await saveStory(edit); setEdit(null) }}>
           <Field label="Story name"><input className={inputCls} required value={edit.title} onChange={(e) => setEdit({ ...edit, title: e.target.value })} placeholder="e.g. Rescuing the pricing project" /></Field>
@@ -53,7 +53,7 @@ function StoryBuilder() {
 export default function Stories() {
   return (
     <>
-      <PageHeader title="Fit stories" art={<ArtStories />} intro="Build 6-8 stories once, and use each for several questions. Rehearse them out loud every week."
+      <PageHeader title="Fit stories" art={<ArtStories />} intro="Build 6 to 8 stories once and reuse them. Rehearse out loud each week."
         action={<LinkButton to="/learn/fit-interview" variant="secondary">Lesson: the fit interview</LinkButton>} />
       <div className="space-y-5">
         <StoryBuilder />

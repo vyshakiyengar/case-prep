@@ -28,7 +28,7 @@ export default function Notes() {
 
   return (
     <>
-      <PageHeader title="My notes" art={<ArtNotes />} intro="Everything you've written on the course pages, in course order. Edit a note on its page, or keep anything else in the box at the bottom."
+      <PageHeader title="My notes" art={<ArtNotes />} intro="Your notes from the course, in course order."
         action={(filled.length > 0 || notes.general?.text.trim()) ? <div className="flex gap-2"><Button variant="secondary" onClick={copy}>{copied ? 'Copied' : 'Copy all'}</Button><Button variant="secondary" onClick={download}>Download</Button></div> : undefined} />
 
       {filled.length === 0 ? (

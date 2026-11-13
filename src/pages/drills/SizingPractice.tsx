@@ -7,7 +7,7 @@ import { useStore } from '../../lib/store'
 import { todayIso, uid } from '../../lib/dates'
 import { SIZING, fmtAnswer, fmtStep, parseEstimate, sizingAnswer } from '../../content/sizingDrills'
 import type { SizingQ } from '../../content/sizingDrills'
-import { DrillCrumbs, HowItWorks, Seg } from './shared'
+import { DrillCrumbs, Seg } from './shared'
 
 const shuffle = <T,>(a: T[]) => { const b = [...a]; for (let i = b.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [b[i], b[j]] = [b[j], b[i]] } return b }
 type Level = 0 | 1 | 2 | 3
@@ -46,7 +46,7 @@ export default function SizingPractice() {
   return (
     <>
       <DrillCrumbs here="Market sizing" />
-      <PageHeader title="Market sizing" art={<ArtSizing />} intro="Estimate a market, a number of things, or a revenue from scratch, then compare your number and your logic with a model answer. The structure earns the points; the final number just needs to be sensible." />
+      <PageHeader title="Market sizing" art={<ArtSizing />} intro="Build an estimate from scratch, then compare your logic with a model answer." />
       <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
         <Seg label="Difficulty" value={level} onChange={(x) => { setLevel(x); setN(0); setShown(false); setRaw(''); setPlan('') }}
           items={[{ value: 0, label: 'All' }, { value: 1, label: 'Easy' }, { value: 2, label: 'Medium' }, { value: 3, label: 'Hard' }]} />
@@ -104,11 +104,6 @@ export default function SizingPractice() {
         )}
       </section>
 
-      <div className="max-w-3xl"><HowItWorks steps={[
-        'Read the question and say your structure out loud before you put a number on anything.',
-        'Write your estimate. Rounded numbers are fine: 3.5M, £40k, 2B.',
-        'Compare with the model answer, line by line. Within 2× is a good estimate; the logic is what interviewers score.',
-      ]} /></div>
     </>
   )
 }

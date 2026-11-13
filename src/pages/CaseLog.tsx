@@ -111,7 +111,7 @@ export default function CaseLog() {
   const cases = byDate(data!.cases).reverse()
   return (
     <>
-      <PageHeader title="Case log" art={<ArtCaseLog />} intro="One entry per case, written straight after it ends. Before your next case, read your last five fixes."
+      <PageHeader title="Case log" art={<ArtCaseLog />} intro="One entry per case, straight after it. Read your last five fixes before the next."
         action={<Button onClick={() => setEditing('new')}>Log a case</Button>} />
       {cases.length === 0 ? (
         <Empty title="No cases logged yet" action={<Button onClick={() => setEditing('new')}>Log your first case</Button>}>

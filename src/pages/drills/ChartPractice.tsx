@@ -180,17 +180,16 @@ export default function ChartPractice() {
   return (
     <>
       <DrillCrumbs here="Reading charts" />
-      {mode === null && <PageHeader title="Reading charts" art={<ArtCharts />} intro="Most cases hand you a chart or table and ask what it tells you. Practise reading them quickly and getting to the number that matters." />}
+      {mode === null && <PageHeader title="Reading charts" art={<ArtCharts />} intro="Read a chart fast and find the number that matters." />}
       {mode === null && (
         <>
           <div className="grid max-w-5xl gap-4 md:grid-cols-2">
             <StartCard title="Quick chart questions" tag="Start here" onStart={() => go('quick')}
-              body="You see a chart and one question about it. Type the answer or tap a choice, and you're told straight away if it's right and how to work it out."
-              example={<>Example: a bar chart of revenue by region. "What share of total revenue comes from the North?"</>}
+              body="One chart, one question, marked straight away."
+              example={<>"What share of revenue comes from the North?"</>}
               meta={`${SET} charts · 60 seconds each`} />
             <StartCard title="Exhibits from the casebook" onStart={() => go('insight')}
-              body="You see a chart or table from one of our casebook cases. In 90 seconds, say out loud what it tells you, then compare with a strong answer."
-              example={<>No typing needed: this one is about saying the "so what" clearly.</>}
+              body="Say the so-what of a casebook exhibit out loud, then compare."
               meta="90 seconds each" />
           </div>
           <details className="mt-4 max-w-5xl rounded-lg border border-line bg-white px-5 py-3">

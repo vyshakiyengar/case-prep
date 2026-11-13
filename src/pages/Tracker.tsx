@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { ArtTracker } from '../components/Art'
 import { useStore } from '../lib/store'
 import { HABITS } from '../lib/types'
@@ -10,9 +11,14 @@ export default function Tracker() {
   const dates = programDates(data!.profile)
   const t = todayIso()
   const cons = habitConsistency(data!.profile, data!.days)
+  // Up to today plus the coming week; the rest of the plan opens on request
+  const [all, setAll] = useState(false)
+  const firstFuture = dates.findIndex((d) => d > t)
+  const upto = firstFuture < 0 ? dates.length : Math.max(firstFuture + 6, 7)
+  const shown = all ? dates : dates.slice(0, upto)
   return (
     <>
-      <PageHeader title="Tracker" art={<ArtTracker />} intro="Tap a square when you complete a habit. Five or more in a day is a real prep day. Past days can be filled in if you forgot." />
+      <PageHeader title="Tracker" art={<ArtTracker />} intro="Tap a habit when you do it. Five in a day makes a real prep day." />
       
       <div className="overflow-x-auto rounded-lg border border-line bg-white">
         <table className="w-full min-w-[760px] border-collapse text-[14px]">
@@ -30,7 +36,7 @@ export default function Tracker() {
             </tr>
           </thead>
           <tbody>
-            {dates.map((d, i) => {
+            {shown.map((d, i) => {
               const s = dayScore(data!.days[d]), isToday = d === t, future = d > t
               return (
                 <tr key={d} className={`${i % 7 === 6 ? 'border-b-2 border-ink/70' : 'border-b border-line'} ${isToday ? 'bg-marker-l' : ''}`}>
@@ -57,6 +63,7 @@ export default function Tracker() {
           </tbody>
         </table>
       </div>
+      {dates.length > shown.length && <button type="button" onClick={() => setAll(true)} className="mt-3 text-[14px] font-medium text-violet-d hover:underline">Show all {dates.length} days</button>}
 
       <Section title="Habit consistency" className="mt-5" aside={<span className="text-[13.5px] text-muted">Share of days since you started</span>}>
         <ul className="grid gap-x-10 gap-y-3 sm:grid-cols-2">

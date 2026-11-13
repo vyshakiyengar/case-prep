@@ -179,16 +179,16 @@ export default function StructurePractice() {
   return (
     <>
       <DrillCrumbs here="Structuring" />
-      {mode === null && <PageHeader title="Structuring" art={<ArtStructure />} intro="In a case you're asked to break a problem into a few clear parts before you dive in. Interviewers watch this skill closely. Practise it here in two ways." />}
+      {mode === null && <PageHeader title="Structuring" art={<ArtStructure />} intro="Break a problem into a few clear parts. Practise it two ways." />}
       {mode === null && (
         <div className="grid max-w-5xl gap-4 md:grid-cols-2">
           <StartCard title="Spot the flaw" tag="Start here" onStart={() => go('pick')}
-            body="Quick questions about structures someone else wrote. Either pick the best of four, or find the bucket that overlaps another. You're told straight away what's right and why."
-            example={<>Example: "A clinic's wait for appointments has risen from 5 to 12 days." Which is better: <i>Doctors / Nurses / Rooms</i>, or <i>More demand / Less capacity / Less efficient use</i>?</>}
+            body="Pick the best structure, or find the bucket that overlaps. Marked straight away."
+            example={<>"Why has a clinic's wait gone from 5 to 12 days?"</>}
             meta={`${ALL_SPOT.length} questions · under a minute each`} />
           <StartCard title="Write your own" onStart={() => go('write')}
-            body="You get a problem and 2 minutes to write your main buckets. Then you see a strong answer, the usual mistake, and mark yourself with a short checklist."
-            example={<>Example: "Should a luxury hotel group launch a budget brand?"</>}
+            body="Two minutes to write your buckets, then compare with a strong answer."
+            example={<>"Should a luxury hotel group launch a budget brand?"</>}
             meta={`${STRUCTURE_PROMPTS.length} problems · 2 minutes each`} />
         </div>
       )}

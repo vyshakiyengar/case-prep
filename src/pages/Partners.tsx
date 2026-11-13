@@ -75,7 +75,7 @@ export default function Partners() {
 
   return (
     <>
-      <PageHeader title="Practice partners" art={<ArtPartners />} intro="Prep is easier when someone can see whether you showed up. Partners see each other's weekly summary: tracker score, prep days, cases logged, average score, the stage you're working on and your latest fix. They never see your full case log, notes or stories."
+      <PageHeader title="Practice partners" art={<ArtPartners />} intro="Pair up with a friend. You each see the other's weekly summary, never your notes, stories or case log."
         action={<Button onClick={invite}>Invite a partner</Button>} />
       {link && (
         <Section title="Send this link to your partner" className="mb-5">

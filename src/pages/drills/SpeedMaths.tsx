@@ -8,7 +8,7 @@ import { isCorrect, LEVELS, makeQuestion, SKILLS } from '../../lib/speedMaths'
 import type { Level, Skill, SpeedQ } from '../../lib/speedMaths'
 import { Button, PageHeader } from '../../components/ui'
 import { mmss } from '../../components/Timer'
-import { DrillCrumbs, HowItWorks, Seg, readBest, writeBest, Tally } from './shared'
+import { DrillCrumbs, Seg, readBest, writeBest, Tally } from './shared'
 
 type Mode = 'ten' | 'pace' | 'sprint'
 const MODES: { key: Mode; label: string; long: string }[] = [
@@ -120,21 +120,20 @@ export default function SpeedMaths() {
   return (
     <>
       <DrillCrumbs here="Case maths" />
-      {phase === 'run' ? <h1 className="mb-4 text-[22px] leading-tight sm:text-[26px]">Case maths</h1> : <PageHeader title="Case maths" art={<ArtMaths />} intro="Quick sums like the ones in a case: percentages, big numbers, margins, growth. Type your answer and see straight away whether it's right. If not, you see the quickest way to work it out." />}
+      {phase === 'run' ? <h1 className="mb-4 text-[22px] leading-tight sm:text-[26px]">Case maths</h1> : <PageHeader title="Case maths" art={<ArtMaths />} intro="Quick case sums, marked as you go, with the fastest method when you miss." />}
 
       {phase === 'ready' && (
         <div className="max-w-3xl">
           <div className="graph-paper rounded-lg border border-line p-4 sm:p-5">
             <p className="text-[13.5px] text-muted">Example question</p>
             <p className="mt-1 font-serif text-[22px] leading-snug font-semibold text-ink">What is 15% of 240?</p>
-            <p className="mt-1 text-[14.5px] text-ink-2">You'd type <b className="font-semibold">36</b>. No calculator: work it out in your head or on paper, as you would in an interview.</p>
+            <p className="mt-1 text-[14.5px] text-ink-2">You'd type <b className="font-semibold">36</b>. No calculator.</p>
             <div className="mt-6 flex flex-wrap items-center gap-x-4 gap-y-2">
               <Button className="px-7 py-3 text-[15px]" onClick={start}>Start</Button>
               <span className="text-[14px] text-muted">{summary}</span>
             </div>
             {best !== null && <p className="mt-3 text-[13.5px] text-muted">Your best at this length and difficulty: <b className="font-semibold text-ink">{best}</b> right</p>}
           </div>
-          <HowItWorks steps={['Read the question.', 'Type your answer (the unit is shown next to the box) and press Enter.', 'See if you were right. If not, you see the quickest way to do it.']} />
           <details className="mt-4 rounded-lg border border-line bg-white px-5 py-3">
             <summary className="cursor-pointer text-[14.5px] font-medium text-ink">Options: length, difficulty, topics</summary>
             <div className="space-y-5 py-3">

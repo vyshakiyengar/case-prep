@@ -6,12 +6,9 @@ import type { CaseDef } from '../content'
 import { LinkButton, PageHeader, Section } from '../components/ui'
 
 const STEPS = [
-  ['Pick a case they haven\'t seen', 'Start easy (one dot), then work up. Open it in interviewer mode below.'],
-  ['Read the prompt aloud, once', 'Let them take notes and recap. Don\'t repeat it unless they ask.'],
-  ['Give facts only when asked', 'The clarifying answers are on screen. A good candidate asks for them; don\'t volunteer.'],
-  ['Show exhibits when they ask for data', 'Share your screen or read the numbers. Stay quiet while they work.'],
-  ['Push like a real interviewer', 'Use the interviewer notes: "What else?", "So what?", "What would you recommend?"'],
-  ['Give feedback, then swap', 'Score each stage, name one thing to fix, then switch roles for the next case.'],
+  ['Read the prompt aloud, once', 'Give facts and exhibits only when they ask.'],
+  ['Push like an interviewer', 'Ask "So what?" and "What would you recommend?"'],
+  ['Score it, then swap', 'Name one thing to fix, then switch roles.'],
 ]
 
 export default function Interviewer() {
@@ -19,9 +16,9 @@ export default function Interviewer() {
   useEffect(() => { loadCases().then(setCases) }, [])
   return (
     <>
-      <PageHeader title="Interviewer mode" art={<ArtInterviewer />} intro="Give a case to a friend, then swap. Each case shows you what to read aloud, what to reveal when asked, and the model answers." />
-      <Section title="How to run a case for a partner" className="mb-6">
-        <ol className="grid gap-3 md:grid-cols-2 lg:grid-cols-3">
+      <PageHeader title="Interviewer mode" art={<ArtInterviewer />} intro="Give a case to a friend: what to read aloud, what to reveal, and the model answers." />
+      <Section title="How to run it" className="mb-6">
+        <ol className="grid gap-3 md:grid-cols-3">
           {STEPS.map(([t, d], i) => (
             <li key={t} className="rounded-lg border border-line p-4">
               <div className="text-[14.5px] font-semibold text-ink"><span className="mr-1.5 text-teal-d">{i + 1}</span>{t}</div>
@@ -39,7 +36,7 @@ export default function Interviewer() {
                   <div className="font-medium text-ink">{c.id}. {c.title} <span className="ml-1 text-[13px] text-muted">{'●'.repeat(c.diff)}{'○'.repeat(3 - c.diff)}</span></div>
                   <div className="text-[14px] text-muted">{c.type} · {c.industry}</div>
                 </div>
-                <LinkButton to={`/casebook/${c.slug}?mode=interviewer`} variant="secondary">Be the interviewer</LinkButton>
+                <LinkButton to={`/casebook/${c.slug}?mode=interviewer`} variant="secondary">Open</LinkButton>
               </li>
             ))}
           </ul>

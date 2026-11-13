@@ -20,7 +20,6 @@ function FamilyGuide() {
         <a key={fam.id} href={`#family-${fam.id}`} className="rounded-lg border border-line bg-white p-4 transition-colors hover:border-teal">
           <p className="text-[16px] font-semibold text-ink">{fam.name}</p>
           <p className="mt-0.5 text-[14.5px] font-medium text-violet-d">{fam.question}</p>
-          <p className="mt-1.5 text-[14px] text-ink-2">{fam.shape}</p>
           <p className="mt-2 text-[13px] text-muted">{CORE.filter((c) => c.family === fam.id).map((c) => c.title.replace(/\?$/, '')).join(' · ')}</p>
         </a>
       ))}
@@ -62,13 +61,13 @@ export function FrameworksIndex() {
   ]
   return (
     <>
-      <PageHeader title="Frameworks" art={<ArtFrameworks />} intro="Eleven core frameworks cover most cases you will get. Learn these first; the rest of the page is for later." />
-      <p className="mb-5 max-w-2xl text-[14.5px] text-ink-2">How to use them: pick the tree closest to the question, rename every branch for your client, and say which branch you would test first. New to this? Read the <Link to="/learn/structuring" className="font-medium text-violet-d hover:underline">structuring lesson</Link> first.</p>
+      <PageHeader title="Frameworks" art={<ArtFrameworks />} intro="Eleven frameworks cover most cases. Learn these first." />
+      <p className="mb-5 max-w-2xl text-[14.5px] text-ink-2">Pick the closest tree, rename its branches for your client, and say which you'd test first.</p>
       <JumpBar items={nav} label="Jump to" />
       <div className="space-y-14">
         <div>
           <h2 className="text-[24px] font-semibold">Core frameworks to learn</h2>
-          <p className="mt-1 mb-5 text-muted">Know these eleven well enough to sketch from memory. Each starts with the question it answers.</p>
+          <p className="mt-1 mb-5 text-muted">Know these well enough to sketch from memory.</p>
           <FamilyGuide />
           <div className="mt-8 space-y-12">
             <TreeList list={CORE.slice(0, 2)} start={0} />
@@ -80,24 +79,16 @@ export function FrameworksIndex() {
 
         <section id="drivers" className="scroll-mt-32">
           <h2 className="text-[24px] font-semibold">Second-order drivers</h2>
-          <p className="mt-1 mb-4 text-muted">Once you are inside a branch, these are the things to dig into. Use them to go one level deeper in any framework.</p>
+          <p className="mt-1 mb-4 text-muted">What to dig into once you're inside a branch.</p>
           <DriversGrid />
         </section>
 
         <section id="other" className="scroll-mt-32">
           <h2 className="text-[24px] font-semibold">Other frameworks to remember</h2>
-          <p className="mt-1 mb-4 text-muted">Not your starting point, but useful inside a branch, for brainstorming, or when the interviewer pushes further.</p>
+          <p className="mt-1 mb-4 text-muted">Useful inside a branch or when you're pushed further.</p>
           <div className="grid gap-4 lg:grid-cols-2">{OTHER.map((f) => <OtherCard key={f.id} f={f} />)}</div>
         </section>
 
-        <section className="rounded-lg border border-line bg-white p-5">
-          <h2 className="text-[19px] font-semibold">Keep going</h2>
-          <ul className="mt-2 grid gap-2 text-[14.5px] sm:grid-cols-3">
-            <li><Link to="/case-types" className="font-medium text-violet-d hover:underline">All 17 case types</Link><p className="text-[13.5px] text-muted">What to ask first, and the trap, for each type.</p></li>
-            <li><Link to="/formulas" className="font-medium text-violet-d hover:underline">Formulas</Link><p className="text-[13.5px] text-muted">The 20 you need, with a test-yourself mode.</p></li>
-            <li><Link to="/glossary" className="font-medium text-violet-d hover:underline">Glossary</Link><p className="text-[13.5px] text-muted">Business terms in plain English.</p></li>
-          </ul>
-        </section>
       </div>
     </>
   )
@@ -117,7 +108,7 @@ export default function Framework() {
       <Link to="/case-types" className="text-[13.5px] text-muted hover:text-ink">Case types</Link>
       <h1 className="mt-1 text-[28px] leading-tight font-semibold">{f.type}</h1>
       <p className="mt-1 text-[16px] text-muted">{f.when}</p>
-      {f.core && <p className="mt-3 rounded-lg border border-teal bg-teal-l/40 px-4 py-2.5 text-[14.5px] text-ink">Start from the core framework <Link to={`/frameworks#${f.core}`} className="font-semibold text-teal-d hover:underline">{CORE.find((x) => x.id === f.core)?.title}</Link>. This page adds the detail for this case type.</p>}
+      {f.core && <p className="mt-3 text-[14.5px] text-ink-2">Core framework: <Link to={`/frameworks#${f.core}`} className="font-semibold text-teal-d hover:underline">{CORE.find((x) => x.id === f.core)?.title}</Link></p>}
 
       <section className="mt-7">
         <h2 className="text-[19px] font-semibold">1. Ask this first</h2>

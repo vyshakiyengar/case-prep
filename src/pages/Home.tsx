@@ -1,41 +1,13 @@
 import { CaseOfTheDay, Readiness } from '../components/Daily'
-import { ArtCourse, ArtPractise, ArtReference, ArtImprove, ArtMap, ArtMaths, ArtStructure, ArtCharts, ArtSkills, IndustryCardBody, INDUSTRY_CARD } from '../components/Art'
-import { CASE_PICKS, DIFF_WORD } from '../content/casePicks'
+import { ArtMap, ArtMaths, ArtStructure, ArtCharts, ArtSkills } from '../components/Art'
 import { CASE_COUNT } from '../content/caseCount'
 import { Link } from 'react-router-dom'
 import { useStore } from '../lib/store'
-import { LEARN, PRACTISE, DRILLS, REFERENCE, PREP, Icon } from '../components/AppShell'
 import { LESSONS } from '../content/course'
 import { CARDS } from '../content/perfectCasing'
 import { dayScore, drillStats, streak } from '../lib/stats'
 import { todayIso } from '../lib/dates'
 import { SignInButton } from './SignIn'
-
-type Item = { to: string; label: string; icon: string }
-const ABOUT: Record<string, string> = {
-  '/learn': 'Start here: 11 short lessons',
-  '/perfect-casing': 'What to say at every stage',
-  '/frameworks': '11 trees that cover most cases',
-  '/casebook': `${CASE_COUNT} cases to practise`,
-  '/interviewer': 'Give a case to a friend',
-  '/graphs': '64 charts to read',
-  '/drills': 'Three quick exercises',
-  '/drills/maths': 'Quick sums, marked instantly',
-  '/drills/structure': 'Break a problem into parts',
-  '/drills/charts': 'One chart, one question',
-  '/drills/sizing': 'Estimate a market, step by step',
-  '/interview-skills': 'Think and speak clearly',
-  '/case-types': 'Each case type and how to approach it',
-  '/formulas': '20 formulas for case maths',
-  '/glossary': 'Business terms, plain English',
-  '/today': 'Your day at a glance',
-  '/tracker': 'Daily habits',
-  '/cases': 'Every case, and one fix',
-  '/stories': 'Your behavioural stories',
-  '/notes': 'Your course notes in one place',
-  '/partners': 'Practise with friends',
-  '/perks': 'Verify your school email',
-}
 
 const GRAPH_KEY = 'case-prep-graph-library-v1'
 const graphsDone = () => { try { const v = JSON.parse(localStorage.getItem(GRAPH_KEY) || '[]'); return Array.isArray(v) ? v.length : 0 } catch { return 0 } }
@@ -74,19 +46,13 @@ export default function Home() {
     : nextLesson ? { label: `Continue: lesson ${LESSONS.indexOf(nextLesson) + 1}, ${nextLesson.title.split(':')[0]}`, to: `/learn/${nextLesson.slug}` }
     : { label: 'Do a case and log it', to: '/casebook' }
 
-  const COLS: { n: number; title: string; sub: string; items: Item[]; tone: string }[] = [
-    { n: 1, title: 'Learn', sub: 'Understand how a case works', items: LEARN, tone: 'bg-teal' },
-    { n: 2, title: 'Practise', sub: 'Build the skill until it is automatic', items: [...PRACTISE, ...DRILLS.filter((d) => d.to !== '/drills')], tone: 'bg-violet' },
-    { n: 3, title: 'Look things up', sub: 'Quick reference, any time', items: REFERENCE, tone: 'bg-ink' },
-    { n: 4, title: 'Track and improve', sub: 'Log it, find the weak spot, fix one thing', items: PREP, tone: 'bg-signal' },
-  ]
+  const done = Object.entries(progress).filter(([, p]) => p && p.v > 0)
   const name = data?.profile?.name && data.profile.name !== 'You' ? data.profile.name.split(' ')[0] : ''
 
   return (
     <>
       <header className="mb-6">
         <h1 className="text-[25px] leading-[1.12] font-semibold sm:text-[30px]">{user ? `Welcome back${name ? `, ${name}` : ''}` : 'Welcome to PrepForCase'}</h1>
-        <p className="mt-1.5 max-w-3xl text-[14.5px] leading-relaxed text-muted">Everything you need for case interviews, free: a short course and the core frameworks to learn the method, 102 cases to practise alone or with a partner, drills for maths, structuring, charts and market sizing, guides on how you think and speak, and a tracker that shows how you are improving. {user ? 'Start with your next step below.' : 'Sign in to open every page in full.'}</p>
       </header>
 
       <section className="relative mb-6 flex flex-wrap items-center justify-between gap-4 overflow-hidden rounded-xl bg-ink p-5 text-white sm:p-5 md:pr-56">
@@ -107,55 +73,7 @@ export default function Home() {
         {user && <Readiness />}
       </div>
 
-      <h2 className="mb-3 text-[19px] font-semibold">Everything on the site</h2>
-      <div className="grid gap-4 lg:grid-cols-4">
-        {COLS.map((col, ci) => (
-          <section key={col.n} className="relative flex flex-col rounded-xl border border-line bg-white p-4">
-            <div aria-hidden className="-mx-4 -mt-4 mb-3 rounded-t-xl border-b border-line bg-canvas px-6 pt-1 sm:px-8 lg:px-3"><div className="mx-auto max-w-[200px] lg:max-w-none">{(() => { const A = [ArtCourse, ArtPractise, ArtReference, ArtImprove][ci]; return <A /> })()}</div></div>
-            {ci < COLS.length - 1 && <span aria-hidden className="absolute top-[30%] -right-[15px] z-10 hidden h-6 w-6 items-center justify-center rounded-full border border-line bg-white text-[13px] text-faint lg:flex">→</span>}
-            <div className="mb-3 flex items-center gap-2.5">
-              <span className={`flex h-8 w-8 items-center justify-center rounded-full font-serif text-[15px] font-semibold text-white ${col.tone}`}>{col.n}</span>
-              <div>
-                <h3 className="font-sans text-[16px] font-semibold text-ink">{col.title}</h3>
-                <p className="text-[12.5px] text-muted">{col.sub}</p>
-              </div>
-            </div>
-            <ul className="space-y-0.5">
-              {col.items.map((it) => {
-                const pr = progress[it.to]
-                const locked = !user && col.n === 4
-                return (
-                  <li key={it.to}>
-                    <Link to={it.to} className="flex items-start gap-2.5 rounded-lg px-2 py-2 hover:bg-canvas">
-                      <span className="mt-0.5 text-muted"><Icon d={it.icon} /></span>
-                      <span className="min-w-0">
-                        <span className="block text-[14.5px] font-semibold text-ink">{it.label}{locked && <span className="ml-2 text-[11.5px] font-normal text-faint">sign in</span>}</span>
-                        <span className="block text-[13px] text-muted">{pr && pr.v > 0 ? <span className="font-medium text-teal-d">{pr.text}</span> : ABOUT[it.to]}</span>
-                      </span>
-                    </Link>
-                  </li>
-                )
-              })}
-            </ul>
-          </section>
-        ))}
-      </div>
-
-      <section className="mt-9">
-        <div className="mb-3 flex flex-wrap items-baseline justify-between gap-2">
-          <h2 className="text-[19px] font-semibold">Try a case today</h2>
-          <Link to="/casebook" className="text-[14px] font-medium text-violet-d hover:underline">All {CASE_COUNT} cases</Link>
-        </div>
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          {todaysPicks(data?.profile?.practised || []).map((c) => (
-            <Link key={c.slug} to={`/casebook/${c.slug}`} className={INDUSTRY_CARD}>
-              <IndustryCardBody label={c.label} title={c.title} sub={c.sub} industry={c.industry} meta={DIFF_WORD[c.diff]} done={(data?.profile?.practised || []).includes(c.slug)} />
-            </Link>
-          ))}
-        </div>
-      </section>
-
-      <section className="mt-9">
+      <section>
         <h2 className="mb-3 text-[19px] font-semibold">Ten-minute warm-ups</h2>
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {[
@@ -174,13 +92,17 @@ export default function Home() {
           ))}
         </div>
       </section>
+
+      {done.length > 0 && (
+        <section className="mt-9">
+          <h2 className="mb-3 text-[19px] font-semibold">Your progress</h2>
+          <ul className="flex flex-wrap gap-2">
+            {done.map(([to, p]) => (
+              <li key={to}><Link to={to} className="inline-block rounded-full border border-line bg-white px-3.5 py-1.5 text-[13.5px] text-ink-2 hover:border-ink/40 hover:text-ink">{p!.text}</Link></li>
+            ))}
+          </ul>
+        </section>
+      )}
     </>
   )
-}
-
-/** Four cases from different industries, rotating daily, unpractised ones first. */
-function todaysPicks(practised: string[]) {
-  const day = Math.floor(Date.now() / 86400000)
-  const rotated = CASE_PICKS.map((_, i) => CASE_PICKS[(i + day * 4) % CASE_PICKS.length])
-  return [...rotated.filter((c) => !practised.includes(c.slug)), ...rotated.filter((c) => practised.includes(c.slug))].slice(0, 4)
 }
