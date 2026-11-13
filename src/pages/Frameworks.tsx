@@ -9,7 +9,7 @@ import { useStore } from '../lib/store'
 import { CORE, FAMILIES, OTHER } from '../content/frameworkTrees'
 import type { CoreFramework } from '../content/frameworkTrees'
 import { CoreBlock, DriversGrid, OtherCard } from '../components/FrameworkTree'
-import { Gate, JumpBar, useScrollToTarget } from '../components/Learning'
+import { Gate, JumpBar, useFreePage, useScrollToTarget } from '../components/Learning'
 import { StructureTree } from '../components/CaseParts'
 
 /** The three kinds of case question, so a candidate knows which shelf to reach for. */
@@ -54,9 +54,10 @@ function TreeList({ list, start }: { list: CoreFramework[]; start: number }) {
 
 export function FrameworksIndex() {
   const { user } = useStore()
+  const pageFree = useFreePage()
   useScrollToTarget()
   const nav = [
-    ...CORE.map((t, i) => ({ id: t.id, label: `${i + 1}. ${t.title}${!user && i >= 2 ? ' (sign in)' : ''}`, locked: !user && i >= 2 })),
+    ...CORE.map((t, i) => ({ id: t.id, label: `${i + 1}. ${t.title}${!user && !pageFree && i >= 2 ? ' (sign in)' : ''}`, locked: !user && !pageFree && i >= 2 })),
     { id: 'drivers', label: 'Second-order drivers' }, { id: 'other', label: 'Other frameworks' },
   ]
   return (

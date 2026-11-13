@@ -73,7 +73,7 @@ function VerifyBanner({ email }: { email?: string }) {
   const [sent, setSent] = useState(false)
   return (
     <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-1 border-b border-marker/60 bg-marker-l px-4 py-2 text-[13.5px] text-ink-2 lg:px-10">
-      <span>Confirm your school email: we sent a link to <b className="font-medium text-ink">{email}</b>.</span>
+      <span>Confirm your email: we sent a link to <b className="font-medium text-ink">{email}</b>.</span>
       <span className="flex gap-4">
         <button onClick={() => refreshUser()} className="font-medium text-ink underline-offset-2 hover:underline">I've confirmed it</button>
         <button disabled={sent} onClick={() => resendVerification().then(() => setSent(true)).catch(() => {})} className="text-muted hover:text-ink disabled:no-underline">{sent ? 'Sent again' : 'Resend'}</button>

@@ -30,7 +30,7 @@ export default function Settings() {
     catch (e) { setDelMsg(e instanceof AuthError ? e.message : "Couldn't delete everything. Check your connection and try again.") }
     finally { setDeleting(false) }
   }
-  const how = user?.provider === 'password' ? 'with your school email' : user?.provider === 'google' ? 'with Google' : ''
+  const how = user?.provider === 'password' ? 'with your email' : user?.provider === 'google' ? 'with Google' : ''
   return (
     <>
       <PageHeader title="Settings" />

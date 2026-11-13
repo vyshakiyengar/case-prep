@@ -7,7 +7,7 @@ import { lessonBySlug } from '../content/course'
 import { useStore } from '../lib/store'
 import { addDays, todayIso } from '../lib/dates'
 import { Button, Meter, PageHeader, Section } from '../components/ui'
-import { Gate, JumpBar, useScrollToTarget } from '../components/Learning'
+import { Gate, JumpBar, useFreePage, useScrollToTarget } from '../components/Learning'
 import { SignInButton } from './SignIn'
 import { Countdown } from '../components/Timer'
 
@@ -155,10 +155,11 @@ function Trainer({ stage }: { stage: number | null }) {
 
 export default function PerfectCasing() {
   const { user } = useStore()
+  const pageFree = useFreePage()
   const [stage, setStage] = useState<number | null>(null)
   useScrollToTarget()
   const train = (n: number | null) => { setStage(n); setTimeout(() => document.getElementById('trainer')?.scrollIntoView({ behavior: 'smooth' }), 30) }
-  const nav = [...STAGES_PC.map((x) => ({ id: `stage-${x.n}`, label: `Stage ${x.n}: ${x.title.replace(/ \(.*\)/, "")}${!user && x.n > 2 ? ' (sign in)' : ''}`, locked: !user && x.n > 2 })), { id: 'trainer', label: 'Phrase trainer', locked: !user }]
+  const nav = [...STAGES_PC.map((x) => ({ id: `stage-${x.n}`, label: `Stage ${x.n}: ${x.title.replace(/ \(.*\)/, "")}${!user && !pageFree && x.n > 2 ? ' (sign in)' : ''}`, locked: !user && !pageFree && x.n > 2 })), { id: 'trainer', label: 'Phrase trainer', locked: !user && !pageFree }]
   return (
     <>
       <PageHeader title="Perfect casing" art={<ArtInterviewer />} intro="The choreography of a strong case, from the first sentence to the recommendation, with the exact words to use at each moment. Read it top to bottom once, then train the phrases daily until they come out on their own." />

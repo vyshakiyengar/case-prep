@@ -58,7 +58,7 @@ const ago = (t?: number) => {
 }
 const pct = (a: number, b: number) => (b ? Math.round((a / b) * 100) : 0)
 const median = (xs: number[]) => { if (!xs.length) return 0; const s = [...xs].sort((a, b) => a - b); const m = Math.floor(s.length / 2); return s.length % 2 ? s[m] : Math.round((s[m - 1] + s[m]) / 2) }
-const method = (s: UserStats) => s.provider === 'google' ? 'Google' : s.provider === 'password' ? (s.emailVerified ? 'School email' : 'School email (unconfirmed)') : 'Unknown'
+const method = (s: UserStats) => s.provider === 'google' ? 'Google' : s.provider === 'password' ? (s.emailVerified ? 'Email' : 'Email (unconfirmed)') : 'Unknown'
 const SECTION: Record<string, string> = {
   learn: 'Course', 'perfect-casing': 'Perfect casing', frameworks: 'Frameworks', casebook: 'Casebook', case: 'Case player', interviewer: 'Interviewer mode',
   graphs: 'Graph library', drills: 'Drills', 'interview-skills': 'Interview skills', 'case-types': 'Case types', formulas: 'Formulas', glossary: 'Glossary',
@@ -318,11 +318,79 @@ function Analytics({ stats, students, updated }: { stats: UserStats[]; students:
           {!users.length && <p className="py-4 text-muted">No users yet.</p>}
         </div>
       </Section>
-      <Section title="Visitors who don't sign in" className="mb-6">
-        <p className="text-ink-2">Anonymous visits, top pages, countries and referrers are counted by Vercel Web Analytics (no cookies). Open the project in Vercel and choose the <b className="font-semibold">Analytics</b> tab.</p>
-        <a href="https://vercel.com/dashboard" target="_blank" rel="noopener noreferrer" className="mt-3 inline-block text-[14px] font-medium text-violet-d hover:underline">Open Vercel ↗</a>
-      </Section>
+      <VisitorFunnel />
     </>
+  )
+}
+
+const pretty = (k: string, pre: string) => {
+  const t = k.slice(pre.length).replace(/_/g, ' ')
+  const names: Record<string, string> = { x: 'X (Twitter)', chatgpt: 'ChatGPT', linkedin: 'LinkedIn', youtube: 'YouTube', whatsapp: 'WhatsApp', landing: 'Landing page', case: 'A case' }
+  return names[t] || t.charAt(0).toUpperCase() + t.slice(1)
+}
+
+/** Signed-out visitors: anonymous daily counts of each step towards signing up (see lib/funnel.ts). */
+function VisitorFunnel() {
+  const { backend } = useStore()
+  const [range, setRange] = useState(7)
+  const [rows, setRows] = useState<Record<string, Record<string, number>> | null>(null)
+  const [failed, setFailed] = useState(false)
+  useEffect(() => {
+    if (!backend) return
+    backend.listFunnel(lastNDays(30)).then(setRows).catch(() => setFailed(true))
+  }, [backend])
+  const days = lastNDays(range)
+  const sum: Record<string, number> = {}
+  for (const d of days) for (const [k, v] of Object.entries(rows?.[d] || {})) sum[k] = (sum[k] || 0) + (typeof v === 'number' ? v : 0)
+  const g = (k: string) => sum[k] || 0
+  const visits = g('visit_anon')
+  const group = (pre: string, of = visits) => Object.keys(sum).filter((k) => k.startsWith(pre)).map((k) => ({ label: pretty(k, pre), v: sum[k], of })).sort((a, b) => b.v - a.v).slice(0, 8)
+  const pct = (a: number, b: number) => (b ? `${Math.round((a / b) * 100)}%` : '—')
+  const steps = [
+    { label: 'Visits (signed out)', v: visits, of: visits },
+    { label: 'Saw a sign-in lock', v: g('lock_any'), of: visits },
+    { label: 'Chose a way to sign in', v: g('click_any'), of: visits },
+    { label: 'Signed in', v: g('signin_ok'), of: visits },
+    { label: 'New accounts', v: g('signup_new'), of: visits },
+  ]
+  return (
+    <div className="mb-6">
+      <div className="mb-3 flex flex-wrap items-center justify-between gap-3">
+        <h2 className="text-[21px] font-semibold">Visitors who don't sign in</h2>
+        <div className="flex gap-1 text-[13.5px]">{[7, 30].map((n) => (
+          <button key={n} onClick={() => setRange(n)} className={`rounded-md px-3 py-1 ${range === n ? 'bg-ink text-white' : 'text-muted hover:text-ink'}`}>Last {n} days</button>
+        ))}</div>
+      </div>
+      {failed && <p className="mb-3 text-[14px] text-signal-d">Couldn't read the funnel. Publish the latest firestore.rules (it adds the funnel collection).</p>}
+      {!failed && rows && !visits && <p className="mb-3 text-[14px] text-muted">No visitor counts yet. They start from this release, once the latest firestore.rules is published.</p>}
+      <dl className="mb-5 flex flex-wrap gap-x-10 gap-y-3">
+        <div><dt className="text-[13px] text-muted">Signed-out visits</dt><dd className="font-serif text-[26px] font-semibold text-ink">{visits}</dd></div>
+        <div><dt className="text-[13px] text-muted">Visit to sign-in</dt><dd className="font-serif text-[26px] font-semibold text-ink">{pct(g('signin_ok'), visits)}</dd></div>
+        <div><dt className="text-[13px] text-muted">Tried, then signed in</dt><dd className="font-serif text-[26px] font-semibold text-ink">{pct(g('signin_ok'), g('click_any'))}</dd></div>
+        <div><dt className="text-[13px] text-muted">In an app's built-in browser</dt><dd className="font-serif text-[26px] font-semibold text-ink">{pct(g('inapp'), visits)}</dd></div>
+      </dl>
+      <div className="mb-5 grid gap-5 lg:grid-cols-2">
+        <Section title="Steps to signing up" aside={<span className="text-[13px] text-muted">% of signed-out visits</span>}><HBars rows={steps} /></Section>
+        <Section title="Visits and sign-ups per day"><p className="mb-1 text-[13px] text-muted">Signed-out visits</p><Columns days={days} values={days.map((d) => rows?.[d]?.visit_anon || 0)} label="Signed-out visits" /><p className="mt-4 mb-1 text-[13px] text-muted">New accounts</p><div><Columns days={days} values={days.map((d) => rows?.[d]?.signup_new || 0)} label="New accounts" /></div></Section>
+      </div>
+      <div className="mb-5 grid gap-5 lg:grid-cols-3">
+        <Section title="Where they came from"><HBars rows={group('src_')} /></Section>
+        <Section title="First page they saw"><HBars rows={group('entry_')} /></Section>
+        <Section title="Device and browser"><HBars rows={[...group('dev_'), { label: "Inside an app's browser", v: g('inapp'), of: visits }]} /></Section>
+      </div>
+      <div className="grid gap-5 lg:grid-cols-3">
+        <Section title="Free preview used"><HBars rows={[
+          { label: 'Free pages opened', v: g('free_page') }, { label: 'Free cases played past step 2', v: g('free_case') },
+          { label: 'Hit a locked page', v: g('lock_page') }, { label: 'Hit a locked case step', v: g('lock_case') }, { label: 'Hit a locked section', v: g('lock_gate') },
+        ]} /></Section>
+        <Section title="Sign-in choices"><HBars rows={[
+          { label: 'Google', v: g('click_google') }, { label: 'Email', v: g('click_email') },
+          { label: "Saw the 'open in browser' note", v: g('inapp_signin_seen') }, { label: 'Tapped Open in Chrome', v: g('inapp_open_chrome') }, { label: 'Copied the link', v: g('inapp_copy_link') },
+        ]} /></Section>
+        <Section title="Sign-in errors"><HBars rows={group('err_', 0).map((r) => ({ label: r.label, v: r.v }))} empty="No sign-in errors." /></Section>
+      </div>
+      <p className="mt-4 text-[13.5px] text-muted">Plain daily counts, no personal data. Each step counts once per browser tab. Page views, countries and referrers are also in <a href="https://vercel.com/dashboard" target="_blank" rel="noopener noreferrer" className="font-medium text-violet-d hover:underline">Vercel Analytics</a>.</p>
+    </div>
   )
 }
 

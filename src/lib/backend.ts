@@ -2,7 +2,7 @@ import type { CaseEntry, DayEntry, DrillEntry, Invite, Perk, Profile, StatsBump,
 import { FIREBASE_CONFIG } from './firebaseConfig'
 import { uid as newId } from './dates'
 
-export interface AuthUser { uid: string; name: string; email?: string; photoURL?: string; emailVerified?: boolean; provider?: 'google' | 'password' | 'other' }
+export interface AuthUser { uid: string; name: string; email?: string; photoURL?: string; emailVerified?: boolean; provider?: 'google' | 'password' | 'other'; createdAt?: number }
 export interface UserData { profile: Profile | null; days: Record<string, DayEntry>; cases: CaseEntry[]; drills: DrillEntry[]; stories: Story[] }
 
 export interface Backend {
@@ -50,11 +50,18 @@ export interface Backend {
   getStats(uid: string): Promise<UserStats | null>
   /** Live feed of everyone's stats for the admin dashboard. Returns an unsubscribe function. */
   watchStats(cb: (rows: UserStats[]) => void, onError: () => void): () => void
+  /** Anonymous sign-up funnel: add 1 to each named counter for the day. */
+  countFunnel(day: string, keys: string[]): Promise<void>
+  /** Admin: the funnel counters for these days. */
+  listFunnel(days: string[]): Promise<Record<string, Record<string, number>>>
 }
 
 export class SchoolLinkError extends Error {}
 /** A sign-in problem with a message that is safe and useful to show the person. */
-export class AuthError extends Error {}
+export class AuthError extends Error {
+  code: string
+  constructor(message: string, code = '') { super(message); this.code = code }
+}
 
 function authMessage(code: string): string {
   if (code.includes('email-already-in-use')) return 'There is already an account with this email. Sign in instead, or reset your password.'
@@ -66,7 +73,7 @@ function authMessage(code: string): string {
   if (code.includes('unauthorized-domain')) return 'Sign-in isn\'t enabled on this web address yet.'
   return 'Sign-in didn\'t work. Try again.'
 }
-const authFail = (e: unknown): never => { throw new AuthError(authMessage((e as { code?: string }).code || '')) }
+const authFail = (e: unknown): never => { const code = (e as { code?: string }).code || ''; throw new AuthError(authMessage(code), code) }
 
 const env = import.meta.env
 // Firebase web config. These values are public by design (they ship to every browser).
@@ -97,6 +104,7 @@ async function makeFirebase(): Promise<Backend> {
     return {
       uid: u.uid, name: u.displayName || u.email?.split('@')[0] || 'You', email: u.email || undefined, photoURL: u.photoURL || undefined,
       emailVerified: u.emailVerified, provider: ids.includes('google.com') ? 'google' : ids.includes('password') ? 'password' : 'other',
+      createdAt: u.metadata.creationTime ? Date.parse(u.metadata.creationTime) : undefined,
     }
   }
   const verifyUrl = () => ({ url: `${window.location.origin}/home?verified=1` })
@@ -247,6 +255,16 @@ async function makeFirebase(): Promise<Backend> {
       for (const k of ['lastPath', 'device', 'tz', 'source'] as const) if (b[k]) inc[k] = b[k]
       await fs.setDoc(fs.doc(db, 'stats', b.uid), inc, { merge: true })
     },
+    async countFunnel(day, keys) {
+      const inc: Record<string, unknown> = {}
+      for (const k of keys) inc[k] = fs.increment(1)
+      await fs.setDoc(fs.doc(db, 'funnel', day), inc, { merge: true })
+    },
+    async listFunnel(days) {
+      const out: Record<string, Record<string, number>> = {}
+      await Promise.all(days.map(async (d) => { const snap = await fs.getDoc(fs.doc(db, 'funnel', d)); if (snap.exists()) out[d] = snap.data() as Record<string, number> }))
+      return out
+    },
     async listStats() {
       const s = await fs.getDocs(fs.collection(db, 'stats')); return s.docs.map((d) => d.data() as UserStats)
     },
@@ -267,7 +285,7 @@ const DEMO_PERKS: Perk[] = [
 ]
 
 const KEY = 'cpos-device-v2'
-type DemoState = { signedIn: boolean; data: UserData; summaries: Record<string, Summary>; invites: Record<string, Invite>; student?: StudentRecord | null; perks?: Perk[]; stats?: UserStats }
+type DemoState = { signedIn: boolean; data: UserData; summaries: Record<string, Summary>; invites: Record<string, Invite>; student?: StudentRecord | null; perks?: Perk[]; stats?: UserStats; funnel?: Record<string, Record<string, number>> }
 
 function seed(): DemoState {
   return { signedIn: false, data: { profile: null, days: {}, cases: [], drills: [], stories: [] }, summaries: {}, invites: {} }
@@ -319,6 +337,12 @@ function makeDemo(): Backend {
     savePerk: (p) => upd((s) => { s.perks = [...(s.perks ?? DEMO_PERKS).filter((x) => x.id !== p.id), p] }),
     deletePerk: (id) => upd((s) => { s.perks = (s.perks ?? DEMO_PERKS).filter((x) => x.id !== id) }),
     saveStats: (st) => upd((s) => { s.stats = { ...(s.stats || {}), ...JSON.parse(JSON.stringify(st)), activeDays: Array.from(new Set([...(s.stats?.activeDays || []), ...st.activeDays])).sort() } }),
+    async countFunnel(day, keys) {
+      const f = (state.funnel ||= {}); const row = (f[day] ||= {})
+      for (const k of keys) row[k] = (row[k] || 0) + 1
+      write()
+    },
+    async listFunnel(days) { const f = state.funnel || {}; return Object.fromEntries(days.filter((d) => f[d]).map((d) => [d, f[d]])) },
     async listStats() { return state.stats ? [state.stats] : [] },
     async getStats() { return state.stats || null },
     bumpStats: (b) => upd((s) => {

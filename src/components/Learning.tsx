@@ -1,31 +1,46 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import type { ReactNode } from 'react'
 import { Button, inputCls } from './ui'
 import { Countdown } from './Timer'
 import { useStore } from '../lib/store'
 import { SignInPanel } from './SignInPanel'
 import type { Lesson } from '../content/course'
+import { useLocation, Link } from 'react-router-dom'
+import { claimPage, FREE_CASES, FREE_PAGES, type Taste } from '../lib/taste'
+import { track } from '../lib/funnel'
 
 /** Card shown over locked content. Signing in is free; nothing else is needed. */
-export function SignInCard({ id, what }: { id?: string; what?: string }) {
+export function SignInCard({ id, what, lead }: { id?: string; what?: string; lead?: string }) {
   return (
     <section aria-labelledby={id ? `${id}-t` : undefined} className="relative mx-auto w-full max-w-[420px] rounded-xl border border-line bg-white p-5 text-center shadow-[0_30px_60px_-30px_rgba(15,27,51,.55)] sm:p-7">
       <span aria-hidden className="mx-auto flex h-10 w-10 items-center justify-center rounded-full bg-canvas text-ink">
         <svg width="18" height="18" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" d="M6 11h12v9H6zM8.5 11V8a3.5 3.5 0 0 1 7 0v3" /></svg>
       </span>
       <h2 id={id ? `${id}-t` : undefined} className="mt-3 text-[22px] leading-tight">Sign in to see it all, free</h2>
-      <p className="mt-1.5 mb-5 text-[14.5px] text-muted">Only a sign-in is needed. No payment, no trial.{what ? ` You'll get ${what}.` : ''}</p>
+      <p className="mt-1.5 mb-5 text-[14.5px] text-muted">{lead ? `${lead} ` : ''}Only a sign-in is needed. No payment, no trial.{what ? ` You'll get ${what}.` : ''}</p>
       <SignInPanel />
     </section>
   )
 }
 
+/** A quiet line telling a signed-out visitor that this page or case is one of their free ones. */
+export function FreeNote({ t, kind }: { t: Taste; kind: 'page' | 'case' }) {
+  const max = kind === 'case' ? FREE_CASES : FREE_PAGES
+  return (
+    <p className="mb-4 flex flex-wrap items-center gap-x-2 gap-y-1 rounded-lg bg-teal-l px-3.5 py-2 text-[13.5px] text-teal-d">
+      <span>{kind === 'case' ? `Free full case ${t.n} of ${max}: every step is open.` : `Free page ${t.n} of ${max}: everything here is open.`}</span>
+      <Link to="/signin" className="font-medium underline">Sign in free to open everything</Link>
+    </p>
+  )
+}
+
 /** Shows content blurred and locked behind a sign-in card. */
-export function Locked({ children, id, what }: { children: ReactNode; id?: string; what?: string }) {
+export function Locked({ children, id, what, lead, kind = 'gate' }: { children: ReactNode; id?: string; what?: string; lead?: string; kind?: 'gate' | 'case' }) {
+  useEffect(() => { track('lock_any'); track(`lock_${kind}`) }, [kind])
   return (
     <div id={id} className="relative min-h-[520px]">
       <div aria-hidden inert className="pointer-events-none max-h-[640px] select-none overflow-hidden blur-[5px] [mask-image:linear-gradient(to_bottom,#000_55%,transparent)]">{children}</div>
-      <div className="absolute inset-x-0 top-6 flex justify-center px-1 sm:top-10"><SignInCard id={id} what={what} /></div>
+      <div className="absolute inset-x-0 top-6 flex justify-center px-1 sm:top-10"><SignInCard id={id} what={what} lead={lead} /></div>
     </div>
   )
 }
@@ -34,9 +49,19 @@ export function Locked({ children, id, what }: { children: ReactNode; id?: strin
  * Marks where the members-only part of an open page begins. Signed-out visitors (and search
  * engines) read everything above it; what's inside shows blurred behind a sign-in card.
  */
+/** Whether this page is one of a signed-out visitor's free, fully open pages (claims a slot if one is left). */
+export function useFreePage(): boolean {
+  const { user, ready } = useStore()
+  const { pathname } = useLocation()
+  return useMemo(() => !user && ready && claimPage(pathname).free, [user, ready, pathname])
+}
+
 export function Gate({ children, id, what }: { children: ReactNode; id?: string; what?: string }) {
   const { user, ready } = useStore()
-  if (!user && ready) return <Locked id={id} what={what}>{children}</Locked>
+  const { pathname } = useLocation()
+  const taste = useMemo(() => (!user && ready ? claimPage(pathname) : null), [user, ready, pathname])
+  if (taste?.free) return <div id={id}><FreeNote t={taste} kind="page" />{children}</div>
+  if (!user && ready) return <Locked id={id} what={what} lead={taste && taste.used >= FREE_PAGES ? `You've seen your ${FREE_PAGES} free pages.` : undefined}>{children}</Locked>
   return id ? <div id={id}>{children}</div> : <>{children}</>
 }
 

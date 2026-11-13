@@ -3,6 +3,7 @@ import { useLocation } from 'react-router-dom'
 import { useStore } from '../lib/store'
 import { todayIso } from '../lib/dates'
 import type { StatsBump } from '../lib/types'
+import { trackVisit } from '../lib/funnel'
 
 /**
  * Counts how signed-in people use the site, for the admin dashboard:
@@ -38,8 +39,15 @@ function firstSource(): string {
 const section = (path: string) => path.split('/')[1] || 'landing'
 
 export function ActivityTracker() {
-  const { backend, user } = useStore()
+  const { backend, user, ready } = useStore()
   const { pathname } = useLocation()
+  // anonymous funnel: one count per visit (see lib/funnel.ts)
+  const counted = useRef(false)
+  useEffect(() => {
+    if (!ready || counted.current) return
+    counted.current = true
+    trackVisit(pathname, !!user)
+  }, [ready]) // eslint-disable-line react-hooks/exhaustive-deps
   const pending = useRef<{ sessions: number; minutes: number; views: Record<string, number>; lastPath?: string }>({ sessions: 0, minutes: 0, views: {} })
   const lastInput = useRef(Date.now())
 

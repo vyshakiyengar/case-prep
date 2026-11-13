@@ -1,4 +1,5 @@
 import { caseOfDay } from './daily'
+import { setFunnelSink, track, seenInTab } from './funnel'
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react'
 import type { ReactNode } from 'react'
 import { AuthError, getBackend } from './backend'
@@ -15,7 +16,7 @@ interface Store {
   data: UserData | null
   signIn(): Promise<void>
   signOut(): Promise<void>
-  /** School email + password. These reject with an AuthError whose message can be shown as-is. */
+  /** Email + password. These reject with an AuthError whose message can be shown as-is. */
   signUpEmail(name: string, email: string, password: string): Promise<void>
   signInEmail(email: string, password: string): Promise<void>
   resetPassword(email: string): Promise<void>
@@ -67,10 +68,17 @@ export function StoreProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     let unsub = () => {}
+    let sawSignedOut = false
     getBackend().then((b) => {
       setBackend(b)
+      setFunnelSink((d, k) => b.countFunnel(d, k))
       unsub = b.onAuth(async (u) => {
         setUser(u)
+        if (!u) sawSignedOut = true
+        else {
+          if (sawSignedOut || seenInTab('click_any')) track('signin_ok')
+          if (u.createdAt && Date.now() - u.createdAt < 10 * 60 * 1000) track('signup_new')
+        }
         if (u) {
           try {
             const d = await b.loadAll(u.uid)

@@ -1,6 +1,6 @@
 import { SectorTile } from '../components/Art'
 import { caseMeta } from '../lib/seo'
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { Link, useNavigate, useParams, useSearchParams } from 'react-router-dom'
 import { loadCases } from '../content'
 import type { CaseDef } from '../content'
@@ -13,7 +13,8 @@ import { Difficulty } from './Casebook'
 import { STAGES } from '../lib/types'
 import { useStore } from '../lib/store'
 import { SignInButton } from './SignIn'
-import { Locked } from '../components/Learning'
+import { FreeNote, Locked } from '../components/Learning'
+import { claimCase, FREE_CASES, peekCase } from '../lib/taste'
 import type { CaseQuestion } from '../content'
 
 type Kind = 'clarify' | 'structure' | 'chart' | 'maths' | 'ideas' | 'reco' | 'judge' | 'sizing'
@@ -80,8 +81,8 @@ function Answer({ html, note, interviewer }: { html: string; note?: string; inte
   )
 }
 
-function LockWhen({ on, what, children }: { on: boolean; what: string; children: React.ReactNode }) {
-  return on ? <Locked what={what}>{children}</Locked> : <>{children}</>
+function LockWhen({ on, what, lead, children }: { on: boolean; what: string; lead?: string; children: React.ReactNode }) {
+  return on ? <Locked what={what} lead={lead} kind="case">{children}</Locked> : <>{children}</>
 }
 
 export default function CasePlayer() {
@@ -96,6 +97,15 @@ export default function CasePlayer() {
   const watch = useStopwatch(true)
   useEffect(() => { loadCases().then(setCases) }, [])
   useEffect(() => { setI(0); setRevealed({}); watch.reset() }, [slug, interviewer]) // eslint-disable-line react-hooks/exhaustive-deps
+  // Two whole cases are free without an account. A case only uses a free slot once the
+  // visitor goes past the clarifying questions.
+  const [claimed, setClaimed] = useState(0)
+  const taste = useMemo(() => (!user && ready && slug ? peekCase(slug) : null), [user, ready, slug, claimed]) // eslint-disable-line react-hooks/exhaustive-deps
+  useEffect(() => {
+    if (!taste?.free || !slug || i < 2) return
+    const t = claimCase(slug)
+    if (t.isNew) setClaimed((n) => n + 1)
+  }, [i, slug, taste])
   const found = cases?.find((x) => x.slug === slug)
   useEffect(() => { if (found) document.title = caseMeta(found).title }, [found])
   if (!cases) return <Loading label="Loading case…" />
@@ -115,10 +125,11 @@ export default function CasePlayer() {
   const isOpen = (k: string) => interviewer || !!revealed[k]
   const go = (n: number) => { setI(n); window.scrollTo({ top: 0, behavior: 'smooth' }) }
   // Signed-out visitors can read the prompt and clarifying questions; the rest needs an account
-  const locked = (k: number) => !user && ready && k >= 2
+  const locked = (k: number) => !user && ready && k >= 2 && !taste?.free
 
   return (
     <div>
+      {taste?.free && <FreeNote t={taste} kind="case" />}
       <div className="mb-5 flex flex-wrap items-start justify-between gap-4">
         <div className="flex min-w-0 gap-4">
         <SectorTile industry={c.industry} className="hidden h-[84px] w-[104px] shrink-0 rounded-xl bg-canvas p-1.5 md:block" />
@@ -160,7 +171,7 @@ export default function CasePlayer() {
         </nav>
 
         <article className="min-w-0 rounded-lg border border-line bg-white p-5 sm:p-7">
-          <LockWhen on={locked(i)} what={`the structure, every question with a worked answer, the exhibits and the recommendation for ${c.title}`}>
+          <LockWhen on={locked(i)} lead={taste && !taste.free ? `You've played your ${FREE_CASES} free cases.` : undefined} what={`the structure, every question with a worked answer, the exhibits and the recommendation for ${c.title}`}>
           {step.key === 'prompt' && (
             <>
               <h2 className="text-[19px] font-semibold">{interviewer ? 'Read this aloud to your candidate' : 'Read the prompt'}</h2>

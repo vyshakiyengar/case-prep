@@ -100,7 +100,7 @@ export default function Landing() {
             </div>
             <p className="mt-6 flex max-w-lg items-start gap-2.5 text-[14px] leading-snug text-[#B8C2D3]">
               <svg aria-hidden viewBox="0 0 24 24" className="mt-px h-[18px] w-[18px] shrink-0 fill-none stroke-teal-l stroke-2"><rect x="3" y="4" width="18" height="13" rx="2" /><path d="M8 21h8M12 17v4" /></svg>
-              <span>It all works in your browser, on a laptop or a phone. Nothing to download, nothing to pay. Sign in with Google or a school email to save your progress.</span>
+              <span>It all works in your browser, on a laptop or a phone. Nothing to download, nothing to pay. Sign in with Google or any email to save your progress.</span>
             </p>
           </div>
           <HeroScreens />
@@ -134,7 +134,7 @@ export default function Landing() {
                 <p className="font-serif text-[44px] leading-none text-white italic">Free</p>
               </div>
               <h3 className="text-[19px]">No app, no card, no trial</h3>
-              <p className="mt-2 text-[14.5px] leading-relaxed text-ink-2">The course, frameworks and casebook open straight away. A free sign-in with Google or a school email unlocks every step of every case and saves your progress on any device.</p>
+              <p className="mt-2 text-[14.5px] leading-relaxed text-ink-2">The course, frameworks and casebook open straight away. A free sign-in with Google or any email unlocks every step of every case and saves your progress on any device.</p>
               <div className="mt-5 flex flex-wrap gap-3">
                 <Link to="/signin" className="rounded-lg bg-ink px-4 py-2.5 text-[14.5px] font-medium text-white hover:bg-[#1C2B4A]">Sign in free</Link>
                 <Link to="/learn" className="rounded-lg border border-line px-4 py-2.5 text-[14.5px] font-medium text-ink hover:border-ink/40">Start the course</Link>

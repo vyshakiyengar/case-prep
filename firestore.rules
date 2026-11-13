@@ -68,6 +68,17 @@ service cloud.firestore {
       allow delete: if isSelf(uid);
     }
 
+    // Anonymous sign-up funnel: one document per day of plain counters, no personal data.
+    // Anyone may add to them (small writes only); only the admin can read them.
+    match /funnel/{day} {
+      allow get, list: if isAdmin();
+      allow create: if day.matches('^20[0-9]{2}-[01][0-9]-[0-3][0-9]$')
+        && request.resource.data.keys().size() <= 20;
+      allow update: if day.matches('^20[0-9]{2}-[01][0-9]-[0-3][0-9]$')
+        && request.resource.data.keys().size() <= 300
+        && request.resource.data.diff(resource.data).affectedKeys().size() <= 20;
+    }
+
     // Perks: visible to verified students, managed by you from /admin
     match /perks/{id} {
       allow read: if isVerifiedStudent() || isAdmin();
