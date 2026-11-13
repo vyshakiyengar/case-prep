@@ -2,6 +2,9 @@ import { CaseOfTheDay, Readiness } from '../components/Daily'
 import { ArtMaths, ArtStructure, ArtCharts, ArtSkills, IndustryCardBody, INDUSTRY_CARD } from '../components/Art'
 import { CASE_PICKS, DIFF_WORD } from '../content/casePicks'
 import { TryOne } from './Landing'
+import { useState } from 'react'
+import { CORE } from '../content/frameworkTrees'
+import { GLOSSARY } from '../content/glossary'
 import { CASE_COUNT } from '../content/caseCount'
 import { Link } from 'react-router-dom'
 import { useStore } from '../lib/store'
@@ -110,6 +113,8 @@ export default function Home() {
         <Readiness />
       </div>
 
+      <TodaysThree />
+
       <div className="mb-8 grid gap-6 lg:grid-cols-[320px_1fr]">
         <section>
           <h2 className="mb-3 text-[19px] font-semibold">A quick one</h2>
@@ -161,6 +166,48 @@ export default function Home() {
         </section>
       )}
     </>
+  )
+}
+
+
+/** Three small things to learn today, rotating daily: a framework, a phrase, a term. */
+function TodaysThree() {
+  const day = Math.floor(Date.now() / 86400000)
+  const fw = CORE[day % CORE.length]
+  const card = CARDS[(day * 7) % CARDS.length]
+  const term = GLOSSARY[(day * 13) % GLOSSARY.length]
+  const [show, setShow] = useState(false)
+  const box = 'flex flex-col rounded-xl border border-line bg-white p-4 sm:p-5'
+  return (
+    <section className="mb-8">
+      <h2 className="mb-3 text-[19px] font-semibold">Learn three things today</h2>
+      <div className="grid gap-4 lg:grid-cols-3">
+        <div className={box}>
+          <p className="text-[12.5px] font-medium text-teal-d">Framework</p>
+          <h3 className="mt-1 text-[17px]">{fw.title}</h3>
+          <p className="mt-1.5 text-[14px] text-ink-2"><span className="text-muted">Ask first:</span> {fw.ask}</p>
+          <ul className="mt-3 flex flex-wrap gap-1.5">
+            {fw.branches.map((b) => <li key={b.t} className="rounded-md bg-teal-l px-2 py-1 text-[12.5px] font-medium text-teal-d">{b.t}</li>)}
+          </ul>
+          <Link to={`/frameworks#${fw.id}`} className="mt-auto pt-4 text-[14px] font-medium text-violet-d hover:underline">See the full tree</Link>
+        </div>
+        <div className={box}>
+          <p className="text-[12.5px] font-medium text-teal-d">What would you say?</p>
+          <p className="mt-1 text-[14.5px] leading-snug text-ink">{card.situation}</p>
+          {show
+            ? <div className="mt-3 rounded-lg bg-canvas p-3 text-[14px] leading-snug"><p className="text-ink">{card.model}</p><p className="mt-1.5 text-muted">{card.why}</p></div>
+            : <button type="button" onClick={() => setShow(true)} className="mt-3 self-start rounded-lg border border-line px-3 py-1.5 text-[13.5px] font-medium text-ink hover:border-ink/40">Show a strong answer</button>}
+          <Link to="/perfect-casing#trainer" className="mt-auto pt-4 text-[14px] font-medium text-violet-d hover:underline">Train more phrases</Link>
+        </div>
+        <div className={box}>
+          <p className="text-[12.5px] font-medium text-teal-d">Term</p>
+          <h3 className="mt-1 text-[17px]">{term.term}</h3>
+          <p className="mt-1.5 text-[14px] text-ink-2">{term.plain}</p>
+          <p className="mt-2 text-[13.5px] text-muted">For example: {term.example}</p>
+          <Link to="/glossary" className="mt-auto pt-4 text-[14px] font-medium text-violet-d hover:underline">Open the glossary</Link>
+        </div>
+      </div>
+    </section>
   )
 }
 
