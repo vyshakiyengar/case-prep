@@ -144,7 +144,7 @@ export default function AppShell() {
   return (
     <div className="min-h-screen lg:pl-60">
       <aside className="fixed inset-y-0 left-0 z-20 hidden w-60 flex-col overflow-y-auto bg-ink px-4 py-6 lg:flex">
-        <Link to="/home" className="px-3"><Logo light height={28} /></Link>
+        <Link to="/" aria-label="PrepForCase: front page" className="px-3"><Logo light height={28} /></Link>
         <nav aria-label="Main" className="mt-2">
           <NavGroup title="" items={[HOME]} />
           <NavGroup title="Learn" items={LEARN} />
@@ -177,7 +177,7 @@ export default function AppShell() {
       </aside>
 
       <header className="sticky top-0 z-20 flex items-center justify-between border-b border-line/80 bg-white/85 px-4 py-2 backdrop-blur-xl lg:hidden">
-        <Link to="/home"><Logo height={24} /></Link>
+        <Link to="/" aria-label="PrepForCase: front page"><Logo height={24} /></Link>
         <div className="flex items-center gap-3">
           <button type="button" onClick={() => setMobileOpen((o) => !o)} aria-expanded={mobileOpen} aria-controls="mobile-sections" aria-label={mobileOpen ? 'Close menu' : 'Open menu: all sections'}
             className="grid h-9 w-9 place-items-center rounded-lg text-ink hover:bg-canvas"><Icon d={mobileOpen ? CLOSE : MENU} /></button>
@@ -193,7 +193,9 @@ export default function AppShell() {
 
       {user?.provider === 'password' && !user.emailVerified && <VerifyBanner email={user.email} />}
 
-      <main className="mx-auto max-w-6xl px-4 pt-4 pb-28 sm:px-6 lg:px-9 lg:pt-7 lg:pb-14"><SignInWall><Outlet /></SignInWall></main>
+      {loc.pathname === '/'
+        ? <main className="pb-24 lg:pb-0"><Outlet /></main>
+        : <main className="mx-auto max-w-6xl px-4 pt-4 pb-28 sm:px-6 lg:px-9 lg:pt-7 lg:pb-14"><SignInWall><Outlet /></SignInWall></main>}
 
       <MobileSheet open={mobileOpen} onClose={closeMenu} user={!!user} isAdmin={isAdmin} />
 
@@ -202,7 +204,8 @@ export default function AppShell() {
           const tabs = TABS(!!user)
           const idx = mobileOpen ? 4 : tabs.findIndex((t) => loc.pathname === t.to || loc.pathname.startsWith(t.to + '/'))
           const at = idx < 0 ? 4 : idx
-          return <span aria-hidden className="tab-pill" style={{ transform: `translateX(${at * 100}%)` }} />
+          const none = idx < 0 && !mobileOpen && loc.pathname === '/'
+          return <span aria-hidden className={`tab-pill ${none ? 'opacity-0' : ''}`} style={{ transform: `translateX(${at * 100}%)` }} />
         })()}
         {TABS(!!user).map((n) => (
           <NavLink key={n.to} to={n.to} end={n.end}
@@ -211,7 +214,7 @@ export default function AppShell() {
           </NavLink>
         ))}
         <button type="button" onClick={() => setMobileOpen((o) => !o)} aria-expanded={mobileOpen} aria-controls="mobile-sections"
-          className={`relative z-[1] flex flex-col items-center gap-0.5 rounded-lg py-1.5 text-[10.5px] font-medium transition-colors ${mobileOpen || !TABS(!!user).some((t) => loc.pathname === t.to || loc.pathname.startsWith(t.to + '/')) ? 'text-white' : 'text-muted'}`}>
+          className={`relative z-[1] flex flex-col items-center gap-0.5 rounded-lg py-1.5 text-[10.5px] font-medium transition-colors ${mobileOpen || (loc.pathname !== '/' && !TABS(!!user).some((t) => loc.pathname === t.to || loc.pathname.startsWith(t.to + '/'))) ? 'text-white' : 'text-muted'}`}>
           <Icon d={mobileOpen ? CLOSE : MENU} /><span>More</span>
         </button>
       </nav>

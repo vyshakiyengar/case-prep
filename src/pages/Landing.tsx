@@ -2,7 +2,7 @@ import { CASE_COUNT } from '../content/caseCount'
 import { Link } from 'react-router-dom'
 import { useEffect, useRef, useState } from 'react'
 import CASE_INDEX from '../content/caseIndex.json'
-import { Logo } from '../components/ui'
+import { useStore } from '../lib/store'
 import { ArtCourse, ArtCasebook, ArtMaths, ArtReference, ArtImprove, ArtMap, ArtStructure, ArtVoice, ArtPerks, IndustryCardBody, INDUSTRY_CARD } from '../components/Art'
 import { CASE_PICKS, DIFF_WORD } from '../content/casePicks'
 import { MODULES, lessonBySlug, LESSONS, totalMinutes } from '../content/course'
@@ -224,7 +224,7 @@ function StartDock() {
   }, [])
   if (closed) return null
   return (
-    <div className={`lp-dock fixed inset-x-3 bottom-3 z-40 mx-auto max-w-[520px] ${show ? 'translate-y-0 opacity-100' : 'pointer-events-none translate-y-[140%] opacity-0'}`} aria-hidden={!show}>
+    <div className={`lp-dock fixed inset-x-3 bottom-[calc(80px+env(safe-area-inset-bottom))] z-30 mx-auto max-w-[520px] lg:bottom-4 lg:left-60 ${show ? 'translate-y-0 opacity-100' : 'pointer-events-none translate-y-[140%] opacity-0'}`} aria-hidden={!show}>
       <div className="flex items-center gap-3 rounded-xl bg-ink px-4 py-3 text-white shadow-[0_24px_50px_-18px_rgba(0,0,0,.6)]">
         <p className="min-w-0 flex-1 text-[14px] leading-snug"><span className="font-medium">Try a case now.</span> <span className="text-[#B9C4D3]">Free, no sign-up.</span></p>
         <Link to="/casebook/coastal-brew" tabIndex={show ? undefined : -1} className="lp-cta inline-flex shrink-0 items-center rounded-lg bg-white px-3.5 py-2 text-[14px] font-medium text-ink hover:bg-teal-l">Start Coastal Brew<Arrow /></Link>
@@ -238,7 +238,7 @@ function StartDock() {
 
 function HeroScreens() {
   return (
-    <div className="relative mx-auto w-full max-w-[640px] pb-10 sm:pb-16 lg:mr-[-60px]">
+    <div className="relative mx-auto w-full max-w-[640px] pt-6 pb-10 sm:pb-16">
       <div aria-hidden className="pointer-events-none absolute -inset-16 rounded-full bg-[radial-gradient(closest-side,rgba(45,212,191,.22),transparent)] blur-2xl" />
       <div className="lp-window" style={{ ['--d' as string]: '.35s' }}>
         <div><Browser src="/shots/desktop-home.webp" path="home" eager alt="The PrepForCase home page in a browser: the next lesson, the case of the day and a readiness score" /></div>
@@ -246,7 +246,7 @@ function HeroScreens() {
       <div className="lp-slide absolute bottom-0 left-[-8%] hidden w-[44%] sm:block" style={{ ['--d' as string]: '.75s' }}>
         <div><Browser src="/shots/desktop-charts.webp" path="drills/charts" alt="The chart drill: a stacked bar exhibit with a question and a 60-second timer" /></div>
       </div>
-      <div className="lp-pop absolute top-[-40px] right-[-24px] z-[1] hidden w-[300px] lg:block" style={{ ['--d' as string]: '1.2s' }}>
+      <div className="lp-pop absolute top-[-28px] right-0 z-[1] hidden w-[290px] lg:block xl:right-[-12px]" style={{ ['--d' as string]: '1.2s' }}>
         <TryOne />
       </div>
       <div className="lp-pop absolute right-3 bottom-1 rounded-lg bg-white px-3.5 py-2.5 text-ink shadow-[0_18px_40px_-18px_rgba(0,0,0,.55)] sm:bottom-6" style={{ ['--d' as string]: '1s' }}>
@@ -307,22 +307,20 @@ const GROUPS: { t: string; art: (p: { className?: string }) => React.ReactElemen
 ]
 
 export default function Landing() {
+  const { user, data } = useStore()
+  const firstName = (data?.profile?.name || user?.name || '').split(' ')[0]
   return (
     <div className="bg-white">
-      <div className="relative overflow-hidden bg-ink text-white">
+      <div className="relative overflow-hidden bg-ink text-white lg:border-l lg:border-white/10">
         <div aria-hidden className="pointer-events-none absolute inset-0 opacity-[.07] [background-image:radial-gradient(circle_at_1px_1px,#fff_1px,transparent_1.2px)] [background-size:22px_22px]" />
-        <header className="relative mx-auto flex max-w-6xl items-center justify-between gap-4 px-5 py-6 sm:px-6">
-          <Logo light height={30} />
-          <nav className="flex items-center gap-5 text-[14.5px] text-[#B8C2D3]" aria-label="Main">
-            <Link to="/learn" className="hidden hover:text-white sm:inline">Course</Link>
-            <Link to="/perfect-casing" className="hidden hover:text-white md:inline">Perfect casing</Link>
-            <Link to="/frameworks" className="hidden hover:text-white sm:inline">Frameworks</Link>
-            <Link to="/casebook" className="hidden hover:text-white sm:inline">Casebook</Link>
-            <Link to="/signin" className="rounded-lg border border-white/25 px-4 py-2 text-white hover:border-white/60">Sign in</Link>
-          </nav>
-        </header>
+        {user && (
+          <div className="relative mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-3 px-5 pt-6 sm:px-6">
+            <p className="text-[14.5px] text-[#C9D2E0]">Welcome back{firstName ? `, ${firstName}` : ''}.</p>
+            <Link to="/home" className="lp-cta inline-flex items-center rounded-lg bg-white/10 px-4 py-2 text-[14px] font-medium text-white hover:bg-white/20">Continue your prep<Arrow /></Link>
+          </div>
+        )}
 
-        <section className="relative mx-auto grid max-w-6xl items-center gap-14 px-5 pt-10 pb-24 sm:px-6 lg:grid-cols-[1.1fr_1fr] lg:pt-16 lg:pb-20">
+        <section className="relative mx-auto grid max-w-6xl items-center gap-14 px-5 pt-10 pb-24 sm:px-6 lg:grid-cols-[1.1fr_1fr] lg:pt-20 lg:pb-20">
           <div>
             <h1 className="text-[38px] leading-[1.04] text-white text-balance sm:text-[54px]" style={{ fontWeight: 400 }}>
               <span className="lp-in block">Learn the case interview.</span>
@@ -340,7 +338,7 @@ export default function Landing() {
             <div className="lp-in mt-8 lg:hidden" style={{ ['--d' as string]: '.55s' }}><TryOne /></div>
             <p className="lp-in mt-6 flex max-w-lg items-start gap-2.5 text-[14px] leading-snug text-[#B8C2D3]" style={{ ['--d' as string]: '.6s' }}>
               <svg aria-hidden viewBox="0 0 24 24" className="mt-px h-[18px] w-[18px] shrink-0 fill-none stroke-teal-l stroke-2"><rect x="3" y="4" width="18" height="13" rx="2" /><path d="M8 21h8M12 17v4" /></svg>
-              <span>No sign-up for your first two cases. It all works in your browser on a laptop or phone, with nothing to download. Sign in free with Google or any email when you want to save your progress.</span>
+              <span>{user ? 'It all works in your browser on a laptop or phone, with nothing to download, and your progress is saved to your account.' : 'No sign-up for your first two cases. It all works in your browser on a laptop or phone, with nothing to download. Sign in free with Google or any email when you want to save your progress.'}</span>
             </p>
           </div>
           <HeroScreens />
@@ -377,7 +375,7 @@ export default function Landing() {
               <h3 className="text-[19px]">No app, no card, no trial</h3>
               <p className="mt-2 text-[14.5px] leading-relaxed text-ink-2">The course, frameworks and casebook open straight away. A free sign-in with Google or any email unlocks every step of every case and saves your progress on any device.</p>
               <div className="mt-5 flex flex-wrap gap-3">
-                <Link to="/signin" className="rounded-lg bg-ink px-4 py-2.5 text-[14.5px] font-medium text-white hover:bg-[#1C2B4A]">Sign in free</Link>
+                <Link to={user ? '/home' : '/signin'} className="rounded-lg bg-ink px-4 py-2.5 text-[14.5px] font-medium text-white hover:bg-[#1C2B4A]">{user ? 'Go to my Home' : 'Sign in free'}</Link>
                 <Link to="/learn" className="rounded-lg border border-line px-4 py-2.5 text-[14.5px] font-medium text-ink hover:border-ink/40">Start the course</Link>
               </div>
             </div>
@@ -511,7 +509,7 @@ export default function Landing() {
         <span>© {new Date().getFullYear()} PrepForCase · <Link to="/about" className="underline">About</Link> · <Link to="/privacy" className="underline">Privacy</Link> · <Link to="/terms" className="underline">Terms</Link></span>
         <span>All cases are original and fictional, written for practice. Not affiliated with any consulting firm or school.</span>
       </footer>
-      <StartDock />
+      {!user && <StartDock />}
     </div>
   )
 }

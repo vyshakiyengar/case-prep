@@ -55,19 +55,11 @@ function RequireUser({ children, onboard = false }: { children: ReactNode; onboa
   return <>{children}</>
 }
 
-function Home() {
-  const { ready, user, data } = useStore()
-  if (!ready || (user && !data)) return <Loading />
-  if (user) return <Navigate to="/home" replace />
-  return <Landing />
-}
-
 export default function App() {
   return (
     <Suspense fallback={<Loading />}>
       <ActivityTracker />
       <Routes>
-        <Route path="/" element={<Home />} />
         <Route path="/signin" element={<SignIn />} />
         <Route path="/privacy" element={<Privacy />} />
         <Route path="/terms" element={<Terms />} />
@@ -76,6 +68,7 @@ export default function App() {
         <Route path="/verify-school" element={<RequireUser><VerifySchool /></RequireUser>} />
         <Route element={<AppShell />}>
           {/* open to everyone */}
+          <Route path="/" element={<Landing />} />
           <Route path="/learn" element={<Learn />} />
           <Route path="/learn/:slug" element={<Learn />} />
           <Route path="/perfect-casing" element={<PerfectCasing />} />
