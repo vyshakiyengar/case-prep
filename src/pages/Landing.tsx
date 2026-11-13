@@ -1,17 +1,138 @@
 import { CASE_COUNT } from '../content/caseCount'
 import { Link } from 'react-router-dom'
+import { useEffect, useRef, useState } from 'react'
+import CASE_INDEX from '../content/caseIndex.json'
 import { Logo } from '../components/ui'
 import { ArtCourse, ArtCasebook, ArtMaths, ArtReference, ArtImprove, ArtMap, ArtStructure, ArtVoice, ArtPerks, IndustryCardBody, INDUSTRY_CARD } from '../components/Art'
 import { CASE_PICKS, DIFF_WORD } from '../content/casePicks'
 import { MODULES, lessonBySlug, LESSONS, totalMinutes } from '../content/course'
 
+
+const reducedMotion = () => typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches
+
+/** Counts up to a number once, after a short delay. */
+function CountUp({ to, delay = 0 }: { to: number; delay?: number }) {
+  const [n, setN] = useState(() => (reducedMotion() ? to : 0))
+  useEffect(() => {
+    if (reducedMotion()) return
+    let raf = 0
+    const t = setTimeout(() => {
+      const start = performance.now()
+      const step = (now: number) => {
+        const p = Math.min(1, (now - start) / 1300)
+        setN(Math.round(to * (1 - Math.pow(1 - p, 3))))
+        if (p < 1) raf = requestAnimationFrame(step)
+      }
+      raf = requestAnimationFrame(step)
+    }, delay)
+    return () => { clearTimeout(t); cancelAnimationFrame(raf) }
+  }, [to, delay])
+  return <>{n}</>
+}
+
+/** A small live demo of the drills: an answer is typed, checked and marked, on a loop. */
+function MarkingChip() {
+  const ANSWER = '20'
+  const [phase, setPhase] = useState(() => (reducedMotion() ? 4 : 0)) // 0 empty, 1-2 typing, 3 checking, 4 right
+  useEffect(() => {
+    if (reducedMotion()) return
+    const times = [1400, 260, 500, 700, 3200]
+    const t = setTimeout(() => setPhase((p) => (p + 1) % 5), times[phase])
+    return () => clearTimeout(t)
+  }, [phase])
+  const typed = phase >= 2 ? ANSWER : phase === 1 ? ANSWER[0] : ''
+  return (
+    <div className="w-[262px] rounded-xl border border-line bg-white p-3.5 text-left text-ink shadow-[0_24px_50px_-20px_rgba(0,0,0,.55)]">
+      <p className="text-[11.5px] text-muted">Case maths</p>
+      <p className="mt-0.5 font-serif text-[15.5px] leading-snug font-semibold">Fixed costs $400k. Each unit adds $20 of profit. Break-even volume?</p>
+      <div className="mt-2.5 flex items-center gap-2">
+        <span className={`flex h-8 flex-1 items-center justify-between rounded-md border px-2.5 text-[13.5px] transition-colors ${phase === 4 ? 'border-teal' : 'border-line'}`}>
+          <span>{typed}<span className={`ml-px inline-block h-4 w-px align-middle bg-ink ${phase >= 3 ? 'opacity-0' : 'animate-pulse'}`} /></span>
+          <span className="text-[12px] text-faint">thousand</span>
+        </span>
+        <span className={`rounded-md px-2.5 py-1.5 text-[12.5px] font-medium text-white transition-colors ${phase === 3 ? 'bg-teal-d' : 'bg-ink'}`}>Check</span>
+      </div>
+      <p className={`mt-2 flex items-center gap-1.5 text-[13px] transition-opacity duration-300 ${phase === 4 ? 'opacity-100' : 'opacity-0'}`} aria-live="polite">
+        <svg aria-hidden viewBox="0 0 24 24" className="h-4 w-4 fill-none stroke-teal-d stroke-[2.5]"><path d="M5 12.5l4.5 4.5L19 7.5" /></svg>
+        <span><b className="font-semibold text-teal-d">Right.</b> 20k units.</span>
+      </p>
+    </div>
+  )
+}
+
+type CaseRow = { id: number; slug: string; title: string; type: string }
+/** Every case in the casebook, drifting past in two rows. Pauses on hover. */
+function CaseTicker() {
+  const rows = [CASE_INDEX.slice(0, 51), CASE_INDEX.slice(51)] as CaseRow[][]
+  return (
+    <div className="lp-band relative space-y-2.5 overflow-hidden py-6" aria-label={`All ${CASE_COUNT} cases`}>
+      {rows.map((row, r) => (
+        <div key={r} className={`lp-marquee ${r ? 'rev' : ''}`} style={{ ['--t' as string]: r ? '230s' : '200s' }}>
+          {[...row, ...row].map((c, k) => (
+            <Link key={`${c.slug}-${k}`} to={`/casebook/${c.slug}`} tabIndex={k >= row.length ? -1 : undefined} aria-hidden={k >= row.length || undefined}
+              className="mr-2.5 flex shrink-0 items-baseline gap-2 rounded-full border border-white/12 px-4 py-1.5 text-[13.5px] text-white/85 hover:border-white/40 hover:text-white">
+              <span className="font-serif text-[12px] text-teal-l italic">{c.id}</span>{c.title}<span className="text-[12px] text-white/45">{c.type}</span>
+            </Link>
+          ))}
+        </div>
+      ))}
+    </div>
+  )
+}
+
+const CASE_STEPS = [
+  { t: 'The prompt', d: "Read the client's problem the way you'd hear it." },
+  { t: 'Clarifying questions', d: 'Ask, and get the facts an interviewer would give.' },
+  { t: 'Structure', d: 'Draw your issue tree, then compare it with a strong one.' },
+  { t: 'Maths and exhibits', d: 'Work the numbers and read the charts.' },
+  { t: 'Recommendation', d: 'Lead with the answer, then the reasons and the risks.' },
+  { t: 'Score yourself', d: 'Mark each stage and note one thing to fix.' },
+]
+/** The stages of a case, lit up one after another while the section is on screen. */
+function CaseSteps() {
+  const [at, setAt] = useState(0)
+  const ref = useRef<HTMLOListElement>(null)
+  const [seen, setSeen] = useState(false)
+  useEffect(() => {
+    const el = ref.current
+    if (!el || reducedMotion()) return
+    const io = new IntersectionObserver(([e]) => setSeen(e.isIntersecting), { threshold: 0.4 })
+    io.observe(el)
+    return () => io.disconnect()
+  }, [])
+  useEffect(() => {
+    if (!seen) return
+    const t = setInterval(() => setAt((a) => (a + 1) % CASE_STEPS.length), 2200)
+    return () => clearInterval(t)
+  }, [seen])
+  return (
+    <ol ref={ref} className="relative mt-6 border-l border-line pl-5">
+      <span aria-hidden className="absolute -left-px top-0 w-[2px] bg-teal transition-[height] duration-700 ease-out" style={{ height: `${((at + 1) / CASE_STEPS.length) * 100}%` }} />
+      {CASE_STEPS.map((s, k) => (
+        <li key={s.t} className="relative py-1.5">
+          <span aria-hidden className={`absolute top-[13px] -left-[25px] h-2.5 w-2.5 rounded-full border-2 transition-colors duration-500 ${k <= at ? 'border-teal bg-teal' : 'border-line bg-white'}`} />
+          <button type="button" onClick={() => setAt(k)} className={`text-left text-[15px] transition-colors duration-300 ${k === at ? 'font-medium text-ink' : 'text-muted hover:text-ink'}`}>{s.t}</button>
+          <p className={`grid text-[14px] text-ink-2 transition-[grid-template-rows,opacity] duration-500 ${k === at ? 'grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0'}`}><span className="overflow-hidden">{s.d}</span></p>
+        </li>
+      ))}
+    </ol>
+  )
+}
+
 function HeroScreens() {
   return (
     <div className="relative mx-auto w-full max-w-[640px] pb-10 sm:pb-16 lg:mr-[-60px]">
-      <Browser src="/shots/desktop-home.webp" path="home" eager alt="The PrepForCase home page in a browser: the next lesson, the case of the day and a readiness score" />
-      <Browser src="/shots/desktop-charts.webp" path="drills/charts" alt="The chart drill: a stacked bar exhibit with a question and a 60-second timer" className="absolute bottom-0 left-[-8%] hidden w-[44%] sm:block" />
-      <div className="absolute right-3 bottom-1 rounded-lg bg-white px-3.5 py-2.5 text-ink shadow-[0_18px_40px_-18px_rgba(0,0,0,.55)] sm:bottom-6">
-        <p className="font-serif text-[22px] leading-tight font-semibold">{CASE_COUNT} cases</p>
+      <div className="lp-window" style={{ ['--d' as string]: '.35s' }}>
+        <div className="lp-float"><Browser src="/shots/desktop-home.webp" path="home" eager alt="The PrepForCase home page in a browser: the next lesson, the case of the day and a readiness score" /></div>
+      </div>
+      <div className="lp-slide absolute bottom-0 left-[-8%] hidden w-[44%] sm:block" style={{ ['--d' as string]: '.75s' }}>
+        <div className="lp-float" style={{ ['--f' as string]: '-3s' }}><Browser src="/shots/desktop-charts.webp" path="drills/charts" alt="The chart drill: a stacked bar exhibit with a question and a 60-second timer" /></div>
+      </div>
+      <div className="lp-pop absolute top-[-34px] right-[-18px] hidden lg:block" style={{ ['--d' as string]: '1.2s' }}>
+        <div className="lp-float" style={{ ['--f' as string]: '-1.5s' }}><MarkingChip /></div>
+      </div>
+      <div className="lp-pop absolute right-3 bottom-1 rounded-lg bg-white px-3.5 py-2.5 text-ink shadow-[0_18px_40px_-18px_rgba(0,0,0,.55)] sm:bottom-6" style={{ ['--d' as string]: '1s' }}>
+        <p className="font-serif text-[22px] leading-tight font-semibold tabular-nums"><CountUp to={CASE_COUNT} delay={1000} /> cases</p>
         <p className="text-[12.5px] text-muted">each with a full worked answer</p>
       </div>
     </div>
@@ -83,28 +204,29 @@ export default function Landing() {
           </nav>
         </header>
 
-        <section className="relative mx-auto grid max-w-6xl items-center gap-14 px-5 pt-10 pb-24 sm:px-6 lg:grid-cols-[1.1fr_1fr] lg:pt-16 lg:pb-28">
+        <section className="relative mx-auto grid max-w-6xl items-center gap-14 px-5 pt-10 pb-24 sm:px-6 lg:grid-cols-[1.1fr_1fr] lg:pt-16 lg:pb-20">
           <div>
             <h1 className="text-[38px] leading-[1.04] text-white text-balance sm:text-[54px]" style={{ fontWeight: 400 }}>
-              <span className="block">Learn the case interview.</span>
-              <span className="block">Then practise it {CASE_COUNT}&nbsp;times.</span>
+              <span className="lp-in block">Learn the case interview.</span>
+              <span className="lp-in block" style={{ ['--d' as string]: '.12s' }}>Then practise it {CASE_COUNT}&nbsp;times.</span>
             </h1>
-            <span aria-hidden className="mt-7 block h-[2px] w-16 bg-teal" />
-            <p className="mt-6 max-w-lg text-[16.5px] leading-relaxed text-[#C9D2E0]">
+            <span aria-hidden className="lp-rule mt-7 block h-[2px] w-16 bg-teal" style={{ ['--d' as string]: '.45s' }} />
+            <p className="lp-in mt-6 max-w-lg text-[16.5px] leading-relaxed text-[#C9D2E0]" style={{ ['--d' as string]: '.3s' }}>
               A free course on how consultants solve cases, {CASE_COUNT} practice cases with full worked answers,
               and drills for maths, structuring, charts and market sizing. Made by a London Business School and BCG alum.
             </p>
-            <div className="mt-9 flex flex-wrap items-center gap-3">
+            <div className="lp-in mt-9 flex flex-wrap items-center gap-3" style={{ ['--d' as string]: '.45s' }}>
               <Link to="/learn" className="rounded-lg bg-white px-5 py-3 text-[14.5px] font-medium text-ink hover:bg-teal-l">Start the free course</Link>
               <Link to="/casebook" className="rounded-lg border border-white/25 px-5 py-3 text-[14.5px] font-medium text-white hover:border-white/60">Browse the casebook</Link>
             </div>
-            <p className="mt-6 flex max-w-lg items-start gap-2.5 text-[14px] leading-snug text-[#B8C2D3]">
+            <p className="lp-in mt-6 flex max-w-lg items-start gap-2.5 text-[14px] leading-snug text-[#B8C2D3]" style={{ ['--d' as string]: '.6s' }}>
               <svg aria-hidden viewBox="0 0 24 24" className="mt-px h-[18px] w-[18px] shrink-0 fill-none stroke-teal-l stroke-2"><rect x="3" y="4" width="18" height="13" rx="2" /><path d="M8 21h8M12 17v4" /></svg>
               <span>It all works in your browser, on a laptop or a phone. Nothing to download, nothing to pay. Sign in with Google or any email to save your progress.</span>
             </p>
           </div>
           <HeroScreens />
         </section>
+        <div className="relative border-t border-white/10"><CaseTicker /></div>
       </div>
 
 
@@ -148,8 +270,9 @@ export default function Landing() {
         <div className="grid items-center gap-12 lg:grid-cols-[1fr_1.35fr]">
           <div>
             <h2 className="text-[30px]">Practise it like the real interview</h2>
-            <p className="mt-2 text-[15.5px] leading-relaxed text-ink-2">Every case runs the way an interviewer would run it: the prompt, your clarifying questions, your structure, the exhibits and the maths, then your recommendation. A strong answer is waiting at each step, so you always know what good looks like.</p>
-            <p className="mt-3 text-[15.5px] leading-relaxed text-ink-2">Practising with a friend? Switch to interviewer mode and they get the script.</p>
+            <p className="mt-2 text-[15.5px] leading-relaxed text-ink-2">Every case runs the way an interviewer would run it, one stage at a time, with a strong answer waiting at each step so you always know what good looks like.</p>
+            <CaseSteps />
+            <p className="mt-5 text-[15.5px] leading-relaxed text-ink-2">Practising with a friend? Switch to interviewer mode and they get the script.</p>
             <Link to="/casebook" className="mt-6 inline-block rounded-lg bg-ink px-4 py-2.5 text-[14.5px] font-medium text-white hover:bg-[#1C2B4A]">Open the casebook</Link>
           </div>
           <div className="relative pb-16 sm:pb-24">
