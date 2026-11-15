@@ -46,7 +46,7 @@ for (const r of routes) {
   } else if (r.path === '/author/vyshak-iyengar') {
     const ld = { '@context': 'https://schema.org', '@type': 'ProfilePage', url, name: r.title, mainEntity: PERSON }
     h = h.replace('</head>', `    <script type="application/ld+json">${JSON.stringify(ld)}</script>\n  </head>`)
-    h = set(h, /<div id="root"><\/div>/, `<div id="root"><main style="max-width:44rem;margin:0 auto;padding:24px;font-family:system-ui,sans-serif;line-height:1.6"><h1>Vyshak K Iyengar</h1><p>Founder, PrepForCase. London Business School MBA. Cracked BCG's case interviews. Formerly Accenture Strategy and Meta.</p><p><a href="https://vyshak.me" rel="me">vyshak.me</a> · <a href="https://www.linkedin.com/in/vyshakiyengar/" rel="me">LinkedIn</a> · <a href="/blog">PrepForCase blog</a></p></main></div>`)
+    h = set(h, /<div id="root"><\/div>/, `<div id="root"><main style="max-width:44rem;margin:0 auto;padding:24px;font-family:system-ui,sans-serif;line-height:1.6"><h1>Vyshak K Iyengar</h1><p>Founder, PrepForCase. Former strategy consultant (BCG, Accenture Strategy). London Business School MBA. Formerly Meta.</p><p><a href="https://vyshak.me" rel="me">vyshak.me</a> · <a href="https://www.linkedin.com/in/vyshakiyengar/" rel="me">LinkedIn</a> · <a href="/blog">PrepForCase blog</a></p></main></div>`)
   } else if (r.body) {
     h = set(h, /<div id="root"><\/div>/, `<div id="root"><main style="max-width:48rem;margin:0 auto;padding:24px;font-family:system-ui,sans-serif;line-height:1.6">${r.body}</main></div>`)
   }

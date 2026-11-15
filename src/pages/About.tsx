@@ -33,7 +33,7 @@ export default function About() {
       <h1 className="mt-2 text-[30px] leading-[1.1] sm:text-[38px]">Built from what helped me, so it can help you</h1>
       <div className="mt-7 space-y-5 font-serif text-[17px] leading-[1.65] text-ink">
         <p>
-          Hi, I'm Vyshak. I'm an alum of London Business School and Accenture Strategy, I cracked BCG's case interviews, and I recently led product strategy for a multi-billion-dollar ads product at Meta.
+          Hi, I'm Vyshak. I'm a former strategy consultant (BCG, Accenture Strategy) and a London Business School MBA, and I recently led product strategy for a multi-billion-dollar ads product at Meta.
          
         </p>
         <p>
