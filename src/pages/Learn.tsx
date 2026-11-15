@@ -233,8 +233,18 @@ export default function Learn() {
     <>
       {i === 0 && (
         <PageHeader title="The case interview course" art={<ArtCourse />}
-          intro={`${LESSONS.length} short lessons, about ${Math.round(totalMinutes / 5) * 5} minutes in all.`}
+          intro={`${LESSONS.length} short lessons in 3 modules, about ${Math.round(totalMinutes / 5) * 5} minutes in all. Each has a worked example, an exercise and a quiz.`}
           action={<LinkButton to={`/learn/${nextLesson.slug}`}>{done ? 'Continue where I left off' : 'Start lesson 1'}</LinkButton>} />
+      )}
+      {i === 0 && (
+        <section className="mb-6 rounded-xl border border-line bg-white p-5">
+          <h2 className="text-[17px] font-semibold">By the end, you'll be able to</h2>
+          <ul className="mt-3 grid gap-x-8 gap-y-2 text-[14.5px] text-ink-2 sm:grid-cols-2">
+            {['Open a case calmly and ask the right clarifying questions', 'Build a structure that fits the client, not a memorised list', 'Do the maths out loud and read any chart quickly', 'Close with a clear recommendation, the risks and next steps'].map((x) => (
+              <li key={x} className="grid grid-cols-[18px_1fr] gap-2"><svg aria-hidden viewBox="0 0 24 24" className="mt-0.5 h-4 w-4 fill-none stroke-teal-d stroke-[2.4]"><path d="M5 12.5l4.5 4.5L19 7.5" /></svg>{x}</li>
+            ))}
+          </ul>
+        </section>
       )}
 
       <CourseBar i={i} onTurn={turn} done={user ? `${done} of ${LESSONS.length} done` : undefined} />

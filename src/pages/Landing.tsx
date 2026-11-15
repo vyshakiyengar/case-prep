@@ -253,19 +253,19 @@ function Browser({ src, alt, path = '', className = '', eager = false, crop = fa
 
 type Feature = { t: string; d: string; to: string }
 const GROUPS: { t: string; art: (p: { className?: string }) => React.ReactElement; note?: string; items: Feature[] }[] = [
-  { t: 'Learn the method', art: ArtCourse, items: [
+  { t: 'Learn the method', art: ArtCourse, note: 'About 90 minutes', items: [
     { t: 'Course', d: `${LESSONS.length} short lessons, each with a worked example, an exercise and a quiz.`, to: '/learn' },
     { t: 'Perfect casing', d: 'What to say at each of the 10 stages of a case, with a phrase trainer.', to: '/perfect-casing' },
     { t: 'Frameworks', d: '11 core issue trees, with when to use each and what to ask first.', to: '/frameworks' },
     { t: 'Interview skills', d: 'Exercises for thinking clearly and speaking calmly under pressure.', to: '/interview-skills' },
   ] },
-  { t: 'Practise cases', art: ArtCasebook, items: [
+  { t: 'Practise cases', art: ArtCasebook, note: `${CASE_COUNT} cases`, items: [
     { t: 'Casebook', d: `${CASE_COUNT} original cases across every industry, each with a full worked answer.`, to: '/casebook' },
     { t: 'Case of the day', d: 'One case for everyone each day. Keep a streak going.', to: `/casebook/${caseOfDay(todayIso()).slug}` },
     { t: 'Interviewer mode', d: 'Give a case to a friend, with the script and the facts to share.', to: '/interviewer' },
     { t: 'Graph library', d: '64 exhibit charts, each with the insight to look for.', to: '/graphs' },
   ] },
-  { t: 'Drill the skills', art: ArtMaths, items: [
+  { t: 'Drill the skills', art: ArtMaths, note: '10 minutes a day', items: [
     { t: 'Case maths', d: 'Percentages, margins, growth and break-even, marked as you go.', to: '/drills/maths' },
     { t: 'Structuring', d: 'Spot the flaw in a structure, or write your own against the clock.', to: '/drills/structure' },
     { t: 'Reading charts', d: 'One chart, one question, sixty seconds.', to: '/drills/charts' },
@@ -284,6 +284,51 @@ const GROUPS: { t: string; art: (p: { className?: string }) => React.ReactElemen
   ] },
 ]
 
+/** The worries candidates bring, and the part of the site that answers each. */
+const PAINS = [
+  { q: "I don't know where to start.", a: `Follow the course: ${LESSONS.length} short lessons, from the first sentence of a case to the recommendation.`, to: '/learn', cta: 'Start lesson 1' },
+  { q: "I don't have a business background.", a: 'Frameworks, terms and formulas in plain English, each with an example.', to: '/glossary', cta: 'Open the glossary' },
+  { q: "I don't have anyone to practise with.", a: 'Every case has a strong answer at each step, so you can practise alone. With a friend, interviewer mode gives them the script.', to: '/casebook', cta: 'Open the casebook' },
+  { q: 'My maths falls apart under pressure.', a: 'Ten-minute drills for maths, charts and market sizing, marked as you go.', to: '/drills', cta: 'Try a drill' },
+  { q: "I freeze when it's time to talk.", a: 'Perfect casing gives you the words for each stage, and a phrase trainer to make them automatic.', to: '/perfect-casing', cta: 'See the phrases' },
+  { q: 'My interview is soon.', a: 'Pick a plan for one, three or six weeks.', to: '#plans', cta: 'See the plans' },
+]
+
+const PLANS = [
+  { t: 'One week to go', who: 'Interview next week', steps: [
+    'Day 1: lessons 1 to 3, about 27 minutes, then the perfect-casing phrases',
+    'Days 2 to 6: one case a day, plus a ten-minute drill',
+    'Day 7: read your case-log fixes, rehearse two fit stories, rest',
+  ] },
+  { t: 'Three weeks', who: 'The usual run-up', steps: [
+    'Week 1: the whole course and the 11 frameworks; an easy case every other day',
+    'Week 2: a case a day, a drill a day, your first case with a friend',
+    'Week 3: hard cases against the clock, two cases with a friend, fit stories',
+  ] },
+  { t: 'Six weeks or more', who: 'Starting from zero', steps: [
+    'Weeks 1 and 2: course, frameworks and glossary; easy cases',
+    'Weeks 3 and 4: four or five cases a week, every drill, the case types',
+    'Weeks 5 and 6: hard cases, friends twice a week, fit stories, rest the day before',
+  ] },
+]
+
+const COSTS = [
+  { t: 'A paid case course', v: 'about $180 to $300' },
+  { t: 'A drills app', v: 'about $35 a month' },
+  { t: 'One hour with a coach', v: '$110 or more' },
+]
+
+const FAQ = [
+  { q: 'Is it really free?', a: 'Yes. No trial, no card, no paid tier. Your first two cases and two pages need no account; a free sign-in opens everything and saves your progress.' },
+  { q: 'Who is it for?', a: 'Anyone with a case interview coming up: students, MBAs and experienced hires, for strategy consulting, Big Four advisory, boutiques and in-house strategy roles.' },
+  { q: 'I have never done a case. Can I start here?', a: `Yes. The course assumes no business background. Start with lesson 1, then try Coastal Brew, an easy first case.` },
+  { q: 'How long should I prepare?', a: 'A common target is 20 to 40 cases over three to six weeks, with a little drilling most days. The plans above show how to fit it in.' },
+  { q: 'Do I need a case partner?', a: 'No. Every case has a worked answer at each step. A friend helps later on, and interviewer mode makes it easy for them to run the case.' },
+  { q: 'Does it cover the fit interview?', a: 'Yes. Build your fit stories once with the STAR-L method, keep them in one place and rehearse them each week.' },
+  { q: 'Are these real interview cases?', a: 'They are original cases written for practice, in the style firms use. They are not taken from any firm.' },
+  { q: 'Does it work on my phone?', a: 'Yes. It all runs in your browser on a phone or a computer. Nothing to download.' },
+]
+
 export default function Landing() {
   const { user } = useStore()
   return (
@@ -299,14 +344,19 @@ export default function Landing() {
             </h1>
             <span aria-hidden className="lp-rule mt-7 block h-[2px] w-16 bg-teal" style={{ ['--d' as string]: '.45s' }} />
             <p className="lp-in mt-6 max-w-lg text-[16.5px] leading-relaxed text-[#C9D2E0]" style={{ ['--d' as string]: '.3s' }}>
-              Got a case interview coming up? Start here. A short course on how consultants solve cases,{' '}
-              {CASE_COUNT} practice cases with full worked answers, and quick drills for maths, structuring, charts and market sizing. All free.
+              A step-by-step system for case interviews, free from start to finish. Learn the method in about 90 minutes,
+              practise {CASE_COUNT} cases with worked answers, and drill the skills in ten minutes a day.
             </p>
             <div className="lp-in mt-9 flex flex-wrap items-center gap-3" style={{ ['--d' as string]: '.45s' }}>
               <Link to="/casebook/coastal-brew" className="lp-cta inline-flex items-center rounded-lg bg-white px-5 py-3 text-[14.5px] font-medium text-ink hover:bg-teal-l">Try a free case<Arrow /></Link>
               <Link to="/learn" className="rounded-lg border border-white/25 px-5 py-3 text-[14.5px] font-medium text-white hover:border-white/60">Start the course</Link>
             </div>
-            <div className="lp-in mt-8 lg:hidden" style={{ ['--d' as string]: '.55s' }}><TryOne /></div>
+            <dl className="lp-in mt-8 grid max-w-lg grid-cols-3 gap-4 border-t border-white/15 pt-5" style={{ ['--d' as string]: '.55s' }}>
+              {[[`${LESSONS.length}`, 'short lessons'], [`${CASE_COUNT}`, 'cases with answers'], ['Free', 'no card, no trial']].map(([n, l]) => (
+                <div key={l}><dt className="sr-only">{l}</dt><dd><span className="block font-serif text-[26px] leading-none text-white">{n}</span><span className="mt-1 block text-[13px] text-[#9FB0C6]">{l}</span></dd></div>
+              ))}
+            </dl>
+            <div className="lp-in mt-8 lg:hidden" style={{ ['--d' as string]: '.6s' }}><TryOne /></div>
             <p className="lp-in mt-6 flex max-w-lg items-start gap-2.5 text-[14px] leading-snug text-[#B8C2D3]" style={{ ['--d' as string]: '.6s' }}>
               <svg aria-hidden viewBox="0 0 24 24" className="mt-px h-[18px] w-[18px] shrink-0 fill-none stroke-teal-l stroke-2"><rect x="3" y="4" width="18" height="13" rx="2" /><path d="M8 21h8M12 17v4" /></svg>
               <span>{user ? 'Works in any browser. Your progress is saved to your account.' : 'No sign-up for your first two cases. Works in any browser, nothing to download.'}</span>
@@ -317,10 +367,31 @@ export default function Landing() {
       </div>
 
 
+      <section className="border-b border-line">
+        <div className="mx-auto max-w-6xl px-5 py-20 sm:px-6">
+          <h2 className="text-[30px]">Sound familiar?</h2>
+          <p className="mt-1 max-w-2xl text-muted">Common worries before a case interview, and where the site helps with each.</p>
+          <div className="mt-8 grid gap-x-10 md:grid-cols-2">
+            {PAINS.map((p) => (
+              <div key={p.q} className="grid grid-cols-[22px_1fr] gap-x-3 border-t border-line py-5">
+                <svg aria-hidden viewBox="0 0 24 24" className="mt-1 h-[18px] w-[18px] fill-none stroke-teal-d stroke-[2.2]"><path d="M5 12.5l4.5 4.5L19 7.5" /></svg>
+                <div>
+                  <p className="font-serif text-[18px] leading-snug text-ink">“{p.q}”</p>
+                  <p className="mt-1.5 text-[14.5px] leading-relaxed text-ink-2">{p.a}</p>
+                  {p.to.startsWith('#')
+                    ? <a href={p.to} className="mt-1.5 inline-block text-[14px] font-medium text-violet-d hover:underline">{p.cta}</a>
+                    : <Link to={p.to} className="mt-1.5 inline-block text-[14px] font-medium text-violet-d hover:underline">{p.cta}</Link>}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
       <section id="everything">
         <div className="mx-auto max-w-6xl px-5 py-20 sm:px-6">
-          <h2 className="text-[30px]">Everything on PrepForCase</h2>
-          <p className="mt-1 max-w-2xl text-muted">The whole site at a glance.</p>
+          <h2 className="text-[30px]">Everything included, free</h2>
+          <p className="mt-1 max-w-2xl text-muted">Five parts that work together: learn the method, practise cases, drill the skills, look things up, and track how you're doing.</p>
           <div className="mt-9 grid gap-x-8 gap-y-11 md:grid-cols-2 lg:grid-cols-3">
             {GROUPS.map((g) => (
               <div key={g.t}>
@@ -388,27 +459,45 @@ export default function Landing() {
         </div>
       </section>
 
-      <section className="bg-canvas">
+      <section id="plans" className="scroll-mt-20 bg-canvas">
         <div className="mx-auto max-w-6xl px-5 py-20 sm:px-6">
-          <h2 className="text-[30px]">Drills that take a few minutes</h2>
-          <p className="mt-1 max-w-2xl text-muted">Each drill tells you straight away whether you were right, and why.</p>
-          <div className="mt-10 grid gap-x-8 gap-y-10 md:grid-cols-2">
-            {[
-              { src: '/shots/desktop-maths.webp', path: 'drills/maths', to: '/drills/maths', t: 'Case maths', d: 'Percentages, margins, growth and break-even, marked as you go.', alt: 'A break-even question in the case maths drill, answered correctly' },
-              { src: '/shots/desktop-structure.webp', path: 'drills/structure', to: '/drills/structure', t: 'Structuring', d: 'Spot the bucket that overlaps another, or write your own structure against the clock.', alt: 'A structuring question: the overlapping bucket found, with the explanation' },
-              { src: '/shots/desktop-charts.webp', path: 'drills/charts', to: '/drills/charts', t: 'Reading charts', d: 'One chart, one question, sixty seconds.', alt: 'A stacked bar chart question with a 60-second timer' },
-              { src: '/shots/desktop-sizing.webp', path: 'drills/sizing', to: '/drills/sizing', t: 'Market sizing', d: 'Build the estimate, then see how a model answer is put together.', alt: 'A market sizing question on coffee sales, with the estimate compared to a model answer' },
-            ].map((x) => (
-              <figure key={x.t}>
-                <Link to={x.to} className="block transition-transform hover:-translate-y-0.5"><Browser src={x.src} path={x.path} alt={x.alt} crop /></Link>
-                <figcaption className="mt-4">
-                  <h3 className="text-[19px]">{x.t}</h3>
-                  <p className="mt-1 text-[14.5px] text-muted">{x.d}</p>
-                </figcaption>
-              </figure>
+          <h2 className="text-[30px]">Pick your timeline</h2>
+          <p className="mt-1 max-w-2xl text-muted">A plan for however long you have. Add your interview date and the site counts down with you.</p>
+          <div className="mt-8 grid gap-4 lg:grid-cols-3">
+            {PLANS.map((p, k) => (
+              <div key={p.t} className={`flex flex-col rounded-xl border bg-white p-5 sm:p-6 ${k === 1 ? 'border-ink shadow-[0_18px_40px_-28px_rgba(15,27,51,.6)]' : 'border-line'}`}>
+                <p className="text-[13px] font-medium text-teal-d">{p.who}</p>
+                <h3 className="mt-0.5 text-[21px]">{p.t}</h3>
+                <ol className="mt-4 space-y-3 text-[14.5px] leading-snug text-ink-2">
+                  {p.steps.map((x) => (
+                    <li key={x} className="grid grid-cols-[18px_1fr] gap-2">
+                      <span aria-hidden className="mt-[7px] h-[7px] w-[7px] rounded-full bg-teal" />{x}
+                    </li>
+                  ))}
+                </ol>
+                <Link to="/learn/how-case-interviews-work" className="mt-auto pt-6 text-[14.5px] font-medium text-violet-d hover:underline">Start day 1</Link>
+              </div>
             ))}
           </div>
-          <Link to="/drills" className="mt-10 inline-block rounded-lg bg-ink px-4 py-2.5 text-[14.5px] font-medium text-white hover:bg-[#1C2B4A]">Try a drill</Link>
+        </div>
+      </section>
+
+      <section className="mx-auto max-w-6xl px-5 py-20 sm:px-6">
+        <div className="grid gap-10 lg:grid-cols-[1fr_1.1fr] lg:items-center">
+          <div>
+            <h2 className="text-[30px]">What good prep usually costs</h2>
+            <p className="mt-2 max-w-md text-[15.5px] leading-relaxed text-ink-2">Typical prices for paid prep. PrepForCase gives you a course, a casebook, drills and a tracker for nothing, and it stays that way.</p>
+          </div>
+          <dl className="divide-y divide-line rounded-xl border border-line bg-white">
+            {COSTS.map((c) => (
+              <div key={c.t} className="flex items-baseline justify-between gap-4 px-5 py-4">
+                <dt className="text-[15px] text-ink-2">{c.t}</dt><dd className="text-[15px] text-muted tabular-nums">{c.v}</dd>
+              </div>
+            ))}
+            <div className="flex items-baseline justify-between gap-4 rounded-b-xl bg-ink px-5 py-4 text-white">
+              <dt className="text-[15px] font-medium">PrepForCase</dt><dd className="font-serif text-[22px] leading-none">Free</dd>
+            </div>
+          </dl>
         </div>
       </section>
 
@@ -426,6 +515,21 @@ export default function Landing() {
             </figcaption>
           </div>
         </figure>
+      </section>
+
+      <section className="mx-auto max-w-6xl px-5 py-20 sm:px-6">
+        <h2 className="text-[30px]">Questions</h2>
+        <div className="mt-6 grid gap-x-10 md:grid-cols-2">
+          {FAQ.map((f) => (
+            <details key={f.q} className="group border-t border-line py-4">
+              <summary className="flex cursor-pointer list-none items-start justify-between gap-4 text-[16px] font-medium text-ink [&::-webkit-details-marker]:hidden">
+                {f.q}
+                <svg aria-hidden viewBox="0 0 16 16" className="mt-1 h-4 w-4 shrink-0 fill-none stroke-muted stroke-2 transition-transform group-open:rotate-45"><path d="M8 3v10M3 8h10" /></svg>
+              </summary>
+              <p className="mt-2 text-[14.5px] leading-relaxed text-ink-2">{f.a}</p>
+            </details>
+          ))}
+        </div>
       </section>
 
       <section id="start-now" className="relative overflow-hidden bg-ink">
