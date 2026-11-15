@@ -44,7 +44,7 @@ function LessonChapter({ l, n }: { l: Lesson; n: number }) {
           <p className="text-[13.5px] text-muted">Lesson {n} of {LESSONS.length}, {l.minutes} min{done && <span className="ml-2 font-medium text-teal-d">Completed ✓</span>}</p>
           <h2 className="mt-1 text-[24px] leading-tight font-semibold sm:text-[26px]">{l.title}</h2>
           <p className="mt-1 max-w-2xl text-[15.5px] text-muted">{l.summary}</p>
-          <VideoToggle id={`lesson-${l.slug}`} label="Watch the summary" className="mt-4" />
+          <VideoToggle id={`lesson-${l.slug}`} label="Lesson summary" className="mt-4" />
         </div>
         {LESSON_ART[l.slug] && <div aria-hidden className="mt-3 w-44 shrink-0 sm:-mt-3 sm:w-48">{(() => { const A = LESSON_ART[l.slug]; return <A /> })()}</div>}
       </div>

@@ -59,7 +59,7 @@ export function CoreBlock({ f, n }: { f: CoreFramework; n: number }) {
         <h3 className="text-[21px] font-semibold">{f.title}</h3>
       </div>
       <p className="mb-3 text-[14.5px] text-ink-2"><span className="text-muted">Use it when:</span> {f.when} <span className="font-medium text-violet-d">Ask first:</span> "{f.ask}"</p>
-      <VideoToggle id={`framework-${f.id}`} label="Watch it built" className="mb-3" />
+      <VideoToggle id={`framework-${f.id}`} label="The tree, built step by step" className="mb-3" />
       <IssueTree f={f} />
       <div className="mt-3 flex flex-wrap items-start justify-between gap-3">
         <p className="max-w-3xl flex-1 rounded-lg bg-teal-l/60 px-4 py-2.5 text-[14.5px] text-ink"><b className="font-semibold text-teal-d">Make it yours: </b>{f.tip}</p>

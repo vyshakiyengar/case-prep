@@ -4,6 +4,7 @@ import { useStore } from '../lib/store'
 import { todayIso } from '../lib/dates'
 import type { StatsBump } from '../lib/types'
 import { trackVisit } from '../lib/funnel'
+import { trackView } from '../lib/views'
 
 /**
  * Counts how signed-in people use the site, for the admin dashboard:
@@ -48,6 +49,8 @@ export function ActivityTracker() {
     counted.current = true
     trackVisit(pathname, !!user)
   }, [ready]) // eslint-disable-line react-hooks/exhaustive-deps
+  // anonymous page views: every page change counts (see lib/views.ts)
+  useEffect(() => { trackView(pathname) }, [pathname])
   const pending = useRef<{ sessions: number; minutes: number; views: Record<string, number>; lastPath?: string }>({ sessions: 0, minutes: 0, views: {} })
   const lastInput = useRef(Date.now())
 

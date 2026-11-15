@@ -1,5 +1,6 @@
 import { caseOfDay } from './daily'
 import { setFunnelSink, track, seenInTab } from './funnel'
+import { setViewsSink } from './views'
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react'
 import type { ReactNode } from 'react'
 import { AuthError, getBackend } from './backend'
@@ -72,6 +73,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     getBackend().then((b) => {
       setBackend(b)
       setFunnelSink((d, k) => b.countFunnel(d, k))
+      setViewsSink((d, c) => b.countViews(d, c))
       unsub = b.onAuth(async (u) => {
         setUser(u)
         if (!u) sawSignedOut = true

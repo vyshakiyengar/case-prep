@@ -181,7 +181,8 @@ export default function ChartPractice() {
   return (
     <>
       <DrillCrumbs here="Reading charts" />
-      {mode === null && <PageHeader title="Reading charts" art={<ArtCharts />} intro="Read a chart fast and find the number that matters." action={<VideoToggle id="charts-how-to-read" label="How to read any chart" />} />}
+      {mode === null && <PageHeader title="Reading charts" art={<ArtCharts />} intro="Read a chart fast and find the number that matters." />}
+      {mode === null && <VideoToggle id="charts-how-to-read" label="How to read any chart" className="mb-6" />}
       {mode === null && (
         <>
           <div className="grid max-w-5xl gap-4 md:grid-cols-2">

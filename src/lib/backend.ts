@@ -54,6 +54,10 @@ export interface Backend {
   countFunnel(day: string, keys: string[]): Promise<void>
   /** Admin: the funnel counters for these days. */
   listFunnel(days: string[]): Promise<Record<string, Record<string, number>>>
+  /** Anonymous page views: add each count to the day's counters. */
+  countViews(day: string, counts: Record<string, number>): Promise<void>
+  /** Admin: the page-view counters for these days. */
+  listViews(days: string[]): Promise<Record<string, Record<string, number>>>
 }
 
 export class SchoolLinkError extends Error {}
@@ -265,6 +269,16 @@ async function makeFirebase(): Promise<Backend> {
       await Promise.all(days.map(async (d) => { const snap = await fs.getDoc(fs.doc(db, 'funnel', d)); if (snap.exists()) out[d] = snap.data() as Record<string, number> }))
       return out
     },
+    async countViews(day, counts) {
+      const inc: Record<string, unknown> = {}
+      for (const [k, n] of Object.entries(counts)) inc[k] = fs.increment(n)
+      await fs.setDoc(fs.doc(db, 'views', day), inc, { merge: true })
+    },
+    async listViews(days) {
+      const out: Record<string, Record<string, number>> = {}
+      await Promise.all(days.map(async (d) => { const snap = await fs.getDoc(fs.doc(db, 'views', d)); if (snap.exists()) out[d] = snap.data() as Record<string, number> }))
+      return out
+    },
     async listStats() {
       const s = await fs.getDocs(fs.collection(db, 'stats')); return s.docs.map((d) => d.data() as UserStats)
     },
@@ -285,7 +299,7 @@ const DEMO_PERKS: Perk[] = [
 ]
 
 const KEY = 'cpos-device-v2'
-type DemoState = { signedIn: boolean; data: UserData; summaries: Record<string, Summary>; invites: Record<string, Invite>; student?: StudentRecord | null; perks?: Perk[]; stats?: UserStats; funnel?: Record<string, Record<string, number>> }
+type DemoState = { signedIn: boolean; data: UserData; summaries: Record<string, Summary>; invites: Record<string, Invite>; student?: StudentRecord | null; perks?: Perk[]; stats?: UserStats; funnel?: Record<string, Record<string, number>>; views?: Record<string, Record<string, number>> }
 
 function seed(): DemoState {
   return { signedIn: false, data: { profile: null, days: {}, cases: [], drills: [], stories: [] }, summaries: {}, invites: {} }
@@ -343,6 +357,12 @@ function makeDemo(): Backend {
       write()
     },
     async listFunnel(days) { const f = state.funnel || {}; return Object.fromEntries(days.filter((d) => f[d]).map((d) => [d, f[d]])) },
+    async countViews(day, counts) {
+      const v = (state.views ||= {}); const row = (v[day] ||= {})
+      for (const [k, n] of Object.entries(counts)) row[k] = (row[k] || 0) + n
+      write()
+    },
+    async listViews(days) { const v = state.views || {}; return Object.fromEntries(days.filter((d) => v[d]).map((d) => [d, v[d]])) },
     async listStats() { return state.stats ? [state.stats] : [] },
     async getStats() { return state.stats || null },
     bumpStats: (b) => upd((s) => {

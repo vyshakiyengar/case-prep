@@ -1,3 +1,4 @@
+import { keyPath } from '../lib/views'
 import { useEffect, useMemo, useState } from 'react'
 import { Navigate } from 'react-router-dom'
 import { useStore } from '../lib/store'
@@ -318,6 +319,7 @@ function Analytics({ stats, students, updated }: { stats: UserStats[]; students:
           {!users.length && <p className="py-4 text-muted">No users yet.</p>}
         </div>
       </Section>
+      <PageViews />
       <VisitorFunnel />
     </>
   )
@@ -330,6 +332,50 @@ const pretty = (k: string, pre: string) => {
 }
 
 /** Signed-out visitors: anonymous daily counts of each step towards signing up (see lib/funnel.ts). */
+function PageViews() {
+  const { backend } = useStore()
+  const [range, setRange] = useState(7)
+  const [rows, setRows] = useState<Record<string, Record<string, number>> | null>(null)
+  const [failed, setFailed] = useState(false)
+  const [titles, setTitles] = useState<Record<string, string>>({})
+  useEffect(() => {
+    if (!backend) return
+    backend.listViews(lastNDays(30)).then(setRows).catch(() => setFailed(true))
+    import('../content/blogIndex.json').then((m) => setTitles(Object.fromEntries(m.default.posts.map((x) => [x.slug, x.title])))).catch(() => {})
+  }, [backend])
+  const days = lastNDays(range)
+  const sum: Record<string, number> = {}
+  for (const d of days) for (const [k, v] of Object.entries(rows?.[d] || {})) sum[k] = (sum[k] || 0) + (typeof v === 'number' ? v : 0)
+  const pages = Object.entries(sum).filter(([k]) => k.startsWith('p~')).map(([k, v]) => ({ path: keyPath(k), v })).sort((a, b) => b.v - a.v)
+  const total = sum.all || 0
+  const blog = pages.filter((x) => x.path.startsWith('/blog/'))
+  const label = (path: string) => (path.startsWith('/blog/') ? titles[path.slice(6)] || path : path === '/' ? 'Front page' : path)
+  return (
+    <div className="mb-8">
+      <div className="mb-3 flex flex-wrap items-center justify-between gap-3">
+        <h2 className="text-[21px] font-semibold">Page views</h2>
+        <div className="flex gap-1 text-[13.5px]">{[7, 30].map((n) => (
+          <button key={n} onClick={() => setRange(n)} className={`rounded-md px-3 py-1 ${range === n ? 'bg-ink text-white' : 'text-muted hover:text-ink'}`}>Last {n} days</button>
+        ))}</div>
+      </div>
+      {failed && <p className="mb-3 text-[14px] text-signal-d">Couldn't read page views. Publish the latest firestore.rules (it adds the views collection).</p>}
+      {!failed && rows && !total && <p className="mb-3 text-[14px] text-muted">No page views yet. They start from this release, once the latest firestore.rules is published.</p>}
+      <dl className="mb-5 flex flex-wrap gap-x-10 gap-y-3">
+        <div><dt className="text-[13px] text-muted">Page views</dt><dd className="font-serif text-[26px] font-semibold text-ink">{total}</dd></div>
+        <div><dt className="text-[13px] text-muted">Blog views</dt><dd className="font-serif text-[26px] font-semibold text-ink">{sum.blog || 0}</dd></div>
+        <div><dt className="text-[13px] text-muted">Pages viewed</dt><dd className="font-serif text-[26px] font-semibold text-ink">{pages.length}</dd></div>
+        <div><dt className="text-[13px] text-muted">Blog posts read</dt><dd className="font-serif text-[26px] font-semibold text-ink">{blog.length}</dd></div>
+      </dl>
+      <div className="mb-5 grid gap-5 lg:grid-cols-2">
+        <Section title="Views per day"><p className="mb-1 text-[13px] text-muted">All pages</p><Columns days={days} values={days.map((d) => rows?.[d]?.all || 0)} label="Page views" /><p className="mt-4 mb-1 text-[13px] text-muted">Blog</p><Columns days={days} values={days.map((d) => rows?.[d]?.blog || 0)} label="Blog views" /></Section>
+        <Section title="Top pages"><HBars rows={pages.slice(0, 15).map((x) => ({ label: label(x.path), v: x.v, of: pages[0]?.v }))} /></Section>
+      </div>
+      <Section title="Top blog posts"><HBars rows={blog.slice(0, 20).map((x) => ({ label: label(x.path), v: x.v, of: blog[0]?.v }))} empty="No blog views yet." /></Section>
+      <p className="mt-3 text-[13.5px] text-muted">Every page change counts as a view; no personal data is stored. Visitors, countries and referrers are also in Vercel Analytics.</p>
+    </div>
+  )
+}
+
 function VisitorFunnel() {
   const { backend } = useStore()
   const [range, setRange] = useState(7)

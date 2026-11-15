@@ -47,7 +47,8 @@ export default function SizingPractice() {
   return (
     <>
       <DrillCrumbs here="Market sizing" />
-      <PageHeader title="Market sizing" art={<ArtSizing />} intro="Build an estimate from scratch, then compare your logic with a model answer." action={<VideoToggle id="sizing-coffee" label="See one done well" />} />
+      <PageHeader title="Market sizing" art={<ArtSizing />} intro="Build an estimate from scratch, then compare your logic with a model answer." />
+      <VideoToggle id="sizing-coffee" label="See one done well" className="mb-6" />
       <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
         <Seg label="Difficulty" value={level} onChange={(x) => { setLevel(x); setN(0); setShown(false); setRaw(''); setPlan('') }}
           items={[{ value: 0, label: 'All' }, { value: 1, label: 'Easy' }, { value: 2, label: 'Medium' }, { value: 3, label: 'Hard' }]} />
