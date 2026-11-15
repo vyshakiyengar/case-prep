@@ -42,7 +42,7 @@ function LessonChapter({ l, n }: { l: Lesson; n: number }) {
       <div className="sm:flex sm:items-start sm:justify-between sm:gap-6">
         <div>
           <p className="text-[13.5px] text-muted">Lesson {n} of {LESSONS.length}, {l.minutes} min{done && <span className="ml-2 font-medium text-teal-d">Completed ✓</span>}</p>
-          <h2 className="mt-1 font-serif text-[28px] leading-[1.15] font-semibold tracking-[-0.015em] sm:text-[34px]">{l.title}</h2>
+          <h1 className="mt-1 font-serif text-[28px] leading-[1.15] font-semibold tracking-[-0.015em] sm:text-[34px]">{l.title}</h1>
           <p className="mt-2 max-w-2xl font-serif text-[18px] leading-snug text-muted sm:text-[20px]">{l.summary}</p>
           <VideoToggle id={`lesson-${l.slug}`} label="Lesson summary" className="mt-4" />
         </div>
@@ -265,7 +265,7 @@ export default function Learn() {
         {i > 0 && <PageTurner i={i} onTurn={turn} top />}
         {page.id === 'case-map' && (
           <section id="case-map" className="scroll-mt-32">
-            <h2 className="text-[24px] leading-tight">The map of a case</h2>
+            <h1 className="text-[24px] leading-tight">The map of a case</h1>
             <p className="mt-1 mb-6 max-w-2xl text-[15px] text-ink-2">Six steps, 20 to 40 minutes. The lessons take them one at a time.</p>
             <CaseMap />
             <p className="mt-4 text-[14.5px] text-ink-2">Want to see a whole case done well? <Link to="/perfect-casing" className="font-medium text-violet-d hover:underline">See the perfect case</Link></p>
@@ -315,6 +315,7 @@ export default function Learn() {
 
         {page.id === 'whats-next' && (
           <>
+            <h1 className="mb-4 text-[26px] leading-tight sm:text-[30px]">What to do after the course</h1>
             <section className="grid items-center gap-5 rounded-xl border-2 border-teal bg-white p-5 md:grid-cols-[1fr_auto]">
               <div>
                 <h2 className="text-[21px] leading-tight">Next: perfect casing</h2>

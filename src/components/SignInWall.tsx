@@ -12,6 +12,8 @@ import { LogoMark } from './ui'
 const OPEN = ['/home', '/blog', '/author/vyshak-iyengar', '/about', '/casebook', '/learn', '/frameworks', '/perfect-casing', '/glossary', '/interview-formats']
 const OPEN_PREFIX = ['/casebook/', '/learn/', '/blog/']
 // Pages that need an account to work at all (they send people to sign in), so they never use a free page
+// Pages that only show their first screen to signed-out visitors. Anything else (unknown addresses included) is never locked.
+const LOCKABLE = ['/drills', '/formulas', '/graphs', '/case-types', '/interviewer', '/interview-skills', '/frameworks/']
 const MEMBERS = ['/today', '/tracker', '/cases', '/stories', '/notes', '/partners', '/perks', '/settings', '/admin', '/welcome', '/invite', '/verify-school']
 
 /**
@@ -22,6 +24,7 @@ export function SignInWall({ children }: { children: ReactNode }) {
   const { user, ready } = useStore()
   const { pathname } = useLocation()
   const open = OPEN.includes(pathname) || OPEN_PREFIX.some((p) => pathname.startsWith(p)) || MEMBERS.some((p) => pathname.startsWith(p))
+    || !LOCKABLE.some((p) => pathname === p || pathname.startsWith(p.endsWith('/') ? p : p + '/'))
   // Two pages are fully open for anyone; this takes a free slot if one is left
   const taste = useMemo(() => (!user && ready && !open ? claimPage(pathname) : null), [user, ready, open, pathname])
   const locked = !user && ready && !open && !taste?.free

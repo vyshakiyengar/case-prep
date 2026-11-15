@@ -2,7 +2,7 @@ import { SectorTile } from '../components/Art'
 import { caseMeta } from '../lib/seo'
 import { useEffect, useMemo, useState } from 'react'
 import { Link, useNavigate, useParams, useSearchParams } from 'react-router-dom'
-import { loadCases } from '../content'
+import { loadCase } from '../content'
 import type { CaseDef } from '../content'
 import { Loading } from '../App'
 import { Button } from '../components/ui'
@@ -91,11 +91,11 @@ export default function CasePlayer() {
   const nav = useNavigate()
   const { user, ready, markCase } = useStore()
   const interviewer = params.get('mode') === 'interviewer'
-  const [cases, setCases] = useState<CaseDef[] | null>(null)
+  const [loaded, setLoaded] = useState<{ slug: string; c: CaseDef | null } | null>(null)
   const [i, setI] = useState(0)
   const [revealed, setRevealed] = useState<Record<string, boolean>>({})
   const watch = useStopwatch(true)
-  useEffect(() => { loadCases().then(setCases) }, [])
+  useEffect(() => { if (slug) loadCase(slug).then((c) => setLoaded({ slug, c })) }, [slug])
   useEffect(() => { setI(0); setRevealed({}); watch.reset() }, [slug, interviewer]) // eslint-disable-line react-hooks/exhaustive-deps
   // Two whole cases are free without an account. A case only uses a free slot once the
   // visitor goes past the clarifying questions.
@@ -106,10 +106,10 @@ export default function CasePlayer() {
     const t = claimCase(slug)
     if (t.isNew) setClaimed((n) => n + 1)
   }, [i, slug, taste])
-  const found = cases?.find((x) => x.slug === slug)
+  const found = loaded && loaded.slug === slug ? loaded.c : null
   useEffect(() => { if (found) document.title = caseMeta(found).title }, [found])
-  if (!cases) return <Loading label="Loading case…" />
-  const c = cases.find((x) => x.slug === slug)
+  if (!loaded || loaded.slug !== slug) return <Loading label="Loading case…" />
+  const c = found
   if (!c) return <p>That case doesn't exist. <Link className="underline" to="/casebook">Back to the casebook</Link></p>
 
   const steps: Step[] = [

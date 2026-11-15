@@ -13,6 +13,12 @@ export interface CaseDef {
 }
 
 let cache: Promise<CaseDef[]> | null = null
+const one = new Map<string, Promise<CaseDef | null>>()
+/** A single case, fetched on its own (public/case-data/<slug>.json). */
+export const loadCase = (slug: string) => {
+  if (!one.has(slug)) one.set(slug, fetch(`/case-data/${encodeURIComponent(slug)}.json`).then((r) => (r.ok ? r.json() : null)).catch(() => { one.delete(slug); return null }))
+  return one.get(slug)!
+}
 export const loadCases = () => (cache ??= import('./cases.json').then((m) => m.default as unknown as CaseDef[]))
 
 export const drills = drillsJson as { structure: { prompt: string; buckets: string }[]; maths: { q: string; a: string }[] }

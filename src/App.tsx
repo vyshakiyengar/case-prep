@@ -19,6 +19,7 @@ import Privacy from './pages/Privacy'
 import Terms from './pages/Terms'
 import Learn from './pages/Learn'
 const Blog = lazy(() => import('./pages/Blog'))
+const NotFound = lazy(() => import('./pages/NotFound'))
 const Author = lazy(() => import('./pages/Author'))
 const BlogPost = lazy(() => import('./pages/BlogPost'))
 import { ActivityTracker } from './components/ActivityTracker'
@@ -71,12 +72,12 @@ export default function App() {
     <ErrorBoundary><Suspense fallback={<Loading />}>
       <ActivityTracker />
       <Routes>
-        <Route path="/signin" element={<SignIn />} />
-        <Route path="/privacy" element={<Privacy />} />
-        <Route path="/terms" element={<Terms />} />
-        <Route path="/welcome" element={<RequireUser><Welcome /></RequireUser>} />
-        <Route path="/invite/:code" element={<RequireUser><Invite /></RequireUser>} />
-        <Route path="/verify-school" element={<RequireUser><VerifySchool /></RequireUser>} />
+        <Route path="/signin" element={<main><SignIn /></main>} />
+        <Route path="/privacy" element={<main><Privacy /></main>} />
+        <Route path="/terms" element={<main><Terms /></main>} />
+        <Route path="/welcome" element={<main><RequireUser><Welcome /></RequireUser></main>} />
+        <Route path="/invite/:code" element={<main><RequireUser><Invite /></RequireUser></main>} />
+        <Route path="/verify-school" element={<main><RequireUser><VerifySchool /></RequireUser></main>} />
         <Route element={<AppShell />}>
           {/* open to everyone */}
           <Route path="/" element={<Front />} />
@@ -115,9 +116,10 @@ export default function App() {
           <Route path="/perks" element={<RequireUser><Perks /></RequireUser>} />
           <Route path="/settings" element={<RequireUser><Settings /></RequireUser>} />
           <Route path="/admin" element={<RequireUser><Admin /></RequireUser>} />
+          <Route path="*" element={<NotFound />} />
         </Route>
         <Route path="/playbook" element={<Navigate to="/learn" replace />} />
-        <Route path="*" element={<Navigate to="/" replace />} />
+
       </Routes>
     </Suspense></ErrorBoundary>
   )

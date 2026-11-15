@@ -2,7 +2,7 @@ import { ArtFrameworks } from '../components/Art'
 import { useEffect, useState } from 'react'
 import { Link, Navigate, useParams } from 'react-router-dom'
 import { FRAMEWORKS, frameworkBySlug } from '../content/frameworks'
-import { loadCases } from '../content'
+import { loadCase } from '../content'
 import type { CaseDef } from '../content'
 import { LinkButton, PageHeader } from '../components/ui'
 import { useStore } from '../lib/store'
@@ -98,7 +98,7 @@ export default function Framework() {
   const { slug } = useParams()
   const f = frameworkBySlug(slug || '')
   const [cases, setCases] = useState<CaseDef[] | null>(null)
-  useEffect(() => { loadCases().then(setCases) }, [])
+  useEffect(() => { if (f) Promise.all(f.cases.map((s) => loadCase(s))).then((r) => setCases(r.filter((x): x is CaseDef => !!x))) }, [f])
   if (!f) return <Navigate to="/frameworks" replace />
   const linked = (cases || []).filter((c) => f.cases.includes(c.slug))
   const tailored = linked[0]

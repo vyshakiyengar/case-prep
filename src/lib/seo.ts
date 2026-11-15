@@ -7,7 +7,7 @@ export interface Meta { title: string; description: string; image: string; type?
 const IMG = (name: string) => `${SITE}/og/${name}.jpg`
 
 export const PAGES: Record<string, Meta> = {
-  '/': { title: 'PrepForCase · Free case interview prep', description: 'A free, step-by-step system for case interviews: learn the method in about 90 minutes, practise 102 cases with worked answers, drill maths, charts and market sizing, and follow a 1, 3 or 6-week plan.', image: IMG('home') },
+  '/': { title: 'PrepForCase · Free case interview prep', description: 'Free, step-by-step case interview prep: learn the method in about 90 minutes, practise 102 cases with worked answers, and drill maths, charts and market sizing.', image: IMG('home') },
   '/casebook': { title: 'Casebook: 102 free practice cases with worked answers · PrepForCase', description: '102 original consulting case interviews across every industry, each with clarifying facts, a structure, exhibits, maths and a model recommendation. Free.', image: IMG('casebook') },
   '/learn': { title: 'The case interview course · PrepForCase', description: 'Eleven short lessons on how consultants solve cases: the opening, structuring, case maths, charts, market sizing, brainstorming and the recommendation.', image: IMG('learn') },
   '/frameworks': { title: 'Case interview frameworks: 11 core issue trees · PrepForCase', description: 'Eleven core frameworks that cover most consulting cases, drawn as issue trees, with when to use each and what to ask first.', image: IMG('frameworks') },

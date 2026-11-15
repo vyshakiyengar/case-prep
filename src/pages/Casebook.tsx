@@ -1,11 +1,11 @@
 import { ArtCasebook, SectorTile } from '../components/Art'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { Link } from 'react-router-dom'
-import { loadCases, DIFF_LABEL } from '../content'
-import type { CaseDef } from '../content'
+import { DIFF_LABEL } from '../content'
+import caseIndex from '../content/caseIndex.json'
+type CaseItem = (typeof caseIndex)[number]
 import { useStore } from '../lib/store'
 import { PageHeader } from '../components/ui'
-import { Loading } from '../App'
 
 const DIFF_TONE = { 1: 'bg-teal-l text-teal-d', 2: 'bg-marker-l text-[#8A6A12]', 3: 'bg-signal-l text-signal-d' } as const
 
@@ -38,18 +38,16 @@ type Status = 'all' | 'todo' | 'done'
 
 export default function Casebook() {
   const { data, user, markCase } = useStore()
-  const [cases, setCases] = useState<CaseDef[] | null>(null)
+  const cases = caseIndex as CaseItem[]
   const [type, setType] = useState('All')
   const [diff, setDiff] = useState<Diff>(0)
   const [status, setStatus] = useState<Status>('all')
   const [q, setQ] = useState('')
-  useEffect(() => { loadCases().then(setCases) }, [])
-  if (!cases) return <Loading label="Loading cases…" />
   const logged = new Set((data?.cases || []).map((c) => c.name.toLowerCase()))
   const marked = new Set(data?.profile?.practised || [])
-  const isDone = (c: CaseDef) => marked.has(c.slug) || logged.has(c.title.toLowerCase())
+  const isDone = (c: CaseItem) => marked.has(c.slug) || logged.has(c.title.toLowerCase())
   const types = ['All', ...Array.from(new Set(cases.map((c) => c.type))).sort()]
-  const match = (c: CaseDef, ignore?: 'diff' | 'status') =>
+  const match = (c: CaseItem, ignore?: 'diff' | 'status') =>
     (type === 'All' || c.type === type) && (ignore === 'diff' || !diff || c.diff === diff) &&
     (ignore === 'status' || status === 'all' || (status === 'done') === isDone(c)) &&
     (!q || `${c.title} ${c.sub} ${c.industry} ${c.geo}`.toLowerCase().includes(q.toLowerCase()))
@@ -97,7 +95,7 @@ export default function Casebook() {
                 <div className="min-w-0">
                 <div className="flex flex-wrap items-center gap-x-2.5 gap-y-1">
                   <h2 className="text-[16.5px]"><Link to={`/casebook/${c.slug}`} className="hover:text-violet-d">{c.title}</Link></h2>
-                  <Difficulty d={c.diff} />
+                  <Difficulty d={c.diff as 1 | 2 | 3} />
                 </div>
                 <p className="text-[14.5px] leading-snug text-ink-2">{c.sub}</p>
                 <div className="mt-1 flex flex-wrap items-center gap-x-4 gap-y-1 text-[13px] text-muted">

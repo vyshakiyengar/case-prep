@@ -1,8 +1,5 @@
 import { ArtInterviewer } from '../components/Art'
-import { useEffect, useState } from 'react'
-
-import { loadCases } from '../content'
-import type { CaseDef } from '../content'
+import caseIndex from '../content/caseIndex.json'
 import { VideoToggle } from '../components/VideoPlayer'
 import { LinkButton, PageHeader, Section } from '../components/ui'
 
@@ -13,8 +10,7 @@ const STEPS = [
 ]
 
 export default function Interviewer() {
-  const [cases, setCases] = useState<CaseDef[] | null>(null)
-  useEffect(() => { loadCases().then(setCases) }, [])
+  const cases = caseIndex
   return (
     <>
       <PageHeader title="Interviewer mode" art={<ArtInterviewer />} intro="Give a case to a friend: what to read aloud, what to reveal, and the model answers." />

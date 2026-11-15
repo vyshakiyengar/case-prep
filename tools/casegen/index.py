@@ -3,6 +3,6 @@
 import json, os
 CONTENT = os.path.join(os.path.dirname(__file__), "..", "..", "src", "content")
 cases = json.load(open(os.path.join(CONTENT, "cases.json"), encoding="utf-8"))
-idx = [{k: c[k] for k in ("id", "slug", "title", "sub", "type", "industry", "diff", "time")} for c in cases]
+idx = [{k: c[k] for k in ("id", "slug", "title", "sub", "type", "industry", "diff", "time", "geo")} for c in cases]
 json.dump(idx, open(os.path.join(CONTENT, "caseIndex.json"), "w", encoding="utf-8"), ensure_ascii=False, separators=(",", ":"))
 print("caseIndex.json:", len(idx), "cases")
