@@ -1,3 +1,4 @@
+import { ErrorBoundary } from './components/ErrorBoundary'
 import { lazy, Suspense } from 'react'
 import type { ReactNode } from 'react'
 import { Navigate, Route, Routes, useLocation } from 'react-router-dom'
@@ -68,7 +69,7 @@ function Front() {
 
 export default function App() {
   return (
-    <Suspense fallback={<Loading />}>
+    <ErrorBoundary><Suspense fallback={<Loading />}>
       <ActivityTracker />
       <Routes>
         <Route path="/signin" element={<SignIn />} />
@@ -119,6 +120,6 @@ export default function App() {
         <Route path="/playbook" element={<Navigate to="/learn" replace />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
-    </Suspense>
+    </Suspense></ErrorBoundary>
   )
 }
