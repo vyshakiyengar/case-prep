@@ -68,8 +68,6 @@ service cloud.firestore {
       allow delete: if isSelf(uid);
     }
 
-    // Anonymous sign-up funnel: one document per day of plain counters, no personal data.
-    // Anyone may add to them (small writes only); only the admin can read them.
     // Anonymous page views: one document per day, a counter per page. Same limits as the funnel.
     match /views/{day} {
       allow get, list: if isAdmin();
@@ -79,6 +77,8 @@ service cloud.firestore {
         && request.resource.data.keys().size() <= 3000
         && request.resource.data.diff(resource.data).affectedKeys().size() <= 25;
     }
+    // Anonymous sign-up funnel: one document per day of plain counters, no personal data.
+    // Anyone may add to them (small writes only); only the admin can read them.
     match /funnel/{day} {
       allow get, list: if isAdmin();
       allow create: if day.matches('^20[0-9]{2}-[01][0-9]-[0-3][0-9]$')
