@@ -1,6 +1,6 @@
 import { useEffect, useState, type MouseEvent } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
-import { POSTS, TOPICS, PostCard } from './Blog'
+import { POSTS, TOPICS } from './Blog'
 
 /** Where to practise what each topic teaches: the article leads into the tools. */
 const PRACTICE: Record<string, { to: string; t: string; d: string }> = {
@@ -18,6 +18,17 @@ const PRACTICE: Record<string, { to: string; t: string; d: string }> = {
 }
 
 type Full = { slug: string; title: string; description: string; topic: string; kind: string; minutes: number; hook: string; body: string; outro: string; related: string[] }
+
+/** A thin bar across the top that fills as you read. */
+function ReadingProgress() {
+  const [p, setP] = useState(0)
+  useEffect(() => {
+    const on = () => { const h = document.documentElement; const max = h.scrollHeight - h.clientHeight; setP(max > 0 ? Math.min(1, h.scrollTop / max) : 0) }
+    on(); window.addEventListener('scroll', on, { passive: true }); window.addEventListener('resize', on)
+    return () => { window.removeEventListener('scroll', on); window.removeEventListener('resize', on) }
+  }, [])
+  return <div aria-hidden className="fixed inset-x-0 top-0 z-40 h-[3px]"><div className="h-full origin-left bg-teal transition-transform duration-150 motion-reduce:transition-none" style={{ transform: `scaleX(${p})` }} /></div>
+}
 
 export default function BlogPost() {
   const { slug = '' } = useParams()
@@ -49,28 +60,39 @@ export default function BlogPost() {
   }
   if (!meta) return <div className="mx-auto max-w-2xl py-10"><h1 className="font-serif text-[30px]">This article doesn't exist</h1><p className="mt-2 text-ink-2">It may have moved. <Link to="/blog" className="text-violet-d underline">See all articles</Link>.</p></div>
   const topic = TOPICS.find((t) => t.id === meta.topic)!
-  const inTopic = POSTS.filter((p) => p.topic === meta.topic).sort((a, b) => a.order - b.order)
-  const i = inTopic.findIndex((p) => p.slug === slug)
-  const next = inTopic[i + 1] ?? inTopic[0]
   return (
-    <article className="mx-auto max-w-[44rem] pb-10">
-      <nav aria-label="Breadcrumb" className="text-[14px] text-muted"><Link to="/blog" className="hover:text-ink">Blog</Link> <span aria-hidden>/</span> <Link to={`/blog/topic/${topic.id}`} className="hover:text-ink">{topic.name}</Link></nav>
-      <h1 className="mt-3 font-serif text-[26px] leading-[1.2] text-balance text-ink sm:text-[34px]">{meta.title}</h1>
-      <p className="mt-3 text-[14px] text-muted">{meta.kind}, {meta.minutes} min read. Free, no sign-in.</p>
+    <article className="mx-auto max-w-[680px] pb-12">
+      <ReadingProgress />
+      <nav aria-label="Breadcrumb" className="text-[14px] text-muted"><Link to="/blog" className="hover:text-ink">Blog</Link> <span aria-hidden>/</span> <Link to={`/blog/topic/${topic.id}`} className="font-medium text-teal-d hover:text-ink">{topic.name}</Link></nav>
+      <h1 className="mt-4 font-serif text-[30px] leading-[1.15] font-semibold tracking-[-0.02em] text-balance text-ink sm:text-[42px]">{meta.title}</h1>
+      <p className="mt-3 font-serif text-[19px] leading-snug text-muted sm:text-[21px]">{meta.description}</p>
+      <div className="mt-6 flex items-center gap-3 border-y border-line py-4">
+        <span aria-hidden className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-ink font-serif text-[18px] text-white">P</span>
+        <div className="text-[14px] leading-snug">
+          <p className="font-medium text-ink">PrepForCase</p>
+          <p className="text-muted">{meta.kind} · {meta.minutes} min read · Free, no sign-in</p>
+        </div>
+      </div>
       {failed && <p className="mt-8 rounded-lg bg-white p-4 text-ink-2">This article didn't load. Check your connection and <button type="button" onClick={() => location.reload()} className="text-violet-d underline">try again</button>.</p>}
-      {!post && !failed && <div className="mt-8 space-y-3" aria-busy><div className="h-5 w-full animate-pulse rounded bg-line" /><div className="h-5 w-5/6 animate-pulse rounded bg-line" /><div className="h-5 w-4/6 animate-pulse rounded bg-line" /></div>}
+      {!post && !failed && <div className="mt-10 space-y-3" aria-busy><div className="h-5 w-full animate-pulse rounded bg-line" /><div className="h-5 w-5/6 animate-pulse rounded bg-line" /><div className="h-5 w-4/6 animate-pulse rounded bg-line" /></div>}
       {post && <>
-        <p className="mt-7 text-[19px] leading-relaxed text-ink">{post.hook}</p>
-        <div className="post mt-6" onClick={onClick} dangerouslySetInnerHTML={{ __html: post.body }} />
-        {PRACTICE[meta.topic] && <Link to={PRACTICE[meta.topic].to} className="group mt-10 flex items-center justify-between gap-4 rounded-xl bg-ink p-5 text-white hover:bg-ink/90">
+        <p className="lede mt-9">{post.hook}</p>
+        <div className="post mt-[1.15em]" onClick={onClick} dangerouslySetInnerHTML={{ __html: post.body }} />
+        {PRACTICE[meta.topic] && <Link to={PRACTICE[meta.topic].to} className="group mt-14 flex items-center justify-between gap-4 rounded-2xl bg-ink p-6 text-white hover:bg-ink/90">
           <span><span className="block text-[13px] text-white/70">Practise what you just read</span><span className="mt-0.5 block text-[18px] font-semibold">{PRACTICE[meta.topic].t}</span><span className="mt-1 block text-[14.5px] text-white/80">{PRACTICE[meta.topic].d}</span></span>
           <span aria-hidden className="shrink-0 rounded-full bg-white px-4 py-2 text-[14px] font-medium text-ink group-hover:bg-teal-l">Start</span>
         </Link>}
-        <div className="post mt-6 rounded-xl border border-line bg-white p-5" onClick={onClick}><p><b>One last thing.</b> <span dangerouslySetInnerHTML={{ __html: post.outro }} /></p></div>
-        <section className="mt-12">
-          <h2 className="mb-3 text-[20px] font-semibold">Read next</h2>
-          <div className="grid gap-4 sm:grid-cols-2">{post.related.map((s) => POSTS.find((p) => p.slug === s)).filter((p) => !!p).map((p) => <PostCard key={p!.slug} p={p!} />)}</div>
-          <p className="mt-6 text-[15px] text-ink-2">More in <Link to={`/blog/topic/${topic.id}`} className="font-medium text-violet-d underline">{topic.name}</Link>{next && next.slug !== slug && <>, or carry on with <Link to={`/blog/${next.slug}`} className="font-medium text-violet-d underline">{next.title}</Link></>}.</p>
+        <div className="post mt-8 border-t border-line pt-6 text-[17px]" onClick={onClick}><p><span dangerouslySetInnerHTML={{ __html: post.outro }} /></p></div>
+        <section className="mt-14 border-t border-ink pt-6">
+          <h2 className="font-sans text-[15px] font-semibold text-ink">Read next</h2>
+          <ul className="mt-2 divide-y divide-line">{post.related.map((s) => POSTS.find((p) => p.slug === s)).filter((p) => !!p).map((p) => (
+            <li key={p!.slug}><Link to={`/blog/${p!.slug}`} className="group block py-5">
+              <span className="block font-serif text-[20px] leading-snug font-semibold text-ink group-hover:underline">{p!.title}</span>
+              <span className="mt-1.5 line-clamp-2 block font-serif text-[16.5px] leading-snug text-muted">{p!.description}</span>
+              <span className="mt-2 block text-[13px] text-muted">{p!.kind} · {p!.minutes} min read</span>
+            </Link></li>
+          ))}</ul>
+          <p className="mt-4 text-[15px] text-ink-2">See every article in <Link to={`/blog/topic/${topic.id}`} className="font-medium text-ink underline underline-offset-4">{topic.name}</Link>.</p>
         </section>
       </>}
     </article>
