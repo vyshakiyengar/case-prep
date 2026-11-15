@@ -122,6 +122,10 @@ export default function BlogPost() {
               <span className="mt-2 block text-[13px] text-muted">{p!.kind} · {p!.minutes} min read</span>
             </Link></li>
           ))}</ul>
+          <div className="mt-8 flex flex-wrap gap-3">
+            <Link to="/learn" className="rounded-full bg-ink px-5 py-2.5 text-[15px] font-medium text-white hover:bg-ink/90">Back to the course</Link>
+            <Link to="/blog" className="rounded-full border border-line px-5 py-2.5 text-[15px] font-medium text-ink hover:border-ink/40">All articles</Link>
+          </div>
           <p className="mt-4 text-[15px] text-ink-2">See every article in <Link to={`/blog/topic/${topic.id}`} className="font-medium text-ink underline underline-offset-4">{topic.name}</Link>.</p>
         </section>
       </>}

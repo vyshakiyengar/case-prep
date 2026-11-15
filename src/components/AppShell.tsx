@@ -1,7 +1,7 @@
 import { FurtherReading } from './FurtherReading'
 import { PAGES } from '../lib/seo'
 import { useCallback, useEffect, useState } from 'react'
-import { Link, NavLink, Outlet, useLocation } from 'react-router-dom'
+import { Link, NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom'
 import { SignInWall } from './SignInWall'
 import { useStore } from '../lib/store'
 import { Avatar, Logo } from './ui'
@@ -147,17 +147,23 @@ export default function AppShell() {
   const isAdmin = useIsAdmin()
   useEffect(() => { if (!loc.hash) window.scrollTo(0, 0); setMobileOpen(false) }, [loc.pathname, loc.hash])
   useEffect(() => { const m = PAGES[loc.pathname]; if (m) document.title = m.title }, [loc.pathname])
+  const nav = useNavigate()
   const name = data?.profile?.name || user?.name || ''
   // Articles get a calm reading layout: white page, slim top bar, no sidebar or tab bar
   if (/^\/blog\/(?!topic\/)[^/]+$/.test(loc.pathname)) return (
     <div className="min-h-screen bg-white">
       <header className="sticky top-0 z-30 border-b border-line/70 bg-white/90 backdrop-blur">
         <div className="mx-auto flex h-14 max-w-5xl items-center justify-between gap-4 px-5">
-          <div className="flex items-center gap-5">
-            <Link to="/" aria-label="PrepForCase: front page"><Logo height={22} /></Link>
-            <Link to="/blog" className="text-[14.5px] font-medium text-muted hover:text-ink">Blog</Link>
+          <div className="flex items-center gap-3 sm:gap-5">
+            <button type="button" onClick={() => ((window.history.state?.idx ?? 0) > 0 ? nav(-1) : nav('/blog'))}
+              className="inline-flex items-center gap-1.5 rounded-full border border-line px-3 py-1.5 text-[14px] font-medium text-ink hover:border-ink/40" aria-label="Go back">
+              <svg aria-hidden viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M15 18l-6-6 6-6" /></svg>Back
+            </button>
+            <Link to="/" aria-label="PrepForCase: front page" className="hidden sm:block"><Logo height={22} /></Link>
           </div>
-          <div className="flex items-center gap-4 text-[14.5px]">
+          <div className="flex items-center gap-4 text-[14.5px] sm:gap-5">
+            <Link to="/learn" className="font-medium text-muted hover:text-ink">Course</Link>
+            <Link to="/blog" className="font-medium text-muted hover:text-ink">Blog</Link>
             <Link to="/casebook" className="hidden font-medium text-muted hover:text-ink sm:inline">Practice cases</Link>
             {user ? <NavLink to="/settings" aria-label="Settings"><Avatar name={name} photo={user.photoURL} /></NavLink> : <Link to="/learn" className="rounded-full bg-ink px-4 py-1.5 font-medium text-white hover:bg-ink/90">Start free</Link>}
           </div>
