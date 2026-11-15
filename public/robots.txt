@@ -4,4 +4,4 @@ Disallow: /admin
 Disallow: /settings
 Disallow: /invite/
 
-Sitemap: https://prepforcase.com/sitemap.xml
+Sitemap: https://www.prepforcase.com/sitemap.xml

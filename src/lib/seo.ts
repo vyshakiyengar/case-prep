@@ -1,7 +1,7 @@
 // Titles, descriptions and preview images for each public page. Used in the browser (to set the
 // tab title as you move around) and at build time (tools/seo) to write a separate HTML head for
 // every page, so link previews on WhatsApp, LinkedIn and others show the right title and image.
-export const SITE = 'https://prepforcase.com'
+export const SITE = 'https://www.prepforcase.com'
 export interface Meta { title: string; description: string; image: string; type?: 'website' | 'article' }
 
 const IMG = (name: string) => `${SITE}/og/${name}.jpg`
