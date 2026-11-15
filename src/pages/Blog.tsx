@@ -7,7 +7,7 @@ export const TOPICS = blog.topics
 export const POSTS = blog.posts
 const LEAD = 'case-interview-guide'
 const FEATURED = ['case-interview-mistakes', 'which-case-framework', 'case-maths-cheat-sheet']
-// Four more starters under the lead story, so the front column reads like a front page
+// Four more starters under the lead story
 const UNDER_LEAD = POSTS.filter((p) => p.topic === 'start' && p.slug !== LEAD && !FEATURED.includes(p.slug)).sort((a, b) => a.order - b.order).slice(0, 4).map((p) => p.slug)
 const ON_FRONT = new Set([LEAD, ...FEATURED, ...UNDER_LEAD])
 
@@ -29,7 +29,7 @@ const post = (slug: string) => POSTS.find((p) => p.slug === slug)!
 
 /* ---------- Newspaper pieces ---------- */
 const Meta = ({ p }: { p: BlogMeta }) => (
-  <p className="mt-2 text-[11.5px] font-medium tracking-[0.06em] text-[#727272] uppercase">{p.minutes} min read</p>
+  <p className="mt-2 text-[12.5px] text-[#727272]">{p.kind} · {p.minutes} min read</p>
 )
 
 /** A story: headline (size set by the slot), optional summary, reading time. */
@@ -52,7 +52,10 @@ function Section({ t }: { t: (typeof TOPICS)[number] }) {
   const mid = rest.slice(0, 3), side = rest.slice(3, 8)
   return (
     <section id={t.id} className="scroll-mt-24 border-t-2 border-[#121212] pt-3 pb-10">
-      <h2 className="mb-5"><Link to={`/blog/topic/${t.id}`} className="font-serif text-[22px] font-bold text-[#121212] hover:underline">{t.name} <span aria-hidden>›</span></Link></h2>
+      <div className="mb-5 flex items-baseline justify-between gap-4">
+        <h2><Link to={`/blog/topic/${t.id}`} className="font-serif text-[22px] font-bold text-[#121212] hover:underline">{t.name}</Link> <span className="text-[13px] text-[#727272]">{byTopic(t.id).length} articles</span></h2>
+        <Link to={`/blog/topic/${t.id}`} className="shrink-0 text-[13px] font-semibold text-[#121212] hover:underline">See all <span aria-hidden>›</span></Link>
+      </div>
       <div className="grid gap-6 md:grid-cols-[1.35fr_1fr] lg:grid-cols-[1.35fr_1fr_0.9fr] lg:gap-0">
         <div className="lg:pr-6">
           <Story p={lead} size="lg" />
@@ -65,7 +68,7 @@ function Section({ t }: { t: (typeof TOPICS)[number] }) {
           <ul className="divide-y divide-[#dfdfdf] [&>li]:py-2.5 [&>li:first-child]:pt-0">
             {side.map((p) => <li key={p.slug}><Link to={`/blog/${p.slug}`} className="font-serif text-[15px] leading-[1.35] text-[#121212] hover:underline">{p.title}</Link></li>)}
           </ul>
-          {list.length > 10 && <Link to={`/blog/topic/${t.id}`} className="mt-3 inline-block text-[13px] font-semibold text-[#121212] hover:underline">All {list.length} in {t.name.toLowerCase()} ›</Link>}
+          {list.length > 10 && <Link to={`/blog/topic/${t.id}`} className="mt-3 inline-block text-[13px] font-semibold text-[#121212] hover:underline">See all {byTopic(t.id).length} articles ›</Link>}
         </div>}
       </div>
     </section>
@@ -91,16 +94,15 @@ export default function Blog() {
   useEffect(() => { document.body.classList.add('bg-white'); return () => document.body.classList.remove('bg-white') }, [])
   const results = useMemo(() => search(q), [q])
   const setQ = (v: string) => { const n = new URLSearchParams(params); if (v) n.set('q', v); else n.delete('q'); setParams(n, { replace: true }) }
-  const today = new Date().toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })
 
   return (
-    // A white sheet of newsprint inside the app's grey canvas
+    // The blog sits on white, with a newspaper-style layout
     <div className="pt-1 pb-10">
       <div className="mx-auto max-w-6xl">
         {/* Masthead */}
         <header className="text-center">
           <div className="flex items-center justify-between gap-4 text-[12px] text-[#333]">
-            <span className="hidden text-left sm:block"><b className="font-semibold">{today}</b><br />{POSTS.length} free articles · No sign-in, no paywall</span>
+            <span className="hidden text-left sm:block"><b className="font-semibold">{POSTS.length} free articles</b><br />No sign-in, no paywall</span>
             <div className="relative w-full sm:w-60">
               <label htmlFor="blog-q" className="sr-only">Search the blog</label>
               <svg aria-hidden viewBox="0 0 24 24" className="pointer-events-none absolute top-1/2 left-2.5 h-4 w-4 -translate-y-1/2 text-[#727272]" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="11" cy="11" r="7" /><path d="m20 20-3.5-3.5" /></svg>
@@ -110,7 +112,7 @@ export default function Blog() {
           </div>
           {hubTopic ? (
             <>
-              <nav aria-label="Breadcrumb" className="mt-2 text-[12px] font-semibold tracking-[0.08em] uppercase"><Link to="/blog" className="text-[#121212] hover:underline">The PrepForCase Blog</Link></nav>
+              <nav aria-label="Breadcrumb" className="mt-2 text-[13px] text-[#5a5a5a]"><Link to="/blog" className="font-semibold text-[#121212] hover:underline">Blog</Link> <span aria-hidden>/</span> {hubTopic.name}</nav>
               <h1 className="mt-1 font-serif text-[34px] leading-[1.05] font-bold tracking-[-0.015em] text-[#121212] sm:text-[48px]">{hubTopic.name}</h1>
               <p className="mx-auto mt-2 max-w-2xl font-serif text-[17px] text-[#5a5a5a]">{hubTopic.head} {byTopic(hubTopic.id).length} free articles.</p>
             </>
@@ -122,10 +124,10 @@ export default function Blog() {
           )}
         </header>
 
-        {/* Section bar: double rule above, hairline below, like a front page */}
+        {/* Topic bar: double rule above, hairline below */}
         <div className="sticky top-0 z-10 mt-5 border-t-[3px] border-double border-[#121212] bg-white">
           <nav aria-label="Blog sections" className="flex gap-x-5 gap-y-1 overflow-x-auto border-b border-[#121212] py-2 text-[13px] whitespace-nowrap lg:flex-wrap lg:justify-center lg:overflow-visible">
-            <Link to="/blog" aria-current={!topic ? 'page' : undefined} className={`py-1 ${!topic ? 'font-bold text-[#121212] underline underline-offset-[6px]' : 'text-[#333] hover:underline'}`}>Front page</Link>
+            <Link to="/blog" aria-current={!topic ? 'page' : undefined} className={`py-1 ${!topic ? 'font-bold text-[#121212] underline underline-offset-[6px]' : 'text-[#333] hover:underline'}`}>All articles</Link>
             {TOPICS.map((t) => (
               <Link key={t.id} to={`/blog/topic/${t.id}`} aria-current={topic === t.id ? 'page' : undefined}
                 className={`py-1 ${topic === t.id ? 'font-bold text-[#121212] underline underline-offset-[6px]' : 'text-[#333] hover:underline'}`}>{t.name}</Link>
@@ -146,7 +148,7 @@ export default function Blog() {
               {/* Above the fold: the lead story, then the three other starter guides */}
               <section aria-label="Start here" className="grid gap-6 pb-10 lg:grid-cols-[2fr_1fr] lg:gap-0">
                 <div className="lg:border-r lg:border-[#dfdfdf] lg:pr-8">
-                  <p className="mb-2 text-[11.5px] font-bold tracking-[0.08em] text-[#121212] uppercase">Start here</p>
+                  <p className="mb-2 text-[13px] font-semibold text-[#0B6F77]">New to case interviews? Start here</p>
                   <Story p={post(LEAD)} size="xl" />
                   <div className="mt-6 grid gap-x-8 border-t border-[#dfdfdf] sm:grid-cols-2">
                     {UNDER_LEAD.map((s) => <Story key={s} p={post(s)} size="sm" className="border-b border-[#dfdfdf] py-4 sm:[&:nth-last-child(-n+2)]:border-b-0" />)}
