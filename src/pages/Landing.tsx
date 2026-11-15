@@ -8,30 +8,10 @@ import { ArtCourse, ArtCasebook, ArtMaths, ArtReference, ArtImprove, IndustryCar
 import { CASE_PICKS, DIFF_WORD } from '../content/casePicks'
 import { LESSONS } from '../content/course'
 import { PLANS } from '../content/plans'
-import { VideoPlayer } from '../components/VideoPlayer'
 
 
 const reducedMotion = () => typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches
 
-/** Counts up to a number once, after a short delay. */
-function CountUp({ to, delay = 0 }: { to: number; delay?: number }) {
-  const [n, setN] = useState(() => (reducedMotion() ? to : 0))
-  useEffect(() => {
-    if (reducedMotion()) return
-    let raf = 0
-    const t = setTimeout(() => {
-      const start = performance.now()
-      const step = (now: number) => {
-        const p = Math.min(1, (now - start) / 1300)
-        setN(Math.round(to * (1 - Math.pow(1 - p, 3))))
-        if (p < 1) raf = requestAnimationFrame(step)
-      }
-      raf = requestAnimationFrame(step)
-    }, delay)
-    return () => { clearTimeout(t); cancelAnimationFrame(raf) }
-  }, [to, delay])
-  return <>{n}</>
-}
 
 const TRY = [
   { topic: 'Break-even', q: 'Fixed costs are $400k. Each unit sold adds $20 of profit. Break-even volume?', unit: 'thousand', a: 20, say: '20k units', how: 'Fixed costs ÷ profit per unit = $400k ÷ $20.' },
@@ -217,23 +197,26 @@ function StartDock() {
   )
 }
 
-function HeroScreens() {
+/** The 30-second tour as the page opener: plays silently on a loop (subtitles are in the picture); one tap replays it with sound. */
+function HeroVideo() {
+  const ref = useRef<HTMLVideoElement>(null)
+  const [sound, setSound] = useState(false)
+  const still = reducedMotion()
+  const withSound = () => {
+    const v = ref.current; if (!v) return
+    v.currentTime = 0; v.muted = false; v.loop = false; setSound(true); v.play().catch(() => {})
+  }
   return (
-    <div className="relative mx-auto w-full max-w-[640px] pt-6 pb-10 sm:pb-16">
-      <div aria-hidden className="pointer-events-none absolute -inset-16 rounded-full bg-[radial-gradient(closest-side,rgba(45,212,191,.22),transparent)] blur-2xl" />
-      <div className="lp-window" style={{ ['--d' as string]: '.35s' }}>
-        <div><Browser src="/shots/desktop-home.webp" path="home" eager alt="The PrepForCase home page in a browser: the next lesson, the case of the day and a readiness score" /></div>
-      </div>
-      <div className="lp-slide absolute bottom-0 left-[-8%] hidden w-[44%] sm:block" style={{ ['--d' as string]: '.75s' }}>
-        <div><Browser src="/shots/desktop-charts.webp" path="drills/charts" alt="The chart drill: a stacked bar exhibit with a question and a 60-second timer" /></div>
-      </div>
-      <div className="lp-pop absolute top-[-28px] right-0 z-[1] hidden w-[290px] lg:block xl:right-[-12px]" style={{ ['--d' as string]: '1.2s' }}>
-        <TryOne />
-      </div>
-      <div className="lp-pop absolute right-3 bottom-1 rounded-lg bg-white px-3.5 py-2.5 text-ink shadow-[0_18px_40px_-18px_rgba(0,0,0,.55)] sm:bottom-6" style={{ ['--d' as string]: '1s' }}>
-        <p className="font-serif text-[22px] leading-tight font-semibold tabular-nums"><CountUp to={CASE_COUNT} delay={1000} /> cases</p>
-        <p className="text-[12.5px] text-muted">each with a full worked answer</p>
-      </div>
+    <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-ink shadow-[0_40px_90px_-40px_rgba(0,0,0,.7)]">
+      <video ref={ref} src="/video/prepforcase-tour-v1.mp4" poster="/video/prepforcase-tour-v1.jpg" playsInline preload="auto"
+        autoPlay={!still} muted={!sound} loop={!sound} controls={sound || still} aria-label="A 30-second tour of PrepForCase" className="block aspect-video w-full">
+        <track kind="captions" src="/video/prepforcase-tour-v1.vtt" srcLang="en" label="English" />
+      </video>
+      {!sound && !still && (
+        <button type="button" onClick={withSound} className="absolute top-3 right-3 inline-flex items-center gap-2 rounded-full bg-white/95 px-3.5 py-1.5 text-[13.5px] font-medium text-ink shadow-lg hover:bg-white sm:top-auto sm:right-auto sm:bottom-6 sm:left-6 sm:px-4 sm:py-2 sm:text-[14px]">
+          <svg aria-hidden viewBox="0 0 16 16" className="h-3.5 w-3.5 fill-current"><path d="M4 2.5v11l9-5.5z" /></svg>Play with sound
+        </button>
+      )}
     </div>
   )
 }
@@ -321,48 +304,41 @@ export default function Landing() {
       <div className="relative overflow-hidden bg-ink text-white lg:border-l lg:border-white/10">
         <div aria-hidden className="pointer-events-none absolute inset-0 opacity-[.07] [background-image:radial-gradient(circle_at_1px_1px,#fff_1px,transparent_1.2px)] [background-size:22px_22px]" />
 
-        <section className="relative mx-auto grid max-w-6xl items-center gap-14 px-5 pt-10 pb-24 sm:px-6 lg:grid-cols-[1.1fr_1fr] lg:pt-20 lg:pb-20">
-          <div>
-            <h1 className="text-[38px] leading-[1.04] text-white text-balance sm:text-[54px]" style={{ fontWeight: 400 }}>
-              <span className="lp-in block">Learn the case interview.</span>
-              <span className="lp-in block" style={{ ['--d' as string]: '.12s' }}>Then practise it {CASE_COUNT}&nbsp;times.</span>
-            </h1>
-            <span aria-hidden className="lp-rule mt-7 block h-[2px] w-16 bg-teal" style={{ ['--d' as string]: '.45s' }} />
-            <p className="lp-in mt-6 max-w-lg text-[16.5px] leading-relaxed text-[#C9D2E0]" style={{ ['--d' as string]: '.3s' }}>
-              A step-by-step system for case interviews, free from start to finish. Learn the method in about 90 minutes,
-              practise {CASE_COUNT} cases with worked answers, and drill the skills in ten minutes a day.
-            </p>
-            <div className="lp-in mt-9 flex flex-wrap items-center gap-3" style={{ ['--d' as string]: '.45s' }}>
-              <Link to="/casebook/coastal-brew" className="lp-cta inline-flex items-center rounded-lg bg-white px-5 py-3 text-[14.5px] font-medium text-ink hover:bg-teal-l">Try a free case<Arrow /></Link>
-              <a href="#tour" className="inline-flex items-center gap-2 rounded-lg border border-white/25 px-5 py-3 text-[14.5px] font-medium text-white hover:border-white/60">
-                <svg aria-hidden viewBox="0 0 16 16" className="h-3.5 w-3.5 fill-current"><path d="M4 2.5v11l9-5.5z" /></svg>Watch the tour</a>
+        <section className="relative mx-auto max-w-6xl px-5 pt-10 pb-16 sm:px-6 lg:pt-16 lg:pb-20">
+          <div className="grid gap-8 lg:grid-cols-[1.1fr_1fr] lg:items-end lg:gap-14">
+            <div>
+              <h1 className="text-[38px] leading-[1.04] text-white text-balance sm:text-[54px]" style={{ fontWeight: 400 }}>
+                <span className="lp-in block">Learn the case interview.</span>
+                <span className="lp-in block" style={{ ['--d' as string]: '.12s' }}>Then practise it {CASE_COUNT}&nbsp;times.</span>
+              </h1>
+              <span aria-hidden className="lp-rule mt-7 block h-[2px] w-16 bg-teal" style={{ ['--d' as string]: '.45s' }} />
             </div>
-            <dl className="lp-in mt-8 grid max-w-lg grid-cols-3 gap-4 border-t border-white/15 pt-5" style={{ ['--d' as string]: '.55s' }}>
+            <div>
+              <p className="lp-in max-w-lg text-[16.5px] leading-relaxed text-[#C9D2E0]" style={{ ['--d' as string]: '.3s' }}>
+                A step-by-step system for case interviews, free from start to finish. Learn the method in about 90 minutes,
+                practise {CASE_COUNT} cases with worked answers, and drill the skills in ten minutes a day.
+              </p>
+              <div className="lp-in mt-7 flex flex-wrap items-center gap-3" style={{ ['--d' as string]: '.45s' }}>
+                <Link to="/casebook/coastal-brew" className="lp-cta inline-flex items-center rounded-lg bg-white px-5 py-3 text-[14.5px] font-medium text-ink hover:bg-teal-l">Try a free case<Arrow /></Link>
+                <Link to="/learn" className="rounded-lg border border-white/25 px-5 py-3 text-[14.5px] font-medium text-white hover:border-white/60">Start the course</Link>
+              </div>
+            </div>
+          </div>
+          <div className="lp-window mt-10 lg:mt-12" style={{ ['--d' as string]: '.35s' }}><HeroVideo /></div>
+          <div className="lp-in mt-8 flex flex-wrap items-end justify-between gap-6" style={{ ['--d' as string]: '.6s' }}>
+            <dl className="grid grid-cols-3 gap-8">
               {[[`${LESSONS.length}`, 'short lessons'], [`${CASE_COUNT}`, 'cases with answers'], ['Free', 'no card, no trial']].map(([n, l]) => (
                 <div key={l}><dt className="sr-only">{l}</dt><dd><span className="block font-serif text-[26px] leading-none text-white">{n}</span><span className="mt-1 block text-[13px] text-[#9FB0C6]">{l}</span></dd></div>
               ))}
             </dl>
-            <div className="lp-in mt-8 lg:hidden" style={{ ['--d' as string]: '.6s' }}><TryOne /></div>
-            <p className="lp-in mt-6 flex max-w-lg items-start gap-2.5 text-[14px] leading-snug text-[#B8C2D3]" style={{ ['--d' as string]: '.6s' }}>
+            <p className="flex max-w-md items-start gap-2.5 text-[14px] leading-snug text-[#B8C2D3]">
               <svg aria-hidden viewBox="0 0 24 24" className="mt-px h-[18px] w-[18px] shrink-0 fill-none stroke-teal-l stroke-2"><rect x="3" y="4" width="18" height="13" rx="2" /><path d="M8 21h8M12 17v4" /></svg>
               <span>{user ? 'Works in any browser. Your progress is saved to your account.' : 'No sign-up for your first two cases. Works in any browser, nothing to download.'}</span>
             </p>
           </div>
-          <HeroScreens />
         </section>
       </div>
 
-
-      <section id="tour" className="scroll-mt-16 border-b border-line bg-canvas">
-        <div className="mx-auto grid max-w-6xl items-center gap-10 px-5 py-16 sm:px-6 lg:grid-cols-[1fr_1.6fr]">
-          <div>
-            <h2 className="text-[30px]">See it in 30 seconds</h2>
-            <p className="mt-2 max-w-sm text-[15.5px] leading-relaxed text-ink-2">What's inside, how it works, and why it costs nothing. Subtitles are built in, so it works with the sound off.</p>
-            <Link to="/casebook/coastal-brew" className="lp-cta mt-6 inline-flex items-center rounded-lg bg-ink px-4 py-2.5 text-[14.5px] font-medium text-white hover:bg-[#1C2B4A]">Try a free case<Arrow /></Link>
-          </div>
-          <VideoPlayer name="prepforcase-tour-v1" title="A 30-second tour of PrepForCase" autoPlayInView />
-        </div>
-      </section>
 
       <section className="border-b border-line">
         <div className="mx-auto max-w-6xl px-5 py-20 sm:px-6">
