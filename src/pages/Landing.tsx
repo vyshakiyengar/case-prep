@@ -7,6 +7,7 @@ import { todayIso } from '../lib/dates'
 import { ArtCourse, ArtCasebook, ArtMaths, ArtReference, ArtImprove, IndustryCardBody, INDUSTRY_CARD } from '../components/Art'
 import { CASE_PICKS, DIFF_WORD } from '../content/casePicks'
 import { LESSONS } from '../content/course'
+import { PLANS } from '../content/plans'
 
 
 const reducedMotion = () => typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches
@@ -294,23 +295,6 @@ const PAINS = [
   { q: 'My interview is soon.', a: 'Pick a plan for one, three or six weeks.', to: '#plans', cta: 'See the plans' },
 ]
 
-const PLANS = [
-  { t: 'One week to go', who: 'Interview next week', steps: [
-    'Day 1: lessons 1 to 3, about 27 minutes, then the perfect-casing phrases',
-    'Days 2 to 6: one case a day, plus a ten-minute drill',
-    'Day 7: read your case-log fixes, rehearse two fit stories, rest',
-  ] },
-  { t: 'Three weeks', who: 'The usual run-up', steps: [
-    'Week 1: the whole course and the 11 frameworks; an easy case every other day',
-    'Week 2: a case a day, a drill a day, your first case with a friend',
-    'Week 3: hard cases against the clock, two cases with a friend, fit stories',
-  ] },
-  { t: 'Six weeks or more', who: 'Starting from zero', steps: [
-    'Weeks 1 and 2: course, frameworks and glossary; easy cases',
-    'Weeks 3 and 4: four or five cases a week, every drill, the case types',
-    'Weeks 5 and 6: hard cases, friends twice a week, fit stories, rest the day before',
-  ] },
-]
 
 const COSTS = [
   { t: 'A paid case course', v: 'about $180 to $300' },

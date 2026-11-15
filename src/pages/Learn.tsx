@@ -8,7 +8,8 @@ const LESSON_ART: Record<string, typeof ArtMap> = {
 }
 import { useEffect, useRef } from 'react'
 import { Link, useLocation, useNavigate, useParams } from 'react-router-dom'
-import { LESSONS, lessonBySlug, totalMinutes } from '../content/course'
+import { LESSONS, MODULES, lessonBySlug, totalMinutes } from '../content/course'
+import { PLANS } from '../content/plans'
 import type { Lesson } from '../content/course'
 import { playbook } from '../content'
 import { useStore } from '../lib/store'
@@ -260,6 +261,40 @@ export default function Learn() {
           </section>
         )}
 
+        {page.id === 'case-map' && (
+          <section className="mt-10">
+            <h2 className="text-[24px] leading-tight">What's in the course</h2>
+            <div className="mt-4 grid gap-4 lg:grid-cols-3">
+              {MODULES.map((m, mi) => {
+                const ls = m.slugs.map((sl) => lessonBySlug(sl)!).filter(Boolean)
+                const mins = ls.reduce((a, l) => a + l.minutes, 0)
+                return (
+                  <div key={m.title} className="rounded-xl border border-line bg-white p-4 sm:p-5">
+                    <p className="text-[12.5px] font-medium text-teal-d">Module {mi + 1}, {ls.length} lessons, {mins} min</p>
+                    <h3 className="mt-0.5 text-[18px]">{m.title}</h3>
+                    <p className="mt-1 text-[13.5px] text-muted">{m.blurb}</p>
+                    <ol className="mt-3 divide-y divide-line border-t border-line">
+                      {ls.map((l) => {
+                        const n = LESSONS.indexOf(l) + 1
+                        const ok = learned.has(l.slug)
+                        return (
+                          <li key={l.slug}>
+                            <Link to={`/learn/${l.slug}`} className="group grid grid-cols-[22px_1fr_auto] items-baseline gap-2 py-2 text-[14px]">
+                              <span className={`text-[12.5px] tabular-nums ${ok ? 'text-teal-d' : 'text-faint'}`}>{ok ? '✓' : n}</span>
+                              <span className="text-ink group-hover:text-violet-d">{l.title.split(':')[0]}</span>
+                              <span className="text-[12.5px] text-faint tabular-nums">{l.minutes} min</span>
+                            </Link>
+                          </li>
+                        )
+                      })}
+                    </ol>
+                  </div>
+                )
+              })}
+            </div>
+          </section>
+        )}
+
         {lessonN > 0 && (
           <>
             {page.module && <p className="mb-2 text-[13.5px] font-medium text-teal-d">{page.module}</p>}
@@ -276,17 +311,19 @@ export default function Learn() {
               </div>
               <LinkButton to="/perfect-casing">Open perfect casing</LinkButton>
             </section>
-            <Section title="Then: a 6-week practice plan" className="mt-6">
-              <p className="mb-4 text-muted">This is how to turn the course into steady, measurable practice. The tracker in My prep follows the same plan.</p>
-              <ol className="grid gap-3 md:grid-cols-2 lg:grid-cols-3">
-                {playbook.plan.map((p, pi) => (
-                  <li key={p.week} className="rounded-lg border border-line p-4">
-                    <div className={`font-serif text-[14.5px] font-semibold ${pi < 2 ? 'text-teal-d' : pi < 4 ? 'text-violet-d' : 'text-signal-d'}`}>{p.week}</div>
-                    <p className="mt-1 text-[14.5px] text-ink">{p.focus}</p>
-                    <p className="mt-1.5 text-[13.5px] text-muted">Target: {p.volume}</p>
-                  </li>
+            <Section title="Then: pick a practice plan" className="mt-6">
+              <p className="mb-4 text-muted">Choose the one that fits the time you have. Your Home page follows it once you add your interview date in <Link to="/settings" className="font-medium text-violet-d hover:underline">Settings</Link>.</p>
+              <div className="grid gap-3 lg:grid-cols-3">
+                {PLANS.map((p) => (
+                  <div key={p.id} className="rounded-lg border border-line p-4">
+                    <p className="text-[12.5px] font-medium text-teal-d">{p.who}</p>
+                    <h3 className="text-[17px]">{p.t}</h3>
+                    <ol className="mt-2 space-y-1.5 text-[14px] leading-snug text-ink-2">
+                      {p.steps.map((x) => <li key={x} className="grid grid-cols-[14px_1fr] gap-1.5"><span aria-hidden className="mt-[7px] h-[6px] w-[6px] rounded-full bg-teal" />{x}</li>)}
+                    </ol>
+                  </div>
                 ))}
-              </ol>
+              </div>
             </Section>
           </>
         )}

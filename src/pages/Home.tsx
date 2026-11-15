@@ -2,6 +2,7 @@ import { CaseOfTheDay, Readiness } from '../components/Daily'
 import { ArtMaths, ArtStructure, ArtCharts, ArtSkills, IndustryCardBody, INDUSTRY_CARD } from '../components/Art'
 import { CASE_PICKS, DIFF_WORD } from '../content/casePicks'
 import { TryOne } from './Landing'
+import { planFor } from '../content/plans'
 import { useState } from 'react'
 import { CORE } from '../content/frameworkTrees'
 import { GLOSSARY } from '../content/glossary'
@@ -113,6 +114,8 @@ export default function Home() {
         <Readiness />
       </div>
 
+      <YourPlan toGo={toGo} />
+
       <TodaysThree />
 
       <div className="mb-8 grid gap-6 lg:grid-cols-[320px_1fr]">
@@ -169,6 +172,28 @@ export default function Home() {
   )
 }
 
+
+/** The study plan that fits the days left, with the current step marked. */
+function YourPlan({ toGo }: { toGo: number | null }) {
+  const { plan, step } = planFor(toGo)
+  return (
+    <section className="mb-8 rounded-xl border border-line bg-white p-4 sm:p-5">
+      <div className="flex flex-wrap items-baseline justify-between gap-2">
+        <h2 className="text-[19px] font-semibold">Your plan: {plan.t.toLowerCase()}</h2>
+        <Link to="/settings" className="text-[14px] font-medium text-violet-d hover:underline">{toGo === null ? 'Add your interview date' : 'Change your date'}</Link>
+      </div>
+      {toGo === null && <p className="mt-1 text-[13.5px] text-muted">Add your interview date and this plan adjusts to the time you have.</p>}
+      <ol className="mt-3 grid gap-3 md:grid-cols-3">
+        {plan.steps.map((x, k) => (
+          <li key={x} className={`rounded-lg px-3.5 py-3 text-[14px] leading-snug ${k === step ? 'bg-ink text-white' : 'bg-canvas text-ink-2'}`}>
+            {k === step && <span className="mb-1 block text-[12px] font-medium text-teal-l">Now</span>}
+            {x}
+          </li>
+        ))}
+      </ol>
+    </section>
+  )
+}
 
 /** Three small things to learn today, rotating daily: a framework, a phrase, a term. */
 function TodaysThree() {
