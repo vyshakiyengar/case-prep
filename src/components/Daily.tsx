@@ -44,7 +44,7 @@ function Ring({ value }: { value: number }) {
       <circle cx="60" cy="60" r={r} fill="none" stroke="#E6EBF1" strokeWidth="11" />
       {value > 0 && <circle cx="60" cy="60" r={r} fill="none" stroke="#0E8C96" strokeWidth="11" strokeLinecap="round" strokeDasharray={`${(c * value) / 100} ${c}`} transform="rotate(-90 60 60)" />}
       <text x="60" y="66" textAnchor="middle" fontFamily="'Newsreader Variable', Georgia, serif" fontSize="30" fontWeight="600" fill="#0F1B33">{value}</text>
-      <text x="60" y="84" textAnchor="middle" fontFamily="'IBM Plex Sans', sans-serif" fontSize="10.5" fill="#5B6880">of 100</text>
+      <text x="60" y="84" textAnchor="middle" fontFamily="'Libre Franklin Variable', sans-serif" fontSize="10.5" fill="#5B6880">of 100</text>
     </svg>
   )
 }

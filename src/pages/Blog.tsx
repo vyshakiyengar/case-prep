@@ -1,6 +1,7 @@
-import { useEffect, useMemo } from 'react'
+import { useEffect, useMemo, useRef } from 'react'
 import { Link, useParams, useSearchParams } from 'react-router-dom'
 import blog from '../content/blogIndex.json'
+import { lastUnfinished, useReadMarks } from '../lib/reader'
 
 export type BlogMeta = (typeof blog.posts)[number]
 export const TOPICS = blog.topics
@@ -11,26 +12,106 @@ const FEATURED = ['case-interview-mistakes', 'which-case-framework', 'case-maths
 const UNDER_LEAD = POSTS.filter((p) => p.topic === 'start' && p.slug !== LEAD && !FEATURED.includes(p.slug)).sort((a, b) => a.order - b.order).slice(0, 4).map((p) => p.slug)
 const ON_FRONT = new Set([LEAD, ...FEATURED, ...UNDER_LEAD])
 
-const norm = (s: string) => s.toLowerCase().normalize('NFKD').replace(/[^a-z0-9 ]/g, ' ')
-/** Every word typed has to appear somewhere; title matches rank first. */
-function search(q: string) {
-  const words = norm(q).split(/\s+/).filter(Boolean)
-  if (!words.length) return null
-  return POSTS.map((p) => {
-    const t = norm(p.title), all = `${t} ${norm(p.description)} ${norm(p.k)} ${norm(p.kind)}`
-    if (!words.every((w) => all.includes(w))) return null
-    return { p, score: words.filter((w) => t.includes(w)).length * 3 + (p.kind === 'Guide' ? 1 : 0) }
+const norm = (s: string) => s.toLowerCase().normalize('NFKD').replace(/&/g, ' and ').replace(/[^a-z0-9 ]/g, ' ')
+// Shorthand, US spellings and near-synonyms people type, mapped to words the articles use
+const SYN: Record<string, string[]> = {
+  mbb: ['mckinsey', 'bcg', 'bain'], pe: ['private equity'], ma: ['acquisition', 'merger'], vc: ['venture'],
+  breakeven: ['break even'], pnl: ['profit', 'loss'], pl: ['profit', 'loss'], cagr: ['growth'], roi: ['return'], npv: ['net present value'],
+  tmay: ['tell me about yourself'], behavioral: ['fit'], behavioural: ['fit'], pei: ['personal experience'],
+  math: ['maths'], mathematics: ['maths'], arithmetic: ['maths'], calculation: ['maths'], calculations: ['maths'],
+  guesstimate: ['market sizing'], guesstimates: ['market sizing'], estimate: ['sizing'], estimation: ['sizing'], sizing: ['sizing'],
+  practice: ['practise', 'practice'], practise: ['practise', 'practice'], behavior: ['behaviour'], analyze: ['analyse'], organization: ['organisation'],
+  nervous: ['nerves', 'calm'], anxiety: ['nerves', 'calm'], stress: ['nerves', 'calm'],
+  graph: ['chart'], graphs: ['chart'], exhibit: ['chart', 'exhibit'], exhibits: ['chart', 'exhibit'],
+  big4: ['big four'], deloitte: ['deloitte'], accenture: ['accenture'], kpmg: ['kpmg'], ey: ['ey'], pwc: ['pwc'],
+}
+const STOP = new Set(['a', 'an', 'the', 'how', 'do', 'i', 'to', 'in', 'of', 'for', 'and', 'what', 'is', 'my', 'case', 'interview', 'interviews', 'you', 'question', 'questions', 'about', 'with', 'on', 'at'])
+const singular = (w: string) => (w.length > 4 && w.endsWith('ies') ? w.slice(0, -3) + 'y' : w.length > 3 && w.endsWith('s') && !w.endsWith('ss') ? w.slice(0, -1) : w)
+/** True if a and b differ by at most one letter (typo tolerance for longer words). */
+function near(a: string, b: string) {
+  if (Math.abs(a.length - b.length) > 1) return false
+  let i = 0, j = 0, d = 0
+  while (i < a.length && j < b.length) {
+    if (a[i] === b[j]) { i++; j++; continue }
+    if (++d > 1) return false
+    if (a.length > b.length) i++; else if (b.length > a.length) j++; else { i++; j++ }
+  }
+  return d + (a.length - i) + (b.length - j) <= 1
+}
+const INDEX = POSTS.map((p) => {
+  const title = norm(p.title), all = `${title} ${norm(p.description)} ${norm(p.k)} ${norm(p.kind)} ${norm(TOPICS.find((t) => t.id === p.topic)?.name ?? '')}`
+  return { p, title: ` ${title} `, all: ` ${all} `, words: new Set(all.split(/\s+/).filter((w) => w.length > 3)), titleWords: new Set(title.split(/\s+/)) }
+})
+/** Every word typed (bar small words) has to match: exactly, as a synonym, singular or with one typo. Title matches rank first. */
+export function search(q: string) {
+  const raw = norm(q).split(/\s+/).filter(Boolean)
+  if (!raw.length) return null
+  const words = raw.filter((w) => !STOP.has(w)).length ? raw.filter((w) => !STOP.has(w)) : raw
+  const variants = words.map((w) => [w, singular(w), ...(SYN[w] ?? [])].filter(Boolean))
+  return INDEX.map((x) => {
+    let score = x.p.kind === 'Guide' ? 1 : 0
+    // Short words (PE, fit, ey) must be whole words, so they don't match inside 'open' or 'profit'
+    const has = (text: string, v: string) => text.includes(v.length <= 4 ? ` ${v} ` : v)
+    for (const vs of variants) {
+      const hit = vs.some((v) => has(x.all, v))
+      const fuzzyTitle = !hit && vs[0].length >= 5 && [...x.titleWords].some((w) => near(vs[0], w))
+      const fuzzy = fuzzyTitle || (!hit && vs[0].length >= 5 && [...x.words].some((w) => near(vs[0], w)))
+      if (!hit && !fuzzy) return null
+      score += vs.some((v) => has(x.title, v)) || fuzzyTitle ? 3 : hit ? 1 : 0.5
+    }
+    return { p: x.p, score }
   }).filter((x): x is { p: BlogMeta; score: number } => !!x).sort((a, b) => b.score - a.score).map((x) => x.p)
 }
+
+const QUICK = ['Profitability', 'Market sizing', 'McKinsey', 'Mental maths', 'Tell me about yourself', 'Break-even', 'Charts']
+/** Common situations, each pointing at the best place to start. */
+const NEEDS: { q: string; to: string }[] = [
+  { q: "I've never done a case interview", to: '/blog/case-interview-guide' },
+  { q: 'My interview is next week', to: '/blog/one-week-case-interview-plan' },
+  { q: 'Maths is my weak spot', to: '/blog/topic/maths' },
+  { q: "I'm interviewing at McKinsey, BCG or Bain", to: '/blog/topic/careers' },
+  { q: 'I freeze when structuring', to: '/blog/topic/frameworks' },
+  { q: 'I get nervous in interviews', to: '/blog/case-interview-nerves' },
+  { q: 'I need to size a market', to: '/blog/topic/sizing' },
+  { q: 'I have a fit interview coming up', to: '/blog/topic/fit' },
+]
 
 const byTopic = (id: string) => POSTS.filter((p) => p.topic === id)
   .sort((a, b) => (a.kind === 'Guide' ? 0 : 1) - (b.kind === 'Guide' ? 0 : 1) || a.order - b.order)
 const post = (slug: string) => POSTS.find((p) => p.slug === slug)!
 
 /* ---------- Newspaper pieces ---------- */
-const Meta = ({ p }: { p: BlogMeta }) => (
-  <p className="mt-2 text-[12.5px] text-[#727272]">{p.kind} · {p.minutes} min read</p>
-)
+function Meta({ p }: { p: BlogMeta }) {
+  const m = useReadMarks()[p.slug]
+  return (
+    <p className="mt-2 text-[12.5px] text-[#727272]">{p.kind} · {p.minutes} min read
+      {m?.done ? <span className="ml-2 font-medium text-[#0B6F77]"><span aria-hidden>✓ </span>Read</span>
+        : m && m.p >= 0.08 ? <span className="ml-2 font-medium text-[#0B6F77]">{Math.round(m.p * 100)}% read</span> : null}
+    </p>
+  )
+}
+
+/** "Continue reading": the article you most recently left part-way through. */
+function ContinueReading() {
+  const marks = useReadMarks()
+  const last = lastUnfinished(marks)
+  const p = last && POSTS.find((x) => x.slug === last[0])
+  if (!p) return null
+  const pct = Math.round(last[1].p * 100)
+  return (
+    <Link to={`/blog/${p.slug}`} state={{ resume: true }} className="group mb-6 flex items-center gap-4 border border-[#dfdfdf] bg-[#fafafa] px-4 py-3 hover:border-[#121212]">
+      <span className="relative h-10 w-10 shrink-0" aria-hidden>
+        <svg viewBox="0 0 36 36" className="h-10 w-10 -rotate-90"><circle cx="18" cy="18" r="15" fill="none" stroke="#e3e3e3" strokeWidth="3" /><circle cx="18" cy="18" r="15" fill="none" stroke="#0B6F77" strokeWidth="3" strokeDasharray={`${pct * 0.942} 100`} strokeLinecap="round" /></svg>
+        <span className="absolute inset-0 grid place-items-center text-[10px] font-semibold text-[#121212]">{pct}%</span>
+      </span>
+      <span className="min-w-0 flex-1">
+        <span className="block text-[12.5px] font-semibold text-[#0B6F77]">Continue reading</span>
+        <span className="block truncate font-serif text-[17px] font-semibold text-[#121212] group-hover:underline">{p.title}</span>
+      </span>
+      <span aria-hidden className="hidden shrink-0 text-[13px] font-semibold text-[#121212] sm:block">Pick up where you left off ›</span>
+    </Link>
+  )
+}
 
 /** A story: headline (size set by the slot), optional summary, reading time. */
 function Story({ p, size = 'md', summary = true, className = '' }: { p: BlogMeta; size?: 'xl' | 'lg' | 'md' | 'sm'; summary?: boolean; className?: string }) {
@@ -46,6 +127,7 @@ function Story({ p, size = 'md', summary = true, className = '' }: { p: BlogMeta
 
 /** Section front: thick rule, section name, then a lead story beside columns of headlines. */
 function Section({ t }: { t: (typeof TOPICS)[number] }) {
+  const marks = useReadMarks()
   const list = byTopic(t.id).filter((p) => !ON_FRONT.has(p.slug))
   if (!list.length) return null
   const [lead, second, ...rest] = list
@@ -66,7 +148,7 @@ function Section({ t }: { t: (typeof TOPICS)[number] }) {
         </div>
         {side.length > 0 && <div className="border-[#dfdfdf] md:col-span-2 lg:col-span-1 lg:border-l lg:pl-6">
           <ul className="divide-y divide-[#dfdfdf] [&>li]:py-2.5 [&>li:first-child]:pt-0">
-            {side.map((p) => <li key={p.slug}><Link to={`/blog/${p.slug}`} className="font-serif text-[15px] leading-[1.35] text-[#121212] hover:underline">{p.title}</Link></li>)}
+            {side.map((p) => <li key={p.slug}><Link to={`/blog/${p.slug}`} className="font-serif text-[15px] leading-[1.35] text-[#121212] hover:underline">{p.title}</Link>{marks[p.slug]?.done && <span className="ml-1.5 text-[12px] font-medium text-[#0B6F77]"><span aria-hidden>✓</span><span className="sr-only">Read</span></span>}</li>)}
           </ul>
           {list.length > 10 && <Link to={`/blog/topic/${t.id}`} className="mt-3 inline-block text-[13px] font-semibold text-[#121212] hover:underline">See all {byTopic(t.id).length} articles ›</Link>}
         </div>}
@@ -93,6 +175,13 @@ export default function Blog() {
   useEffect(() => { document.title = hubTopic ? `${hubTopic.head} · PrepForCase blog` : 'The PrepForCase blog · PrepForCase' }, [hubTopic])
   useEffect(() => { document.body.classList.add('bg-white'); return () => document.body.classList.remove('bg-white') }, [])
   const results = useMemo(() => search(q), [q])
+  const input = useRef<HTMLInputElement>(null)
+  useEffect(() => {
+    if (location.hash === '#search') input.current?.focus()
+    const key = (e: KeyboardEvent) => { if (e.key === '/' && !(e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement)) { e.preventDefault(); input.current?.focus() } }
+    document.addEventListener('keydown', key); return () => document.removeEventListener('keydown', key)
+  }, [])
+  const topicHit = q ? TOPICS.find((t) => norm(t.name).includes(norm(q).trim()) && norm(q).trim().length > 2) : undefined
   const setQ = (v: string) => { const n = new URLSearchParams(params); if (v) n.set('q', v); else n.delete('q'); setParams(n, { replace: true }) }
 
   return (
@@ -106,7 +195,7 @@ export default function Blog() {
             <div className="relative w-full sm:w-60">
               <label htmlFor="blog-q" className="sr-only">Search the blog</label>
               <svg aria-hidden viewBox="0 0 24 24" className="pointer-events-none absolute top-1/2 left-2.5 h-4 w-4 -translate-y-1/2 text-[#727272]" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="11" cy="11" r="7" /><path d="m20 20-3.5-3.5" /></svg>
-              <input id="blog-q" type="search" value={q} onChange={(e) => setQ(e.target.value)} placeholder={`Search ${POSTS.length} articles`}
+              <input ref={input} id="blog-q" type="search" value={q} onChange={(e) => setQ(e.target.value)} placeholder={`Search ${POSTS.length} articles`}
                 className="w-full border border-[#ccc] bg-white py-1.5 pr-2 pl-8 text-[14px] text-[#121212] outline-none placeholder:text-[#8a8a8a] focus:border-[#121212]" />
             </div>
           </div>
@@ -120,6 +209,9 @@ export default function Blog() {
             <>
               <h1 className="mt-1 font-serif text-[40px] leading-none font-bold tracking-[-0.02em] text-[#121212] sm:mt-0 sm:text-[64px]">The PrepForCase Blog</h1>
               <p className="mt-2 font-serif text-[15px] text-[#5a5a5a] italic">Case interviews and consulting careers, explained plainly</p>
+              <p className="mt-3 flex flex-wrap items-center justify-center gap-x-1 gap-y-1 text-[13px] text-[#5a5a5a]"><span className="mr-1">Popular:</span>
+                {QUICK.map((w) => <button key={w} type="button" onClick={() => { setQ(w); window.scrollTo({ top: 0 }) }} className="rounded-full border border-[#dcdcdc] px-2.5 py-0.5 text-[#121212] hover:border-[#121212]">{w}</button>)}
+              </p>
             </>
           )}
         </header>
@@ -136,9 +228,11 @@ export default function Blog() {
         </div>
 
         <div className="mt-6">
+          {!results && <ContinueReading />}
           {results ? (
             <section aria-live="polite">
-              <p className="mb-3 font-serif text-[17px] text-[#121212]">{results.length ? <>{results.length} result{results.length > 1 ? 's' : ''} for <b>“{q}”</b></> : <>Nothing matches “{q}”. Try a shorter word, like “maths” or “fit”.</>}</p>
+              {topicHit && <p className="mb-3 text-[14px]">Looking for the whole topic? <Link to={`/blog/topic/${topicHit.id}`} className="font-semibold text-[#121212] underline underline-offset-2">All {byTopic(topicHit.id).length} articles in {topicHit.name} ›</Link></p>}
+              <p className="mb-3 font-serif text-[17px] text-[#121212]">{results.length ? <>{results.length} result{results.length > 1 ? 's' : ''} for <b>“{q}”</b></> : <>Nothing matches “{q}”. Try a shorter word, or one of these: {QUICK.slice(0, 4).map((w, i) => <span key={w}>{i ? ', ' : ''}<button type="button" onClick={() => setQ(w)} className="underline underline-offset-2">{w.toLowerCase()}</button></span>)}.</>}</p>
               {results.length > 0 && <River items={results.slice(0, 60)} />}
             </section>
           ) : hubTopic ? (
@@ -157,6 +251,12 @@ export default function Blog() {
                 <div className="divide-y divide-[#dfdfdf] border-t border-[#dfdfdf] pt-4 lg:border-t-0 lg:pt-0 lg:pl-8 [&>*]:py-4 [&>*:first-child]:pt-0">
                   {FEATURED.map((s) => <Story key={s} p={post(s)} size="md" />)}
                 </div>
+              </section>
+              <section aria-labelledby="needs" className="mb-10 border-t-2 border-[#121212] pt-3">
+                <h2 id="needs" className="mb-4 font-serif text-[22px] font-bold text-[#121212]">Find what you need</h2>
+                <ul className="grid gap-x-8 sm:grid-cols-2 lg:grid-cols-4">
+                  {NEEDS.map((n) => <li key={n.q} className="border-b border-[#dfdfdf]"><Link to={n.to} className="group flex items-center justify-between gap-3 py-3 font-serif text-[16.5px] text-[#121212]"><span className="group-hover:underline">{n.q}</span><span aria-hidden className="text-[#999] group-hover:text-[#121212]">›</span></Link></li>)}
+                </ul>
               </section>
               {TOPICS.map((t) => <Section key={t.id} t={t} />)}
             </>

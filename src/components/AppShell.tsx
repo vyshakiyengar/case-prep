@@ -1,6 +1,7 @@
 import { FurtherReading } from './FurtherReading'
+import { SIZES, useReaderPrefs } from '../lib/reader'
 import { PAGES } from '../lib/seo'
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useState, type CSSProperties } from 'react'
 import { Link, NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom'
 import { SignInWall } from './SignInWall'
 import { useStore } from '../lib/store'
@@ -148,9 +149,10 @@ export default function AppShell() {
   useEffect(() => { const m = PAGES[loc.pathname]; if (m) document.title = m.title }, [loc.pathname])
   const nav = useNavigate()
   const name = data?.profile?.name || user?.name || ''
+  const reader = useReaderPrefs()
   // Articles get a calm reading layout: white page, slim top bar, no sidebar or tab bar
   if (/^\/blog\/(?!topic\/)[^/]+$/.test(loc.pathname)) return (
-    <div className="min-h-screen bg-white">
+    <div className={`min-h-screen bg-white ${reader.theme === 'light' ? '' : `reader-${reader.theme}`}`} style={{ '--rs': SIZES[reader.size] } as CSSProperties}>
       <header className="sticky top-0 z-30 border-b border-line/70 bg-white/90 backdrop-blur">
         <div className="mx-auto flex h-14 max-w-5xl items-center justify-between gap-4 px-5">
           <div className="flex items-center gap-3 sm:gap-5">
@@ -158,9 +160,10 @@ export default function AppShell() {
               className="inline-flex items-center gap-1.5 rounded-full border border-line px-3 py-1.5 text-[14px] font-medium text-ink hover:border-ink/40" aria-label="Go back">
               <svg aria-hidden viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M15 18l-6-6 6-6" /></svg>Back
             </button>
-            <Link to="/" aria-label="PrepForCase: front page" className="hidden sm:block"><Logo height={22} /></Link>
+            <Link to="/" aria-label="PrepForCase: home" className="hidden sm:block"><Logo height={22} light={reader.theme === 'dark'} /></Link>
           </div>
           <div className="flex items-center gap-4 text-[14.5px] sm:gap-5">
+            <Link to="/blog#search" aria-label="Search articles" className="text-muted hover:text-ink"><svg aria-hidden viewBox="0 0 24 24" className="h-[18px] w-[18px]" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="11" cy="11" r="7" /><path d="m20 20-3.5-3.5" /></svg></Link>
             <Link to="/learn" className="font-medium text-muted hover:text-ink">Course</Link>
             <Link to="/blog" className="font-medium text-muted hover:text-ink">Blog</Link>
             <Link to="/casebook" className="hidden font-medium text-muted hover:text-ink sm:inline">Practice cases</Link>

@@ -9,7 +9,7 @@ const INK = '#0F1B33', MUTED = '#5F6B7D', GRID = '#E6EAF0', AXIS = '#A7B0BF', NE
 let W = 640, H = 300, L = 44, R = 16, T = 20, B = 40, K = 1
 let PW = W - L - R, PH = H - T - B
 const f = (x: number) => String(x * K)
-const font = 'IBM Plex Sans, system-ui, sans-serif'
+const font = 'Libre Franklin Variable, system-ui, sans-serif'
 
 function niceMax(v: number) {
   const p = 10 ** Math.floor(Math.log10(v)), f = v / p

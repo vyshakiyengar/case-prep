@@ -8,7 +8,7 @@ import type { ReactNode } from 'react'
  */
 const N = '#0F1B33', T = '#0E8C96', TL = '#D5EEF0', O = '#C2410C', OL = '#FBE4D8', A = '#B7791F', AL = '#F5E8CC'
 const BL = '#3B5BDB', BLL = '#E2E8FB', W = '#FFFFFF', G = '#C9D2DE', SERIF = '"Newsreader Variable", Newsreader, Georgia, serif'
-const SANS = '"IBM Plex Sans", system-ui, sans-serif'
+const SANS = '"Libre Franklin Variable", system-ui, sans-serif'
 const S = { stroke: N, strokeWidth: 1.75, strokeLinejoin: 'round' as const, strokeLinecap: 'round' as const }
 
 function Frame({ children, label, className = '' }: { children: ReactNode; label?: string; className?: string }) {

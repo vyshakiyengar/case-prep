@@ -86,7 +86,7 @@ function makeExercises(): Exercise[] {
 const EXERCISES = makeExercises()
 // Validated categorical palette (teal, burnt orange, blue, amber, ink), shared with case exhibits
 const COLORS = ['#0A8F9C', '#C2410C', '#3B5BDB', '#B7791F', '#0F1B33']
-const txt = { fontFamily: 'IBM Plex Sans, sans-serif', fill: '#5F6B7D', fontSize: 12 }
+const txt = { fontFamily: 'Libre Franklin Variable, sans-serif', fill: '#5F6B7D', fontSize: 12 }
 function Graph({ e }: { e: Exercise }) {
   const bottom = 270, top = 34, left = 57, right = 682, height = bottom - top, width = right - left
   const chartMax = e.family === 'Bar' ? Math.ceil(Math.max(...e.values) * 1.17 / 20) * 20 : e.family === 'Line' ? 200 : e.family === 'Scatter' ? 95 : e.family === 'Bubble' ? 40 : e.family === 'Bar + Line' ? 240 : e.family === 'Waterfall' ? Math.max(e.values[0], e.values[e.values.length - 1], e.values[0] + e.values.slice(1, -1).filter((v) => v > 0).reduce((a,b) => a+b,0)) * 1.17 : e.family === 'Bar Mekko' ? 40 : 100
