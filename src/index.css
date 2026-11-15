@@ -266,3 +266,6 @@ h1:not(.font-sans) { letter-spacing: -0.02em; }
 .read b { color: var(--color-ink); font-weight: 650; }
 .read i { color: inherit; font-style: italic; }
 .read a { text-decoration: underline; text-underline-offset: 3px; text-decoration-color: rgb(15 27 51 / .35); }
+
+/* Smoother text in long-form reading */
+.post, .read { text-rendering: optimizeLegibility; }
