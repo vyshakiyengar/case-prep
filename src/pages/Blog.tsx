@@ -68,7 +68,7 @@ export default function Blog() {
       ) : (
         <>
           {!topic && <section className="mb-10">
-            <h2 className="mb-3 text-[20px] font-semibold">New to case interviews? Read these four guides first</h2>
+            <h2 className="mb-3 text-[20px] font-semibold">New to case interviews? Which four guides should you read first?</h2>
             <div className="grid gap-4 sm:grid-cols-2">{FEATURED.map((s) => POSTS.find((p) => p.slug === s)!).map((p) => <PostCard key={p.slug} p={p} big />)}</div>
           </section>}
           {topics.map((t) => {
