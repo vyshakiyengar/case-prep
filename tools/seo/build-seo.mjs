@@ -18,6 +18,9 @@ const esc = (s) => s.replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g
 const base = readFileSync(join(dist, 'index.html'), 'utf8')
 const set = (html, re, value) => { if (!re.test(html)) throw new Error(`build-seo: tag not found ${re}`); return html.replace(re, value) }
 
+const PERSON = { '@type': 'Person', '@id': 'https://vyshak.me/#person', name: 'Vyshak K Iyengar', alternateName: 'Vyshak Iyengar', url: `${SITE}/author/vyshak-iyengar`, image: `${SITE}/vyshak.jpg`,
+  jobTitle: 'Founder, PrepForCase', worksFor: { '@type': 'Organization', name: 'PrepForCase', url: SITE },
+  alumniOf: [{ '@type': 'CollegeOrUniversity', name: 'London Business School' }], sameAs: ['https://vyshak.me', 'https://www.linkedin.com/in/vyshakiyengar/', 'https://x.com/vyshakkiyengar'] }
 let n = 0
 for (const r of routes) {
   const url = `${SITE}${r.path === '/' ? '/' : r.path}`
@@ -34,9 +37,13 @@ for (const r of routes) {
     // Blog posts: the article itself goes into the page, so it reads without JavaScript
     const post = JSON.parse(readFileSync(join(root, 'public/blog-data', `${r.blog}.json`), 'utf8'))
     const ld = { '@context': 'https://schema.org', '@type': 'BlogPosting', headline: r.title.split(' · ')[0], description: r.description, url, image: r.image, datePublished: '2026-11-15',
-      isAccessibleForFree: true, inLanguage: 'en-GB', publisher: { '@type': 'Organization', name: 'PrepForCase', url: SITE }, author: { '@type': 'Person', name: 'Vyshak Iyengar', url: 'https://vyshak.me/' } }
+      isAccessibleForFree: true, inLanguage: 'en-GB', publisher: { '@type': 'Organization', name: 'PrepForCase', url: SITE }, author: PERSON, mainEntityOfPage: url }
     h = h.replace('</head>', `    <script type="application/ld+json">${JSON.stringify(ld)}</script>\n  </head>`)
-    h = set(h, /<div id="root"><\/div>/, `<div id="root"><article style="max-width:44rem;margin:0 auto;padding:24px;font-family:system-ui,sans-serif;line-height:1.6"><p><a href="/blog">PrepForCase blog</a></p><h1>${esc(r.title.split(' · ')[0])}</h1><p>${post.hook}</p>${post.body}<p>${post.outro}</p></article></div>`)
+    h = set(h, /<div id="root"><\/div>/, `<div id="root"><article style="max-width:44rem;margin:0 auto;padding:24px;font-family:system-ui,sans-serif;line-height:1.6"><p><a href="/blog">PrepForCase blog</a></p><h1>${esc(r.title.split(' · ')[0])}</h1><p>By <a href="/author/vyshak-iyengar">Vyshak K Iyengar</a>, Founder, PrepForCase</p><p>${post.hook}</p>${post.body}<p>${post.outro}</p></article></div>`)
+  } else if (r.path === '/author/vyshak-iyengar') {
+    const ld = { '@context': 'https://schema.org', '@type': 'ProfilePage', url, name: r.title, mainEntity: PERSON }
+    h = h.replace('</head>', `    <script type="application/ld+json">${JSON.stringify(ld)}</script>\n  </head>`)
+    h = set(h, /<div id="root"><\/div>/, `<div id="root"><main style="max-width:44rem;margin:0 auto;padding:24px;font-family:system-ui,sans-serif;line-height:1.6"><h1>Vyshak K Iyengar</h1><p>Founder, PrepForCase. London Business School MBA. Formerly BCG, Accenture Strategy and Meta.</p><p><a href="https://vyshak.me" rel="me">vyshak.me</a> · <a href="https://www.linkedin.com/in/vyshakiyengar/" rel="me">LinkedIn</a> · <a href="/blog">PrepForCase blog</a></p></main></div>`)
   } else if (r.body) {
     h = set(h, /<div id="root"><\/div>/, `<div id="root"><main style="max-width:48rem;margin:0 auto;padding:24px;font-family:system-ui,sans-serif;line-height:1.6">${r.body}</main></div>`)
   }

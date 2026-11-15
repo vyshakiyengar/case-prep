@@ -19,6 +19,7 @@ import Terms from './pages/Terms'
 import Learn from './pages/Learn'
 const Videos = lazy(() => import('./pages/Videos'))
 const Blog = lazy(() => import('./pages/Blog'))
+const Author = lazy(() => import('./pages/Author'))
 const BlogPost = lazy(() => import('./pages/BlogPost'))
 import { ActivityTracker } from './components/ActivityTracker'
 
@@ -82,6 +83,7 @@ export default function App() {
           <Route path="/learn" element={<Learn />} />
           <Route path="/videos" element={<Videos />} />
           <Route path="/blog" element={<Blog />} />
+          <Route path="/author/vyshak-iyengar" element={<Author />} />
           <Route path="/blog/topic/:topic" element={<Blog />} />
           <Route path="/blog/:slug" element={<BlogPost />} />
           <Route path="/learn/:slug" element={<Learn />} />

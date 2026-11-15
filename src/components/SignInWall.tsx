@@ -9,7 +9,7 @@ import { LogoMark } from './ui'
 
 // Pages a signed-out visitor (and a search engine) can read. Pages with a members-only part
 // mark it themselves with <Gate>, or lock it (case steps after the clarifying questions).
-const OPEN = ['/home', '/blog', '/videos', '/about', '/casebook', '/learn', '/frameworks', '/perfect-casing', '/glossary', '/interview-formats']
+const OPEN = ['/home', '/blog', '/author/vyshak-iyengar', '/videos', '/about', '/casebook', '/learn', '/frameworks', '/perfect-casing', '/glossary', '/interview-formats']
 const OPEN_PREFIX = ['/casebook/', '/learn/', '/blog/']
 // Pages that need an account to work at all (they send people to sign in), so they never use a free page
 const MEMBERS = ['/today', '/tracker', '/cases', '/stories', '/notes', '/partners', '/perks', '/settings', '/admin', '/welcome', '/invite', '/verify-school']

@@ -48,7 +48,8 @@ h1:not(.font-sans) { letter-spacing: -0.02em; }
 }
 
 /* model answers and exhibits authored as HTML */
-.rich p { margin: 0 0 .6em; }
+.rich { line-height: 1.65; }
+.rich p { margin: 0 0 .7em; }
 .rich ul { margin: .2em 0 .7em 1.1em; list-style: disc; }
 .rich li { margin-bottom: .25em; }
 .rich b { color: var(--color-ink); font-weight: 600; }
@@ -254,3 +255,14 @@ h1:not(.font-sans) { letter-spacing: -0.02em; }
 .post h2, .post h3 { scroll-margin-top: 90px; transition: background-color .6s; border-radius: 6px; }
 .lede { font-family: var(--font-serif); font-size: 20px; line-height: 1.6; color: #1f2733; }
 @media (min-width: 640px) { .lede { font-size: 22px; } }
+
+/* Course lessons: the same calm reading style as the blog, a little smaller */
+.read { font-family: var(--font-serif); font-size: 18px; line-height: 1.65; color: #1f2733; font-optical-sizing: auto; }
+@media (min-width: 640px) { .read { font-size: 19px; } }
+.read .rich { font-size: inherit !important; line-height: inherit; }
+.read p { margin: 0 0 .9em; }
+.read ul, .read ol { margin: .3em 0 .9em 1.3em; }
+.read li { margin-bottom: .4em; padding-left: .15em; }
+.read b { color: var(--color-ink); font-weight: 650; }
+.read i { color: inherit; font-style: italic; }
+.read a { text-decoration: underline; text-underline-offset: 3px; text-decoration-color: rgb(15 27 51 / .35); }

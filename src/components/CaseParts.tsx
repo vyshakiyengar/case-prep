@@ -46,6 +46,6 @@ export function StructureTree({ s }: { s: CaseDef['structure'] }) {
   )
 }
 
-export function Rich({ html }: { html: string }) {
-  return <div className="rich text-[14.5px]" dangerouslySetInnerHTML={{ __html: html }} />
+export function Rich({ html, className = 'text-[15.5px]' }: { html: string; className?: string }) {
+  return <div className={`rich ${className}`} dangerouslySetInnerHTML={{ __html: html }} />
 }

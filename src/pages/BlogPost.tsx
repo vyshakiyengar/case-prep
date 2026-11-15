@@ -1,6 +1,8 @@
 import { useEffect, useState, type MouseEvent } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import { POSTS, TOPICS } from './Blog'
+import { AuthorPhoto } from './Author'
+import { AUTHOR } from '../content/author'
 
 /** Where to practise what each topic teaches: the article leads into the tools. */
 const PRACTICE: Record<string, { to: string; t: string; d: string }> = {
@@ -85,10 +87,10 @@ export default function BlogPost() {
       <h1 className="mt-4 font-serif text-[30px] leading-[1.15] font-semibold tracking-[-0.02em] text-balance text-ink sm:text-[42px]">{meta.title}</h1>
       <p className="mt-3 font-serif text-[19px] leading-snug text-muted sm:text-[21px]">{meta.description}</p>
       <div className="mt-6 flex items-center gap-3 border-y border-line py-4">
-        <span aria-hidden className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-ink font-serif text-[18px] text-white">P</span>
+        <Link to={AUTHOR.path} aria-label={`About ${AUTHOR.name}`} className="shrink-0"><AuthorPhoto size={44} /></Link>
         <div className="text-[14px] leading-snug">
-          <p className="font-medium text-ink">PrepForCase</p>
-          <p className="text-muted">{meta.kind} · {meta.minutes} min read · Free, no sign-in</p>
+          <p><Link to={AUTHOR.path} className="font-medium text-ink hover:underline">{AUTHOR.name}</Link> <span className="text-muted">· {AUTHOR.role}</span></p>
+          <p className="text-muted">{meta.minutes} min read · Free, no sign-in</p>
         </div>
         <ShareButton title={meta.title} />
       </div>
@@ -102,6 +104,15 @@ export default function BlogPost() {
           <span aria-hidden className="shrink-0 rounded-full bg-white px-4 py-2 text-[14px] font-medium text-ink group-hover:bg-teal-l">Start</span>
         </Link>}
         <div className="post mt-8 border-t border-line pt-6 text-[17px]" onClick={onClick}><p><span dangerouslySetInnerHTML={{ __html: post.outro }} /></p></div>
+        <aside className="mt-12 flex gap-4 rounded-2xl bg-canvas p-5 sm:p-6">
+          <Link to={AUTHOR.path} aria-label={`About ${AUTHOR.name}`} className="shrink-0"><AuthorPhoto size={56} /></Link>
+          <div>
+            <p className="text-[13px] text-muted">About the founder</p>
+            <p className="mt-0.5 text-[17px] font-semibold text-ink"><Link to={AUTHOR.path} className="hover:underline">{AUTHOR.name}</Link></p>
+            <p className="text-[14px] text-muted">{AUTHOR.creds}</p>
+            <p className="mt-2 font-serif text-[16.5px] leading-snug text-ink-2">{AUTHOR.bio}</p>
+          </div>
+        </aside>
         <section className="mt-14 border-t border-ink pt-6">
           <h2 className="font-sans text-[15px] font-semibold text-ink">Read next</h2>
           <ul className="mt-2 divide-y divide-line">{post.related.map((s) => POSTS.find((p) => p.slug === s)).filter((p) => !!p).map((p) => (

@@ -174,7 +174,7 @@ export default function CasePlayer() {
           {step.key === 'prompt' && (
             <>
               <h2 className="text-[19px] font-semibold">{interviewer ? 'Read this aloud to your candidate' : 'Read the prompt'}</h2>
-              <blockquote className="graph-paper mt-4 rounded-lg border-l-4 border-teal p-5 font-serif text-[16.5px] leading-relaxed text-ink">{c.prompt}</blockquote>
+              <blockquote className="graph-paper mt-4 rounded-lg border-l-4 border-teal p-5 font-serif text-[18px] leading-[1.6] text-ink sm:text-[19px]">{c.prompt}</blockquote>
               <p className="mt-4 text-muted">
                 {interviewer ? 'Let them recap it. A strong recap covers only the key points, then confirms the goal.' : 'Now recap it out loud in a few sentences: the client, the problem, and what success looks like. Then move on to your clarifying questions.'}
               </p>

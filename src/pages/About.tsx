@@ -68,7 +68,7 @@ export default function About() {
         <div className="flex items-center gap-4">
           <Portrait />
           <div className="text-[14.5px] leading-snug">
-            <p className="text-ink">Made by <a href="https://vyshak.me" target="_blank" rel="noopener noreferrer me" className="font-medium hover:underline">Vyshak K Iyengar</a></p>
+            <p className="text-ink">Made by <Link to="/author/vyshak-iyengar" className="font-medium hover:underline">Vyshak K Iyengar</Link> (<a href="https://vyshak.me" target="_blank" rel="noopener noreferrer me" className="hover:underline">vyshak.me</a>)</p>
             <a href={LINKEDIN} target="_blank" rel="noopener noreferrer me" className="mt-0.5 inline-flex items-center gap-1.5 text-muted hover:text-[#0A66C2]"><LinkedInIcon />Connect on LinkedIn</a>
           </div>
         </div>

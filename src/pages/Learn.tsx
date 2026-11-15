@@ -27,8 +27,8 @@ import { VideoPlayer, VideoToggle } from '../components/VideoPlayer'
 function SectionBody({ s }: { s: Lesson['sections'][number] }) {
   return (
     <section>
-      <h3 className="text-[18px] font-semibold">{s.h}</h3>
-      <div className="rich mt-2 text-[15.5px] leading-[1.7] [&_p]:mb-3"><Rich html={s.body} /></div>
+      <h3 className="font-sans text-[20px] font-bold tracking-[-0.01em] text-ink sm:text-[22px]">{s.h}</h3>
+      <div className="read mt-2"><Rich html={s.body} className="" /></div>
     </section>
   )
 }
@@ -42,14 +42,14 @@ function LessonChapter({ l, n }: { l: Lesson; n: number }) {
       <div className="sm:flex sm:items-start sm:justify-between sm:gap-6">
         <div>
           <p className="text-[13.5px] text-muted">Lesson {n} of {LESSONS.length}, {l.minutes} min{done && <span className="ml-2 font-medium text-teal-d">Completed ✓</span>}</p>
-          <h2 className="mt-1 text-[24px] leading-tight font-semibold sm:text-[26px]">{l.title}</h2>
-          <p className="mt-1 max-w-2xl text-[15.5px] text-muted">{l.summary}</p>
+          <h2 className="mt-1 font-serif text-[28px] leading-[1.15] font-semibold tracking-[-0.015em] sm:text-[34px]">{l.title}</h2>
+          <p className="mt-2 max-w-2xl font-serif text-[18px] leading-snug text-muted sm:text-[20px]">{l.summary}</p>
           <VideoToggle id={`lesson-${l.slug}`} label="Lesson summary" className="mt-4" />
         </div>
         {LESSON_ART[l.slug] && <div aria-hidden className="mt-3 w-44 shrink-0 sm:-mt-3 sm:w-48">{(() => { const A = LESSON_ART[l.slug]; return <A /> })()}</div>}
       </div>
 
-      <div className="mt-6 max-w-[68ch] space-y-7">
+      <div className="mt-8 max-w-[680px] space-y-9">
         {l.sections.slice(0, freeCount).map((s) => <SectionBody key={s.h} s={s} />)}
         <Gate what="the rest of the lesson, the worked example, the exercise and the quiz">
           <div className="space-y-7">
@@ -58,7 +58,7 @@ function LessonChapter({ l, n }: { l: Lesson; n: number }) {
             {l.example && (
               <section className="graph-paper rounded-lg border border-line p-4 sm:p-5">
                 <h3 className="text-[17px] font-semibold">Worked example: {l.example.title.charAt(0).toLowerCase() + l.example.title.slice(1)}</h3>
-                <div className="mt-2 text-[15px] leading-[1.7]"><Rich html={l.example.body} /></div>
+                <div className="read mt-2 !text-[17px]"><Rich html={l.example.body} className="" /></div>
                 {l.example.tree && <div className="mt-3"><StructureTree s={l.example.tree} /></div>}
               </section>
             )}
