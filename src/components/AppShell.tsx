@@ -5,7 +5,7 @@ import { useCallback, useEffect, useState, type CSSProperties } from 'react'
 import { Link, NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom'
 import { SignInWall } from './SignInWall'
 import { useStore } from '../lib/store'
-import { Avatar, Logo } from './ui'
+import { Avatar, Logo, LogoMark } from './ui'
 import { useIsAdmin } from '../lib/admin'
 
 type Item = { to: string; label: string; icon: string; end?: boolean }
@@ -200,7 +200,7 @@ export default function AppShell() {
       <aside className={'fixed inset-y-0 left-0 z-20 hidden flex-col overflow-y-auto bg-ink py-6 transition-[width,padding] duration-200 lg:flex ' + (compactSidebar ? 'w-[76px] px-2' : 'w-60 px-4')}>
         <div className={'flex px-2 ' + (compactSidebar ? 'flex-col items-center gap-5' : 'items-center justify-between gap-2')}>
           {compactSidebar
-            ? <Link to="/" title="PrepForCase home" aria-label="PrepForCase home" className="grid h-9 w-9 place-items-center rounded-lg bg-white/10 font-serif text-[21px] font-semibold text-white">P</Link>
+            ? <Link to="/" title="PrepForCase home" aria-label="PrepForCase home" className="grid h-9 w-9 place-items-center rounded-lg"><LogoMark size={34} /></Link>
             : <Link to="/" aria-label="PrepForCase: front page" className="min-w-0 overflow-hidden"><Logo light height={24} /></Link>}
           {user && (
             <button type="button" onClick={() => setSidebarCollapsed((value) => !value)}

@@ -5,16 +5,17 @@ import { CASE_PICKS } from '../content/casePicks'
 import { CASE_COUNT } from '../content/caseCount'
 import { SPRINT_FOR, weakestStage } from '../lib/stats'
 import { todayIso } from '../lib/dates'
+import { LinkButton, PageHeader } from '../components/ui'
 
 type NextStep = { tag: string; title: string; detail: string; reason: string; to: string; action: string; time: string }
 
 function PathCard({ number, title, detail, to, action }: { number: string; title: string; detail: string; to: string; action: string }) {
   return (
-    <Link to={to} className="group flex min-h-[182px] flex-col rounded-2xl border border-line bg-white p-5 transition-[border-color,box-shadow,transform] hover:-translate-y-0.5 hover:border-[#A9B9C8] hover:shadow-[0_12px_30px_-20px_rgba(15,27,51,.26)] motion-reduce:hover:translate-y-0">
-      <span className="text-[12px] font-semibold tracking-[.1em] text-teal-d">{number}</span>
-      <h3 className="mt-3 font-sans text-[17px] font-semibold text-ink">{title}</h3>
-      <p className="mt-1.5 text-[14px] leading-relaxed text-muted">{detail}</p>
-      <span className="mt-auto inline-flex items-center gap-2 pt-4 text-[14px] font-semibold text-violet-d">{action} <span aria-hidden>→</span></span>
+    <Link to={to} className="group flex min-h-[160px] flex-col rounded-xl border border-line bg-white p-4 transition-colors hover:border-ink/40 sm:p-5">
+      <span className="text-[12.5px] font-medium text-teal-d">{number}</span>
+      <h3 className="mt-2 font-sans text-[15px] font-semibold text-ink">{title}</h3>
+      <p className="mt-1.5 text-[13.5px] leading-relaxed text-muted">{detail}</p>
+      <span className="mt-auto inline-flex items-center gap-2 pt-4 text-[13.5px] font-medium text-violet-d">{action} <span aria-hidden>→</span></span>
     </Link>
   )
 }
@@ -82,41 +83,35 @@ export default function Home() {
 
   const pct = Math.round((lessonsDone / LESSONS.length) * 100)
   return (
-    <div className="mx-auto max-w-[1040px] pb-5">
-      <header className="mb-8 pt-2 sm:mb-10 sm:pt-4">
-        <p className="mb-3 text-[12px] font-semibold uppercase tracking-[.13em] text-teal-d">Your workspace</p>
-        <h1 className="font-serif text-[32px] leading-[1.13] text-ink sm:text-[40px]">
-          {name ? 'Welcome back, ' + name + '.' : 'Welcome back.'}
-        </h1>
-        <p className="mt-3 max-w-xl text-[15px] leading-relaxed text-muted">
-          You do not have to do everything today. Pick one useful step and make progress.
-        </p>
-      </header>
+    <div className="pb-5">
+      <PageHeader
+        title={name ? 'Welcome back, ' + name : 'Welcome back'}
+        intro="You do not have to do everything today. Pick one useful step and make progress."
+      />
 
-      <div className="grid gap-5 lg:grid-cols-[minmax(0,1.65fr)_minmax(270px,.9fr)]">
-        <section aria-labelledby="next-step" className="relative flex min-h-[340px] flex-col overflow-hidden rounded-[22px] border border-[#DCE6E9] bg-white p-6 shadow-[0_14px_50px_-40px_rgba(15,27,51,.35)] sm:p-8">
-          <div aria-hidden className="pointer-events-none absolute -right-16 -top-20 h-64 w-64 rounded-full bg-[radial-gradient(circle,rgba(14,140,150,.10),transparent_70%)]" />
-          <div className="relative">
+      <div className="grid gap-4 lg:grid-cols-[minmax(0,1.65fr)_minmax(270px,.9fr)]">
+        <section aria-labelledby="next-step" className="flex min-h-[290px] flex-col rounded-xl border border-line bg-white p-4 sm:p-5">
+          <div className="">
             <div className="flex flex-wrap items-center justify-between gap-2">
-              <span className="text-[12px] font-semibold uppercase tracking-[.1em] text-teal-d">{next.tag}</span>
-              <span className="rounded-full bg-canvas px-3 py-1 text-[12px] font-medium text-muted">{next.time}</span>
+              <span className="text-[13px] font-medium text-teal-d">{next.tag}</span>
+              <span className="rounded-md bg-canvas px-2.5 py-1 text-[12.5px] text-muted">{next.time}</span>
             </div>
-            <h2 id="next-step" className="mt-5 max-w-lg font-serif text-[27px] leading-tight text-ink sm:text-[32px]">{next.title}</h2>
-            <p className="mt-3 max-w-lg text-[15px] leading-relaxed text-ink-2">{next.detail}</p>
-            <p className="mt-4 max-w-lg border-l-2 border-teal/40 pl-3 text-[13.5px] leading-relaxed text-muted">{next.reason}</p>
+            <h2 id="next-step" className="mt-4 max-w-lg text-[22px] leading-snug text-ink sm:text-[25px]">{next.title}</h2>
+            <p className="mt-2 max-w-lg text-[14.5px] leading-relaxed text-ink-2">{next.detail}</p>
+            <p className="mt-3 max-w-lg text-[13.5px] leading-relaxed text-muted">{next.reason}</p>
           </div>
-          <Link to={next.to} className="btn-primary relative mt-auto inline-flex w-fit items-center gap-3 rounded-xl px-5 py-3 text-[14px] font-semibold text-white">
-            {next.action} <span aria-hidden>→</span>
-          </Link>
+          <div className="mt-auto pt-5">
+            <LinkButton to={next.to}>{next.action} <span aria-hidden>→</span></LinkButton>
+          </div>
         </section>
 
-        <section aria-labelledby="progress-heading" className="rounded-[22px] border border-line bg-[#F9FAFB] p-6 sm:p-7">
+        <section aria-labelledby="progress-heading" className="rounded-xl border border-line bg-white p-4 sm:p-5">
           <div className="flex items-baseline justify-between gap-3">
-            <h2 id="progress-heading" className="font-sans text-[17px] font-semibold text-ink">Your progress</h2>
+            <h2 id="progress-heading" className="text-[19px] text-ink">Your progress</h2>
             <Link to="/today" className="text-[13px] font-medium text-violet-d hover:underline">Full details</Link>
           </div>
           <p className="mt-1 text-[13.5px] text-muted">The essentials, at a glance.</p>
-          <div className="mt-7">
+          <div className="mt-5">
             <div className="flex items-baseline justify-between gap-3">
               <span className="text-[14px] font-medium text-ink">Course</span>
               <span className="text-[13px] tabular-nums text-muted">{lessonsDone} of {LESSONS.length} lessons</span>
@@ -125,13 +120,13 @@ export default function Home() {
               <div className="h-full rounded-full bg-teal transition-[width] duration-300" style={{ width: pct + '%' }} />
             </div>
           </div>
-          <div className="mt-8 grid grid-cols-2 gap-3 border-t border-line pt-6">
+          <div className="mt-6 grid grid-cols-2 gap-3 border-t border-line pt-5">
             <div>
-              <p className="font-serif text-[31px] leading-none text-ink tabular-nums">{caseCount}</p>
+              <p className="font-serif text-[25px] leading-none text-ink tabular-nums">{caseCount}</p>
               <p className="mt-2 text-[13px] leading-snug text-muted">Cases practised</p>
             </div>
             <div>
-              <p className="font-serif text-[31px] leading-none text-ink tabular-nums">{drillCount}</p>
+              <p className="font-serif text-[25px] leading-none text-ink tabular-nums">{drillCount}</p>
               <p className="mt-2 text-[13px] leading-snug text-muted">Drill sessions</p>
             </div>
           </div>
@@ -145,8 +140,8 @@ export default function Home() {
         </section>
       </div>
 
-      <section aria-labelledby="practice-heading" className="mt-10 sm:mt-12">
-        <h2 id="practice-heading" className="font-serif text-[24px] text-ink">Or choose how to practise</h2>
+      <section aria-labelledby="practice-heading" className="mt-8">
+        <h2 id="practice-heading" className="text-[19px] text-ink">Or choose how to practise</h2>
         <p className="mt-1 mb-4 text-[14px] text-muted">Three paths. Everything else is in the sidebar.</p>
         <div className="grid gap-3 sm:grid-cols-3">
           <PathCard number="01 · LEARN" title="Build the foundations"
@@ -160,7 +155,7 @@ export default function Home() {
         </div>
       </section>
 
-      <div className="mt-9 flex flex-wrap items-center gap-x-6 gap-y-2 border-t border-line pt-5 text-[13.5px]">
+      <div className="mt-8 flex flex-wrap items-center gap-x-6 gap-y-2 border-t border-line pt-5 text-[13.5px]">
         <span className="text-muted">Looking for something specific?</span>
         <Link to="/frameworks" className="font-medium text-violet-d hover:underline">Frameworks</Link>
         <Link to="/graphs" className="font-medium text-violet-d hover:underline">Graph library</Link>
