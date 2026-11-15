@@ -16,6 +16,9 @@ await vite.close()
 
 const esc = (s) => s.replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
 const base = readFileSync(join(dist, 'index.html'), 'utf8')
+// A plain app shell (no page-specific text) for every address without its own HTML file:
+// signed-in pages, invite links and unknown addresses. vercel.json rewrites to /app.
+writeFileSync(join(dist, 'app.html'), base.replace('<head>', '<head>\n    <meta name="robots" content="noindex" />'))
 const set = (html, re, value) => { if (!re.test(html)) throw new Error(`build-seo: tag not found ${re}`); return html.replace(re, value) }
 
 const PERSON = { '@type': 'Person', '@id': 'https://vyshak.me/#person', name: 'Vyshak K Iyengar', alternateName: 'Vyshak Iyengar', url: `${SITE}/author/vyshak-iyengar`, image: `${SITE}/vyshak.jpg`,
