@@ -32,7 +32,6 @@ const READ: Record<string, string[]> = {
   '/interviewer': ['practising-with-a-partner', 'what-to-say-in-a-case-interview', 'case-interview-mistakes'],
   '/interview-skills': ['case-interview-nerves', 'pre-interview-warm-up', 'pyramid-principle'],
   '/stories': ['fit-interview-questions', 'coming-from-a-non-business-background', 'after-a-consulting-rejection'],
-  '/videos': ['case-interview-guide', 'which-case-framework', 'case-maths-cheat-sheet'],
 }
 const CASE = ['what-to-say-in-a-case-interview', 'so-what-thinking', 'case-interview-mistakes']
 

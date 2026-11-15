@@ -68,6 +68,11 @@
       "source": "/home",
       "destination": "/",
       "permanent": true
+    },
+    {
+      "source": "/videos",
+      "destination": "/learn",
+      "permanent": true
     }
   ]
 }

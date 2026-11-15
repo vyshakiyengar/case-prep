@@ -244,7 +244,6 @@ const GROUPS: { t: string; art: (p: { className?: string }) => React.ReactElemen
     { t: 'Frameworks', d: '11 core issue trees, with when to use each and what to ask first.', to: '/frameworks' },
     { t: 'Interview skills', d: 'Exercises for thinking clearly and speaking calmly under pressure.', to: '/interview-skills' },
     { t: 'Blog', d: '203 free articles: frameworks, maths, industries, consulting careers and fit, in plain English.', to: '/blog' },
-    { t: 'Videos', d: 'Every lesson and framework in under a minute, with subtitles.', to: '/videos' },
   ] },
   { t: 'Practise cases', art: ArtCasebook, note: `${CASE_COUNT} cases`, items: [
     { t: 'Casebook', d: `${CASE_COUNT} original cases across every industry, each with a full worked answer.`, to: '/casebook' },

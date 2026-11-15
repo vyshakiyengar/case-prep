@@ -18,7 +18,6 @@ import VerifySchool from './pages/VerifySchool'
 import Privacy from './pages/Privacy'
 import Terms from './pages/Terms'
 import Learn from './pages/Learn'
-const Videos = lazy(() => import('./pages/Videos'))
 const Blog = lazy(() => import('./pages/Blog'))
 const Author = lazy(() => import('./pages/Author'))
 const BlogPost = lazy(() => import('./pages/BlogPost'))
@@ -82,7 +81,7 @@ export default function App() {
           {/* open to everyone */}
           <Route path="/" element={<Front />} />
           <Route path="/learn" element={<Learn />} />
-          <Route path="/videos" element={<Videos />} />
+          <Route path="/videos" element={<Navigate to="/learn" replace />} />
           <Route path="/blog" element={<Blog />} />
           <Route path="/author/vyshak-iyengar" element={<Author />} />
           <Route path="/blog/topic/:topic" element={<Blog />} />
