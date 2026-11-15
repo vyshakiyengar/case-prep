@@ -44,7 +44,7 @@ export default function Home() {
     '/stories': { v: data?.stories.length || 0, text: `${data?.stories.length || 0} stories written` },
   } : { '/graphs': g ? { v: g, max: 64, text: `${g} of 64 charts done` } : undefined }
 
-  const next = !user ? { label: 'Start with the map of a case interview', to: '/learn#case-map' }
+  const next = !user ? { label: 'Start with the map of a case interview', to: '/learn/case-map' }
     : lessonsDone < 3 && nextLesson ? { label: `Continue: lesson ${LESSONS.indexOf(nextLesson) + 1}, ${nextLesson.title.split(':')[0]}`, to: `/learn/${nextLesson.slug}` }
     : boxes.length < 5 ? { label: 'Train your first perfect-casing phrases (5 min)', to: '/perfect-casing#trainer' }
     : !cases.length ? { label: 'Do case 1: Coastal Brew', to: '/casebook/coastal-brew' }

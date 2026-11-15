@@ -186,7 +186,7 @@ export default function Learn() {
   const loc = useLocation()
   const navigate = useNavigate()
   const { user, data, markLesson } = useStore()
-  const found = PAGES.findIndex((p) => p.id === (slug || 'case-map'))
+  const found = PAGES.findIndex((p) => p.id === (slug || 'overview'))
   const i = found < 0 ? 0 : found
   const page = PAGES[i]
   const learned = new Set(data?.profile?.learned || [])
@@ -235,7 +235,7 @@ export default function Learn() {
       {i === 0 && (
         <PageHeader title="The case interview course" art={<ArtCourse />}
           intro={`${LESSONS.length} short lessons in 3 modules, about ${Math.round(totalMinutes / 5) * 5} minutes in all. Each has a worked example, an exercise and a quiz.`}
-          action={<LinkButton to={`/learn/${nextLesson.slug}`}>{done ? 'Continue where I left off' : 'Start lesson 1'}</LinkButton>} />
+          action={<LinkButton to={done ? `/learn/${nextLesson.slug}` : '/learn/case-map'}>{done ? 'Continue where I left off' : 'Start the course'}</LinkButton>} />
       )}
       {i === 0 && (
         <section className="mb-6 rounded-xl border border-line bg-white p-5">
@@ -254,15 +254,15 @@ export default function Learn() {
         {i > 0 && <PageTurner i={i} onTurn={turn} top />}
         {page.id === 'case-map' && (
           <section id="case-map" className="scroll-mt-32">
-            <h2 className="text-[24px] leading-tight">First, the map: how a case interview flows</h2>
-            <p className="mt-1 mb-5 max-w-2xl text-[15px] text-ink-2">Most cases follow these six steps and take 20 to 40 minutes. Read these six lines, then turn the page to start lesson 1.</p>
+            <h2 className="text-[24px] leading-tight">The map of a case</h2>
+            <p className="mt-1 mb-6 max-w-2xl text-[15px] text-ink-2">Six steps, 20 to 40 minutes. The lessons take them one at a time.</p>
             <CaseMap />
             <p className="mt-4 text-[14.5px] text-ink-2">Want to see a whole case done well? <Link to="/perfect-casing" className="font-medium text-violet-d hover:underline">See the perfect case</Link></p>
           </section>
         )}
 
-        {page.id === 'case-map' && (
-          <section className="mt-10">
+        {page.id === 'overview' && (
+          <section>
             <h2 className="text-[24px] leading-tight">What's in the course</h2>
             <div className="mt-4 grid gap-4 lg:grid-cols-3">
               {MODULES.map((m, mi) => {
