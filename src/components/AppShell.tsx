@@ -168,7 +168,7 @@ export default function AppShell() {
           </div>
         </div>
       </header>
-      <main className="px-5 pt-8 pb-16 sm:pt-12"><Outlet /></main>
+      <main className="min-h-[100svh] px-5 pt-8 pb-16 sm:pt-12"><Outlet /></main>
       <footer className="border-t border-line py-8 text-center text-[13.5px] text-muted">
         <nav aria-label="Footer" className="flex flex-wrap justify-center gap-x-6 gap-y-2">
           <Link to="/blog" className="hover:text-ink">All articles</Link><Link to="/learn" className="hover:text-ink">Free course</Link>
