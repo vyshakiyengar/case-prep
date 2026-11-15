@@ -40,7 +40,7 @@ export default function BlogPost() {
   return (
     <article className="mx-auto max-w-[44rem] pb-10">
       <nav aria-label="Breadcrumb" className="text-[14px] text-muted"><Link to="/blog" className="hover:text-ink">Blog</Link> <span aria-hidden>/</span> <Link to={`/blog?topic=${topic.id}`} className="hover:text-ink">{topic.name}</Link></nav>
-      <h1 className="mt-3 font-serif text-[32px] leading-[1.15] text-ink sm:text-[40px]">{meta.title}</h1>
+      <h1 className="mt-3 font-serif text-[26px] leading-[1.2] text-balance text-ink sm:text-[34px]">{meta.title}</h1>
       <p className="mt-3 text-[14px] text-muted">{meta.kind}, {meta.minutes} min read. Free, no sign-in.</p>
       {failed && <p className="mt-8 rounded-lg bg-white p-4 text-ink-2">This article didn't load. Check your connection and <button type="button" onClick={() => location.reload()} className="text-violet-d underline">try again</button>.</p>}
       {!post && !failed && <div className="mt-8 space-y-3" aria-busy><div className="h-5 w-full animate-pulse rounded bg-line" /><div className="h-5 w-5/6 animate-pulse rounded bg-line" /><div className="h-5 w-4/6 animate-pulse rounded bg-line" /></div>}

@@ -68,7 +68,7 @@ export default function Blog() {
       ) : (
         <>
           {!topic && <section className="mb-10">
-            <h2 className="mb-3 text-[20px] font-semibold">New to case interviews? Start here</h2>
+            <h2 className="mb-3 text-[20px] font-semibold">New to case interviews? Read these four guides first</h2>
             <div className="grid gap-4 sm:grid-cols-2">{FEATURED.map((s) => POSTS.find((p) => p.slug === s)!).map((p) => <PostCard key={p.slug} p={p} big />)}</div>
           </section>}
           {topics.map((t) => {
@@ -77,8 +77,8 @@ export default function Blog() {
             return (
               <section key={t.id} id={t.id} className="mb-10 scroll-mt-32">
                 <div className="mb-3 flex items-baseline justify-between gap-3">
-                  <h2 className="text-[20px] font-semibold">{t.name} <span className="text-[15px] font-normal text-muted">{list.length}</span></h2>
-                  {!topic && <button type="button" onClick={() => set('topic', t.id)} className="text-[14px] font-medium text-violet-d hover:underline">See all</button>}
+                  <h2 className="text-[20px] font-semibold">{t.head} <span className="text-[15px] font-normal text-muted">{list.length}</span></h2>
+                  {!topic && <button type="button" onClick={() => set('topic', t.id)} className="shrink-0 text-[14px] font-medium text-violet-d hover:underline">See all {list.length}</button>}
                 </div>
                 <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">{list.slice(0, n).map((p) => <PostCard key={p.slug} p={p} />)}</div>
                 {n < list.length && <button type="button" onClick={() => setShown((s) => ({ ...s, [t.id]: list.length }))} className="mt-4 rounded-full border border-line bg-white px-4 py-2 text-[14px] font-medium hover:border-ink/40">Show {list.length - n} more</button>}
