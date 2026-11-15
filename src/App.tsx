@@ -18,6 +18,8 @@ import Privacy from './pages/Privacy'
 import Terms from './pages/Terms'
 import Learn from './pages/Learn'
 const Videos = lazy(() => import('./pages/Videos'))
+const Blog = lazy(() => import('./pages/Blog'))
+const BlogPost = lazy(() => import('./pages/BlogPost'))
 import { ActivityTracker } from './components/ActivityTracker'
 
 const Admin = lazy(() => import('./pages/Admin'))
@@ -79,6 +81,8 @@ export default function App() {
           <Route path="/" element={<Front />} />
           <Route path="/learn" element={<Learn />} />
           <Route path="/videos" element={<Videos />} />
+          <Route path="/blog" element={<Blog />} />
+          <Route path="/blog/:slug" element={<BlogPost />} />
           <Route path="/learn/:slug" element={<Learn />} />
           <Route path="/perfect-casing" element={<PerfectCasing />} />
           <Route path="/frameworks" element={<FrameworksIndex />} />

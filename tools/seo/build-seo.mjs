@@ -30,7 +30,14 @@ for (const r of routes) {
   h = set(h, /<meta property="og:url" content="[^"]*"\s*\/?>/, `<meta property="og:url" content="${url}" />`)
   h = set(h, /<meta property="og:type" content="[^"]*"\s*\/?>/, `<meta property="og:type" content="${r.type || 'website'}" />`)
   h = set(h, /<meta property="og:image" content="[^"]*"\s*\/?>/, `<meta property="og:image" content="${r.image}" />\n    <meta property="og:image:width" content="1200" />\n    <meta property="og:image:height" content="630" />\n    <meta name="twitter:title" content="${esc(r.title)}" />\n    <meta name="twitter:description" content="${esc(r.description)}" />\n    <meta name="twitter:image" content="${r.image}" />`)
-  if (r.type === 'article') {
+  if (r.blog) {
+    // Blog posts: the article itself goes into the page, so it reads without JavaScript
+    const post = JSON.parse(readFileSync(join(root, 'public/blog-data', `${r.blog}.json`), 'utf8'))
+    const ld = { '@context': 'https://schema.org', '@type': 'BlogPosting', headline: r.title.split(' · ')[0], description: r.description, url, image: r.image, datePublished: '2026-11-15',
+      isAccessibleForFree: true, inLanguage: 'en-GB', publisher: { '@type': 'Organization', name: 'PrepForCase', url: SITE }, author: { '@type': 'Person', name: 'Vyshak Iyengar', url: 'https://vyshak.me/' } }
+    h = h.replace('</head>', `    <script type="application/ld+json">${JSON.stringify(ld)}</script>\n  </head>`)
+    h = set(h, /<div id="root"><\/div>/, `<div id="root"><article style="max-width:44rem;margin:0 auto;padding:24px;font-family:system-ui,sans-serif;line-height:1.6"><p><a href="/blog">PrepForCase blog</a></p><h1>${esc(r.title.split(' · ')[0])}</h1><p>${post.hook}</p>${post.body}<p>${post.outro}</p></article></div>`)
+  } else if (r.type === 'article') {
     const ld = { '@context': 'https://schema.org', '@type': 'LearningResource', name: r.title.split(' · ')[0], description: r.description, url, image: r.image,
       learningResourceType: r.path.startsWith('/casebook/') ? 'Practice case' : 'Lesson', educationalLevel: 'Professional', isAccessibleForFree: true,
       inLanguage: 'en-GB', provider: { '@type': 'Organization', name: 'PrepForCase', url: SITE }, author: { '@id': 'https://vyshak.me/#person' } }

@@ -222,3 +222,28 @@ h1:not(.font-sans) { letter-spacing: -0.02em; }
   .lp-path .lp-stop { opacity: 1; transform: none; transition: none; }
   .lp-dock, .lp-cta .lp-arrow { transition: none; }
 }
+
+/* Blog posts: comfortable reading column */
+.post { font-size: 17px; line-height: 1.7; color: var(--color-ink-2); }
+.post > * + * { margin-top: 1em; }
+.post h2 { margin-top: 2em; font-family: var(--font-serif); font-size: 26px; line-height: 1.25; color: var(--color-ink); }
+.post h3 { margin-top: 1.6em; font-size: 18px; line-height: 1.4; font-weight: 600; color: var(--color-ink); }
+.post h2 + *, .post h3 + * { margin-top: .5em; }
+.post ul, .post ol { padding-left: 1.3em; }
+.post ul { list-style: disc; } .post ol { list-style: decimal; }
+.post li + li { margin-top: .4em; }
+.post li > ul { margin-top: .4em; }
+.post b { color: var(--color-ink); font-weight: 600; }
+.post a { color: var(--color-violet-d); text-decoration: underline; text-underline-offset: 3px; text-decoration-thickness: 1px; }
+.post a:hover { text-decoration-thickness: 2px; }
+.post blockquote { border-left: 3px solid var(--color-teal); background: var(--color-teal-l); padding: .7em 1em; border-radius: 0 8px 8px 0; color: var(--color-ink); }
+.post details { border: 1px solid var(--color-line); border-radius: 10px; padding: .6em 1em; background: #fff; }
+.post details[open] { padding-bottom: .9em; }
+.post summary { cursor: pointer; font-weight: 600; font-size: 15px; color: var(--color-teal-d); }
+.post summary:focus-visible { outline: 2px solid var(--color-teal); outline-offset: 3px; border-radius: 4px; }
+.post details > * + * { margin-top: .6em; }
+.post table { width: 100%; border-collapse: collapse; font-size: 15px; display: block; overflow-x: auto; }
+.post th, .post td { text-align: left; vertical-align: top; padding: .55em .8em .55em 0; border-bottom: 1px solid var(--color-line); }
+.post th { color: var(--color-ink); font-weight: 600; }
+.post .tag { margin-left: .4em; font-size: 12px; font-weight: 500; color: var(--color-muted); }
+.post h2, .post h3 { scroll-margin-top: 90px; transition: background-color .6s; border-radius: 6px; }
