@@ -1,3 +1,4 @@
+import { FurtherReading } from './FurtherReading'
 import { PAGES } from '../lib/seo'
 import { useCallback, useEffect, useState } from 'react'
 import { Link, NavLink, Outlet, useLocation } from 'react-router-dom'
@@ -201,7 +202,7 @@ export default function AppShell() {
 
       {loc.pathname === '/' && !user
         ? <main className="pb-24 lg:pb-0"><Outlet /></main>
-        : <main className="mx-auto max-w-6xl px-4 pt-4 pb-28 sm:px-6 lg:px-9 lg:pt-7 lg:pb-14"><SignInWall><Outlet /></SignInWall></main>}
+        : <main className="mx-auto max-w-6xl px-4 pt-4 pb-28 sm:px-6 lg:px-9 lg:pt-7 lg:pb-14"><SignInWall><Outlet /></SignInWall><FurtherReading /></main>}
 
       <MobileSheet open={mobileOpen} onClose={closeMenu} user={!!user} isAdmin={isAdmin} />
 
