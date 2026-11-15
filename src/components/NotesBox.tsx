@@ -46,7 +46,7 @@ export function NotesBox({ pageId, title, compact = false }: { pageId: string; t
       </div>
       <textarea value={text} onChange={(e) => onChange(e.target.value)} rows={compact ? 4 : 3} autoFocus={!compact && !saved}
         placeholder="What clicked, what to practise, phrases to remember…"
-        className={`${inputCls} mt-2 resize-y bg-white text-[14.5px] leading-relaxed`} aria-labelledby={`notes-${pageId}`} />
+        className={`${inputCls} mt-2 resize-y bg-white text-[15px] leading-relaxed`} aria-labelledby={`notes-${pageId}`} />
     </section>
   )
 }

@@ -15,7 +15,7 @@ export function HabitChecklist({ date }: { date: string }) {
     <div className="grid gap-5 sm:grid-cols-2">
       {(['A', 'B'] as const).map((t) => (
         <div key={t}>
-          <h3 className={`mb-2 font-sans text-[13.5px] font-semibold ${t === 'A' ? 'text-teal-d' : 'text-violet-d'}`}>{t === 'A' ? 'Solve the case' : 'Come across well'}</h3>
+          <h3 className={`mb-2 font-sans text-[14px] font-semibold ${t === 'A' ? 'text-teal-d' : 'text-violet-d'}`}>{t === 'A' ? 'Solve the case' : 'Come across well'}</h3>
           <ul className="space-y-1.5">
             {HABITS.filter((h) => h.track === t).map((h) => {
               const on = !!day?.habits[h.key]
@@ -27,8 +27,8 @@ export function HabitChecklist({ date }: { date: string }) {
                       {on && <svg width="12" height="12" viewBox="0 0 12 12" aria-hidden><path d="M2.5 6.2 5 8.5l4.5-5" stroke="#fff" strokeWidth="2" fill="none" strokeLinecap="round" /></svg>}
                     </span>
                     <span className="min-w-0">
-                      <span className="block text-[14.5px] font-medium text-ink">{h.label}</span>
-                      <span className="block text-[12.5px] text-muted">{h.hint}</span>
+                      <span className="block text-[15px] font-medium text-ink">{h.label}</span>
+                      <span className="block text-[13px] text-muted">{h.hint}</span>
                     </span>
                   </button>
                 </li>
@@ -62,8 +62,8 @@ function FirstSteps() {
             <li key={s.t} className={s.done ? 'is-done' : next ? 'is-next' : ''}>
               <span className="path-node" aria-hidden>{s.done ? '✓' : i + 1}</span>
               <Link to={s.to} className="-mx-2 block rounded-md px-2 py-1.5 hover:bg-canvas">
-                <span className={`block text-[14.5px] font-medium ${s.done ? 'text-muted line-through decoration-faint' : 'text-ink'}`}>{s.t}{s.done && <span className="sr-only"> (done)</span>}</span>
-                <span className="block text-[13.5px] leading-snug text-muted">{s.d}</span>
+                <span className={`block text-[15px] font-medium ${s.done ? 'text-muted line-through decoration-faint' : 'text-ink'}`}>{s.t}{s.done && <span className="sr-only"> (done)</span>}</span>
+                <span className="block text-[14px] leading-snug text-muted">{s.d}</span>
               </Link>
             </li>
           )
@@ -121,7 +121,7 @@ export default function Today() {
             </section>
           )}
 
-          {cases.length > 0 && <Section title="Stage scores" aside={<span className="text-[13.5px] text-muted">Average across {cases.length} case{cases.length === 1 ? '' : 's'}</span>}>
+          {cases.length > 0 && <Section title="Stage scores" aside={<span className="text-[14px] text-muted">Average across {cases.length} case{cases.length === 1 ? '' : 's'}</span>}>
             <ul className="space-y-3">
               {stages.map((s) => (
                 <li key={s.key} className="grid grid-cols-[150px_1fr_36px] items-center gap-3 sm:grid-cols-[190px_1fr_40px]">
@@ -133,7 +133,7 @@ export default function Today() {
             </ul>
           </Section>}
 
-          {weeks.some((w) => w.total > 0) && <Section title="Week by week" aside={<Link to="/tracker" className="text-[13.5px] font-medium text-violet-d hover:underline">Open tracker</Link>}>
+          {weeks.some((w) => w.total > 0) && <Section title="Week by week" aside={<Link to="/tracker" className="text-[14px] font-medium text-violet-d hover:underline">Open tracker</Link>}>
             <div className="flex h-40 items-end gap-2" role="img" aria-label="Tracker score by week">
               {weeks.slice(0, 8).map((w) => (
                 <div key={w.week} className="flex flex-1 flex-col items-center gap-1">
@@ -151,12 +151,12 @@ export default function Today() {
           {fixes.length > 0 && <Section title="Before your next case">
             {(
               <>
-                <p className="mb-3 text-[13.5px] text-muted">Read these out loud. Pick one to focus on.</p>
+                <p className="mb-3 text-[14px] text-muted">Read these out loud. Pick one to focus on.</p>
                 <ul className="space-y-2">
                   {fixes.map((c) => (
                     <li key={c.id} className="rounded-lg bg-marker-l px-3 py-2">
-                      <span className="block text-[14.5px] font-medium text-ink">{c.fix}</span>
-                      <span className="block text-[12.5px] text-muted">{c.name}, {fmtShort(c.date)}</span>
+                      <span className="block text-[15px] font-medium text-ink">{c.fix}</span>
+                      <span className="block text-[13px] text-muted">{c.name}, {fmtShort(c.date)}</span>
                     </li>
                   ))}
                 </ul>
@@ -171,13 +171,13 @@ export default function Today() {
               <div><dt className="text-[13px] text-muted">Change</dt><dd className={`font-serif text-[22px] font-semibold ${imp.change && imp.change > 0 ? 'text-good' : imp.change && imp.change < 0 ? 'text-signal-d' : 'text-ink'}`}>{imp.change === null ? '–' : `${imp.change > 0 ? '+' : ''}${imp.change.toFixed(1)}`}</dd></div>
               <div><dt className="text-[13px] text-muted">Fixes that stuck</dt><dd className="font-serif text-[22px] font-semibold text-ink">{imp.stuck === null ? '–' : `${Math.round(imp.stuck * 100)}%`}</dd></div>
             </dl>
-            {imp.last === null && <p className="mt-3 text-[13.5px] text-muted">Log ten cases to see your trend.</p>}
+            {imp.last === null && <p className="mt-3 text-[14px] text-muted">Log ten cases to see your trend.</p>}
           </Section>}
 
           {cases.length > 0 && <Section title="Case types covered">
             <ul className="flex flex-wrap gap-1.5">
               {CASE_TYPES.filter((ty) => ty !== 'Other').map((ty) => (
-                <li key={ty} className={`rounded-full px-2.5 py-1 text-[12.5px] ${typeCount[ty] ? 'bg-teal-l font-medium text-teal-d' : 'bg-canvas text-faint'}`}>
+                <li key={ty} className={`rounded-full px-2.5 py-1 text-[13px] ${typeCount[ty] ? 'bg-teal-l font-medium text-teal-d' : 'bg-canvas text-faint'}`}>
                   {ty}{typeCount[ty] ? ` ${typeCount[ty]}` : ''}
                 </li>
               ))}
@@ -185,7 +185,7 @@ export default function Today() {
           </Section>}
 
           {cases.length > 0 && (
-            <Section title="Latest case" aside={<Link to="/cases" className="text-[13.5px] font-medium text-violet-d hover:underline">Case log</Link>}>
+            <Section title="Latest case" aside={<Link to="/cases" className="text-[14px] font-medium text-violet-d hover:underline">Case log</Link>}>
               {(() => { const c = byDate(cases).at(-1)!; return (
                 <div className="flex items-center justify-between gap-3">
                   <div><div className="font-medium text-ink">{c.name}</div><div className="text-[13px] text-muted">{c.type}, with {c.with.toLowerCase()}</div></div>

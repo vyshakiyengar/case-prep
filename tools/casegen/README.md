@@ -20,4 +20,4 @@ Every number in a generated case is calculated in Python, and `assert` lines che
 3. From this folder: `python3 export.py && python3 fix_original15.py && python3 index.py`
 4. From the repo root: `npm run build`, then commit `src/content/cases.json`.
 
-Needs Python 3 with matplotlib and numpy. Charts use IBM Plex Sans if its `.ttf` files are in `~/.fonts`; otherwise matplotlib's default font is used, which will change how the charts look.
+Needs Python 3 with matplotlib and numpy. Charts use Libre Franklin (the site font) if its `.ttf` files are in `~/.fonts`; otherwise matplotlib's default font is used, which will change how the charts look.

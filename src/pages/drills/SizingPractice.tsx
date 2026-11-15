@@ -57,7 +57,7 @@ export default function SizingPractice() {
 
       <section className="max-w-3xl rounded-lg border border-line bg-white p-4 sm:p-6">
         <div className="flex flex-wrap items-baseline justify-between gap-2">
-          <p className="text-[13.5px] text-muted">Question {n + 1} of {order.length}, {['', 'easy', 'medium', 'hard'][q.level]}</p>
+          <p className="text-[14px] text-muted">Question {n + 1} of {order.length}, {['', 'easy', 'medium', 'hard'][q.level]}</p>
           {!shown && <Countdown key={q.id + n} seconds={180} label="Thinking time" />}
         </div>
         <h2 className="mt-1 font-serif text-[22px] leading-snug font-semibold">{q.q}</h2>
@@ -78,7 +78,7 @@ export default function SizingPractice() {
           <div className="mt-6">
             <div className={`rounded-lg border-l-4 p-4 ${v.tone === 'good' ? 'border-good bg-good-l' : v.tone === 'amber' ? 'border-[#B7791F] bg-[#FBF3E2]' : 'border-signal bg-signal-l'}`}>
               <p className="font-semibold text-ink">{v.head}</p>
-              <p className="mt-1 text-[14.5px] text-ink-2">You said {q.cur ?? ''}{est!.toLocaleString('en-GB')}. One reasonable estimate is <b className="font-semibold">{fmtAnswer(q)}</b> {q.unit}.</p>
+              <p className="mt-1 text-[15px] text-ink-2">You said {q.cur ?? ''}{est!.toLocaleString('en-GB')}. One reasonable estimate is <b className="font-semibold">{fmtAnswer(q)}</b> {q.unit}.</p>
               <p className="mt-1 text-[14px] text-ink-2">{v.body}</p>
             </div>
 
@@ -86,14 +86,14 @@ export default function SizingPractice() {
             <p className="mt-1 text-[14px] text-muted">{q.approach}</p>
             <ol className="mt-3 divide-y divide-line rounded-lg border border-line font-[tabular-nums]">
               {q.steps.map((s, i) => (
-                <li key={i} className="flex items-baseline justify-between gap-4 px-4 py-2.5 text-[14.5px]">
+                <li key={i} className="flex items-baseline justify-between gap-4 px-4 py-2.5 text-[15px]">
                   <span className="text-ink-2"><span className="mr-2 inline-block w-5 text-center text-[17px] leading-none font-semibold text-teal-d">{i === 0 ? '' : s.op}</span>{s.t}</span>
                   <span className="shrink-0 font-semibold text-ink tabular-nums">{fmtStep(s, q.cur)}</span>
                 </li>
               ))}
               <li className="flex items-baseline justify-between gap-4 bg-canvas px-4 py-3 text-[15px]">
                 <span className="font-semibold text-ink"><span className="mr-2 inline-block w-4 text-center text-teal-d">=</span>{q.unit.charAt(0).toUpperCase() + q.unit.slice(1)}</span>
-                <span className="font-serif text-[19px] font-semibold text-ink">{fmtAnswer(q)}</span>
+                <span className="font-serif text-[20px] font-semibold text-ink">{fmtAnswer(q)}</span>
               </li>
             </ol>
             <p className="mt-3 text-[14px] text-ink-2"><b className="font-semibold text-ink">Sanity check:</b> {q.check}</p>

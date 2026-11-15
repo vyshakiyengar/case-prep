@@ -13,7 +13,7 @@ export function CaseTypes() {
   return (
     <>
       <PageHeader title="Case types" art={<ArtFrameworks />} intro="The 17 kinds of case: what to ask first, the skeleton, and the trap to avoid." />
-      <p className="mb-5 text-[14.5px] text-ink-2">Not sure which type? Ask: is the client trying to <b>diagnose</b> a problem, <b>decide</b> something, or <b>generate</b> options?</p>
+      <p className="mb-5 text-[15px] text-ink-2">Not sure which type? Ask: is the client trying to <b>diagnose</b> a problem, <b>decide</b> something, or <b>generate</b> options?</p>
       <ul className="grid gap-3 md:grid-cols-2">
         {FRAMEWORKS.map((f) => (
           <li key={f.slug}>
@@ -54,7 +54,7 @@ export function Formulas() {
           </div>
         ))}
       </div>
-      <p className="mt-5 text-[14.5px] text-ink-2">Use them: <Link to="/drills/maths" className="font-medium text-violet-d hover:underline">mental maths drill</Link> · <Link to="/learn/case-maths" className="font-medium text-violet-d hover:underline">case maths lesson</Link> · <Link to="/glossary" className="font-medium text-violet-d hover:underline">glossary</Link></p>
+      <p className="mt-5 text-[15px] text-ink-2">Use them: <Link to="/drills/maths" className="font-medium text-violet-d hover:underline">mental maths drill</Link> · <Link to="/learn/case-maths" className="font-medium text-violet-d hover:underline">case maths lesson</Link> · <Link to="/glossary" className="font-medium text-violet-d hover:underline">glossary</Link></p>
     </>
   )
 }
@@ -66,7 +66,7 @@ export function Glossary() {
   return (
     <>
       <PageHeader title="Glossary" art={<ArtGlossary />} intro="Business terms you'll meet in cases, in plain English, each with an example." />
-      <input className="mb-4 w-full max-w-sm rounded-lg border border-line bg-white px-3 py-2 text-[14.5px]" placeholder="Search terms" value={q} onChange={(e) => setQ(e.target.value)} aria-label="Search the glossary" />
+      <input className="mb-4 w-full max-w-sm rounded-lg border border-line bg-white px-3 py-2 text-[15px]" placeholder="Search terms" value={q} onChange={(e) => setQ(e.target.value)} aria-label="Search the glossary" />
       <dl className="divide-y divide-line overflow-hidden rounded-lg border border-line bg-white">
         {items.map((g) => (
           <div key={g.term} id={g.term.toLowerCase().replace(/[^a-z0-9]+/g, '-')} className="grid scroll-mt-24 gap-1 px-5 py-3.5 sm:grid-cols-[200px_1fr] sm:gap-4">
@@ -76,7 +76,7 @@ export function Glossary() {
         ))}
         {!items.length && <p className="px-5 py-4 text-muted">No match. Try a shorter word.</p>}
       </dl>
-      <p className="mt-5 text-[14.5px] text-ink-2">See also: <Link to="/formulas" className="font-medium text-violet-d hover:underline">formulas</Link></p>
+      <p className="mt-5 text-[15px] text-ink-2">See also: <Link to="/formulas" className="font-medium text-violet-d hover:underline">formulas</Link></p>
     </>
   )
 }

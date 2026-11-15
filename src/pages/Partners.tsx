@@ -12,17 +12,17 @@ function PartnerCard({ s, you = false, onRemove }: { s: Summary; you?: boolean; 
         <Avatar name={s.name} photo={s.photoURL} size={40} />
         <div className="min-w-0 flex-1">
           <div className="truncate font-serif text-[17px] font-semibold text-ink">{s.name}{you && <span className="ml-2 font-sans text-[13px] font-normal text-muted">you</span>}</div>
-          <div className="text-[12.5px] text-muted">Updated {new Date(s.updatedAt).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' })}</div>
+          <div className="text-[13px] text-muted">Updated {new Date(s.updatedAt).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' })}</div>
         </div>
         {onRemove && <button onClick={onRemove} className="text-[13px] text-muted hover:text-signal-d">Remove</button>}
       </div>
       <dl className="mt-4 grid grid-cols-3 gap-3">
-        <div><dt className="text-[12.5px] text-muted">Habits, last 7 days</dt><dd className="font-serif text-[21px] font-semibold text-ink">{s.weekScore}<span className="text-[13px] font-normal text-muted">/56</span></dd></div>
-        <div><dt className="text-[12.5px] text-muted">Prep days 5+</dt><dd className="font-serif text-[21px] font-semibold text-ink">{s.realPrepDays7}/7</dd></div>
-        <div><dt className="text-[12.5px] text-muted">Avg case</dt><dd className="font-serif text-[21px] font-semibold text-ink">{s.avgScore?.toFixed(1) ?? '–'}</dd></div>
+        <div><dt className="text-[13px] text-muted">Habits, last 7 days</dt><dd className="font-serif text-[22px] font-semibold text-ink">{s.weekScore}<span className="text-[13px] font-normal text-muted">/56</span></dd></div>
+        <div><dt className="text-[13px] text-muted">Prep days 5+</dt><dd className="font-serif text-[22px] font-semibold text-ink">{s.realPrepDays7}/7</dd></div>
+        <div><dt className="text-[13px] text-muted">Avg case</dt><dd className="font-serif text-[22px] font-semibold text-ink">{s.avgScore?.toFixed(1) ?? '–'}</dd></div>
       </dl>
       <p className="mt-3 text-[14px] text-ink-2"><span className="text-muted">Cases logged:</span> {s.casesLogged}{s.weakestStage && <>. <span className="text-muted">Working on:</span> {s.weakestStage.toLowerCase()}</>}</p>
-      {s.lastFix && <p className="mt-2 rounded bg-marker-l px-2 py-1 text-[13.5px] text-ink">Latest fix: {s.lastFix}</p>}
+      {s.lastFix && <p className="mt-2 rounded bg-marker-l px-2 py-1 text-[14px] text-ink">Latest fix: {s.lastFix}</p>}
     </div>
   )
 }
@@ -53,7 +53,7 @@ export default function Partners() {
     <>
       <PageHeader title="Practice partners" art={<ArtPartners />} />
       <div className="max-w-xl rounded-lg border border-line bg-white p-5">
-        <h2 className="text-[17.5px] font-semibold">Coming with Google sign-in</h2>
+        <h2 className="text-[18px] font-semibold">Coming with Google sign-in</h2>
         <p className="mt-1 text-ink-2">Inviting a partner needs an account in the cloud, so it switches on together with Google sign-in. Everything else works now, and your progress is saved in this browser.</p>
       </div>
     </>
@@ -85,7 +85,7 @@ export default function Partners() {
             <a className="inline-flex items-center rounded-lg border border-line bg-white px-4 py-2 text-[14px] font-medium text-ink hover:border-faint"
               href={`https://wa.me/?text=${encodeURIComponent(`Let's keep each other honest on case prep: ${link}`)}`} target="_blank" rel="noreferrer">Share on WhatsApp</a>
           </div>
-          <p className="mt-2 text-[13.5px] text-muted">When they sign in and accept, you'll see each other here.</p>
+          <p className="mt-2 text-[14px] text-muted">When they sign in and accept, you'll see each other here.</p>
         </Section>
       )}
       <div className="grid gap-4 md:grid-cols-2">

@@ -60,7 +60,7 @@ export function TryOne() {
             placeholder={live ? 'Your answer' : ''} className="w-full min-w-0 bg-transparent outline-none placeholder:text-faint" />
           <span className="ml-1 shrink-0 text-[12px] text-faint">{q.unit}</span>
         </label>
-        <button type="submit" className={`rounded-md px-3 py-2 text-[13px] font-medium text-white transition-colors ${!live && phase === 3 ? 'bg-teal-d' : 'bg-ink hover:bg-[#1C2B4A]'}`}>{live && fb !== null ? 'Next' : 'Check'}</button>
+        <button type="submit" className={`rounded-md px-3 py-2 text-[13px] font-medium text-white transition-colors ${!live && phase === 3 ? 'bg-teal-d' : 'bg-ink hover:bg-[#262626]'}`}>{live && fb !== null ? 'Next' : 'Check'}</button>
       </div>
       <div className="mt-2 min-h-[38px] text-[13px] leading-snug" aria-live="polite">
         {right && <p className="flex items-start gap-1.5"><svg aria-hidden viewBox="0 0 24 24" className="mt-px h-4 w-4 shrink-0 fill-none stroke-teal-d stroke-[2.5]"><path d="M5 12.5l4.5 4.5L19 7.5" /></svg><span><b className="font-semibold text-teal-d">Right.</b> {q.say}.{live && <> {q.how}</>}</span></p>}
@@ -151,7 +151,7 @@ function PathToOffer() {
           <span aria-hidden className="relative z-[1] mt-0.5 block h-5 w-5 shrink-0 rounded-full border-2 border-teal-l bg-ink md:mt-0" />
           <Link to={p.to} className="group block md:mt-3">
             <span className="block text-[15px] font-medium text-white group-hover:underline">{p.t}</span>
-            <span className="block text-[13px] leading-snug text-[#9FB0C6]">{p.d}</span>
+            <span className="block text-[13px] leading-snug text-[#A8A8A8]">{p.d}</span>
           </Link>
         </li>
       ))}
@@ -161,7 +161,7 @@ function PathToOffer() {
         </span>
         <div className="md:mt-3">
           <span className="block font-serif text-[18px] leading-tight text-teal-l italic">The offer</span>
-          <span className="block text-[13px] leading-snug text-[#9FB0C6]">Then pass it on</span>
+          <span className="block text-[13px] leading-snug text-[#A8A8A8]">Then pass it on</span>
         </div>
       </li>
     </ol>
@@ -187,9 +187,9 @@ function StartDock() {
   return (
     <div className={`lp-dock fixed inset-x-3 bottom-[calc(80px+env(safe-area-inset-bottom))] z-30 mx-auto max-w-[520px] lg:bottom-4 lg:left-60 ${show ? 'translate-y-0 opacity-100' : 'pointer-events-none translate-y-[140%] opacity-0'}`} aria-hidden={!show}>
       <div className="flex items-center gap-3 rounded-xl bg-ink px-4 py-3 text-white shadow-[0_24px_50px_-18px_rgba(0,0,0,.6)]">
-        <p className="min-w-0 flex-1 text-[14px] leading-snug"><span className="font-medium">Try a case now.</span> <span className="text-[#B9C4D3]">Free, no sign-up.</span></p>
+        <p className="min-w-0 flex-1 text-[14px] leading-snug"><span className="font-medium">Try a case now.</span> <span className="text-[#C4C4C4]">Free, no sign-up.</span></p>
         <Link to="/casebook/coastal-brew" tabIndex={show ? undefined : -1} className="lp-cta inline-flex shrink-0 items-center rounded-lg bg-white px-3.5 py-2 text-[14px] font-medium text-ink hover:bg-teal-l">Start Coastal Brew<Arrow /></Link>
-        <button type="button" onClick={() => setClosed(true)} tabIndex={show ? undefined : -1} aria-label="Close" className="-mr-1 shrink-0 rounded p-1 text-[#9FB0C6] hover:text-white">
+        <button type="button" onClick={() => setClosed(true)} tabIndex={show ? undefined : -1} aria-label="Close" className="-mr-1 shrink-0 rounded p-1 text-[#A8A8A8] hover:text-white">
           <svg aria-hidden viewBox="0 0 16 16" className="h-4 w-4 fill-none stroke-current stroke-2"><path d="M4 4l8 8M12 4l-8 8" /></svg>
         </button>
       </div>
@@ -213,7 +213,7 @@ function HeroVideo() {
         <track kind="captions" src="/video/prepforcase-tour-v2.vtt" srcLang="en" label="English" />
       </video>
       {!sound && !still && (
-        <button type="button" onClick={withSound} className="absolute top-3 right-3 inline-flex items-center gap-2 rounded-full bg-white/95 px-3.5 py-1.5 text-[13.5px] font-medium text-ink shadow-lg hover:bg-white sm:top-auto sm:right-auto sm:bottom-6 sm:left-6 sm:px-4 sm:py-2 sm:text-[14px]">
+        <button type="button" onClick={withSound} className="absolute top-3 right-3 inline-flex items-center gap-2 rounded-full bg-white/95 px-3.5 py-1.5 text-[14px] font-medium text-ink shadow-lg hover:bg-white sm:top-auto sm:right-auto sm:bottom-6 sm:left-6 sm:px-4 sm:py-2 sm:text-[14px]">
           <svg aria-hidden viewBox="0 0 16 16" className="h-3.5 w-3.5 fill-current"><path d="M4 2.5v11l9-5.5z" /></svg>Play with sound
         </button>
       )}
@@ -225,10 +225,10 @@ function HeroVideo() {
 /** A desktop browser window showing a real screen from the site. `crop` trims empty space below the content. */
 function Browser({ src, alt, path = '', className = '', eager = false, crop = false }: { src: string; alt: string; path?: string; className?: string; eager?: boolean; crop?: boolean }) {
   return (
-    <div className={`overflow-hidden rounded-xl border border-line bg-white shadow-[0_30px_60px_-30px_rgba(15,27,51,.45)] ${className}`}>
+    <div className={`overflow-hidden rounded-xl border border-line bg-white shadow-[0_30px_60px_-30px_rgba(18,18,18,.45)] ${className}`}>
       <div className="flex items-center gap-1.5 border-b border-line bg-canvas px-3 py-2">
         <span className="h-2.5 w-2.5 rounded-full bg-[#E5E7EB]" /><span className="h-2.5 w-2.5 rounded-full bg-[#E5E7EB]" /><span className="h-2.5 w-2.5 rounded-full bg-[#E5E7EB]" />
-        <span className="ml-3 truncate rounded-md bg-white px-3 py-0.5 text-[11.5px] text-muted">prepforcase.com{path && `/${path}`}</span>
+        <span className="ml-3 truncate rounded-md bg-white px-3 py-0.5 text-[12px] text-muted">prepforcase.com{path && `/${path}`}</span>
       </div>
       <img src={src} alt={alt} width={1440} height={900} loading={eager ? 'eager' : 'lazy'} decoding="async"
         className={`block w-full ${crop ? 'aspect-[1440/720] object-cover object-left-top' : 'h-auto'}`} />
@@ -315,13 +315,13 @@ export default function Landing() {
               <span aria-hidden className="lp-rule mt-7 block h-[2px] w-16 bg-teal" style={{ ['--d' as string]: '.45s' }} />
             </div>
             <div>
-              <p className="lp-in max-w-lg text-[16.5px] leading-relaxed text-[#C9D2E0]" style={{ ['--d' as string]: '.3s' }}>
+              <p className="lp-in max-w-lg text-[17px] leading-relaxed text-[#C9D2E0]" style={{ ['--d' as string]: '.3s' }}>
                 A step-by-step system for case interviews, free from start to finish. Learn the method in about 90 minutes,
                 practise {CASE_COUNT} cases with worked answers, and drill the skills in ten minutes a day.
               </p>
               <div className="lp-in mt-7 flex flex-wrap items-center gap-3" style={{ ['--d' as string]: '.45s' }}>
-                <Link to="/casebook/coastal-brew" className="lp-cta inline-flex items-center rounded-lg bg-white px-5 py-3 text-[14.5px] font-medium text-ink hover:bg-teal-l">Try a free case<Arrow /></Link>
-                <Link to="/learn" className="rounded-lg border border-white/25 px-5 py-3 text-[14.5px] font-medium text-white hover:border-white/60">Start the course</Link>
+                <Link to="/casebook/coastal-brew" className="lp-cta inline-flex items-center rounded-lg bg-white px-5 py-3 text-[15px] font-medium text-ink hover:bg-teal-l">Try a free case<Arrow /></Link>
+                <Link to="/learn" className="rounded-lg border border-white/25 px-5 py-3 text-[15px] font-medium text-white hover:border-white/60">Start the course</Link>
               </div>
             </div>
           </div>
@@ -329,10 +329,10 @@ export default function Landing() {
           <div className="lp-in mt-8 flex flex-wrap items-end justify-between gap-6" style={{ ['--d' as string]: '.6s' }}>
             <dl className="grid grid-cols-3 gap-8">
               {[[`${LESSONS.length}`, 'short lessons'], [`${CASE_COUNT}`, 'cases with answers'], ['Free', 'no card, no trial']].map(([n, l]) => (
-                <div key={l}><dt className="sr-only">{l}</dt><dd><span className="block font-serif text-[26px] leading-none text-white">{n}</span><span className="mt-1 block text-[13px] text-[#9FB0C6]">{l}</span></dd></div>
+                <div key={l}><dt className="sr-only">{l}</dt><dd><span className="block font-serif text-[26px] leading-none text-white">{n}</span><span className="mt-1 block text-[13px] text-[#A8A8A8]">{l}</span></dd></div>
               ))}
             </dl>
-            <p className="flex max-w-md items-start gap-2.5 text-[14px] leading-snug text-[#B8C2D3]">
+            <p className="flex max-w-md items-start gap-2.5 text-[14px] leading-snug text-[#C4C4C4]">
               <svg aria-hidden viewBox="0 0 24 24" className="mt-px h-[18px] w-[18px] shrink-0 fill-none stroke-teal-l stroke-2"><rect x="3" y="4" width="18" height="13" rx="2" /><path d="M8 21h8M12 17v4" /></svg>
               <span>{user ? 'Works in any browser. Your progress is saved to your account.' : 'No sign-up for your first two cases. Works in any browser, nothing to download.'}</span>
             </p>
@@ -351,7 +351,7 @@ export default function Landing() {
                 <svg aria-hidden viewBox="0 0 24 24" className="mt-1 h-[18px] w-[18px] fill-none stroke-teal-d stroke-[2.2]"><path d="M5 12.5l4.5 4.5L19 7.5" /></svg>
                 <div>
                   <p className="font-serif text-[18px] leading-snug text-ink">“{p.q}”</p>
-                  <p className="mt-1.5 text-[14.5px] leading-relaxed text-ink-2">{p.a}</p>
+                  <p className="mt-1.5 text-[15px] leading-relaxed text-ink-2">{p.a}</p>
                   {p.to.startsWith('#')
                     ? <a href={p.to} className="mt-1.5 inline-block text-[14px] font-medium text-violet-d hover:underline">{p.cta}</a>
                     : <Link to={p.to} className="mt-1.5 inline-block text-[14px] font-medium text-violet-d hover:underline">{p.cta}</Link>}
@@ -370,13 +370,13 @@ export default function Landing() {
             {GROUPS.map((g) => (
               <div key={g.t}>
                 <div aria-hidden className="mb-4 flex h-[120px] items-center justify-center rounded-xl bg-canvas px-6 md:h-[150px]"><div className="w-full max-w-[160px] md:max-w-[200px]"><g.art /></div></div>
-                <h3 className="flex items-baseline justify-between gap-3 text-[19px]">{g.t}{g.note && <span className="text-[12.5px] font-normal text-faint">{g.note}</span>}</h3>
+                <h3 className="flex items-baseline justify-between gap-3 text-[20px]">{g.t}{g.note && <span className="text-[13px] font-normal text-faint">{g.note}</span>}</h3>
                 <ul className="mt-2 divide-y divide-line border-y border-line">
                   {g.items.map((f) => (
                     <li key={f.t}>
                       <Link to={f.to} className="group block py-2.5">
                         <span className="text-[15px] font-medium text-ink group-hover:text-violet-d">{f.t}</span>
-                        <span className="mt-0.5 block text-[13.5px] leading-snug text-muted">{f.d}</span>
+                        <span className="mt-0.5 block text-[14px] leading-snug text-muted">{f.d}</span>
                       </Link>
                     </li>
                   ))}
@@ -387,11 +387,11 @@ export default function Landing() {
               <div aria-hidden className="mb-4 flex h-[120px] items-center justify-center rounded-xl bg-ink md:h-[150px]">
                 <p className="font-serif text-[44px] leading-none text-white italic">Free</p>
               </div>
-              <h3 className="text-[19px]">No app, no card, no trial</h3>
-              <p className="mt-2 text-[14.5px] leading-relaxed text-ink-2">The course, frameworks and casebook open straight away. A free sign-in with Google or any email unlocks every step of every case and saves your progress on any device.</p>
+              <h3 className="text-[20px]">No app, no card, no trial</h3>
+              <p className="mt-2 text-[15px] leading-relaxed text-ink-2">The course, frameworks and casebook open straight away. A free sign-in with Google or any email unlocks every step of every case and saves your progress on any device.</p>
               <div className="mt-5 flex flex-wrap gap-3">
-                <Link to={user ? '/' : '/signin'} className="rounded-lg bg-ink px-4 py-2.5 text-[14.5px] font-medium text-white hover:bg-[#1C2B4A]">{user ? 'Go to my Home' : 'Sign in free'}</Link>
-                <Link to="/learn" className="rounded-lg border border-line px-4 py-2.5 text-[14.5px] font-medium text-ink hover:border-ink/40">Start the course</Link>
+                <Link to={user ? '/' : '/signin'} className="rounded-lg bg-ink px-4 py-2.5 text-[15px] font-medium text-white hover:bg-[#262626]">{user ? 'Go to my Home' : 'Sign in free'}</Link>
+                <Link to="/learn" className="rounded-lg border border-line px-4 py-2.5 text-[15px] font-medium text-ink hover:border-ink/40">Start the course</Link>
               </div>
             </div>
           </div>
@@ -402,10 +402,10 @@ export default function Landing() {
         <div className="grid items-center gap-12 lg:grid-cols-[1fr_1.35fr]">
           <div>
             <h2 className="text-[30px]">Practise it like the real interview</h2>
-            <p className="mt-2 text-[15.5px] leading-relaxed text-ink-2">Each case runs stage by stage, like the real thing, with a strong answer at every step.</p>
+            <p className="mt-2 text-[16px] leading-relaxed text-ink-2">Each case runs stage by stage, like the real thing, with a strong answer at every step.</p>
             <CaseSteps />
-            <p className="mt-5 text-[15.5px] leading-relaxed text-ink-2">Practising with a friend? Switch to interviewer mode and they get the script.</p>
-            <Link to="/casebook" className="mt-6 inline-block rounded-lg bg-ink px-4 py-2.5 text-[14.5px] font-medium text-white hover:bg-[#1C2B4A]">Open the casebook</Link>
+            <p className="mt-5 text-[16px] leading-relaxed text-ink-2">Practising with a friend? Switch to interviewer mode and they get the script.</p>
+            <Link to="/casebook" className="mt-6 inline-block rounded-lg bg-ink px-4 py-2.5 text-[15px] font-medium text-white hover:bg-[#262626]">Open the casebook</Link>
           </div>
           <div className="relative pb-16 sm:pb-24">
             <Browser src="/shots/desktop-case.webp" path="casebook/coastal-brew" alt="A case on the site: the Coastal Brew prompt, with the steps of the case listed on the left" />
@@ -421,7 +421,7 @@ export default function Landing() {
               <h2 className="text-[30px]">Cases from every industry</h2>
               <p className="mt-1 max-w-2xl text-muted">Coffee chains to hospitals, airlines to city councils.</p>
             </div>
-            <Link to="/casebook" className="text-[14.5px] font-medium text-violet-d hover:underline">See all {CASE_COUNT} cases</Link>
+            <Link to="/casebook" className="text-[15px] font-medium text-violet-d hover:underline">See all {CASE_COUNT} cases</Link>
           </div>
           <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
             {CASE_PICKS.slice(0, 4).map((c) => (
@@ -439,17 +439,17 @@ export default function Landing() {
           <p className="mt-1 max-w-2xl text-muted">A plan for however long you have. Add your interview date and the site counts down with you.</p>
           <div className="mt-8 grid gap-4 lg:grid-cols-3">
             {PLANS.map((p, k) => (
-              <div key={p.t} className={`flex flex-col rounded-xl border bg-white p-5 sm:p-6 ${k === 1 ? 'border-ink shadow-[0_18px_40px_-28px_rgba(15,27,51,.6)]' : 'border-line'}`}>
+              <div key={p.t} className={`flex flex-col rounded-xl border bg-white p-5 sm:p-6 ${k === 1 ? 'border-ink shadow-[0_18px_40px_-28px_rgba(18,18,18,.6)]' : 'border-line'}`}>
                 <p className="text-[13px] font-medium text-teal-d">{p.who}</p>
-                <h3 className="mt-0.5 text-[21px]">{p.t}</h3>
-                <ol className="mt-4 space-y-3 text-[14.5px] leading-snug text-ink-2">
+                <h3 className="mt-0.5 text-[22px]">{p.t}</h3>
+                <ol className="mt-4 space-y-3 text-[15px] leading-snug text-ink-2">
                   {p.steps.map((x) => (
                     <li key={x} className="grid grid-cols-[18px_1fr] gap-2">
                       <span aria-hidden className="mt-[7px] h-[7px] w-[7px] rounded-full bg-teal" />{x}
                     </li>
                   ))}
                 </ol>
-                <Link to="/learn/how-case-interviews-work" className="mt-auto pt-6 text-[14.5px] font-medium text-violet-d hover:underline">Start day 1</Link>
+                <Link to="/learn/how-case-interviews-work" className="mt-auto pt-6 text-[15px] font-medium text-violet-d hover:underline">Start day 1</Link>
               </div>
             ))}
           </div>
@@ -460,7 +460,7 @@ export default function Landing() {
         <div className="grid gap-10 lg:grid-cols-[1fr_1.1fr] lg:items-center">
           <div>
             <h2 className="text-[30px]">What good prep usually costs</h2>
-            <p className="mt-2 max-w-md text-[15.5px] leading-relaxed text-ink-2">Typical prices for paid prep. PrepForCase gives you a course, a casebook, drills and a tracker for nothing, and it stays that way.</p>
+            <p className="mt-2 max-w-md text-[16px] leading-relaxed text-ink-2">Typical prices for paid prep. PrepForCase gives you a course, a casebook, drills and a tracker for nothing, and it stays that way.</p>
           </div>
           <dl className="divide-y divide-line rounded-xl border border-line bg-white">
             {COSTS.map((c) => (
@@ -479,10 +479,10 @@ export default function Landing() {
         <figure className="grid items-center gap-6 border-y border-line py-10 md:grid-cols-[150px_1fr] md:gap-10">
           <img src="/vyshak.jpg" alt="Vyshak K Iyengar" width={150} height={150} loading="lazy" decoding="async" className="h-28 w-28 rounded-[8px] object-cover md:h-[150px] md:w-[150px]" />
           <div>
-            <blockquote className="max-w-3xl font-serif text-[21px] leading-[1.45] text-ink sm:text-[24px]">
+            <blockquote className="max-w-3xl font-serif text-[22px] leading-[1.45] text-ink sm:text-[24px]">
               “I built PrepForCase from what helped me: classmates who practised cases with me late into the evening, and consultants who told me honestly what wasn't working. It's free because this is my way of giving back. If it moves you one step closer to an offer, it has done its job.”
             </blockquote>
-            <figcaption className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-1 text-[14.5px]">
+            <figcaption className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-1 text-[15px]">
               <span className="text-ink">Vyshak K Iyengar, London Business School and BCG alum</span>
               <Link to="/about" className="font-medium text-violet-d hover:underline">Read the story</Link>
               <a href="https://www.linkedin.com/in/vyshakiyengar/" target="_blank" rel="noopener noreferrer" className="font-medium text-violet-d hover:underline">Say hello on LinkedIn</a>
@@ -500,7 +500,7 @@ export default function Landing() {
                 {f.q}
                 <svg aria-hidden viewBox="0 0 16 16" className="mt-1 h-4 w-4 shrink-0 fill-none stroke-muted stroke-2 transition-transform group-open:rotate-45"><path d="M8 3v10M3 8h10" /></svg>
               </summary>
-              <p className="mt-2 text-[14.5px] leading-relaxed text-ink-2">{f.a}</p>
+              <p className="mt-2 text-[15px] leading-relaxed text-ink-2">{f.a}</p>
             </details>
           ))}
         </div>
@@ -510,11 +510,11 @@ export default function Landing() {
         <div aria-hidden className="pointer-events-none absolute -top-24 right-[10%] h-72 w-72 rounded-full bg-[radial-gradient(closest-side,rgba(45,212,191,.25),transparent)] blur-2xl" />
         <div className="relative mx-auto max-w-6xl px-5 py-16 sm:px-6">
           <h2 className="text-[30px] text-white sm:text-[34px]">Your road to an offer starts with one case</h2>
-          <p className="mt-1 max-w-2xl text-[#B9C4D3]">Coastal Brew is a friendly first case: a coffee chain that's growing but making less money. About 25 minutes, every step open, no sign-up.</p>
+          <p className="mt-1 max-w-2xl text-[#C4C4C4]">Coastal Brew is a friendly first case: a coffee chain that's growing but making less money. About 25 minutes, every step open, no sign-up.</p>
           <PathToOffer />
           <div className="mt-10 flex flex-wrap gap-3">
-            <Link to="/casebook/coastal-brew" className="lp-cta inline-flex items-center rounded-lg bg-white px-5 py-3 text-[14.5px] font-medium text-ink hover:bg-teal-l">Start Coastal Brew<Arrow /></Link>
-            <Link to="/learn/how-case-interviews-work" className="rounded-lg border border-white/25 px-5 py-3 text-[14.5px] font-medium text-white hover:border-white/60">Or start with lesson 1</Link>
+            <Link to="/casebook/coastal-brew" className="lp-cta inline-flex items-center rounded-lg bg-white px-5 py-3 text-[15px] font-medium text-ink hover:bg-teal-l">Start Coastal Brew<Arrow /></Link>
+            <Link to="/learn/how-case-interviews-work" className="rounded-lg border border-white/25 px-5 py-3 text-[15px] font-medium text-white hover:border-white/60">Or start with lesson 1</Link>
           </div>
         </div>
       </section>

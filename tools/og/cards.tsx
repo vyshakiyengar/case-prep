@@ -22,7 +22,7 @@ const BLOG_ART: Record<string, keyof typeof Art> = {
   start: 'ArtCourse', stages: 'ArtInterviewer', frameworks: 'ArtFrameworks', concepts: 'ArtThink', industries: 'ArtBusiness', careers: 'ArtCasebook',
   resources: 'ArtReference', practice: 'ArtStructure', maths: 'ArtMaths', sizing: 'ArtSizing', fit: 'ArtStories',
 }
-const logo = () => { const u = WORDMARK.underline; return `<svg viewBox="${WORDMARK.viewBox}" height="34" width="173" style="align-self:flex-start"><path d="${WORDMARK.d}" fill="#14213D"/><rect x="${u.x}" y="${u.y}" width="${u.w}" height="${u.h}" fill="#0E9AA7"/></svg>` }
+const logo = () => { const u = WORDMARK.underline; return `<svg viewBox="${WORDMARK.viewBox}" height="34" width="173" style="align-self:flex-start"><path d="${WORDMARK.d}" fill="#121212"/><rect x="${u.x}" y="${u.y}" width="${u.w}" height="${u.h}" fill="#0E9AA7"/></svg>` }
 const esc = (s: string) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;')
 
 function card(chips: string[], title: string, sub: string, art: string) {

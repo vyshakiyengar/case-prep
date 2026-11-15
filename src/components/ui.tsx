@@ -6,7 +6,7 @@ type BtnVariant = 'primary' | 'secondary' | 'quiet' | 'danger'
 const btnBase = 'inline-flex items-center justify-center gap-2 rounded-lg px-4 py-2 text-[14px] font-medium transition-[background-color,border-color,box-shadow,transform] duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal focus-visible:ring-offset-2 disabled:opacity-50'
 const btnVar: Record<BtnVariant, string> = {
   primary: 'btn-primary text-white hover:-translate-y-px active:translate-y-0',
-  secondary: 'bg-white text-ink border border-[#D3DAE3] hover:border-ink/40',
+  secondary: 'bg-white text-ink border border-[#D6D6D6] hover:border-ink/40',
   quiet: 'text-ink hover:bg-white/70 px-3',
   danger: 'text-signal-d hover:bg-signal-l px-3',
 }
@@ -21,8 +21,8 @@ export function PageHeader({ title, intro, action, art }: { title: string; intro
   if (art) return (
     <header className="mb-5 grid items-center gap-x-6 sm:mb-6 sm:grid-cols-[1fr_200px] lg:grid-cols-[1fr_230px]">
       <div className="min-w-0 max-w-2xl">
-        <h1 className="text-[25px] leading-[1.12] tracking-[-0.01em] sm:text-[30px]">{title}</h1>
-        {intro && <p className="mt-1.5 text-[14.5px] leading-relaxed text-muted">{intro}</p>}
+        <h1 className="text-[28px] leading-[1.1] sm:text-[34px]">{title}</h1>
+        {intro && <p className="mt-2 text-[16px] leading-relaxed text-muted">{intro}</p>}
         {action && <div className="mt-3">{action}</div>}
       </div>
       <div aria-hidden className="hidden sm:block">{art}</div>
@@ -31,8 +31,8 @@ export function PageHeader({ title, intro, action, art }: { title: string; intro
   return (
     <header className="mb-5 flex flex-wrap items-end justify-between gap-x-4 gap-y-3 sm:mb-6">
       <div className="min-w-0 max-w-2xl">
-        <h1 className="text-[25px] leading-[1.12] tracking-[-0.01em] sm:text-[30px]">{title}</h1>
-        {intro && <p className="mt-1.5 text-[14.5px] leading-relaxed text-muted">{intro}</p>}
+        <h1 className="text-[28px] leading-[1.1] sm:text-[34px]">{title}</h1>
+        {intro && <p className="mt-2 text-[16px] leading-relaxed text-muted">{intro}</p>}
       </div>
       {action && <div className="shrink-0">{action}</div>}
     </header>
@@ -44,7 +44,7 @@ export function Section({ title, aside, children, className = '' }: { title?: st
     <section className={`rounded-lg border border-line bg-white p-4 sm:p-5 ${className}`}>
       {(title || aside) && (
         <div className="mb-3 flex items-baseline justify-between gap-3">
-          {title && <h2 className="text-[18px]">{title}</h2>}
+          {title && <h2 className="text-[20px]">{title}</h2>}
           {aside}
         </div>
       )}
@@ -87,7 +87,7 @@ export function ScorePicker({ value, onChange, label }: { value?: number; onChan
 export function Empty({ title, children, action }: { title: string; children?: ReactNode; action?: ReactNode }) {
   return (
     <div className="rounded-lg border border-dashed border-line bg-white/60 px-6 py-8 text-center">
-      <h3 className="text-[16.5px] font-semibold">{title}</h3>
+      <h3 className="text-[17px] font-semibold">{title}</h3>
       {children && <p className="mx-auto mt-1 max-w-md text-muted">{children}</p>}
       {action && <div className="mt-4">{action}</div>}
     </div>
@@ -97,20 +97,20 @@ export function Empty({ title, children, action }: { title: string; children?: R
 export function Field({ label, hint, children }: { label: string; hint?: string; children: ReactNode }) {
   return (
     <label className="block">
-      <span className="block text-[13.5px] font-medium text-ink">{label}</span>
-      {hint && <span className="block text-[12.5px] text-muted">{hint}</span>}
+      <span className="block text-[14px] font-medium text-ink">{label}</span>
+      {hint && <span className="block text-[13px] text-muted">{hint}</span>}
       <div className="mt-1.5">{children}</div>
     </label>
   )
 }
-export const inputCls = 'w-full rounded-lg border border-line bg-white px-3 py-2 text-[14.5px] text-ink placeholder:text-faint focus:border-teal focus:outline-none focus:ring-2 focus:ring-teal/15'
+export const inputCls = 'w-full rounded-lg border border-line bg-white px-3 py-2 text-[15px] text-ink placeholder:text-faint focus:border-teal focus:outline-none focus:ring-2 focus:ring-teal/15'
 
 export function Tabs<T extends string>({ value, onChange, items }: { value: T; onChange: (v: T) => void; items: { value: T; label: string }[] }) {
   return (
     <div role="tablist" className="mb-5 flex flex-wrap gap-1 border-b border-line">
       {items.map((it) => (
         <button key={it.value} role="tab" aria-selected={value === it.value} onClick={() => onChange(it.value)}
-          className={`-mb-px border-b-2 px-3 py-2 text-[14.5px] font-medium ${value === it.value ? 'border-ink text-ink' : 'border-transparent text-muted hover:text-ink'}`}>
+          className={`-mb-px border-b-2 px-3 py-2 text-[15px] font-medium ${value === it.value ? 'border-ink text-ink' : 'border-transparent text-muted hover:text-ink'}`}>
           {it.label}
         </button>
       ))}
@@ -129,8 +129,8 @@ export function Avatar({ name, photo, size = 32 }: { name: string; photo?: strin
 export function LogoMark({ size = 28 }: { size?: number }) {
   return (
     <svg width={size} height={size} viewBox="0 0 48 48" aria-hidden>
-      <rect width="48" height="48" rx="10" fill="#14213D" />
-      <path d={ICON_P.d} transform={ICON_P.transform} fill="#FBFCFE" />
+      <rect width="48" height="48" rx="10" fill="#1A1A1A" />
+      <path d={ICON_P.d} transform={ICON_P.transform} fill="#FBFBFB" />
       <rect x="14" y="37" width="20" height="2" fill="#5ED3DC" />
     </svg>
   )
@@ -142,7 +142,7 @@ export function Logo({ light = false, height = 30 }: { light?: boolean; height?:
   const u = WORDMARK.underline
   return (
     <svg role="img" aria-label="PrepForCase" height={height} width={(height * w) / h} viewBox={WORDMARK.viewBox} className="block">
-      <path d={WORDMARK.d} fill={light ? '#FFFFFF' : '#14213D'} />
+      <path d={WORDMARK.d} fill={light ? '#FFFFFF' : '#1A1A1A'} />
       <rect x={u.x} y={u.y} width={u.w} height={u.h} fill={light ? '#5ED3DC' : '#0E9AA7'} />
     </svg>
   )

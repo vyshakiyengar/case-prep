@@ -38,17 +38,17 @@ function Stage({ s, onTrain }: { s: ReturnType<typeof stageByN>; onTrain: (n: nu
           <li key={m.name} className="grid gap-2 border-t border-line pt-5 first:border-t-0 first:pt-0 md:grid-cols-[1fr_1.1fr] md:gap-5">
             <div>
               <h3 className="font-sans text-[15px] font-semibold text-ink">{m.name}</h3>
-              <p className="mt-1 text-[14.5px] text-ink-2">{m.do}</p>
+              <p className="mt-1 text-[15px] text-ink-2">{m.do}</p>
             </div>
             {m.say && (
               <blockquote className="graph-paper rounded-lg border-l-4 border-teal px-4 py-3 font-serif text-[16px] leading-relaxed text-ink">
-                <span className="mb-1 block font-sans text-[12.5px] font-medium text-teal-d">Say this</span>{m.say}
+                <span className="mb-1 block font-sans text-[13px] font-medium text-teal-d">Say this</span>{m.say}
               </blockquote>
             )}
           </li>
         ))}
       </ol>
-      <p className="mt-6 rounded-lg bg-signal-l px-4 py-3 text-[14.5px] text-signal-d"><b className="font-semibold">Common mistake:</b> {s.mistake}</p>
+      <p className="mt-6 rounded-lg bg-signal-l px-4 py-3 text-[15px] text-signal-d"><b className="font-semibold">Common mistake:</b> {s.mistake}</p>
       <div className="mt-5 flex flex-wrap gap-2">
         <Button onClick={() => onTrain(s.n)}>Train these phrases</Button>
         {lesson && <Link to={`/learn/${lesson.slug}`} className="inline-flex items-center px-2 py-2 text-[14px] font-medium text-violet-d hover:underline">Read the lesson</Link>}
@@ -121,13 +121,13 @@ function Trainer({ stage }: { stage: number | null }) {
   const s = stageByN(c.stage)
   return (
     <div className="mx-auto max-w-2xl">
-      <div className="mb-3 flex items-center justify-between text-[13.5px] text-muted">
+      <div className="mb-3 flex items-center justify-between text-[14px] text-muted">
         <span>Card {i + 1} of {queue.length}, stage {s.n}: {s.title}</span>
         <button onClick={() => setQueue(null)} className="hover:text-ink">End session</button>
       </div>
       <div className="graph-paper rounded-lg border border-line p-4 sm:p-5">
         <p className="text-[13px] font-medium text-muted">The moment</p>
-        <p className="mt-1 font-serif text-[19px] leading-snug font-semibold text-ink">{c.situation}</p>
+        <p className="mt-1 font-serif text-[20px] leading-snug font-semibold text-ink">{c.situation}</p>
         {!shown ? (
           <div className="mt-6 flex flex-wrap items-center gap-3">
             <Countdown key={c.id + i} seconds={10} label="Say it out loud" autoStart onEnd={() => setShown(true)} />
@@ -135,7 +135,7 @@ function Trainer({ stage }: { stage: number | null }) {
           </div>
         ) : (
           <>
-            <blockquote className="mt-5 rounded-lg border-l-4 border-teal bg-white px-4 py-3 font-serif text-[16.5px] leading-relaxed text-ink">{c.model}</blockquote>
+            <blockquote className="mt-5 rounded-lg border-l-4 border-teal bg-white px-4 py-3 font-serif text-[17px] leading-relaxed text-ink">{c.model}</blockquote>
             <p className="mt-2 text-[14px] text-muted">{c.why}</p>
             <p className="mt-3 rounded-md bg-marker-l px-3 py-2 text-[14px] text-ink">Now say the model line out loud twice, then once in your own words.</p>
             <div className="mt-5">

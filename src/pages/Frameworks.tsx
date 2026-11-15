@@ -19,7 +19,7 @@ function FamilyGuide() {
       {FAMILIES.map((fam) => (
         <a key={fam.id} href={`#family-${fam.id}`} className="rounded-lg border border-line bg-white p-4 transition-colors hover:border-teal">
           <p className="text-[16px] font-semibold text-ink">{fam.name}</p>
-          <p className="mt-0.5 text-[14.5px] font-medium text-violet-d">{fam.question}</p>
+          <p className="mt-0.5 text-[15px] font-medium text-violet-d">{fam.question}</p>
           <p className="mt-2 text-[13px] text-muted">{CORE.filter((c) => c.family === fam.id).map((c) => c.title.replace(/\?$/, '')).join(' · ')}</p>
         </a>
       ))}
@@ -40,7 +40,7 @@ function TreeList({ list, start }: { list: CoreFramework[]; start: number }) {
             {first && (
               <div id={`family-${fam.id}`} className="scroll-mt-32 border-b border-line pb-2">
                 <h3 className="text-[17px] font-semibold text-teal-d">{fam.name}</h3>
-                <p className="text-[14.5px] text-ink-2">{fam.question} {fam.shape}</p>
+                <p className="text-[15px] text-ink-2">{fam.question} {fam.shape}</p>
               </div>
             )}
             <CoreBlock f={f} n={g + 1} />
@@ -62,7 +62,7 @@ export function FrameworksIndex() {
   return (
     <>
       <PageHeader title="Frameworks" art={<ArtFrameworks />} intro="Eleven frameworks cover most cases. Learn these first." />
-      <p className="mb-5 max-w-2xl text-[14.5px] text-ink-2">Pick the closest tree, rename its branches for your client, and say which you'd test first.</p>
+      <p className="mb-5 max-w-2xl text-[15px] text-ink-2">Pick the closest tree, rename its branches for your client, and say which you'd test first.</p>
       <JumpBar items={nav} label="Jump to" />
       <div className="space-y-14">
         <div>
@@ -105,25 +105,25 @@ export default function Framework() {
   const i = FRAMEWORKS.indexOf(f)
   return (
     <div className="max-w-4xl">
-      <Link to="/case-types" className="text-[13.5px] text-muted hover:text-ink">Case types</Link>
-      <h1 className="mt-1 text-[28px] leading-tight font-semibold">{f.type}</h1>
+      <Link to="/case-types" className="text-[14px] text-muted hover:text-ink">Case types</Link>
+      <h1 className="mt-1 text-[28px] leading-[1.1] sm:text-[34px]">{f.type}</h1>
       <p className="mt-1 text-[16px] text-muted">{f.when}</p>
-      {f.core && <p className="mt-3 text-[14.5px] text-ink-2">Core framework: <Link to={`/frameworks#${f.core}`} className="font-semibold text-teal-d hover:underline">{CORE.find((x) => x.id === f.core)?.title}</Link></p>}
+      {f.core && <p className="mt-3 text-[15px] text-ink-2">Core framework: <Link to={`/frameworks#${f.core}`} className="font-semibold text-teal-d hover:underline">{CORE.find((x) => x.id === f.core)?.title}</Link></p>}
 
       <section className="mt-7">
-        <h2 className="text-[19px] font-semibold">1. Ask this first</h2>
+        <h2 className="text-[20px] font-semibold">1. Ask this first</h2>
         <p className="mt-1 rounded-lg bg-violet-l px-4 py-3 font-serif text-[16px] text-ink">"{f.ask}"</p>
-        <p className="mt-2 text-[14.5px] text-muted">The answer usually decides which branch of your structure matters most.</p>
+        <p className="mt-2 text-[15px] text-muted">The answer usually decides which branch of your structure matters most.</p>
       </section>
 
       <section className="mt-8">
-        <h2 className="text-[19px] font-semibold">2. The skeleton</h2>
+        <h2 className="text-[20px] font-semibold">2. The skeleton</h2>
         <p className="mt-1 mb-3 text-muted">These are the raw building blocks. In an interview, rename every branch for the client in front of you.</p>
         {f.mode === 'steps' ? (
           <ol className="flex flex-wrap items-center gap-2">
             {f.steps.map((s, k) => (
               <li key={k} className="flex items-center gap-2">
-                <span className="rounded-lg border border-teal bg-white px-3 py-2 text-[14.5px] text-ink"><span className="mr-1.5 font-semibold text-teal-d">{k + 1}</span>{s}</span>
+                <span className="rounded-lg border border-teal bg-white px-3 py-2 text-[15px] text-ink"><span className="mr-1.5 font-semibold text-teal-d">{k + 1}</span>{s}</span>
                 {k < f.steps.length - 1 && <span className="text-faint" aria-hidden>→</span>}
               </li>
             ))}
@@ -133,15 +133,15 @@ export default function Framework() {
 
       {tailored && (
         <section className="mt-8">
-          <h2 className="text-[19px] font-semibold">3. The skeleton, tailored to a casebook case</h2>
+          <h2 className="text-[20px] font-semibold">3. The skeleton, tailored to a casebook case</h2>
           <p className="mt-1 text-muted">From case {tailored.id}, {tailored.title}: <i>{tailored.sub.replace(/[?.]$/, '')}</i>. Compare the branch names with the skeleton above: each one now says something about this client.</p>
 <div className="mt-3"><StructureTree s={tailored.structure} /></div>
-          <p className="mt-3 rounded-lg bg-violet-l px-4 py-3 text-[14.5px] text-ink"><b className="font-semibold">Then a hypothesis:</b> {tailored.hypothesis}</p>
+          <p className="mt-3 rounded-lg bg-violet-l px-4 py-3 text-[15px] text-ink"><b className="font-semibold">Then a hypothesis:</b> {tailored.hypothesis}</p>
         </section>
       )}
 
       <section className="mt-8">
-        <h2 className="text-[19px] font-semibold">{tailored ? '4' : '3'}. The trap to avoid</h2>
+        <h2 className="text-[20px] font-semibold">{tailored ? '4' : '3'}. The trap to avoid</h2>
         <p className="mt-1 rounded-lg border border-signal bg-signal-l px-4 py-3 text-[15px] text-signal-d">{f.trap}</p>
       </section>
 
@@ -149,7 +149,7 @@ export default function Framework() {
         {linked.map((c) => <LinkButton key={c.slug} to={`/casebook/${c.slug}`}>Practise: case {c.id}, {c.title}</LinkButton>)}
         <LinkButton to="/drills/structure" variant="secondary">Structuring drills</LinkButton>
       </section>
-      <nav className="mt-8 flex justify-between gap-4 text-[14.5px]">
+      <nav className="mt-8 flex justify-between gap-4 text-[15px]">
         {FRAMEWORKS[i - 1] ? <Link className="text-muted hover:text-ink" to={`/frameworks/${FRAMEWORKS[i - 1].slug}`}>Previous: {FRAMEWORKS[i - 1].type}</Link> : <span />}
         {FRAMEWORKS[i + 1] && <Link className="font-medium text-ink hover:underline" to={`/frameworks/${FRAMEWORKS[i + 1].slug}`}>Next: {FRAMEWORKS[i + 1].type}</Link>}
       </nav>

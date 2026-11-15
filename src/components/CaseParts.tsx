@@ -32,13 +32,13 @@ export function ExhibitView({ ex }: { ex: Exhibit }) {
 export function StructureTree({ s }: { s: CaseDef['structure'] }) {
   return (
     <div className="graph-paper rounded-lg border border-line p-4 sm:p-5">
-      <div className="mx-auto w-fit max-w-full rounded-lg bg-ink px-4 py-2 text-center text-[14.5px] font-semibold text-white">{s.root}</div>
+      <div className="mx-auto w-fit max-w-full rounded-lg bg-ink px-4 py-2 text-center text-[15px] font-semibold text-white">{s.root}</div>
       <div className="mx-auto h-4 w-px bg-faint" />
       <div className="grid gap-3 border-t-2 border-faint pt-4" style={{ gridTemplateColumns: `repeat(auto-fit, minmax(170px, 1fr))` }}>
         {s.branches.map((b) => (
           <div key={b.head} className="overflow-hidden rounded-lg border border-teal bg-white">
             <div className="bg-teal-d px-3 py-1.5 text-[14px] font-semibold text-white">{b.head}</div>
-            <ul className="list-disc px-3 py-2 pl-7 text-[13.5px] text-ink-2">{b.items.map((i) => <li key={i}>{i}</li>)}</ul>
+            <ul className="list-disc px-3 py-2 pl-7 text-[14px] text-ink-2">{b.items.map((i) => <li key={i}>{i}</li>)}</ul>
           </div>
         ))}
       </div>
@@ -46,6 +46,6 @@ export function StructureTree({ s }: { s: CaseDef['structure'] }) {
   )
 }
 
-export function Rich({ html, className = 'text-[15.5px]' }: { html: string; className?: string }) {
+export function Rich({ html, className = 'text-[16px]' }: { html: string; className?: string }) {
   return <div className={`rich ${className}`} dangerouslySetInnerHTML={{ __html: html }} />
 }

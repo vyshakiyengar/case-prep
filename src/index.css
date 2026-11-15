@@ -3,20 +3,20 @@
 @theme {
   --font-serif: "Newsreader Variable", "Newsreader", Georgia, serif;
   --font-sans: "Libre Franklin Variable", "Libre Franklin", system-ui, -apple-system, "Segoe UI", sans-serif;
-  --color-ink: #0F1B33;
-  --color-ink-2: #2B3445;
-  --color-muted: #5B6475;
-  --color-faint: #98A1B0;
-  --color-canvas: #F6F7F9;
-  --color-paper: #FCFCFD;
-  --color-grid: #D9DFE8;
-  --color-line: #E1E6ED;
+  --color-ink: #121212;
+  --color-ink-2: #333333;
+  --color-muted: #5A5A5A;
+  --color-faint: #999999;
+  --color-canvas: #F7F7F7;
+  --color-paper: #FCFCFC;
+  --color-grid: #DCDCDC;
+  --color-line: #E2E2E2;
   --color-teal: #0E8C96;
   --color-teal-d: #0A6E76;
   --color-teal-l: #E4F2F3;
-  --color-violet: #2E5C8A;
-  --color-violet-d: #234A72;
-  --color-violet-l: #E8EFF6;
+  --color-violet: #326891;
+  --color-violet-d: #24507A;
+  --color-violet-l: #EAF0F5;
   --color-signal: #B5404A;
   --color-signal-d: #93313A;
   --color-signal-l: #F7E9EA;
@@ -28,7 +28,7 @@
 
 @layer base {
   html { -webkit-text-size-adjust: 100%; }
-  body { @apply bg-canvas font-sans text-ink-2 antialiased; font-size: 14.5px; line-height: 1.58; font-feature-settings: "kern", "liga"; }
+  body { @apply bg-white font-sans text-ink-2 antialiased; font-size: 15px; line-height: 1.58; font-feature-settings: "kern", "liga"; }
   h1, h2, h3 { @apply font-serif text-ink; font-optical-sizing: auto; letter-spacing: -0.012em; }
   ::selection { background: #CFE7E9; color: var(--color-ink); }
   :focus-visible { outline: 2px solid var(--color-violet); outline-offset: 2px; border-radius: 4px; }
@@ -36,14 +36,14 @@
   button:disabled { cursor: not-allowed; }
 }
 
-/* Serif headings read lighter and more refined than the default semibold. */
-:where(h1, h2, h3):not(.font-sans) { font-weight: 500; }
-h1:not(.font-sans) { letter-spacing: -0.02em; }
+/* Newspaper headings: bold serif page titles, semibold serif section and card heads. */
+:where(h1, h2, h3):not(.font-sans) { font-weight: 600; }
+:where(h1):not(.font-sans) { font-weight: 700; letter-spacing: -0.018em; }
 
 /* A quiet dot grid: the paper consultants sketch issue trees on. */
 .graph-paper {
   background-color: var(--color-paper);
-  background-image: radial-gradient(circle at 1px 1px, #CBD3DE 1px, transparent 1.2px);
+  background-image: radial-gradient(circle at 1px 1px, #D6D6D6 1px, transparent 1.2px);
   background-size: 18px 18px;
 }
 
@@ -70,12 +70,12 @@ h1:not(.font-sans) { letter-spacing: -0.02em; }
 
 /* Primary button: deep navy with a soft top light and a teal hairline that shows on hover */
 .btn-primary {
-  background: linear-gradient(180deg, #1A2A49 0%, #0F1B33 100%);
-  box-shadow: inset 0 1px 0 rgb(255 255 255 / .12), inset 0 -2px 0 rgb(14 140 150 / 0), 0 1px 2px rgb(15 27 51 / .22);
+  background: linear-gradient(180deg, #2B2B2B 0%, #121212 100%);
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / .12), inset 0 -2px 0 rgb(14 140 150 / 0), 0 1px 2px rgb(18 18 18 / .22);
 }
 .btn-primary:hover {
-  background: linear-gradient(180deg, #213458 0%, #13223F 100%);
-  box-shadow: inset 0 1px 0 rgb(255 255 255 / .14), inset 0 -2px 0 rgb(94 211 220 / .9), 0 2px 6px -2px rgb(15 27 51 / .35);
+  background: linear-gradient(180deg, #2E2E2E 0%, #161616 100%);
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / .14), inset 0 -2px 0 rgb(94 211 220 / .9), 0 2px 6px -2px rgb(18 18 18 / .35);
 }
 
 /* ---------- Motion ---------- */
@@ -116,7 +116,7 @@ h1:not(.font-sans) { letter-spacing: -0.02em; }
 /* The sign-in wall: the page softens and blurs out below the first screen */
 .wall-veil {
   -webkit-backdrop-filter: blur(9px); backdrop-filter: blur(9px);
-  background: linear-gradient(to bottom, rgb(246 247 249 / 0) 0%, rgb(246 247 249 / .55) 35%, rgb(246 247 249 / .98) 75%);
+  background: linear-gradient(to bottom, rgb(255 255 255 / 0) 0%, rgb(255 255 255 / .55) 35%, rgb(255 255 255 / .98) 75%);
   -webkit-mask-image: linear-gradient(to bottom, transparent 0, black 120px); mask-image: linear-gradient(to bottom, transparent 0, black 120px);
 }
 
@@ -128,10 +128,10 @@ h1:not(.font-sans) { letter-spacing: -0.02em; }
 /* Left-to-right issue tree with bracket connectors */
 .htree-node { display: flex; align-items: center; }
 .htree-kids { position: relative; display: flex; flex-direction: column; justify-content: center; gap: 8px; padding-left: 28px; }
-.htree-kids::before { content: ''; position: absolute; left: 0; top: 50%; width: 14px; border-top: 1.5px solid #9AA6B8; }
+.htree-kids::before { content: ''; position: absolute; left: 0; top: 50%; width: 14px; border-top: 1.5px solid #A0A0A0; }
 .htree-kid { position: relative; }
-.htree-kid::before { content: ''; position: absolute; left: -14px; top: 50%; width: 14px; border-top: 1.5px solid #9AA6B8; }
-.htree-kid::after { content: ''; position: absolute; left: -14px; top: -4px; bottom: -4px; border-left: 1.5px solid #9AA6B8; }
+.htree-kid::before { content: ''; position: absolute; left: -14px; top: 50%; width: 14px; border-top: 1.5px solid #A0A0A0; }
+.htree-kid::after { content: ''; position: absolute; left: -14px; top: -4px; bottom: -4px; border-left: 1.5px solid #A0A0A0; }
 .htree-kid:first-child::after { top: 50%; }
 .htree-kid:last-child::after { bottom: 50%; }
 .htree-kid:only-child::after { display: none; }
@@ -155,13 +155,13 @@ h1:not(.font-sans) { letter-spacing: -0.02em; }
 .tabbar {
   background: rgb(255 255 255 / .82);
   -webkit-backdrop-filter: saturate(1.6) blur(18px); backdrop-filter: saturate(1.6) blur(18px);
-  border: 1px solid rgb(15 27 51 / .08);
-  box-shadow: 0 10px 30px -12px rgb(15 27 51 / .45), 0 1px 0 rgb(255 255 255 / .6) inset;
+  border: 1px solid rgb(18 18 18 / .08);
+  box-shadow: 0 10px 30px -12px rgb(18 18 18 / .45), 0 1px 0 rgb(255 255 255 / .6) inset;
 }
 .tab-pill {
   position: absolute; top: 4px; bottom: 4px; left: 4px; width: calc((100% - 8px) / 5); border-radius: 12px;
-  background: linear-gradient(180deg, #1A2A49 0%, #0F1B33 100%);
-  box-shadow: inset 0 -2px 0 rgb(94 211 220 / .85), 0 4px 10px -4px rgb(15 27 51 / .5);
+  background: linear-gradient(180deg, #2B2B2B 0%, #121212 100%);
+  box-shadow: inset 0 -2px 0 rgb(94 211 220 / .85), 0 4px 10px -4px rgb(18 18 18 / .5);
   transition: transform .35s cubic-bezier(.3, 1.3, .5, 1);
 }
 @media (prefers-reduced-motion: reduce) { .tab-pill { transition: none; } }
@@ -225,11 +225,11 @@ h1:not(.font-sans) { letter-spacing: -0.02em; }
 }
 
 /* Blog posts: a Medium-style reading column. Serif body, sans headings, generous rhythm. */
-.post { font-family: var(--font-serif); font-size: calc(18px * var(--rs, 1)); line-height: 1.68; color: var(--reader-text, #1f2733); font-optical-sizing: auto; letter-spacing: -0.003em; }
+.post { font-family: var(--font-serif); font-size: calc(18px * var(--rs, 1)); line-height: 1.68; color: var(--reader-text, #222222); font-optical-sizing: auto; letter-spacing: -0.003em; }
 @media (min-width: 640px) { .post { font-size: calc(20px * var(--rs, 1)); line-height: 1.6; } }
 .post > * + * { margin-top: 1.15em; }
-.post h2 { margin-top: 1.9em; font-family: var(--font-sans); font-size: 22px; font-weight: 700; line-height: 1.3; letter-spacing: -0.01em; color: var(--color-ink); }
-.post h3 { margin-top: 1.6em; font-family: var(--font-sans); font-size: 18px; font-weight: 600; line-height: 1.4; color: var(--color-ink); }
+.post h2 { margin-top: 1.8em; font-family: var(--font-serif); font-size: calc(25px * var(--rs, 1)); font-weight: 700; line-height: 1.22; letter-spacing: -0.012em; color: var(--color-ink); }
+.post h3 { margin-top: 1.5em; font-family: var(--font-serif); font-size: calc(20px * var(--rs, 1)); font-weight: 600; line-height: 1.3; color: var(--color-ink); }
 @media (min-width: 640px) { .post h2 { font-size: 26px; } .post h3 { font-size: 20px; } }
 .post h2 + *, .post h3 + * { margin-top: .45em; }
 .post ul, .post ol { padding-left: 1.4em; }
@@ -239,7 +239,7 @@ h1:not(.font-sans) { letter-spacing: -0.02em; }
 .post li > ul { margin-top: .45em; }
 .post b { color: var(--color-ink); font-weight: 650; }
 .post i { font-style: italic; }
-.post a { color: inherit; text-decoration: underline; text-decoration-color: rgb(15 27 51 / .35); text-underline-offset: 3px; text-decoration-thickness: 1px; }
+.post a { color: inherit; text-decoration: underline; text-decoration-color: rgb(18 18 18 / .35); text-underline-offset: 3px; text-decoration-thickness: 1px; }
 .post a:hover { text-decoration-color: var(--color-ink); }
 .post blockquote { border-left: 3px solid var(--color-ink); padding: .1em 0 .1em 1.1em; font-style: italic; color: var(--color-ink); }
 .post details { border-top: 1px solid var(--color-line); border-bottom: 1px solid var(--color-line); padding: .7em 0; }
@@ -253,11 +253,11 @@ h1:not(.font-sans) { letter-spacing: -0.02em; }
 .post th { color: var(--color-ink); font-weight: 600; }
 .post .tag { margin-left: .3em; font-family: var(--font-sans); font-size: 13px; font-weight: 500; color: var(--color-muted); }
 .post h2, .post h3 { scroll-margin-top: 90px; transition: background-color .6s; border-radius: 6px; }
-.lede { font-family: var(--font-serif); font-size: calc(20px * var(--rs, 1)); line-height: 1.6; color: var(--reader-text, #1f2733); }
+.lede { font-family: var(--font-serif); font-size: calc(20px * var(--rs, 1)); line-height: 1.6; color: var(--reader-text, #222222); }
 @media (min-width: 640px) { .lede { font-size: calc(22px * var(--rs, 1)); } }
 
 /* Course lessons: the same calm reading style as the blog, a little smaller */
-.read { font-family: var(--font-serif); font-size: 18px; line-height: 1.65; color: #1f2733; font-optical-sizing: auto; }
+.read { font-family: var(--font-serif); font-size: 18px; line-height: 1.65; color: #222222; font-optical-sizing: auto; }
 @media (min-width: 640px) { .read { font-size: 19px; } }
 .read .rich { font-size: inherit !important; line-height: inherit; }
 .read p { margin: 0 0 .9em; }
@@ -265,7 +265,7 @@ h1:not(.font-sans) { letter-spacing: -0.02em; }
 .read li { margin-bottom: .4em; padding-left: .15em; }
 .read b { color: var(--color-ink); font-weight: 650; }
 .read i { color: inherit; font-style: italic; }
-.read a { text-decoration: underline; text-underline-offset: 3px; text-decoration-color: rgb(15 27 51 / .35); }
+.read a { text-decoration: underline; text-underline-offset: 3px; text-decoration-color: rgb(18 18 18 / .35); }
 
 /* Smoother text in long-form reading */
 .post, .read { text-rendering: optimizeLegibility; }
@@ -273,6 +273,6 @@ h1:not(.font-sans) { letter-spacing: -0.02em; }
 /* Reader themes for articles. Redefining the palette inside the article layout recolours
    every utility class there (bg-white, text-ink, border-line...) without touching the rest of the site. */
 .reader-sepia { --color-white: #F8F1E3; --color-canvas: #EFE5CF; --color-line: #E0D3B6; --color-ink: #2B2417; --color-ink-2: #3D3424; --color-muted: #776A54; --reader-text: #33291b; --color-teal-l: #E6E1C7; color-scheme: light; }
-.reader-dark { --color-white: #15171B; --color-canvas: #1E2127; --color-line: #2E333C; --color-ink: #ECEEF1; --color-ink-2: #C9CED6; --color-muted: #949CA9; --reader-text: #D9DDE3; --color-teal-l: #1D3A3D; --color-teal-d: #6FCBD2; color-scheme: dark; }
+.reader-dark { --color-white: #15171B; --color-canvas: #1E2127; --color-line: #2E333C; --color-ink: #EDEDED; --color-ink-2: #C9CED6; --color-muted: #949CA9; --reader-text: #D9DDE3; --color-teal-l: #1D3A3D; --color-teal-d: #6FCBD2; color-scheme: dark; }
 .reader-dark .post a { text-decoration-color: rgb(236 238 241 / .4); }
 .reader-sepia, .reader-dark { transition: background-color .25s, color .25s; }

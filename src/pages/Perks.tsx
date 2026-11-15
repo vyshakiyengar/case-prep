@@ -25,7 +25,7 @@ export function SchoolForm({ initial, submitLabel, onSubmit, busy }: { initial?:
       <Field label="Business school email" hint="We send a one-click link to this address to confirm it's yours.">
         <input type="email" required className={inputCls} value={p.email} onChange={(e) => setP({ ...p, email: e.target.value })} placeholder="name@school.edu" autoComplete="email" />
       </Field>
-      {problem && <p className="text-[13.5px] text-signal-d">{problem}</p>}
+      {problem && <p className="text-[14px] text-signal-d">{problem}</p>}
       <Field label="School" hint={look.school ? 'Recognised from your email' : valid ? "We don't recognise this domain yet. Type your school's name." : undefined}>
         <input required className={inputCls} value={p.school} onChange={(e) => setP({ ...p, school: e.target.value })} placeholder="e.g. Your business school" />
       </Field>
@@ -48,17 +48,17 @@ function PerkItem({ p }: { p: Perk }) {
   return (
     <li className="grid gap-3 py-4 sm:grid-cols-[1fr_auto] sm:items-center">
       <div>
-        <h3 className="text-[16.5px] font-semibold">{p.title}</h3>
+        <h3 className="text-[17px] font-semibold">{p.title}</h3>
         <p className="text-ink-2">{p.description}</p>
       </div>
       <div className="flex flex-wrap items-center gap-2">
         {p.kind === 'code' && p.code && (
           <button onClick={async () => { try { await navigator.clipboard.writeText(p.code!); setCopied(true); setTimeout(() => setCopied(false), 2000) } catch { /* ignore */ } }}
-            className="rounded-lg border-2 border-dashed border-violet bg-violet-l px-3 py-1.5 font-mono text-[14.5px] font-semibold tracking-wide text-violet-d" title="Copy code">
+            className="rounded-lg border-2 border-dashed border-violet bg-violet-l px-3 py-1.5 font-mono text-[15px] font-semibold tracking-wide text-violet-d" title="Copy code">
             {copied ? 'Copied' : p.code}
           </button>
         )}
-        {p.url && <a href={p.url} target="_blank" rel="noreferrer" className="rounded-lg bg-ink px-4 py-2 text-[14px] font-medium text-white hover:bg-[#22325A]">{p.kind === 'download' ? 'Download' : p.kind === 'code' ? 'Use the code' : 'Open'}</a>}
+        {p.url && <a href={p.url} target="_blank" rel="noreferrer" className="rounded-lg bg-ink px-4 py-2 text-[14px] font-medium text-white hover:bg-[#2E2E2E]">{p.kind === 'download' ? 'Download' : p.kind === 'code' ? 'Use the code' : 'Open'}</a>}
       </div>
     </li>
   )
@@ -79,7 +79,7 @@ export default function Perks() {
     <>
       <PageHeader title="Student perks" art={<ArtPerks />} />
       <div className="max-w-xl rounded-lg border border-line bg-white p-5">
-        <h2 className="text-[17.5px] font-semibold">Coming with Google sign-in</h2>
+        <h2 className="text-[18px] font-semibold">Coming with Google sign-in</h2>
         <p className="mt-1 text-ink-2">Verifying your business school email needs an account in the cloud, so it switches on together with Google sign-in. Everything else works now, and your progress is saved in this browser.</p>
       </div>
     </>
@@ -101,7 +101,7 @@ export default function Perks() {
       <div className="mb-5 flex flex-wrap items-center gap-3 rounded-lg border border-good/40 bg-good-l px-5 py-3">
         <svg width="22" height="22" viewBox="0 0 24 24" aria-hidden><circle cx="12" cy="12" r="11" fill="#1E8E3E" /><path d="M7 12.5l3.2 3L17 9" stroke="#fff" strokeWidth="2.2" fill="none" strokeLinecap="round" /></svg>
         <span className="text-ink"><b className="font-semibold">School email confirmed:</b> {student.school}{student.program ? `, ${student.program} ${student.gradYear}` : ''}</span>
-        <span className="text-[13.5px] text-muted">{student.schoolEmail}</span>
+        <span className="text-[14px] text-muted">{student.schoolEmail}</span>
       </div>
       <Section>
         {perks.length ? <ul className="divide-y divide-line">{perks.map((p) => <PerkItem key={p.id} p={p} />)}</ul>
@@ -131,7 +131,7 @@ export default function Perks() {
             <li>Extra free downloads for students, when they are available</li>
             <li>Student offers on new materials, when they launch</li>
           </ul>
-          <p className="mt-4 text-[13.5px] text-muted">Your school email is used to confirm you're a student and, only if you ticked the box, to send you offers. Practice partners never see it.</p>
+          <p className="mt-4 text-[14px] text-muted">Your school email is used to confirm you're a student and, only if you ticked the box, to send you offers. Practice partners never see it.</p>
         </Section>
       </div>
     </>

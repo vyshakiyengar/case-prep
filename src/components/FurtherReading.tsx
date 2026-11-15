@@ -51,7 +51,7 @@ export function FurtherReading() {
     <aside aria-labelledby="further-reading" className="mt-12 border-t border-line pt-6">
       <div className="mb-3 flex items-baseline justify-between gap-3">
         <h2 id="further-reading" className="font-sans text-[15px] font-semibold text-ink">Want to go deeper? Read these on the blog</h2>
-        <Link to="/blog" className="shrink-0 text-[13.5px] font-medium text-violet-d hover:underline">All articles</Link>
+        <Link to="/blog" className="shrink-0 text-[14px] font-medium text-violet-d hover:underline">All articles</Link>
       </div>
       <ul className="-mx-4 flex snap-x gap-3 overflow-x-auto px-4 pb-1 sm:mx-0 sm:grid sm:grid-cols-3 sm:overflow-visible sm:px-0">
         {list.map((p) => (

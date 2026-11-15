@@ -74,7 +74,7 @@ export default function Home() {
   return (
     <>
       <header className="mb-6">
-        <h1 className="text-[25px] leading-[1.12] font-semibold sm:text-[30px]">{user ? `Welcome back${name ? `, ${name}` : ''}` : 'Welcome to PrepForCase'}</h1>
+        <h1 className="text-[28px] leading-[1.1] sm:text-[34px]">{user ? `Welcome back${name ? `, ${name}` : ''}` : 'Welcome to PrepForCase'}</h1>
         {sub && <p className="mt-1 text-[15px] text-muted">{sub}</p>}
       </header>
 
@@ -83,9 +83,9 @@ export default function Home() {
         <div className="relative flex flex-wrap items-end justify-between gap-4">
           <div>
             <p className="text-[13px] font-semibold text-teal-l">Your next step</p>
-            <p className="mt-0.5 font-serif text-[21px] leading-snug font-semibold">{next.label}</p>
+            <p className="mt-0.5 font-serif text-[22px] leading-snug font-semibold">{next.label}</p>
           </div>
-          <Link to={next.to} className="lp-cta inline-flex items-center rounded-lg bg-white px-4 py-2.5 text-[14.5px] font-semibold text-ink hover:bg-teal-l">Go</Link>
+          <Link to={next.to} className="lp-cta inline-flex items-center rounded-lg bg-white px-4 py-2.5 text-[15px] font-semibold text-ink hover:bg-teal-l">Go</Link>
         </div>
         <ol className="relative mt-6 grid gap-4 md:grid-cols-6 md:gap-3">
           <span aria-hidden className="absolute top-[9px] right-[9px] left-[9px] hidden h-[2px] bg-white/15 md:block" />
@@ -96,8 +96,8 @@ export default function Home() {
                 {r.done && <svg viewBox="0 0 16 16" className="h-3 w-3 fill-none stroke-ink stroke-[2.5]"><path d="M3.5 8.5l3 3 6-7" /></svg>}
               </span>
               <Link to={r.to} className="group block md:mt-3">
-                <span className={`block text-[14.5px] font-medium group-hover:underline ${r.done ? 'text-white/60' : 'text-white'}`}>{r.t}</span>
-                <span className="block text-[12.5px] leading-snug text-[#9FB0C6]">{r.d}</span>
+                <span className={`block text-[15px] font-medium group-hover:underline ${r.done ? 'text-white/60' : 'text-white'}`}>{r.t}</span>
+                <span className="block text-[13px] leading-snug text-[#A8A8A8]">{r.d}</span>
               </Link>
             </li>
           ))}
@@ -114,9 +114,9 @@ export default function Home() {
         <section className="mb-8 grid items-center gap-6 rounded-xl border border-line bg-white p-4 sm:p-5 lg:grid-cols-[1.3fr_1fr]">
           <VideoPlayer name="getting-started-v2" title="Getting started with PrepForCase" />
           <div>
-            <h2 className="text-[21px] font-semibold">New here? Start with this</h2>
-            <p className="mt-1.5 text-[14.5px] leading-relaxed text-ink-2">80 seconds on what a case interview is, the six steps of a case, and how to use the course. Then lesson 1 takes 8 minutes.</p>
-            <Link to="/learn/case-map" className="mt-4 inline-block rounded-lg bg-ink px-4 py-2.5 text-[14.5px] font-medium text-white hover:bg-[#1C2B4A]">Start the course</Link>
+            <h2 className="text-[22px] font-semibold">New here? Start with this</h2>
+            <p className="mt-1.5 text-[15px] leading-relaxed text-ink-2">80 seconds on what a case interview is, the six steps of a case, and how to use the course. Then lesson 1 takes 8 minutes.</p>
+            <Link to="/learn/case-map" className="mt-4 inline-block rounded-lg bg-ink px-4 py-2.5 text-[15px] font-medium text-white hover:bg-[#262626]">Start the course</Link>
           </div>
         </section>
       )}
@@ -132,11 +132,11 @@ export default function Home() {
 
       <div className="mb-8 grid gap-6 lg:grid-cols-[320px_1fr]">
         <section>
-          <h2 className="mb-3 text-[19px] font-semibold">A quick one</h2>
+          <h2 className="mb-3 text-[20px] font-semibold">A quick one</h2>
           <TryOne />
         </section>
         <section>
-          <h2 className="mb-3 text-[19px] font-semibold">Ten-minute warm-ups</h2>
+          <h2 className="mb-3 text-[20px] font-semibold">Ten-minute warm-ups</h2>
           <div className="grid gap-3 sm:grid-cols-2">
             {[
               { to: '/drills/maths?go=1', t: 'Case maths', d: '10 quick sums, marked as you go', A: ArtMaths },
@@ -158,7 +158,7 @@ export default function Home() {
 
       <section className="mb-8">
         <div className="mb-3 flex flex-wrap items-baseline justify-between gap-2">
-          <h2 className="text-[19px] font-semibold">Cases for you</h2>
+          <h2 className="text-[20px] font-semibold">Cases for you</h2>
           <Link to="/casebook" className="text-[14px] font-medium text-violet-d hover:underline">All {CASE_COUNT} cases</Link>
         </div>
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
@@ -172,10 +172,10 @@ export default function Home() {
 
       {done.length > 0 && (
         <section>
-          <h2 className="mb-3 text-[19px] font-semibold">Your progress</h2>
+          <h2 className="mb-3 text-[20px] font-semibold">Your progress</h2>
           <ul className="flex flex-wrap gap-2">
             {done.map(([to, p]) => (
-              <li key={to}><Link to={to} className="inline-block rounded-full border border-line bg-white px-3.5 py-1.5 text-[13.5px] text-ink-2 hover:border-ink/40 hover:text-ink">{p!.text}</Link></li>
+              <li key={to}><Link to={to} className="inline-block rounded-full border border-line bg-white px-3.5 py-1.5 text-[14px] text-ink-2 hover:border-ink/40 hover:text-ink">{p!.text}</Link></li>
             ))}
           </ul>
         </section>
@@ -191,10 +191,10 @@ function YourPlan({ toGo }: { toGo: number | null }) {
   return (
     <section className="mb-8 rounded-xl border border-line bg-white p-4 sm:p-5">
       <div className="flex flex-wrap items-baseline justify-between gap-2">
-        <h2 className="text-[19px] font-semibold">Your plan: {plan.t.toLowerCase()}</h2>
+        <h2 className="text-[20px] font-semibold">Your plan: {plan.t.toLowerCase()}</h2>
         <Link to="/settings" className="text-[14px] font-medium text-violet-d hover:underline">{toGo === null ? 'Add your interview date' : 'Change your date'}</Link>
       </div>
-      {toGo === null && <p className="mt-1 text-[13.5px] text-muted">Add your interview date and this plan adjusts to the time you have.</p>}
+      {toGo === null && <p className="mt-1 text-[14px] text-muted">Add your interview date and this plan adjusts to the time you have.</p>}
       <ol className="mt-3 grid gap-3 md:grid-cols-3">
         {plan.steps.map((x, k) => (
           <li key={x} className={`rounded-lg px-3.5 py-3 text-[14px] leading-snug ${k === step ? 'bg-ink text-white' : 'bg-canvas text-ink-2'}`}>
@@ -217,30 +217,30 @@ function TodaysThree() {
   const box = 'flex flex-col rounded-xl border border-line bg-white p-4 sm:p-5'
   return (
     <section className="mb-8">
-      <h2 className="mb-3 text-[19px] font-semibold">Learn three things today</h2>
+      <h2 className="mb-3 text-[20px] font-semibold">Learn three things today</h2>
       <div className="grid gap-4 lg:grid-cols-3">
         <div className={box}>
-          <p className="text-[12.5px] font-medium text-teal-d">Framework</p>
+          <p className="text-[13px] font-medium text-teal-d">Framework</p>
           <h3 className="mt-1 text-[17px]">{fw.title}</h3>
           <p className="mt-1.5 text-[14px] text-ink-2"><span className="text-muted">Ask first:</span> {fw.ask}</p>
           <ul className="mt-3 flex flex-wrap gap-1.5">
-            {fw.branches.map((b) => <li key={b.t} className="rounded-md bg-teal-l px-2 py-1 text-[12.5px] font-medium text-teal-d">{b.t}</li>)}
+            {fw.branches.map((b) => <li key={b.t} className="rounded-md bg-teal-l px-2 py-1 text-[13px] font-medium text-teal-d">{b.t}</li>)}
           </ul>
           <Link to={`/frameworks#${fw.id}`} className="mt-auto pt-4 text-[14px] font-medium text-violet-d hover:underline">See the full tree</Link>
         </div>
         <div className={box}>
-          <p className="text-[12.5px] font-medium text-teal-d">What would you say?</p>
-          <p className="mt-1 text-[14.5px] leading-snug text-ink">{card.situation}</p>
+          <p className="text-[13px] font-medium text-teal-d">What would you say?</p>
+          <p className="mt-1 text-[15px] leading-snug text-ink">{card.situation}</p>
           {show
             ? <div className="mt-3 rounded-lg bg-canvas p-3 text-[14px] leading-snug"><p className="text-ink">{card.model}</p><p className="mt-1.5 text-muted">{card.why}</p></div>
-            : <button type="button" onClick={() => setShow(true)} className="mt-3 self-start rounded-lg border border-line px-3 py-1.5 text-[13.5px] font-medium text-ink hover:border-ink/40">Show a strong answer</button>}
+            : <button type="button" onClick={() => setShow(true)} className="mt-3 self-start rounded-lg border border-line px-3 py-1.5 text-[14px] font-medium text-ink hover:border-ink/40">Show a strong answer</button>}
           <Link to="/perfect-casing#trainer" className="mt-auto pt-4 text-[14px] font-medium text-violet-d hover:underline">Train more phrases</Link>
         </div>
         <div className={box}>
-          <p className="text-[12.5px] font-medium text-teal-d">Term</p>
+          <p className="text-[13px] font-medium text-teal-d">Term</p>
           <h3 className="mt-1 text-[17px]">{term.term}</h3>
           <p className="mt-1.5 text-[14px] text-ink-2">{term.plain}</p>
-          <p className="mt-2 text-[13.5px] text-muted">For example: {term.example}</p>
+          <p className="mt-2 text-[14px] text-muted">For example: {term.example}</p>
           <Link to="/glossary" className="mt-auto pt-4 text-[14px] font-medium text-violet-d hover:underline">Open the glossary</Link>
         </div>
       </div>

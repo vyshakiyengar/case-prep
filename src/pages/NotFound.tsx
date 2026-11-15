@@ -10,7 +10,7 @@ export default function NotFound() {
   }, [])
   return (
     <div className="mx-auto max-w-lg py-16 text-center">
-      <h1 className="font-serif text-[32px] text-ink">We couldn't find that page</h1>
+      <h1 className="text-[28px] leading-[1.1] sm:text-[34px]">We couldn't find that page</h1>
       <p className="mt-3 text-[16px] text-ink-2">The link may be old or mistyped. These are good places to pick up from:</p>
       <div className="mt-6 flex flex-wrap justify-center gap-3">
         <Link to="/" className="rounded-full bg-ink px-5 py-2.5 text-[15px] font-medium text-white hover:bg-ink/90">Home</Link>

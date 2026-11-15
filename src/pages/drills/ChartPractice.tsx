@@ -73,9 +73,9 @@ function QuickReads({ fam }: { fam: Fam }) {
           {log.length > 0 && <Tally results={log.map((d) => d.ok)} />}
           <p className="mt-2 text-ink-2">{right === log.length ? 'Every one right.' : right >= log.length * 0.75 ? 'Strong. Check the ones you missed below.' : 'Check the units, and what each percentage is a percentage of.'}</p>
           <div className="mt-5 flex flex-wrap justify-center gap-2"><Button onClick={start}>Another round</Button></div>
-          {best !== null && <p className="mt-3 text-[13.5px] text-muted">Your best: {best} of {SET}</p>}
+          {best !== null && <p className="mt-3 text-[14px] text-muted">Your best: {best} of {SET}</p>}
         </div>
-        {log.some((d) => !d.ok) && <section className="mt-6"><h2 className="text-[17.5px]">The ones you missed</h2><ul className="mt-3 space-y-3">{log.filter((d) => !d.ok).map((d) => <li key={d.q.id} className="rounded-lg border border-line bg-white p-4"><p className="font-medium text-ink">{d.q.chart.title}: {d.q.q}</p><p className="mt-1 text-[14px] text-ink-2">Answer: <b className="font-semibold text-ink">{d.q.show}</b>. {d.q.why}</p></li>)}</ul></section>}
+        {log.some((d) => !d.ok) && <section className="mt-6"><h2 className="text-[18px]">The ones you missed</h2><ul className="mt-3 space-y-3">{log.filter((d) => !d.ok).map((d) => <li key={d.q.id} className="rounded-lg border border-line bg-white p-4"><p className="font-medium text-ink">{d.q.chart.title}: {d.q.q}</p><p className="mt-1 text-[14px] text-ink-2">Answer: <b className="font-semibold text-ink">{d.q.show}</b>. {d.q.why}</p></li>)}</ul></section>}
       </div>
     )
   }
@@ -87,18 +87,18 @@ function QuickReads({ fam }: { fam: Fam }) {
       <div className="min-w-0 rounded-lg border border-line bg-white p-4 sm:p-5">
         <p className="mb-3 text-[13px] text-muted">Exhibit {Math.min(log.length + (fb ? 0 : 1), SET)} of {SET} · {q.family}</p>
         <DrillChart spec={q.chart} />
-        <p className="mt-2 text-[12.5px] text-muted">Fictional data, generated for practice.</p>
+        <p className="mt-2 text-[13px] text-muted">Fictional data, generated for practice.</p>
       </div>
       <div className="space-y-4">
         {!fb && <Countdown key={q.id} seconds={SECS} label="Time left" autoStart onEnd={onTimeout} />}
         <div className={`rounded-lg border p-4 ${fb ? (fb.ok ? 'border-good' : 'border-signal') : 'border-line'} bg-white`}>
-          <p className="text-[13.5px] text-muted">{q.context}</p>
+          <p className="text-[14px] text-muted">{q.context}</p>
           <p className="mt-1 text-[16px] font-medium text-ink">{q.q}</p>
           {q.options ? (
             <div className="mt-3 grid gap-2">
               {q.options.map((o, i) => (
                 <button key={o} type="button" disabled={!!fb} onClick={() => { setPicked(i); record(i === q.correct, o) }}
-                  className={`rounded-lg border px-3 py-2 text-left text-[14.5px] transition-colors ${!fb ? 'border-line hover:border-ink' : i === q.correct ? 'border-good bg-good-l/50 font-medium' : picked === i ? 'border-signal' : 'border-line opacity-70'}`}>{o}</button>
+                  className={`rounded-lg border px-3 py-2 text-left text-[15px] transition-colors ${!fb ? 'border-line hover:border-ink' : i === q.correct ? 'border-good bg-good-l/50 font-medium' : picked === i ? 'border-signal' : 'border-line opacity-70'}`}>{o}</button>
               ))}
             </div>
           ) : (
@@ -112,7 +112,7 @@ function QuickReads({ fam }: { fam: Fam }) {
           )}
           {fb && (
             <div className="mt-3 border-t border-line pt-3" role="status">
-              <p className={`text-[14.5px] font-semibold ${fb.ok ? 'text-good' : 'text-signal'}`}>{fb.ok ? 'Right.' : fb.timeout ? 'Out of time.' : 'Not quite.'} <span className="font-normal text-ink">Answer: <b className="font-semibold">{q.show}</b></span></p>
+              <p className={`text-[15px] font-semibold ${fb.ok ? 'text-good' : 'text-signal'}`}>{fb.ok ? 'Right.' : fb.timeout ? 'Out of time.' : 'Not quite.'} <span className="font-normal text-ink">Answer: <b className="font-semibold">{q.show}</b></span></p>
               <p className="mt-1 text-[14px] text-ink-2">{q.why}</p>
               <Button className="mt-3" onClick={() => (last ? finish() : next())}>{last ? 'See results' : 'Next exhibit'}</Button>
             </div>
@@ -144,7 +144,7 @@ function Insight() {
     <div className="grid gap-5 lg:grid-cols-[1.5fr_1fr]">
       <div className="min-w-0 rounded-lg border border-line bg-white p-5">
         <p className="text-[13px] text-muted">Exhibit {n + 1} of {items.length}, from case {it.c.id}: {it.c.title}</p>
-        <p className="mt-2 text-[14.5px] text-ink-2"><span className="font-medium text-ink">Context:</span> {it.c.sub} {it.q.q}</p>
+        <p className="mt-2 text-[15px] text-ink-2"><span className="font-medium text-ink">Context:</span> {it.c.sub} {it.q.q}</p>
         {it.q.exhibit && <ExhibitView ex={it.q.exhibit} />}
         {phase === 'review' && (
           <div className="mt-2 rounded-lg border border-good/40 p-4">
@@ -165,7 +165,7 @@ function Insight() {
             <li>Link it to the client's goal.</li>
             <li>Say where you'd go next.</li>
           </ol>
-          <Link to="/learn/charts-and-exhibits" className="mt-3 inline-block text-[13.5px] font-medium text-violet-d hover:underline">Lesson: reading charts and exhibits</Link>
+          <Link to="/learn/charts-and-exhibits" className="mt-3 inline-block text-[14px] font-medium text-violet-d hover:underline">Lesson: reading charts and exhibits</Link>
         </Section>
       </div>
     </div>
@@ -195,12 +195,12 @@ export default function ChartPractice() {
               meta="90 seconds each" />
           </div>
           <details className="mt-4 max-w-5xl rounded-lg border border-line bg-white px-5 py-3">
-            <summary className="cursor-pointer text-[14.5px] font-medium text-ink">Options: practise one chart type</summary>
+            <summary className="cursor-pointer text-[15px] font-medium text-ink">Options: practise one chart type</summary>
             <div className="flex flex-wrap gap-2 py-3" role="group" aria-label="Chart type">
               {(['All', ...FAMILIES] as Fam[]).map((f) => <button key={f} onClick={() => setFam(f)} aria-pressed={fam === f}
-                className={`rounded-full border px-3.5 py-1.5 text-[13.5px] font-medium transition-colors ${fam === f ? 'border-ink bg-ink text-white' : 'border-line bg-white text-ink-2 hover:border-faint'}`}>{f === 'All' ? 'All types' : f}</button>)}
+                className={`rounded-full border px-3.5 py-1.5 text-[14px] font-medium transition-colors ${fam === f ? 'border-ink bg-ink text-white' : 'border-line bg-white text-ink-2 hover:border-faint'}`}>{f === 'All' ? 'All types' : f}</button>)}
             </div>
-            <p className="pb-2 text-[13.5px] text-muted">For a slower look at every kind of chart, with an explanation of each, use the <Link to="/graphs" className="font-medium text-violet-d hover:underline">graph library</Link>.</p>
+            <p className="pb-2 text-[14px] text-muted">For a slower look at every kind of chart, with an explanation of each, use the <Link to="/graphs" className="font-medium text-violet-d hover:underline">graph library</Link>.</p>
           </details>
         </>
       )}

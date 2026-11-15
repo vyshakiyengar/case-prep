@@ -41,10 +41,10 @@ export default function Notes() {
           {filled.map((p) => (
             <li key={p.id} className="rounded-xl border border-line bg-white p-4 sm:p-5">
               <div className="flex flex-wrap items-baseline justify-between gap-2">
-                <h2 className="text-[17.5px]">{pageTitle(p.id, p.i)}</h2>
+                <h2 className="text-[18px]">{pageTitle(p.id, p.i)}</h2>
                 <span className="text-[13px] text-muted">{fmt(p.note!.updatedAt)} · <Link to={p.to} className="font-medium text-violet-d hover:underline">Open page to edit</Link></span>
               </div>
-              <p className="mt-2 whitespace-pre-wrap text-[14.5px] leading-relaxed text-ink">{p.note!.text.trim()}</p>
+              <p className="mt-2 whitespace-pre-wrap text-[15px] leading-relaxed text-ink">{p.note!.text.trim()}</p>
             </li>
           ))}
         </ol>

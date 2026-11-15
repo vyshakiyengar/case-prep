@@ -68,5 +68,16 @@ for q in by[15]["questions"]:
         ex["svg"] = slim(kit.line(["Wk -4", "Wk -3", "Wk -2", "Wk -1", "This wk"], {"iOS": [100, 101, 100, 101, 100], "Android": [100, 100, 99, 100, 82]},
                                   fmt="{:.0f}", w=6.0, h=2.4, ylim=(75, 106), labels=False))
         if "Index values" not in ex["note"]: ex["note"] += " Index values: iOS stays at 100–101; Android is 99–100 until this week, then 82."
+
+# Charts first drawn before the generator existed, redrawn with the site font (data read off the originals)
+def redraw(cid, qi, svg):
+    by[cid]["questions"][qi]["exhibit"]["svg"] = slim(svg)
+redraw(2, 1, kit.bar(["Brand A (US)", "Brand B (DE)", "Brand C (US)", "Brand D (NL)", "~40 others"], {"Share": [22, 15, 10, 8, 45]}, fmt="{:.0f}%", highlight=[4], w=6.2, h=2.5))
+redraw(3, 0, kit.bar([f"H{i}" for i in range(1, 13)], {"Occupancy": [78, 74, 71, 70, 69, 68, 66, 64, 60, 44, 41, 39]}, fmt="{:.0f}", highlight=[9, 10, 11], w=6.4, h=2.5))
+redraw(4, 0, kit.bar(["2026", "2027", "2028", "2029", "2030"], {"Supply": [6.0, 6.4, 6.8, 7.2, 7.6], "Demand": [5.0, 6.0, 7.2, 8.3, 9.5]}, fmt="{:.1f}", w=6.2, h=2.6))
+redraw(7, 1, kit.bar(["Packaged groceries", "Household & cleaning", "Dairy & eggs", "Fresh produce", "Meat & deli", "Bakery"], {"Sales lost": [14, 13, 9, 3, 2, 2]}, fmt="{:.0f}%", horizontal=True, highlight=[0, 1], w=6.4, h=2.6))
+redraw(8, 2, kit.bar(["Today", "+3 years"], {"Industry capacity": [3.00, 3.75], "Industry demand": [2.60, 3.20]}, fmt="{:.2f}", w=5.6, h=2.6))
+redraw(10, 2, kit.bar(["GCC", "Europe", "South Asia", "Others"], {"Visitors today (M)": [2.00, 1.25, 1.00, 0.75], "Growth potential (M)": [0.80, 1.80, 1.60, 0.80]}, fmt="{:.2f}", stacked=True, w=6.2, h=2.8))
+redraw(13, 1, kit.bar(["18-25", "26-35", "36-50", "50+"], {"Last year": [3.0, 2.8, 2.5, 2.2], "This year": [8.0, 3.4, 2.6, 2.2]}, fmt="{:.1f}%", w=6.2, h=2.6))
 json.dump(cs, open(P, "w", encoding="utf-8"), ensure_ascii=True)
 print("patched")

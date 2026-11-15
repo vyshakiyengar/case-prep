@@ -22,7 +22,7 @@ export function VideoPlayer({ name, title, autoPlayInView = false, playNow = fal
     return () => io.disconnect()
   }, [autoPlayInView, playNow])
   return (
-    <figure className={`overflow-hidden rounded-xl border border-line bg-ink shadow-[0_30px_60px_-34px_rgba(15,27,51,.5)] ${className}`}>
+    <figure className={`overflow-hidden rounded-xl border border-line bg-ink shadow-[0_30px_60px_-34px_rgba(18,18,18,.5)] ${className}`}>
       <video ref={ref} src={`/video/${name}.mp4`} poster={`/video/${name}.jpg`} controls playsInline preload="none"
         muted={autoPlayInView} aria-label={title} className="block aspect-video w-full">
         <track kind="captions" src={`/video/${name}.vtt`} srcLang="en" label="English" />
@@ -38,7 +38,7 @@ export function VideoToggle({ id, label = 'Watch', className = '' }: { id: strin
   return (
     <div className={`max-w-2xl ${className}`}>
       <VideoPlayer name={`lib/${v.id}`} title={v.title} />
-      <p className="mt-2 text-[13.5px] text-muted"><span className="font-medium text-ink">{label}</span>, {fmtSecs(v.secs)}, with subtitles</p>
+      <p className="mt-2 text-[14px] text-muted"><span className="font-medium text-ink">{label}</span>, {fmtSecs(v.secs)}, with subtitles</p>
     </div>
   )
 }

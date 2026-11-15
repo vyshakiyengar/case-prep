@@ -85,12 +85,12 @@ function makeExercises(): Exercise[] {
 }
 const EXERCISES = makeExercises()
 // Validated categorical palette (teal, burnt orange, blue, amber, ink), shared with case exhibits
-const COLORS = ['#0A8F9C', '#C2410C', '#3B5BDB', '#B7791F', '#0F1B33']
-const txt = { fontFamily: 'Libre Franklin Variable, sans-serif', fill: '#5F6B7D', fontSize: 12 }
+const COLORS = ['#0A8F9C', '#C2410C', '#3B5BDB', '#B7791F', '#121212']
+const txt = { fontFamily: 'Libre Franklin Variable, sans-serif', fill: '#666666', fontSize: 12 }
 function Graph({ e }: { e: Exercise }) {
   const bottom = 270, top = 34, left = 57, right = 682, height = bottom - top, width = right - left
   const chartMax = e.family === 'Bar' ? Math.ceil(Math.max(...e.values) * 1.17 / 20) * 20 : e.family === 'Line' ? 200 : e.family === 'Scatter' ? 95 : e.family === 'Bubble' ? 40 : e.family === 'Bar + Line' ? 240 : e.family === 'Waterfall' ? Math.max(e.values[0], e.values[e.values.length - 1], e.values[0] + e.values.slice(1, -1).filter((v) => v > 0).reduce((a,b) => a+b,0)) * 1.17 : e.family === 'Bar Mekko' ? 40 : 100
-  const grid = [0, 1, 2, 3, 4].map((i) => <g key={i}><line x1={left} x2={right} y1={bottom - i * height / 4} y2={bottom - i * height / 4} stroke="#E3EAF3" /><text x={left - 8} y={bottom - i * height / 4 + 4} textAnchor="end" style={{ fontSize: 11, fill: '#718096' }}>{e.family === 'Marimekko' || e.family === 'Bar Mekko' ? Math.round(i * chartMax / 4) + '%' : Math.round(i * chartMax / 4)}</text>{e.family === 'Bar + Line' && <text x={right + 8} y={bottom - i * height / 4 + 4} textAnchor="start" style={{ fontSize: 11, fill: '#C2410C' }}>{fmt(i * 8 / 4)}%</text>}</g>)
+  const grid = [0, 1, 2, 3, 4].map((i) => <g key={i}><line x1={left} x2={right} y1={bottom - i * height / 4} y2={bottom - i * height / 4} stroke="#E8E8E8" /><text x={left - 8} y={bottom - i * height / 4 + 4} textAnchor="end" style={{ fontSize: 11, fill: '#718096' }}>{e.family === 'Marimekko' || e.family === 'Bar Mekko' ? Math.round(i * chartMax / 4) + '%' : Math.round(i * chartMax / 4)}</text>{e.family === 'Bar + Line' && <text x={right + 8} y={bottom - i * height / 4 + 4} textAnchor="start" style={{ fontSize: 11, fill: '#C2410C' }}>{fmt(i * 8 / 4)}%</text>}</g>)
   const scale = (v: number, max: number) => bottom - v / max * height
   const label = (name: string, x: number, y = 292) => <text x={x} y={y} textAnchor="middle" style={txt}>{name}</text>
   let marks: ReactNode
@@ -122,7 +122,7 @@ function Graph({ e }: { e: Exercise }) {
     marks = e.values.map((v, i) => {
       const x = X(i), bw = 52
       let low, high, color
-      if (i === 0 || i === e.values.length - 1) { low = 0; high = v; color = '#0F1B33' }
+      if (i === 0 || i === e.values.length - 1) { low = 0; high = v; color = '#121212' }
       else { const next = current + v; low = Math.min(current, next); high = Math.max(current, next); color = v >= 0 ? '#0A8F9C' : '#C2410C'; current = next }
       return <g key={i}><rect x={x} y={scale(high, max)} width={bw} height={Math.max(2, scale(low, max) - scale(high, max))} fill={color} rx={2} /><text x={x + bw / 2} y={scale(high, max) - 8} textAnchor="middle" style={txt}>{i === 0 || i === e.values.length - 1 ? '$' + v : (v >= 0 ? '+' : '') + v}</text><text x={x + bw / 2} y={290} textAnchor="middle" style={{ ...txt, fontSize: 10.5 }}>{e.labels[i]}</text></g>
     })
@@ -139,7 +139,7 @@ function Graph({ e }: { e: Exercise }) {
     marks = <g>{marks}{[['Direct',COLORS[0]], ['Partner',COLORS[1]], ['Other',COLORS[2]]].map(([name,color],k) => <g key={name}><rect x={left + 160*k} y={308} width={10} height={10} fill={color} /><text x={left + 15 + 160*k} y={318} style={txt}>{name}</text></g>)}</g>
     note = 'Width: group revenue ($M) · Height: channel share (%) · Area: revenue'
   }
-  return <div className="overflow-x-auto rounded-lg border border-line bg-white p-2 sm:p-4"><svg viewBox="0 0 720 345" className="w-full min-w-[560px]" role="img" aria-label={e.family + ' chart for ' + e.title}><rect x={0} y={0} width={720} height={345} fill="white" />{grid}<line x1={left} y1={top} x2={left} y2={bottom} stroke="#94A0B2" /><line x1={left} y1={bottom} x2={right} y2={bottom} stroke="#94A0B2" />{marks}<text x={left} y={16} style={{ ...txt, fontSize: 12, fill: '#0F1B33' }}>{note}</text></svg><p className="mt-1 text-[12.5px] text-muted">Fictional practice data.</p></div>
+  return <div className="overflow-x-auto rounded-lg border border-line bg-white p-2 sm:p-4"><svg viewBox="0 0 720 345" className="w-full min-w-[560px]" role="img" aria-label={e.family + ' chart for ' + e.title}><rect x={0} y={0} width={720} height={345} fill="white" />{grid}<line x1={left} y1={top} x2={left} y2={bottom} stroke="#9C9C9C" /><line x1={left} y1={bottom} x2={right} y2={bottom} stroke="#9C9C9C" />{marks}<text x={left} y={16} style={{ ...txt, fontSize: 12, fill: '#121212' }}>{note}</text></svg><p className="mt-1 text-[13px] text-muted">Fictional practice data.</p></div>
 }
 
 function DataTable({ e }: { e: Exercise }) {
@@ -151,7 +151,7 @@ function DataTable({ e }: { e: Exercise }) {
     : e.family === 'Bar + Line' ? [['Leads (thousands)',e.values], ['Conversion rate (%)',e.second || []]]
     : e.family === 'Line' ? [['Core (indexed)',e.values], ['Premium (indexed)',e.second || []], ['New ventures (indexed)',e.third || []]]
     : [['Training hours',e.values], ['Satisfaction index',e.second || []]]
-  return <details className="mt-3 rounded-lg border border-line bg-canvas/50"><summary className="cursor-pointer px-4 py-3 text-[13.5px] font-medium text-violet-d">See the exact numbers</summary><div className="overflow-x-auto px-4 pb-4"><table className="w-full min-w-[420px] border-collapse text-left text-[13px]"><thead><tr className="border-b border-line"><th className="py-2 pr-3 font-semibold text-ink">{e.family === 'Waterfall' ? 'Step' : e.family === 'Bar + Line' || e.family === 'Line' ? 'Quarter' : 'Group'}</th>{columns.map(([title])=><th key={title} className="py-2 pr-3 font-semibold text-ink">{title}</th>)}</tr></thead><tbody>{e.labels.map((label,i)=><tr key={label} className="border-b border-line/70 last:border-0"><td className="py-2 pr-3 font-medium">{label}</td>{columns.map(([title,values])=><td key={title} className="py-2 pr-3 tabular-nums">{values[i]}</td>)}</tr>)}</tbody></table></div></details>
+  return <details className="mt-3 rounded-lg border border-line bg-canvas/50"><summary className="cursor-pointer px-4 py-3 text-[14px] font-medium text-violet-d">See the exact numbers</summary><div className="overflow-x-auto px-4 pb-4"><table className="w-full min-w-[420px] border-collapse text-left text-[13px]"><thead><tr className="border-b border-line"><th className="py-2 pr-3 font-semibold text-ink">{e.family === 'Waterfall' ? 'Step' : e.family === 'Bar + Line' || e.family === 'Line' ? 'Quarter' : 'Group'}</th>{columns.map(([title])=><th key={title} className="py-2 pr-3 font-semibold text-ink">{title}</th>)}</tr></thead><tbody>{e.labels.map((label,i)=><tr key={label} className="border-b border-line/70 last:border-0"><td className="py-2 pr-3 font-medium">{label}</td>{columns.map(([title,values])=><td key={title} className="py-2 pr-3 tabular-nums">{values[i]}</td>)}</tr>)}</tbody></table></div></details>
 }
 
 const GUIDE = [
@@ -165,7 +165,7 @@ const STORAGE = 'case-prep-graph-library-v1'
 function ModeCard({ active, onClick, title, body, icon }: { active: boolean; onClick: () => void; title: string; body: string; icon: ReactNode }) {
   return (
     <button onClick={onClick} aria-pressed={active}
-      className={`flex flex-1 items-start gap-3 rounded-lg border p-4 text-left transition-[border-color,box-shadow] duration-200 ${active ? 'border-ink bg-white shadow-[0_0_0_1px_#0F1B33]' : 'border-line bg-white hover:border-faint'}`}>
+      className={`flex flex-1 items-start gap-3 rounded-lg border p-4 text-left transition-[border-color,box-shadow] duration-200 ${active ? 'border-ink bg-white shadow-[0_0_0_1px_#121212]' : 'border-line bg-white hover:border-faint'}`}>
       <span className={`mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-lg ${active ? 'bg-ink text-white' : 'bg-canvas text-ink-2'}`}>{icon}</span>
       <span><span className="block font-medium text-ink">{title}</span><span className="mt-0.5 block text-[14px] text-muted">{body}</span></span>
     </button>
@@ -185,8 +185,8 @@ function Gallery({ items }: { items: Exercise[] }) {
           <DataTable e={e} />
           <details className="mt-3 rounded-lg border border-line bg-white px-4 py-3">
             <summary className="cursor-pointer text-[14px] font-medium text-violet-d">The question and the insight</summary>
-            <p className="mt-2 text-[14.5px] font-medium text-ink">{e.question}</p>
-            <p className="mt-2 text-[14.5px] text-ink-2">{e.answer}</p>
+            <p className="mt-2 text-[15px] font-medium text-ink">{e.question}</p>
+            <p className="mt-2 text-[15px] text-ink-2">{e.answer}</p>
           </details>
         </article>
       ))}
@@ -227,19 +227,19 @@ export default function Graphs() {
         icon={<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" aria-hidden><rect x="4" y="4" width="7" height="7" rx="1" /><rect x="13" y="4" width="7" height="7" rx="1" /><rect x="4" y="13" width="7" height="7" rx="1" /><rect x="13" y="13" width="7" height="7" rx="1" /></svg>} />
     </div>
     <details className="mb-5 rounded-lg border border-line bg-white px-5 py-3">
-      <summary className="cursor-pointer text-[14.5px] font-medium text-ink">How to read any chart (5 steps)</summary>
-      <ol className="mt-3 space-y-1.5 pb-2 text-[14.5px] text-ink-2">{GUIDE.map(([title, desc]) => <li key={title}><b className="font-semibold text-ink">{title.replace(/^\d · /, '')}:</b> {desc}</li>)}</ol>
+      <summary className="cursor-pointer text-[15px] font-medium text-ink">How to read any chart (5 steps)</summary>
+      <ol className="mt-3 space-y-1.5 pb-2 text-[15px] text-ink-2">{GUIDE.map(([title, desc]) => <li key={title}><b className="font-semibold text-ink">{title.replace(/^\d · /, '')}:</b> {desc}</li>)}</ol>
     </details>
-    <div className="mb-5 flex flex-wrap gap-2" role="group" aria-label="Chart type">{['All', ...FAMILIES].map((f) => <button key={f} onClick={() => chooseFamily(f)} aria-pressed={family === f} className={'rounded-full border px-3.5 py-1.5 text-[13.5px] font-medium transition-colors ' + (family === f ? 'border-ink bg-ink text-white' : 'border-line bg-white text-muted hover:border-faint hover:text-ink')}>{f}</button>)}</div>
+    <div className="mb-5 flex flex-wrap gap-2" role="group" aria-label="Chart type">{['All', ...FAMILIES].map((f) => <button key={f} onClick={() => chooseFamily(f)} aria-pressed={family === f} className={'rounded-full border px-3.5 py-1.5 text-[14px] font-medium transition-colors ' + (family === f ? 'border-ink bg-ink text-white' : 'border-line bg-white text-muted hover:border-faint hover:text-ink')}>{f}</button>)}</div>
     {browse ? <Gallery items={visible} /> : <article className="min-w-0 max-w-4xl">
-      <p className="text-[13.5px] text-muted">Chart {selectedIndex + 1} of {visible.length}{done.includes(current.id) ? ' · done ✓' : ''}</p>
-      <h2 className="text-[21px] font-semibold">{current.title.split(' · ')[0]} <span className="font-sans text-[15px] font-normal text-muted">{current.family} chart</span></h2>
-      <p className="mt-1 mb-3 text-[14.5px] text-ink-2"><b className="font-semibold text-ink">How to read it:</b> {FAMILY_GUIDES[current.family].meaning}</p>
+      <p className="text-[14px] text-muted">Chart {selectedIndex + 1} of {visible.length}{done.includes(current.id) ? ' · done ✓' : ''}</p>
+      <h2 className="text-[22px] font-semibold">{current.title.split(' · ')[0]} <span className="font-sans text-[15px] font-normal text-muted">{current.family} chart</span></h2>
+      <p className="mt-1 mb-3 text-[15px] text-ink-2"><b className="font-semibold text-ink">How to read it:</b> {FAMILY_GUIDES[current.family].meaning}</p>
       <Graph e={current} />
       <DataTable e={current} />
-      <section className="mt-5 rounded-lg border-2 border-violet bg-white p-5"><h3 className="font-sans text-[14.5px] font-semibold text-violet-d">Your turn · 90 seconds</h3><p className="mt-1 text-[16px] font-medium text-ink">{current.question}</p><textarea aria-label="Your answer" className={inputCls + ' mt-3'} rows={3} value={notes} onChange={(e) => setNotes(e.target.value)} placeholder="Say it out loud first. Typing is optional." />
+      <section className="mt-5 rounded-lg border-2 border-violet bg-white p-5"><h3 className="font-sans text-[15px] font-semibold text-violet-d">Your turn · 90 seconds</h3><p className="mt-1 text-[16px] font-medium text-ink">{current.question}</p><textarea aria-label="Your answer" className={inputCls + ' mt-3'} rows={3} value={notes} onChange={(e) => setNotes(e.target.value)} placeholder="Say it out loud first. Typing is optional." />
         <div className="mt-3 flex flex-wrap gap-2"><Button onClick={() => setShow((s) => !s)}>{show ? 'Hide the answer' : 'Show the answer'}</Button><Button variant="secondary" onClick={toggleDone}>{done.includes(current.id) ? 'Done ✓' : 'Mark as done'}</Button></div>
-        {show && <div className="mt-4 rounded-lg bg-good-l/60 p-4"><p className="text-[14.5px] text-ink">{current.answer}</p><p className="mt-2 text-[14.5px] text-ink-2"><b className="font-semibold">Next, I would:</b> {current.followUp.charAt(0).toLowerCase() + current.followUp.slice(1)}</p><p className="mt-2 text-[13.5px] text-muted"><b className="font-semibold text-ink">Watch out:</b> {FAMILY_GUIDES[current.family].caution}</p></div>}
+        {show && <div className="mt-4 rounded-lg bg-good-l/60 p-4"><p className="text-[15px] text-ink">{current.answer}</p><p className="mt-2 text-[15px] text-ink-2"><b className="font-semibold">Next, I would:</b> {current.followUp.charAt(0).toLowerCase() + current.followUp.slice(1)}</p><p className="mt-2 text-[14px] text-muted"><b className="font-semibold text-ink">Watch out:</b> {FAMILY_GUIDES[current.family].caution}</p></div>}
       </section>
       <div className="mt-4 flex flex-wrap justify-between gap-3"><Button variant="secondary" disabled={selectedIndex <= 0} onClick={() => pick(visible[selectedIndex - 1])}>Previous chart</Button><Button disabled={selectedIndex >= visible.length - 1} onClick={() => pick(visible[selectedIndex + 1])}>Next chart</Button></div>
     </article>}

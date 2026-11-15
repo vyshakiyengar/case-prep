@@ -53,11 +53,11 @@ export function Icon({ d }: { d: string }) {
 function NavGroup({ title, items }: { title: string; items: Item[] }) {
   return (
     <div className={title ? 'mt-4' : 'mt-3'}>
-      {title && <div className="flex items-center gap-2 px-2.5 pb-1 text-[11.5px] font-medium tracking-[0.02em] text-[#8C98AE]"><span aria-hidden className="h-[7px] w-[7px] rounded-[2px] border border-[#8C98AE]/70" />{title}</div>}
+      {title && <div className="flex items-center gap-2 px-2.5 pb-1 text-[12px] font-medium tracking-[0.02em] text-[#9A9A9A]"><span aria-hidden className="h-[7px] w-[7px] rounded-[2px] border border-[#9A9A9A]/70" />{title}</div>}
       <div className={title ? 'nav-branch ml-[15px] pl-[11px]' : ''}>
         {items.map((n) => (
           <NavLink key={n.to} to={n.to} end={n.end}
-            className={({ isActive }) => `${title ? 'nav-twig' : ''} relative flex items-center gap-2.5 rounded-md px-2.5 py-[5px] text-[13.5px] transition-colors ${isActive ? 'is-active bg-white/[0.07] text-white' : 'text-[#B8C2D3] hover:bg-white/[0.05] hover:text-white'}`}>
+            className={({ isActive }) => `${title ? 'nav-twig' : ''} relative flex items-center gap-2.5 rounded-md px-2.5 py-[5px] text-[14px] transition-colors ${isActive ? 'is-active bg-white/[0.07] text-white' : 'text-[#C4C4C4] hover:bg-white/[0.05] hover:text-white'}`}>
             <span className="opacity-75 [&_svg]:h-[16px] [&_svg]:w-[16px]"><Icon d={n.icon} /></span>{n.label}
           </NavLink>
         ))}
@@ -68,14 +68,14 @@ function NavGroup({ title, items }: { title: string; items: Item[] }) {
 
 export function SignInLink({ className = '' }: { className?: string }) {
   const loc = useLocation()
-  return <Link to={`/signin?next=${encodeURIComponent(loc.pathname + loc.search)}`} className={`rounded-lg bg-ink px-3.5 py-2 text-[14px] font-medium text-white hover:bg-[#22325A] ${className}`}>Sign in</Link>
+  return <Link to={`/signin?next=${encodeURIComponent(loc.pathname + loc.search)}`} className={`rounded-lg bg-ink px-3.5 py-2 text-[14px] font-medium text-white hover:bg-[#2E2E2E] ${className}`}>Sign in</Link>
 }
 
 function VerifyBanner({ email }: { email?: string }) {
   const { resendVerification, refreshUser } = useStore()
   const [sent, setSent] = useState(false)
   return (
-    <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-1 border-b border-marker/60 bg-marker-l px-4 py-2 text-[13.5px] text-ink-2 lg:px-10">
+    <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-1 border-b border-marker/60 bg-marker-l px-4 py-2 text-[14px] text-ink-2 lg:px-10">
       <span>Confirm your email: we sent a link to <b className="font-medium text-ink">{email}</b>.</span>
       <span className="flex gap-4">
         <button onClick={() => refreshUser()} className="font-medium text-ink underline-offset-2 hover:underline">I've confirmed it</button>
@@ -105,12 +105,12 @@ function MobileSheet({ open, onClose, user, isAdmin }: { open: boolean; onClose:
   return (
     <div className="lg:hidden">
       <button type="button" aria-label="Close menu" onClick={onClose} className="sheet-fade fixed inset-0 z-30 bg-ink/40" />
-      <nav id="mobile-sections" aria-label="All sections" className="sheet-up fixed inset-x-0 bottom-[calc(57px+env(safe-area-inset-bottom))] z-30 max-h-[calc(100svh-140px)] overflow-y-auto rounded-t-2xl border-t border-line bg-white px-4 pt-3 pb-4 shadow-[0_-12px_40px_rgba(15,27,51,.18)]">
+      <nav id="mobile-sections" aria-label="All sections" className="sheet-up fixed inset-x-0 bottom-[calc(57px+env(safe-area-inset-bottom))] z-30 max-h-[calc(100svh-140px)] overflow-y-auto rounded-t-2xl border-t border-line bg-white px-4 pt-3 pb-4 shadow-[0_-12px_40px_rgba(18,18,18,.18)]">
         <div aria-hidden className="mx-auto mb-3 h-1 w-10 rounded-full bg-line" />
-        <NavLink to="/" end onClick={onClose} className="mb-1 flex items-center gap-3 rounded-lg px-2 py-2 text-[14.5px] font-medium text-ink hover:bg-canvas"><Icon d={HOME.icon} />Home</NavLink>
+        <NavLink to="/" end onClick={onClose} className="mb-1 flex items-center gap-3 rounded-lg px-2 py-2 text-[15px] font-medium text-ink hover:bg-canvas"><Icon d={HOME.icon} />Home</NavLink>
         {groups.map(([title, items]) => (
           <div key={title} className="mt-3">
-            <p className="px-2 pb-1 font-serif text-[13.5px] italic text-muted">{title}</p>
+            <p className="px-2 pb-1 font-serif text-[14px] italic text-muted">{title}</p>
             <div className="grid grid-cols-2 gap-x-2">
               {items.map((n) => (
                 <NavLink key={n.to} to={n.to} end={n.end} onClick={onClose}
@@ -129,7 +129,7 @@ function MobileSheet({ open, onClose, user, isAdmin }: { open: boolean; onClose:
           className={({ isActive }) => `mt-4 flex items-center gap-3 rounded-lg border border-line px-3 py-2.5 text-[14px] font-medium ${isActive ? 'bg-canvas text-ink' : 'text-ink-2 hover:bg-canvas'}`}>
           <span className="text-teal-d"><Icon d={ABOUT.icon} /></span>About PrepForCase
         </NavLink>
-        <div className="mt-3 flex gap-5 border-t border-line px-2 pt-3 text-[13.5px] text-muted">
+        <div className="mt-3 flex gap-5 border-t border-line px-2 pt-3 text-[14px] text-muted">
           <NavLink to="/privacy" onClick={onClose} className="hover:text-ink">Privacy</NavLink>
           <NavLink to="/terms" onClick={onClose} className="hover:text-ink">Terms</NavLink>
           {user && <NavLink to="/settings" onClick={onClose} className="hover:text-ink">Settings</NavLink>}
@@ -162,7 +162,7 @@ export default function AppShell() {
             </button>
             <Link to="/" aria-label="PrepForCase: home" className="hidden sm:block"><Logo height={22} light={reader.theme === 'dark'} /></Link>
           </div>
-          <div className="flex items-center gap-4 text-[14.5px] sm:gap-5">
+          <div className="flex items-center gap-4 text-[15px] sm:gap-5">
             <Link to="/blog#search" aria-label="Search articles" className="text-muted hover:text-ink"><svg aria-hidden viewBox="0 0 24 24" className="h-[18px] w-[18px]" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="11" cy="11" r="7" /><path d="m20 20-3.5-3.5" /></svg></Link>
             <Link to="/learn" className="font-medium text-muted hover:text-ink">Course</Link>
             <Link to="/blog" className="font-medium text-muted hover:text-ink">Blog</Link>
@@ -172,7 +172,7 @@ export default function AppShell() {
         </div>
       </header>
       <main className="min-h-[100svh] px-5 pt-8 pb-16 sm:pt-12"><Outlet /></main>
-      <footer className="border-t border-line py-8 text-center text-[13.5px] text-muted">
+      <footer className="border-t border-line py-8 text-center text-[14px] text-muted">
         <nav aria-label="Footer" className="flex flex-wrap justify-center gap-x-6 gap-y-2">
           <Link to="/blog" className="hover:text-ink">All articles</Link><Link to="/learn" className="hover:text-ink">Free course</Link>
           <Link to="/casebook" className="hover:text-ink">Casebook</Link><Link to="/drills" className="hover:text-ink">Drills</Link>
@@ -195,7 +195,7 @@ export default function AppShell() {
           <div className="mt-4 border-t border-white/10 pt-3"><NavGroup title="" items={[BLOG, ABOUT]} /></div>
         </nav>
         <div className="mt-auto pt-6">
-          <div className="mb-3 flex gap-4 px-3 text-[12.5px] text-[#8C98AE]">
+          <div className="mb-3 flex gap-4 px-3 text-[13px] text-[#9A9A9A]">
             <Link to="/privacy" className="hover:text-white">Privacy</Link>
             <Link to="/terms" className="hover:text-white">Terms</Link>
           </div>
@@ -204,12 +204,12 @@ export default function AppShell() {
               <Avatar name={name} photo={user.photoURL} />
               <span className="min-w-0">
                 <span className="block truncate text-[14px] font-medium text-white">{name}</span>
-                <span className="block text-[12.5px] text-[#8C98AE]">Settings</span>
+                <span className="block text-[13px] text-[#9A9A9A]">Settings</span>
               </span>
             </NavLink>
           ) : (
             <div className="rounded-lg border border-white/10 p-3.5">
-              <p className="text-[13px] leading-snug text-[#B8C2D3]">Sign in to unlock every lesson and track your progress.</p>
+              <p className="text-[13px] leading-snug text-[#C4C4C4]">Sign in to unlock every lesson and track your progress.</p>
               <SignInLink className="mt-3 inline-block !bg-white !text-ink hover:!bg-teal-l" />
             </div>
           )}
@@ -249,12 +249,12 @@ export default function AppShell() {
         })()}
         {TABS(!!user).map((n) => (
           <NavLink key={n.to} to={n.to} end={n.end}
-            className={({ isActive }) => `relative z-[1] flex flex-col items-center gap-0.5 rounded-lg py-1.5 text-[10.5px] font-medium transition-colors ${isActive && !mobileOpen ? 'text-white' : 'text-muted'}`}>
+            className={({ isActive }) => `relative z-[1] flex flex-col items-center gap-0.5 rounded-lg py-1.5 text-[11px] font-medium transition-colors ${isActive && !mobileOpen ? 'text-white' : 'text-muted'}`}>
             <Icon d={n.icon} /><span className="truncate">{n.label}</span>
           </NavLink>
         ))}
         <button type="button" onClick={() => setMobileOpen((o) => !o)} aria-expanded={mobileOpen} aria-controls="mobile-sections"
-          className={`relative z-[1] flex flex-col items-center gap-0.5 rounded-lg py-1.5 text-[10.5px] font-medium transition-colors ${mobileOpen || (loc.pathname !== '/' && !TABS(!!user).some((t) => loc.pathname === t.to || loc.pathname.startsWith(t.to + '/'))) ? 'text-white' : 'text-muted'}`}>
+          className={`relative z-[1] flex flex-col items-center gap-0.5 rounded-lg py-1.5 text-[11px] font-medium transition-colors ${mobileOpen || (loc.pathname !== '/' && !TABS(!!user).some((t) => loc.pathname === t.to || loc.pathname.startsWith(t.to + '/'))) ? 'text-white' : 'text-muted'}`}>
           <Icon d={mobileOpen ? CLOSE : MENU} /><span>More</span>
         </button>
       </nav>

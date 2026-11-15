@@ -38,11 +38,11 @@ function LessonChapter({ l, n }: { l: Lesson; n: number }) {
   const done = !!data?.profile?.learned?.includes(l.slug)
   const freeCount = l.sections.length > 2 ? 2 : 1
   return (
-    <article id={l.slug} className="scroll-mt-32 sm:rounded-xl sm:border sm:border-line sm:bg-white sm:p-9 sm:shadow-[0_1px_0_#E3E7ED,0_24px_48px_-36px_rgba(15,27,51,.4)]">
+    <article id={l.slug} className="scroll-mt-32 sm:rounded-xl sm:border sm:border-line sm:bg-white sm:p-9 sm:shadow-[0_1px_0_#E5E5E5,0_24px_48px_-36px_rgba(18,18,18,.4)]">
       <div className="sm:flex sm:items-start sm:justify-between sm:gap-6">
         <div>
-          <p className="text-[13.5px] text-muted">Lesson {n} of {LESSONS.length}, {l.minutes} min{done && <span className="ml-2 font-medium text-teal-d">Completed ✓</span>}</p>
-          <h1 className="mt-1 font-serif text-[28px] leading-[1.15] font-semibold tracking-[-0.015em] sm:text-[34px]">{l.title}</h1>
+          <p className="text-[14px] text-muted">Lesson {n} of {LESSONS.length}, {l.minutes} min{done && <span className="ml-2 font-medium text-teal-d">Completed ✓</span>}</p>
+          <h1 className="mt-1 text-[28px] leading-[1.1] sm:text-[34px]">{l.title}</h1>
           <p className="mt-2 max-w-2xl font-serif text-[18px] leading-snug text-muted sm:text-[20px]">{l.summary}</p>
           <VideoToggle id={`lesson-${l.slug}`} label="Lesson summary" className="mt-4" />
         </div>
@@ -68,7 +68,7 @@ function LessonChapter({ l, n }: { l: Lesson; n: number }) {
                 <h3 className="text-[18px] font-semibold">The eleven core frameworks</h3>
                 <p className="mt-1 mb-3 text-[15px] leading-relaxed text-ink-2">These eleven trees cover most cases you will get. Here is the first level of each. Learn them well enough to sketch from memory, then always rename the branches for your client. Each opens as a full tree on the frameworks page.</p>
                 <CoreFrameworksMini items={CORE} />
-                <p className="mt-3 text-[14.5px] text-ink-2">Inside any branch, dig into the <Link to="/frameworks#drivers" className="font-medium text-violet-d hover:underline">second-order drivers</Link> (market, customers, competition, industry economics, our company, macro).</p>
+                <p className="mt-3 text-[15px] text-ink-2">Inside any branch, dig into the <Link to="/frameworks#drivers" className="font-medium text-violet-d hover:underline">second-order drivers</Link> (market, customers, competition, industry economics, our company, macro).</p>
               </section>
             )}
 
@@ -93,7 +93,7 @@ function LessonChapter({ l, n }: { l: Lesson; n: number }) {
                         <span className="font-medium text-ink">{s.name.replace(/^(\w+) · /, (_, k: string) => `${k[0]}${k.slice(1).toLowerCase()}: `)}</span>
                         <span className="text-[13px] text-muted">{s.dose}</span>
                       </div>
-                      <p className="text-[14.5px] text-ink-2">{s.how}</p>
+                      <p className="text-[15px] text-ink-2">{s.how}</p>
                     </li>
                   ))}
                 </ul>
@@ -113,7 +113,7 @@ function LessonChapter({ l, n }: { l: Lesson; n: number }) {
             </section>
 
             <div className="flex flex-wrap items-center gap-3 border-t border-line pt-6">
-              <span className="text-[14.5px] text-ink-2">Now practise it:</span>
+              <span className="text-[15px] text-ink-2">Now practise it:</span>
               <LinkButton to={l.practice.to} variant="secondary">{l.practice.label}</LinkButton>
             </div>
           </div>
@@ -126,7 +126,7 @@ function LessonChapter({ l, n }: { l: Lesson; n: number }) {
 /** Small previous / next controls, shown at the start and end of each page. */
 function PageTurner({ i, onTurn, top = false }: { i: number; onTurn: (to: number) => void; top?: boolean }) {
   const prev = PAGES[i - 1], next = PAGES[i + 1]
-  const pill = 'group inline-flex max-w-[48%] items-center gap-2 rounded-full border border-line bg-white px-3.5 py-1.5 text-[13.5px] text-ink-2 transition-[border-color,color,transform] duration-200 hover:border-teal hover:text-ink active:scale-[.98]'
+  const pill = 'group inline-flex max-w-[48%] items-center gap-2 rounded-full border border-line bg-white px-3.5 py-1.5 text-[14px] text-ink-2 transition-[border-color,color,transform] duration-200 hover:border-teal hover:text-ink active:scale-[.98]'
   return (
     <nav aria-label={top ? 'Course pages (top)' : 'Course pages'} className={`items-center justify-between gap-3 ${top ? 'mb-5 hidden sm:flex' : 'mt-8 flex'}`}>
       {prev ? (
@@ -137,7 +137,7 @@ function PageTurner({ i, onTurn, top = false }: { i: number; onTurn: (to: number
       ) : <span />}
       {next && (
         i === 0 && !top
-          ? <button onClick={() => onTurn(1)} className="btn-primary inline-flex items-center gap-2 rounded-full px-5 py-2.5 text-[14.5px] font-medium text-white transition-transform hover:-translate-y-px">Start the course <span aria-hidden>→</span></button>
+          ? <button onClick={() => onTurn(1)} className="btn-primary inline-flex items-center gap-2 rounded-full px-5 py-2.5 text-[15px] font-medium text-white transition-transform hover:-translate-y-px">Start the course <span aria-hidden>→</span></button>
           : <button onClick={() => onTurn(i + 1)} className={pill}>
               <span className="truncate"><span className="text-muted">Next: </span>{next.label}</span>
               <span aria-hidden className="text-teal-d transition-transform group-hover:translate-x-0.5">→</span>
@@ -171,7 +171,7 @@ function CourseBar({ i, onTurn, done }: { i: number; onTurn: (to: number) => voi
             {PAGES.map((p, pi) => <option key={p.id} value={p.id}>{pageTitle(p.id, pi)}</option>)}
           </select>
         </label>
-        <div className="flex shrink-0 items-center gap-2 text-[13.5px] text-muted">
+        <div className="flex shrink-0 items-center gap-2 text-[14px] text-muted">
           <span className="hidden sm:inline">{done ? `${done} · ` : ''}Page {i + 1} of {PAGES.length}</span>
           <span className="sm:hidden">{i + 1}/{PAGES.length}</span>
           <button className={arrow} disabled={i === 0} onClick={() => onTurn(i - 1)} aria-label="Previous page">‹</button>
@@ -243,15 +243,15 @@ export default function Learn() {
         <section className="mb-6 grid items-center gap-6 lg:grid-cols-[1.5fr_1fr]">
           <VideoPlayer name="getting-started-v2" title="Getting started: what a case interview is, the six steps of a case, and how this course works" />
           <div>
-            <h2 className="text-[19px] font-semibold">Start here: an 80-second overview</h2>
-            <p className="mt-1.5 text-[14.5px] leading-relaxed text-ink-2">What a case interview is, the six steps every case follows, how the three modules fit together, and how to practise.</p>
+            <h2 className="text-[20px] font-semibold">Start here: an 80-second overview</h2>
+            <p className="mt-1.5 text-[15px] leading-relaxed text-ink-2">What a case interview is, the six steps every case follows, how the three modules fit together, and how to practise.</p>
           </div>
         </section>
       )}
       {i === 0 && (
         <section className="mb-6 rounded-xl border border-line bg-white p-5">
           <h2 className="text-[17px] font-semibold">By the end, you'll be able to</h2>
-          <ul className="mt-3 grid gap-x-8 gap-y-2 text-[14.5px] text-ink-2 sm:grid-cols-2">
+          <ul className="mt-3 grid gap-x-8 gap-y-2 text-[15px] text-ink-2 sm:grid-cols-2">
             {['Open a case calmly and ask the right clarifying questions', 'Build a structure that fits the client, not a memorised list', 'Do the maths out loud and read any chart quickly', 'Close with a clear recommendation, the risks and next steps'].map((x) => (
               <li key={x} className="grid grid-cols-[18px_1fr] gap-2"><svg aria-hidden viewBox="0 0 24 24" className="mt-0.5 h-4 w-4 fill-none stroke-teal-d stroke-[2.4]"><path d="M5 12.5l4.5 4.5L19 7.5" /></svg>{x}</li>
             ))}
@@ -265,25 +265,25 @@ export default function Learn() {
         {i > 0 && <PageTurner i={i} onTurn={turn} top />}
         {page.id === 'case-map' && (
           <section id="case-map" className="scroll-mt-32">
-            <h1 className="text-[24px] leading-tight">The map of a case</h1>
+            <h1 className="text-[26px] leading-[1.1]">The map of a case</h1>
             <p className="mt-1 mb-6 max-w-2xl text-[15px] text-ink-2">Six steps, 20 to 40 minutes. The lessons take them one at a time.</p>
             <CaseMap />
-            <p className="mt-4 text-[14.5px] text-ink-2">Want to see a whole case done well? <Link to="/perfect-casing" className="font-medium text-violet-d hover:underline">See the perfect case</Link></p>
+            <p className="mt-4 text-[15px] text-ink-2">Want to see a whole case done well? <Link to="/perfect-casing" className="font-medium text-violet-d hover:underline">See the perfect case</Link></p>
           </section>
         )}
 
         {page.id === 'overview' && (
           <section>
-            <h2 className="text-[24px] leading-tight">What's in the course</h2>
+            <h2 className="text-[26px] leading-[1.1]">What's in the course</h2>
             <div className="mt-4 grid gap-4 lg:grid-cols-3">
               {MODULES.map((m, mi) => {
                 const ls = m.slugs.map((sl) => lessonBySlug(sl)!).filter(Boolean)
                 const mins = ls.reduce((a, l) => a + l.minutes, 0)
                 return (
                   <div key={m.title} className="rounded-xl border border-line bg-white p-4 sm:p-5">
-                    <p className="text-[12.5px] font-medium text-teal-d">Module {mi + 1}, {ls.length} lessons, {mins} min</p>
+                    <p className="text-[13px] font-medium text-teal-d">Module {mi + 1}, {ls.length} lessons, {mins} min</p>
                     <h3 className="mt-0.5 text-[18px]">{m.title}</h3>
-                    <p className="mt-1 text-[13.5px] text-muted">{m.blurb}</p>
+                    <p className="mt-1 text-[14px] text-muted">{m.blurb}</p>
                     <ol className="mt-3 divide-y divide-line border-t border-line">
                       {ls.map((l) => {
                         const n = LESSONS.indexOf(l) + 1
@@ -291,9 +291,9 @@ export default function Learn() {
                         return (
                           <li key={l.slug}>
                             <Link to={`/learn/${l.slug}`} className="group grid grid-cols-[22px_1fr_auto] items-baseline gap-2 py-2 text-[14px]">
-                              <span className={`text-[12.5px] tabular-nums ${ok ? 'text-teal-d' : 'text-faint'}`}>{ok ? '✓' : n}</span>
+                              <span className={`text-[13px] tabular-nums ${ok ? 'text-teal-d' : 'text-faint'}`}>{ok ? '✓' : n}</span>
                               <span className="text-ink group-hover:text-violet-d">{l.title.split(':')[0]}</span>
-                              <span className="text-[12.5px] text-faint tabular-nums">{l.minutes} min</span>
+                              <span className="text-[13px] text-faint tabular-nums">{l.minutes} min</span>
                             </Link>
                           </li>
                         )
@@ -308,17 +308,17 @@ export default function Learn() {
 
         {lessonN > 0 && (
           <>
-            {page.module && <p className="mb-2 text-[13.5px] font-medium text-teal-d">{page.module}</p>}
+            {page.module && <p className="mb-2 text-[14px] font-medium text-teal-d">{page.module}</p>}
             <LessonChapter l={lessonBySlug(page.id)!} n={lessonN} />
           </>
         )}
 
         {page.id === 'whats-next' && (
           <>
-            <h1 className="mb-4 text-[26px] leading-tight sm:text-[30px]">What to do after the course</h1>
+            <h1 className="mb-4 text-[28px] leading-[1.1] sm:text-[34px]">What to do after the course</h1>
             <section className="grid items-center gap-5 rounded-xl border-2 border-teal bg-white p-5 md:grid-cols-[1fr_auto]">
               <div>
-                <h2 className="text-[21px] leading-tight">Next: perfect casing</h2>
+                <h2 className="text-[22px] leading-tight">Next: perfect casing</h2>
                 <p className="mt-1 text-ink-2">The course teaches each skill. Perfect casing puts them in order: the 10 stages of a strong case, the exact words to use at each, and a 5-minute daily trainer that makes those words automatic.</p>
               </div>
               <LinkButton to="/perfect-casing">Open perfect casing</LinkButton>
@@ -328,7 +328,7 @@ export default function Learn() {
               <div className="grid gap-3 lg:grid-cols-3">
                 {PLANS.map((p) => (
                   <div key={p.id} className="rounded-lg border border-line p-4">
-                    <p className="text-[12.5px] font-medium text-teal-d">{p.who}</p>
+                    <p className="text-[13px] font-medium text-teal-d">{p.who}</p>
                     <h3 className="text-[17px]">{p.t}</h3>
                     <ol className="mt-2 space-y-1.5 text-[14px] leading-snug text-ink-2">
                       {p.steps.map((x) => <li key={x} className="grid grid-cols-[14px_1fr] gap-1.5"><span aria-hidden className="mt-[7px] h-[6px] w-[6px] rounded-full bg-teal" />{x}</li>)}

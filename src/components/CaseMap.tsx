@@ -27,10 +27,10 @@ export function CaseMap() {
       <span aria-hidden className="absolute top-4 bottom-4 left-[15px] w-[2px] bg-line" />
       {CASE_FLOW.map((s, i) => (
         <li key={s.n} className="relative grid grid-cols-[32px_1fr] gap-4 pb-6 last:pb-0">
-          <span className={`relative z-10 flex h-8 w-8 items-center justify-center rounded-full font-serif text-[14.5px] font-semibold text-white ring-4 ring-canvas ${dot(i)}`}>{s.n}</span>
+          <span className={`relative z-10 flex h-8 w-8 items-center justify-center rounded-full font-serif text-[15px] font-semibold text-white ring-4 ring-canvas ${dot(i)}`}>{s.n}</span>
           <div className="pt-1">
             <h3 className="font-sans text-[16px] font-semibold text-ink">{s.short} <span className="ml-1 text-[13px] font-normal text-muted">{s.time}</span></h3>
-            <p className="mt-0.5 text-[14.5px] leading-snug text-ink-2">{s.what}</p>
+            <p className="mt-0.5 text-[15px] leading-snug text-ink-2">{s.what}</p>
           </div>
         </li>
       ))}

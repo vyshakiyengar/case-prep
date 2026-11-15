@@ -5,7 +5,7 @@ import { n } from '../lib/speedMaths'
 
 // Validated categorical order (teal, burnt orange, blue, amber), fixed, never cycled.
 const C = ['#0A8F9C', '#C2410C', '#3B5BDB', '#B7791F']
-const INK = '#0F1B33', MUTED = '#5F6B7D', GRID = '#E6EAF0', AXIS = '#A7B0BF', NEG = '#C2410C', POS = '#0A8F9C'
+const INK = '#121212', MUTED = '#666666', GRID = '#E8E8E8', AXIS = '#A7B0BF', NEG = '#C2410C', POS = '#0A8F9C'
 let W = 640, H = 300, L = 44, R = 16, T = 20, B = 40, K = 1
 let PW = W - L - R, PH = H - T - B
 const f = (x: number) => String(x * K)
@@ -116,7 +116,7 @@ export function DrillChart({ spec }: { spec: ChartSpec }) {
   return (
     <figure ref={box} className="m-0">
       <figcaption className="mb-2 text-[14px] font-semibold text-ink">{spec.title}</figcaption>
-      {legend.length > 0 && <div className="mb-1 flex flex-wrap gap-x-4 gap-y-1 text-[12.5px] text-ink-2">{legend.map((l) => <span key={l.name} className="inline-flex items-center gap-1.5"><span className="inline-block h-2.5 w-2.5 rounded-sm" style={{ background: l.color }} />{l.name}</span>)}</div>}
+      {legend.length > 0 && <div className="mb-1 flex flex-wrap gap-x-4 gap-y-1 text-[13px] text-ink-2">{legend.map((l) => <span key={l.name} className="inline-flex items-center gap-1.5"><span className="inline-block h-2.5 w-2.5 rounded-sm" style={{ background: l.color }} />{l.name}</span>)}</div>}
       <svg viewBox={`0 0 ${W} ${H}`} className="block w-full" role="img" aria-label={spec.title} style={{ fontFamily: font }} key={compact ? 'c' : 'w'}>{body}</svg>
     </figure>
   )

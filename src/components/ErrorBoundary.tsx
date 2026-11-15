@@ -18,7 +18,7 @@ export class ErrorBoundary extends Component<{ children: ReactNode }, { failed: 
     if (!this.state.failed) return this.props.children
     return (
       <div className="mx-auto max-w-md px-6 py-20 text-center">
-        <h1 className="font-serif text-[28px] text-ink">This page didn't load</h1>
+        <h1 className="text-[28px] leading-[1.1] sm:text-[34px]">This page didn't load</h1>
         <p className="mt-3 text-[16px] text-ink-2">PrepForCase was probably updated while this tab was open. Reloading gets you the latest version.</p>
         <button type="button" onClick={() => window.location.reload()} className="mt-6 rounded-full bg-ink px-6 py-2.5 text-[15px] font-medium text-white hover:bg-ink/90">Reload</button>
       </div>

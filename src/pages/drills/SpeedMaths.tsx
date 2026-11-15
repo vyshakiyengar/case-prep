@@ -125,41 +125,41 @@ export default function SpeedMaths() {
       {phase === 'ready' && (
         <div className="max-w-3xl">
           <div className="graph-paper rounded-lg border border-line p-4 sm:p-5">
-            <p className="text-[13.5px] text-muted">Example question</p>
+            <p className="text-[14px] text-muted">Example question</p>
             <p className="mt-1 font-serif text-[22px] leading-snug font-semibold text-ink">What is 15% of 240?</p>
-            <p className="mt-1 text-[14.5px] text-ink-2">You'd type <b className="font-semibold">36</b>. No calculator.</p>
+            <p className="mt-1 text-[15px] text-ink-2">You'd type <b className="font-semibold">36</b>. No calculator.</p>
             <div className="mt-6 flex flex-wrap items-center gap-x-4 gap-y-2">
               <Button className="px-7 py-3 text-[15px]" onClick={start}>Start</Button>
               <span className="text-[14px] text-muted">{summary}</span>
             </div>
-            {best !== null && <p className="mt-3 text-[13.5px] text-muted">Your best at this length and difficulty: <b className="font-semibold text-ink">{best}</b> right</p>}
+            {best !== null && <p className="mt-3 text-[14px] text-muted">Your best at this length and difficulty: <b className="font-semibold text-ink">{best}</b> right</p>}
           </div>
           <details className="mt-4 rounded-lg border border-line bg-white px-5 py-3">
-            <summary className="cursor-pointer text-[14.5px] font-medium text-ink">Options: length, difficulty, topics</summary>
+            <summary className="cursor-pointer text-[15px] font-medium text-ink">Options: length, difficulty, topics</summary>
             <div className="space-y-5 py-3">
               <div><p className="mb-2 text-[14px] font-medium text-ink">Length</p><Seg label="Length" value={mode} onChange={setMode} items={MODES.map((m) => ({ value: m.key, label: m.label }))} /></div>
               <div><p className="mb-2 text-[14px] font-medium text-ink">Difficulty</p><Seg label="Difficulty" value={level} onChange={(v) => setLevel(v as Level)} items={LEVELS.map((l) => ({ value: l.key, label: l.label, sub: l.blurb }))} /></div>
               <div>
                 <div className="mb-2 flex flex-wrap items-baseline justify-between gap-2">
                   <p className="text-[14px] font-medium text-ink">Topics <span className="font-normal text-muted">{skills.length ? `${skills.length} chosen` : 'a mix of all twelve'}</span></p>
-                  {skills.length > 0 && <button onClick={() => setSkills([])} className="text-[13.5px] font-medium text-violet-d hover:underline">Mix of all</button>}
+                  {skills.length > 0 && <button onClick={() => setSkills([])} className="text-[14px] font-medium text-violet-d hover:underline">Mix of all</button>}
                 </div>
                 <div className="flex flex-wrap gap-2">
                   {SKILLS.map((s) => {
                     const on = skills.includes(s.key); const acc = st.mathsBySkill[s.key]
                     return (
                       <button key={s.key} onClick={() => toggle(s.key)} aria-pressed={on} title={`For example: ${s.blurb}`}
-                        className={`rounded-full border px-3.5 py-1.5 text-[13.5px] font-medium transition-colors ${on ? 'border-ink bg-ink text-white' : 'border-line bg-white text-ink-2 hover:border-faint'}`}>
+                        className={`rounded-full border px-3.5 py-1.5 text-[14px] font-medium transition-colors ${on ? 'border-ink bg-ink text-white' : 'border-line bg-white text-ink-2 hover:border-faint'}`}>
                         {s.label}{acc && acc[1] >= 4 ? <span className={`ml-1.5 tabular-nums ${on ? 'text-white/75' : 'text-muted'}`}>{Math.round((acc[0] / acc[1]) * 100)}%</span> : null}
                       </button>
                     )
                   })}
                 </div>
               </div>
-              <p className="text-[13.5px] text-muted">Answers can be typed as 450, 1.2M or 37.5%. Small rounding differences still count as right.</p>
+              <p className="text-[14px] text-muted">Answers can be typed as 450, 1.2M or 37.5%. Small rounding differences still count as right.</p>
             </div>
           </details>
-          {!user && <p className="mt-4 text-[13.5px] text-muted"><Link to="/signin?next=/drills/maths" className="font-medium text-violet-d hover:underline">Sign in</Link> to track your accuracy by topic over time.</p>}
+          {!user && <p className="mt-4 text-[14px] text-muted"><Link to="/signin?next=/drills/maths" className="font-medium text-violet-d hover:underline">Sign in</Link> to track your accuracy by topic over time.</p>}
         </div>
       )}
 
@@ -175,12 +175,12 @@ export default function SpeedMaths() {
             <p className="text-[13px] text-muted">{SKILLS.find((s) => s.key === q.skill)!.label}</p>
             <p className="mt-1 font-serif text-[22px] leading-snug font-semibold text-ink sm:text-[26px]" aria-live="polite">{q.q}</p>
             <form className="mt-5" onSubmit={(e) => { e.preventDefault(); submit() }}>
-              <label className="mb-1.5 block text-[13.5px] text-muted" htmlFor="sm-answer">Your answer{q.unit.label ? `, in ${['thousand', 'million', 'billion'].includes(q.unit.label) ? q.unit.label + 's' : q.unit.label}` : ''}</label>
+              <label className="mb-1.5 block text-[14px] text-muted" htmlFor="sm-answer">Your answer{q.unit.label ? `, in ${['thousand', 'million', 'billion'].includes(q.unit.label) ? q.unit.label + 's' : q.unit.label}` : ''}</label>
               <div className="flex flex-wrap items-center gap-2">
                 <div className="flex items-center rounded-lg border border-line bg-white focus-within:border-teal focus-within:ring-2 focus-within:ring-teal/15">
                   <input id="sm-answer" ref={input} value={guess} onChange={(e) => setGuess(e.target.value)} readOnly={!!fb} inputMode="decimal" autoComplete="off"
-                    className="w-40 rounded-lg bg-transparent px-3 py-2.5 text-[16.5px] text-ink tabular-nums outline-none sm:w-52" />
-                  {q.unit.label && <span className="pr-3 text-[14.5px] text-muted">{q.unit.label}</span>}
+                    className="w-40 rounded-lg bg-transparent px-3 py-2.5 text-[17px] text-ink tabular-nums outline-none sm:w-52" />
+                  {q.unit.label && <span className="pr-3 text-[15px] text-muted">{q.unit.label}</span>}
                 </div>
                 {!(fb && fb.ok) && <Button type="submit" className="py-2.5">{fb ? (counted && log.length >= ROUND ? 'See my score' : 'Next question') : 'Check'}</Button>}
                 {!fb && mode !== 'pace' && <button type="button" onClick={() => record(false, '')} className="px-2 text-[14px] text-muted hover:text-ink">I don't know</button>}
@@ -188,12 +188,12 @@ export default function SpeedMaths() {
             </form>
             {fb && (
               <div className="mt-4 rounded-lg bg-white/90 p-4" role="status">
-                <p className={`text-[14.5px] font-semibold ${fb.ok ? 'text-good' : 'text-signal'}`}>{fb.ok ? 'Right!' : fb.timeout ? 'Out of time.' : 'Not quite.'} <span className="font-normal text-ink">The answer is <b className="font-semibold">{q.show}</b>.</span></p>
-                {!fb.ok && <p className="mt-1 text-[14.5px] text-ink-2"><b className="font-medium text-ink">Quick way:</b> {q.method}</p>}
+                <p className={`text-[15px] font-semibold ${fb.ok ? 'text-good' : 'text-signal'}`}>{fb.ok ? 'Right!' : fb.timeout ? 'Out of time.' : 'Not quite.'} <span className="font-normal text-ink">The answer is <b className="font-semibold">{q.show}</b>.</span></p>
+                {!fb.ok && <p className="mt-1 text-[15px] text-ink-2"><b className="font-medium text-ink">Quick way:</b> {q.method}</p>}
               </div>
             )}
           </div>
-          <div className="mt-4 flex gap-5 text-[13.5px]">
+          <div className="mt-4 flex gap-5 text-[14px]">
             {log.length > 0 && <button className="text-muted hover:text-ink" onClick={() => finish(log)}>Finish now</button>}
             <button className="text-muted hover:text-ink" onClick={() => { setPhase('ready'); setLog([]) }}>Stop</button>
           </div>
@@ -214,7 +214,7 @@ export default function SpeedMaths() {
           </div>
           {log.some((d) => !d.ok) && (
             <section className="mt-6">
-              <h2 className="text-[17.5px]">The ones you missed</h2>
+              <h2 className="text-[18px]">The ones you missed</h2>
               <p className="text-[14px] text-muted">Redo each one out loud using the quick way.</p>
               <ul className="mt-3 space-y-3">
                 {log.filter((d) => !d.ok).map((d) => (

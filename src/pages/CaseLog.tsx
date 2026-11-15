@@ -41,14 +41,14 @@ export function CaseForm({ initial, onDone }: { initial?: Partial<CaseEntry>; on
       </div>
 
       <fieldset>
-        <legend className="text-[14.5px] font-semibold text-ink">Score each stage</legend>
+        <legend className="text-[15px] font-semibold text-ink">Score each stage</legend>
         <p className="text-[13px] text-muted">1 = lost, 3 = solid, 5 = offer-level. Be strict with yourself: a generous log teaches you nothing.</p>
         <ul className="mt-3 divide-y divide-line rounded-lg border border-line">
           {STAGES.map((s) => (
             <li key={s.key} className="flex flex-wrap items-center justify-between gap-3 px-3 py-2.5 sm:flex-nowrap">
               <div className="min-w-0 max-w-md">
-                <div className="text-[14.5px] font-medium text-ink">{s.label}</div>
-                <div className="text-[12.5px] text-muted">{s.great}</div>
+                <div className="text-[15px] font-medium text-ink">{s.label}</div>
+                <div className="text-[13px] text-muted">{s.great}</div>
               </div>
               <ScorePicker label={s.label} value={c.scores[s.key]} onChange={(v) => set('scores', { ...c.scores, [s.key]: v })} />
             </li>
@@ -92,7 +92,7 @@ export function Drawer({ title, onClose, children }: { title: string; onClose: (
     <div className="fixed inset-0 z-40 flex justify-end bg-ink/30" onMouseDown={(e) => { if (e.target === e.currentTarget) onClose() }}>
       <div ref={ref} tabIndex={-1} role="dialog" aria-modal="true" aria-label={title} className="h-full w-full max-w-2xl overflow-y-auto bg-white p-5 shadow-2xl outline-none sm:p-5">
         <div className="mb-5 flex items-center justify-between">
-          <h2 className="text-[21px] font-semibold">{title}</h2>
+          <h2 className="text-[22px] font-semibold">{title}</h2>
           <button onClick={onClose} aria-label="Close" className="rounded-lg p-2 text-muted hover:bg-canvas">
             <svg width="20" height="20" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2" fill="none"><path d="M6 6l12 12M18 6 6 18" /></svg>
           </button>
@@ -121,7 +121,7 @@ export default function CaseLog() {
         <div className="overflow-x-auto rounded-lg border border-line bg-white">
           <table className="w-full min-w-[900px] border-collapse text-[14px]">
             <thead>
-              <tr className="border-b border-line text-left text-[12.5px] text-muted">
+              <tr className="border-b border-line text-left text-[13px] text-muted">
                 <th className="px-4 py-2.5 font-medium">Case</th>
                 {STAGES.map((s) => <th key={s.key} className="px-1 py-2.5 text-center font-medium" title={s.label}>{SHORT_STAGE[s.key] ?? s.label.split(' ')[0]}</th>)}
                 <th className="px-2 py-2.5 text-center font-medium">Overall</th>
@@ -133,12 +133,12 @@ export default function CaseLog() {
                 <tr key={c.id} onClick={() => setEditing(c)} className="cursor-pointer border-b border-line last:border-0 hover:bg-canvas/60">
                   <td className="px-4 py-3">
                     <button className="text-left font-medium text-ink hover:underline" onClick={(e) => { e.stopPropagation(); setEditing(c) }}>{c.name}</button>
-                    <div className="text-[12.5px] text-muted">{fmtShort(c.date)}, {c.type}, with {c.with.toLowerCase()}</div>
+                    <div className="text-[13px] text-muted">{fmtShort(c.date)}, {c.type}, with {c.with.toLowerCase()}</div>
                   </td>
                   {STAGES.map((s) => <td key={s.key} className="px-1 py-3 text-center"><ScoreChip v={c.scores[s.key]} /></td>)}
                   <td className="px-2 py-3 text-center font-serif text-[16px] font-semibold text-ink">{caseOverall(c)?.toFixed(1) ?? '–'}</td>
                   <td className="max-w-[260px] px-4 py-3">
-                    {c.fix && <span className="rounded bg-marker-l px-1.5 py-0.5 text-[13.5px] text-ink">{c.fix}</span>}
+                    {c.fix && <span className="rounded bg-marker-l px-1.5 py-0.5 text-[14px] text-ink">{c.fix}</span>}
                     {c.fixed && <div className="mt-1 text-[12px] text-muted">Stuck next time: {c.fixed.toLowerCase()}</div>}
                   </td>
                 </tr>

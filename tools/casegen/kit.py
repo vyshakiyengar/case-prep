@@ -12,12 +12,12 @@ for f in glob.glob(os.path.expanduser("~/.fonts/*.ttf")):
         try: font_manager.fontManager.addfont(f)
         except Exception: pass
 plt.rcParams.update({
-    "font.family": "IBM Plex Sans", "font.size": 9, "axes.edgecolor": "#C9D1DC", "axes.linewidth": 0.8,
-    "axes.spines.top": False, "axes.spines.right": False, "xtick.color": "#4A5568", "ytick.color": "#4A5568",
-    "axes.labelcolor": "#4A5568", "svg.fonttype": "path", "axes.titleweight": "bold", "axes.titlesize": 10,
-    "axes.titlecolor": "#1B2A41", "axes.titlelocation": "left",
+    "font.family": ["Libre Franklin", "DejaVu Sans"], "font.size": 9, "axes.edgecolor": "#CCCCCC", "axes.linewidth": 0.8,
+    "axes.spines.top": False, "axes.spines.right": False, "xtick.color": "#555555", "ytick.color": "#555555",
+    "axes.labelcolor": "#555555", "svg.fonttype": "path", "axes.titleweight": "bold", "axes.titlesize": 10,
+    "axes.titlecolor": "#121212", "axes.titlelocation": "left",
 })
-NAVY = "#0F1B33"; TEAL = "#0A8F9C"; BLUE = "#3B5BDB"; CORAL = "#C2410C"; AMBER = "#B7791F"; GREY = "#B8C2CF"; VIOLET = BLUE
+NAVY = "#121212"; TEAL = "#0A8F9C"; BLUE = "#3B5BDB"; CORAL = "#C2410C"; AMBER = "#B7791F"; GREY = "#BDBDBD"; VIOLET = BLUE
 # Validated categorical order (dataviz validator, light surface): teal, burnt orange, blue, amber
 SERIES = [TEAL, CORAL, BLUE, AMBER, NAVY, GREY]
 
@@ -52,12 +52,12 @@ def bar(cats, series, title="", ylabel="", w=6.2, h=2.6, horizontal=False, stack
             for rect, v in zip(b, vals):
                 if horizontal:
                     ax.text(rect.get_x() + rect.get_width() + (0.01 * max(vals)), rect.get_y() + rect.get_height() / 2,
-                            _f(fmt, v), va="center", fontsize=8, color="#2D3748")
+                            _f(fmt, v), va="center", fontsize=8, color="#333333")
                 elif stacked:
                     if v > 0: ax.text(rect.get_x() + rect.get_width() / 2, rect.get_y() + rect.get_height() / 2, _f(fmt, v),
                                       ha="center", va="center", fontsize=7.5, color="white", fontweight="bold")
                 else:
-                    ax.text(rect.get_x() + rect.get_width() / 2, rect.get_height(), _f(fmt, v), ha="center", va="bottom" if v >= 0 else "top", fontsize=8, color="#2D3748")
+                    ax.text(rect.get_x() + rect.get_width() / 2, rect.get_height(), _f(fmt, v), ha="center", va="bottom" if v >= 0 else "top", fontsize=8, color="#333333")
         if stacked: bottom = bottom + vals
     if horizontal:
         ax.set_yticks(x); ax.set_yticklabels(cats); ax.invert_yaxis(); ax.set_xlabel(ylabel)
@@ -80,7 +80,7 @@ def line(cats, series, title="", ylabel="", w=6.2, h=2.5, fmt="{:,.0f}", labels=
         ax.plot(cats, vals, marker="o", color=SERIES[i % 6], linewidth=2, markersize=4, label=nm)
         if labels:
             for xx, v in zip(cats, vals):
-                ax.annotate(_f(fmt, v), (xx, v), textcoords="offset points", xytext=(0, 6), ha="center", fontsize=7.5, color="#2D3748")
+                ax.annotate(_f(fmt, v), (xx, v), textcoords="offset points", xytext=(0, 6), ha="center", fontsize=7.5, color="#333333")
     if vline is not None:
         ax.axvline(vline[0], color=CORAL, linestyle="--", linewidth=1)
         ax.text(vline[0], ax.get_ylim()[1], " " + vline[1], color=CORAL, fontsize=8, va="top")
@@ -125,19 +125,19 @@ def waterfall(start_label, start, steps, end_label, w=6.2, h=2.7, fmt="{:+,.1f}"
     fig, ax = plt.subplots(figsize=(w, h))
     level = start
     ax.bar(0, start, color=NAVY, width=0.6)
-    ax.text(0, start, _f(base_fmt, start), ha="center", va="bottom", fontsize=8, color="#2D3748")
+    ax.text(0, start, _f(base_fmt, start), ha="center", va="bottom", fontsize=8, color="#333333")
     for i, (lab, d) in enumerate(steps, start=1):
         lo, hi = sorted([level, level + d])
         col = TEAL if d >= 0 else CORAL
         ax.bar(i, hi - lo, bottom=lo, color=col, width=0.6)
-        ax.text(i, hi, _f(fmt, d), ha="center", va="bottom", fontsize=8, color="#2D3748")
+        ax.text(i, hi, _f(fmt, d), ha="center", va="bottom", fontsize=8, color="#333333")
         ax.plot([i - 1 + 0.3, i - 0.3], [level, level], color="#A0AEC0", linewidth=0.8)
         level += d
     end = level
     n = len(steps) + 1
     ax.plot([n - 1 + 0.3, n - 0.3], [end, end], color="#A0AEC0", linewidth=0.8)
     ax.bar(n, end, color=NAVY, width=0.6)
-    ax.text(n, max(end, 0), _f(base_fmt, end), ha="center", va="bottom", fontsize=8, color="#2D3748")
+    ax.text(n, max(end, 0), _f(base_fmt, end), ha="center", va="bottom", fontsize=8, color="#333333")
     ax.axhline(0, color="#A0AEC0", linewidth=0.8)
     ax.set_xticks(range(len(labels))); ax.set_xticklabels(_wrap(labels, 12), fontsize=8)
     ax.set_ylabel(ylabel)

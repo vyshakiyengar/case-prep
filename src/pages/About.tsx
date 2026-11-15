@@ -30,7 +30,7 @@ export default function About() {
   return (
     <article className="rise mx-auto max-w-[640px] pt-2 pb-8">
       <p className="text-[14px] font-medium text-teal-d">About PrepForCase</p>
-      <h1 className="mt-2 text-[30px] leading-[1.1] sm:text-[38px]">Built from what helped me, so it can help you</h1>
+      <h1 className="mt-2 text-[30px] leading-[1.08] sm:text-[40px]">Built from what helped me, so it can help you</h1>
       <div className="mt-7 space-y-5 font-serif text-[17px] leading-[1.65] text-ink">
         <p>
           Hi, I'm Vyshak. I'm a former strategy consultant (BCG, Accenture Strategy) and a London Business School MBA, and I recently led product strategy for a multi-billion-dollar ads product at Meta.
@@ -50,7 +50,7 @@ export default function About() {
 
       <section className="mt-8 rounded-xl border border-line bg-white p-5">
         <h2 className="text-[18px]">How the content is checked</h2>
-        <ul className="mt-3 space-y-2 text-[14.5px] text-ink-2">
+        <ul className="mt-3 space-y-2 text-[15px] text-ink-2">
           <li>Every number in the cases, charts and drills is recalculated before it goes live.</li>
           <li>The frameworks are checked so each split is complete and doesn't overlap.</li>
           <li>The cases, wording and examples are written for this site. They are not copied from any firm or casebook.</li>
@@ -60,19 +60,19 @@ export default function About() {
         </p>
       </section>
 
-      <p className="mt-6 text-[13.5px] leading-relaxed text-muted">
+      <p className="mt-6 text-[14px] leading-relaxed text-muted">
         PrepForCase is an independent, personal project. It is not affiliated with or endorsed by BCG, Meta, London Business School or any other firm or school. See the <Link to="/privacy" className="underline hover:text-ink">privacy policy</Link> for how your data is handled.
       </p>
 
       <div className="mt-8 flex flex-wrap items-center justify-between gap-4 border-t border-line pt-6">
         <div className="flex items-center gap-4">
           <Portrait />
-          <div className="text-[14.5px] leading-snug">
+          <div className="text-[15px] leading-snug">
             <p className="text-ink">Made by <Link to="/author/vyshak-iyengar" className="font-medium hover:underline">Vyshak K Iyengar</Link> (<a href="https://vyshak.me" target="_blank" rel="noopener noreferrer me" className="hover:underline">vyshak.me</a>)</p>
             <a href={LINKEDIN} target="_blank" rel="noopener noreferrer me" className="mt-0.5 inline-flex items-center gap-1.5 text-muted hover:text-[#0A66C2]"><LinkedInIcon />Connect on LinkedIn</a>
           </div>
         </div>
-        <LinkButton to="/learn" className="px-5 py-2.5 text-[14.5px]">Start the course</LinkButton>
+        <LinkButton to="/learn" className="px-5 py-2.5 text-[15px]">Start the course</LinkButton>
       </div>
     </article>
   )

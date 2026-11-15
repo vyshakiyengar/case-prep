@@ -42,15 +42,15 @@ function Tools({ n }: { n: string }) {
   if (!t) return null
   return (
     <div className="mt-5 border-t border-line pt-4">
-      <h3 className="mb-2 font-sans text-[13.5px] font-semibold text-muted">{t.heading}</h3>
+      <h3 className="mb-2 font-sans text-[14px] font-semibold text-muted">{t.heading}</h3>
       <ul className="divide-y divide-line">
         {t.items.map((s) => (
           <li key={s.title} className="grid gap-1 py-2.5 sm:grid-cols-[220px_1fr]">
             <span>
               {s.url ? <a href={s.url} target="_blank" rel="noopener noreferrer" className="font-medium text-violet-d hover:underline">{s.title} ↗</a> : <span className="font-medium text-ink">{s.title}</span>}
-              {s.tag && <span className="ml-2 rounded-full bg-teal-l px-2 py-0.5 text-[11.5px] font-medium text-teal-d">{s.tag}</span>}
+              {s.tag && <span className="ml-2 rounded-full bg-teal-l px-2 py-0.5 text-[12px] font-medium text-teal-d">{s.tag}</span>}
             </span>
-            <p className="text-[14.5px] text-ink-2">{s.desc}</p>
+            <p className="text-[15px] text-ink-2">{s.desc}</p>
           </li>
         ))}
       </ul>
@@ -62,10 +62,10 @@ export default function InterviewSkills() {
   return <>
     <PageHeader title="Interview skills" art={<ArtSkills />} intro="Think clearly, speak calmly, sound commercial. Do one exercise from each part, most days." />
     {ROUTINES.map((r) => <div id={r.number} key={r.number} className="scroll-mt-24"><Section title={`${r.number} · ${r.name} (${r.time})`} className="mb-5">
-      <div className="sm:flex sm:items-start sm:gap-6"><p className="flex-1 text-[14.5px] text-muted">{r.why}</p><div aria-hidden className="mx-auto mt-2 w-40 shrink-0 sm:mx-0 sm:-mt-10 sm:w-44">{(() => { const A = [ArtThink, ArtVoice, ArtBusiness][ROUTINES.indexOf(r)] ?? ArtThink; return <A /> })()}</div></div><ol className="mt-4 space-y-3">{r.examples.map(([name, detail], i) => <li key={name} className="flex gap-3"><span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-violet-l text-[12px] font-semibold text-violet-d">{i + 1}</span><div><h3 className="font-sans text-[14.5px] font-semibold text-ink">{name}</h3><p className="mt-0.5 text-[14.5px] text-ink-2">{detail}</p></div></li>)}</ol>
+      <div className="sm:flex sm:items-start sm:gap-6"><p className="flex-1 text-[15px] text-muted">{r.why}</p><div aria-hidden className="mx-auto mt-2 w-40 shrink-0 sm:mx-0 sm:-mt-10 sm:w-44">{(() => { const A = [ArtThink, ArtVoice, ArtBusiness][ROUTINES.indexOf(r)] ?? ArtThink; return <A /> })()}</div></div><ol className="mt-4 space-y-3">{r.examples.map(([name, detail], i) => <li key={name} className="flex gap-3"><span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-violet-l text-[12px] font-semibold text-violet-d">{i + 1}</span><div><h3 className="font-sans text-[15px] font-semibold text-ink">{name}</h3><p className="mt-0.5 text-[15px] text-ink-2">{detail}</p></div></li>)}</ol>
       <Tools n={r.number} />
     </Section></div>)}
-    <Section title="The 30-minute pre-interview warm-up" className="mb-5"><p className="text-[14.5px] text-muted">This follows the idea of refreshing your business vocabulary just before an interview, without trying to learn a whole new topic at the last minute.</p><ol className="mt-4 grid gap-3 sm:grid-cols-2">{[
+    <Section title="The 30-minute pre-interview warm-up" className="mb-5"><p className="text-[15px] text-muted">This follows the idea of refreshing your business vocabulary just before an interview, without trying to learn a whole new topic at the last minute.</p><ol className="mt-4 grid gap-3 sm:grid-cols-2">{[
       ['10 minutes: familiar reading', 'Skim a book such as Blitzscaling or your own vocabulary notes. Look for ideas you already understand, not new jargon.'],
       ['5 minutes: speech warm-up', 'Do a short routine on SpeechOn.app (free) or read one paragraph aloud. Practise clear articulation and a natural pace.'],
       ['10 minutes: one short mock', 'Recap a prompt, outline three useful branches and deliver a 60-second recommendation. Focus on one improvement.'],

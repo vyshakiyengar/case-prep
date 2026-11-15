@@ -54,12 +54,12 @@ export default function Settings() {
             {backend?.mode === 'firebase' && (
               <div className="mt-5 border-t border-line pt-4">
                 <button onClick={deleteAccount} disabled={deleting} className="text-[14px] font-medium text-signal-d hover:underline disabled:opacity-50">{deleting ? 'Deleting…' : 'Delete my account and data'}</button>
-                {delMsg && <p role="alert" className="mt-2 text-[13.5px] text-signal-d">{delMsg}</p>}
+                {delMsg && <p role="alert" className="mt-2 text-[14px] text-signal-d">{delMsg}</p>}
               </div>
             )}
           </Section>
           <Section title="More">
-            <ul className="space-y-2 text-[14.5px]">
+            <ul className="space-y-2 text-[15px]">
               <li><Link className="font-medium text-violet-d hover:underline" to="/perks">Student perks</Link> <span className="text-muted">Verify your business school email</span></li>
               <li><Link className="font-medium text-violet-d hover:underline" to="/partners">Practice partners</Link></li>
               <li><Link className="font-medium text-violet-d hover:underline" to="/stories">Fit stories</Link></li>

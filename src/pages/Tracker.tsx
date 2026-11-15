@@ -31,8 +31,8 @@ export default function Tracker() {
             </tr>
             <tr className="border-b border-line">
               <th className="sticky left-0 z-10 bg-white px-4 py-2 text-left font-medium text-muted">Day</th>
-              {HABITS.map((h) => <th key={h.key} className="px-1 py-2 text-[12.5px] leading-tight font-medium text-ink">{h.label}</th>)}
-              <th className="px-3 py-2 text-[12.5px] font-medium text-ink">Score</th>
+              {HABITS.map((h) => <th key={h.key} className="px-1 py-2 text-[13px] leading-tight font-medium text-ink">{h.label}</th>)}
+              <th className="px-3 py-2 text-[13px] font-medium text-ink">Score</th>
             </tr>
           </thead>
           <tbody>
@@ -65,13 +65,13 @@ export default function Tracker() {
       </div>
       {dates.length > shown.length && <button type="button" onClick={() => setAll(true)} className="mt-3 text-[14px] font-medium text-violet-d hover:underline">Show all {dates.length} days</button>}
 
-      <Section title="Habit consistency" className="mt-5" aside={<span className="text-[13.5px] text-muted">Share of days since you started</span>}>
+      <Section title="Habit consistency" className="mt-5" aside={<span className="text-[14px] text-muted">Share of days since you started</span>}>
         <ul className="grid gap-x-10 gap-y-3 sm:grid-cols-2">
           {cons.map((h) => (
             <li key={h.key} className="grid grid-cols-[150px_1fr_44px] items-center gap-3">
               <span className="text-[14px] text-ink">{h.label}</span>
               <Meter value={h.pct} max={1} color={h.track === 'A' ? 'bg-teal' : 'bg-violet'} />
-              <span className="text-right text-[13.5px] tabular-nums text-muted">{Math.round(h.pct * 100)}%</span>
+              <span className="text-right text-[14px] tabular-nums text-muted">{Math.round(h.pct * 100)}%</span>
             </li>
           ))}
         </ul>

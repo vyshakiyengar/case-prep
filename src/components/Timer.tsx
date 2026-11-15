@@ -34,13 +34,13 @@ export function Countdown({ seconds, label, onEnd, autoStart = false, onTick }: 
   return (
     <div className="inline-flex items-center gap-3 rounded-lg border border-line bg-white px-3 py-2">
       <svg width="34" height="34" viewBox="0 0 36 36" aria-hidden>
-        <circle cx="18" cy="18" r="15" stroke="#E3EAF3" strokeWidth="4" fill="none" />
+        <circle cx="18" cy="18" r="15" stroke="#E8E8E8" strokeWidth="4" fill="none" />
         <circle cx="18" cy="18" r="15" stroke={urgent ? '#E8505B' : '#6C5CE7'} strokeWidth="4" fill="none" strokeLinecap="round"
           strokeDasharray={`${pct * 94.2} 94.2`} transform="rotate(-90 18 18)" />
       </svg>
       <div>
         <div className="text-[12px] text-muted">{label}</div>
-        <div className={`font-serif text-[19px] leading-none font-semibold tabular-nums ${urgent ? 'text-signal-d' : 'text-ink'}`} aria-live="off">{left <= 0 ? 'Time' : mmss(left)}</div>
+        <div className={`font-serif text-[20px] leading-none font-semibold tabular-nums ${urgent ? 'text-signal-d' : 'text-ink'}`} aria-live="off">{left <= 0 ? 'Time' : mmss(left)}</div>
       </div>
       <div className="flex gap-1">
         {left > 0 && <button onClick={() => setRunning((r) => !r)} className="rounded-md px-2 py-1 text-[13px] font-medium text-violet-d hover:bg-violet-l">{running ? 'Pause' : left === seconds ? 'Start' : 'Resume'}</button>}

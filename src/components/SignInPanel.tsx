@@ -29,14 +29,14 @@ function InAppNote() {
     try { await navigator.clipboard.writeText(href); setCopied(true) } catch { window.prompt('Copy this link, then open it in Safari or Chrome:', href) }
   }
   return (
-    <div className="rounded-lg border border-line bg-canvas p-3.5 text-left text-[13.5px] leading-snug text-ink-2">
+    <div className="rounded-lg border border-line bg-canvas p-3.5 text-left text-[14px] leading-snug text-ink-2">
       <p className="font-medium text-ink">You're in {inAppName === 'this app' ? 'an app' : `${inAppName}`}'s built-in browser</p>
       <p className="mt-1">Google sign-in doesn't work here. {isAndroid ? 'Open this page in Chrome to use Google,' : <>Tap <b className="font-semibold">⋯</b> and choose <b className="font-semibold">Open in browser</b> to use Google,</>} or sign in with your email below.</p>
       <div className="mt-2.5 flex flex-wrap gap-2">
         {isAndroid && <a href={chromeIntent(href)} onClick={() => track('inapp_open_chrome')} className="rounded-md bg-ink px-3 py-1.5 font-medium text-white">Open in Chrome</a>}
         <button type="button" onClick={copy} className="rounded-md border border-line bg-white px-3 py-1.5 font-medium text-ink">{copied ? 'Link copied' : 'Copy link'}</button>
       </div>
-      {copied && <p className="mt-1.5 text-[12.5px] text-muted">Paste it into Safari or Chrome.</p>}
+      {copied && <p className="mt-1.5 text-[13px] text-muted">Paste it into Safari or Chrome.</p>}
     </div>
   )
 }
@@ -82,22 +82,22 @@ export function SignInPanel({ compact = false }: { compact?: boolean }) {
   }
   const useEmail = () => { track('click_any'); track('click_email'); go('signin') }
 
-  const btn = 'flex w-full items-center justify-center gap-3 rounded-lg px-5 py-3 text-[14.5px] font-medium transition-[transform,background-color,border-color] duration-150 active:scale-[.99]'
+  const btn = 'flex w-full items-center justify-center gap-3 rounded-lg px-5 py-3 text-[15px] font-medium transition-[transform,background-color,border-color] duration-150 active:scale-[.99]'
 
   if (mode === 'choose') return (
     <div className="space-y-2.5">
       {inAppName && firebaseConfigured && <InAppNote />}
       {!(inAppName && firebaseConfigured) && (
-        <button type="button" onClick={google} className={`${btn} bg-ink text-white hover:bg-[#1C2B4A]`}>
+        <button type="button" onClick={google} className={`${btn} bg-ink text-white hover:bg-[#262626]`}>
           {firebaseConfigured && <span className="flex h-6 w-6 items-center justify-center rounded bg-white"><GoogleMark /></span>}
           {firebaseConfigured ? 'Sign in with Google' : 'Start now (saved in this browser)'}
         </button>
       )}
-      <button type="button" onClick={useEmail} className={`${btn} ${inAppName && firebaseConfigured ? 'bg-ink text-white hover:bg-[#1C2B4A]' : 'border border-line bg-white text-ink hover:border-teal'}`}>
+      <button type="button" onClick={useEmail} className={`${btn} ${inAppName && firebaseConfigured ? 'bg-ink text-white hover:bg-[#262626]' : 'border border-line bg-white text-ink hover:border-teal'}`}>
         <span className={inAppName && firebaseConfigured ? 'text-white' : 'text-teal-d'}><MailIcon /></span>Sign in with email
       </button>
-      {err && <p role="alert" className="rounded-md bg-signal-l px-3 py-2 text-left text-[13.5px] text-signal-d">{err}</p>}
-      {!compact && <p className="pt-1 text-center text-[12.5px] text-muted">Free. By continuing you agree to the <Link to="/terms" className="underline hover:text-ink">terms</Link> and <Link to="/privacy" className="underline hover:text-ink">privacy notice</Link>.</p>}
+      {err && <p role="alert" className="rounded-md bg-signal-l px-3 py-2 text-left text-[14px] text-signal-d">{err}</p>}
+      {!compact && <p className="pt-1 text-center text-[13px] text-muted">Free. By continuing you agree to the <Link to="/terms" className="underline hover:text-ink">terms</Link> and <Link to="/privacy" className="underline hover:text-ink">privacy notice</Link>.</p>}
     </div>
   )
 
@@ -108,24 +108,24 @@ export function SignInPanel({ compact = false }: { compact?: boolean }) {
         <button type="button" onClick={() => go('choose')} className="text-[13px] text-muted hover:text-ink">Back</button>
       </div>
       {mode === 'signup' && (
-        <label className="block text-[13.5px] text-ink-2">Your name
+        <label className="block text-[14px] text-ink-2">Your name
           <input className={`${inputCls} mt-1`} value={name} onChange={(e) => setName(e.target.value)} autoComplete="name" required />
         </label>
       )}
-      <label className="block text-[13.5px] text-ink-2">Email
+      <label className="block text-[14px] text-ink-2">Email
         <input className={`${inputCls} mt-1`} type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="you@example.com" autoComplete="email" required />
-        {mode === 'signup' && look?.school && <span className="mt-1 block text-[12.5px] text-teal-d">{look.school}: student perks will unlock once you confirm it</span>}
+        {mode === 'signup' && look?.school && <span className="mt-1 block text-[13px] text-teal-d">{look.school}: student perks will unlock once you confirm it</span>}
       </label>
       {mode !== 'reset' && (
-        <label className="block text-[13.5px] text-ink-2">Password
+        <label className="block text-[14px] text-ink-2">Password
           <input className={`${inputCls} mt-1`} type="password" value={password} onChange={(e) => setPassword(e.target.value)} minLength={8}
             autoComplete={mode === 'signup' ? 'new-password' : 'current-password'} required />
-          {mode === 'signup' && <span className="mt-1 block text-[12.5px] text-muted">At least 8 characters.</span>}
+          {mode === 'signup' && <span className="mt-1 block text-[13px] text-muted">At least 8 characters.</span>}
         </label>
       )}
-      {err && <p role="alert" className="rounded-md bg-signal-l px-3 py-2 text-[13.5px] text-signal-d">{err}</p>}
-      {note && <p role="status" className="rounded-md bg-teal-l px-3 py-2 text-[13.5px] text-teal-d">{note}</p>}
-      <button type="submit" disabled={busy || !email} className={`${btn} bg-ink text-white hover:bg-[#1C2B4A] disabled:opacity-50`}>
+      {err && <p role="alert" className="rounded-md bg-signal-l px-3 py-2 text-[14px] text-signal-d">{err}</p>}
+      {note && <p role="status" className="rounded-md bg-teal-l px-3 py-2 text-[14px] text-teal-d">{note}</p>}
+      <button type="submit" disabled={busy || !email} className={`${btn} bg-ink text-white hover:bg-[#262626] disabled:opacity-50`}>
         {busy ? 'One moment…' : mode === 'signup' ? 'Create account' : mode === 'reset' ? 'Send reset link' : 'Sign in'}
       </button>
       <div className="flex flex-wrap justify-between gap-2 text-[13px]">

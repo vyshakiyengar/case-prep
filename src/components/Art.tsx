@@ -6,7 +6,7 @@ import type { ReactNode } from 'react'
  * paper shapes, a patch of graph-paper dots behind each scene (case notes are written on squared
  * paper), and the chart palette for accents. Every drawing is 240 x 160 and decorative.
  */
-const N = '#0F1B33', T = '#0E8C96', TL = '#D5EEF0', O = '#C2410C', OL = '#FBE4D8', A = '#B7791F', AL = '#F5E8CC'
+const N = '#121212', T = '#0E8C96', TL = '#D5EEF0', O = '#C2410C', OL = '#FBE4D8', A = '#B7791F', AL = '#F5E8CC'
 const BL = '#3B5BDB', BLL = '#E2E8FB', W = '#FFFFFF', G = '#C9D2DE', SERIF = '"Newsreader Variable", Newsreader, Georgia, serif'
 const SANS = '"Libre Franklin Variable", system-ui, sans-serif'
 const S = { stroke: N, strokeWidth: 1.75, strokeLinejoin: 'round' as const, strokeLinecap: 'round' as const }
@@ -294,7 +294,7 @@ export const ArtCaseLog = (p: { className?: string }) => (
     {[0.8, 0.6, 0.9, 0.4, 0.7, 0.75].map((v, i) => (
       <g key={i}>
         <Line x={60} y={46 + i * 15} w={26} />
-        <rect x={94} y={41 + i * 15} width={70} height={9} rx="4.5" fill="#EEF1F5" />
+        <rect x={94} y={41 + i * 15} width={70} height={9} rx="4.5" fill="#F0F0F0" />
         <rect x={94} y={41 + i * 15} width={70 * v} height={9} rx="4.5" fill={i === 3 ? O : T} />
       </g>
     ))}
@@ -494,18 +494,18 @@ export function SectorTile({ industry, className = '' }: { industry?: string; cl
 }
 
 /** Inside of a case card with its industry picture (the page wraps it in a link). */
-export const INDUSTRY_CARD = 'group flex flex-col overflow-hidden rounded-xl border border-line bg-white transition-[border-color,transform,box-shadow] duration-300 hover:-translate-y-0.5 hover:border-ink/40 hover:shadow-[0_18px_36px_-24px_rgba(15,27,51,.45)] motion-reduce:hover:translate-y-0'
+export const INDUSTRY_CARD = 'group flex flex-col overflow-hidden rounded-xl border border-line bg-white transition-[border-color,transform,box-shadow] duration-300 hover:-translate-y-0.5 hover:border-ink/40 hover:shadow-[0_18px_36px_-24px_rgba(18,18,18,.45)] motion-reduce:hover:translate-y-0'
 export function IndustryCardBody({ label, title, sub, industry, meta, done }: { label: string; title: string; sub: string; industry: string; meta?: string; done?: boolean }) {
   return <>
     <div className="relative overflow-hidden border-b border-line bg-canvas px-6 pt-2">
       <div className="transition-transform duration-500 ease-out group-hover:scale-[1.06] motion-reduce:group-hover:scale-100"><ArtSector industry={industry} /></div>
-      <span className="absolute top-3 left-3 rounded-full bg-white px-2.5 py-0.5 text-[12px] font-medium text-ink-2 shadow-[0_1px_0_#E1E6ED]">{label}</span>
+      <span className="absolute top-3 left-3 rounded-full bg-white px-2.5 py-0.5 text-[12px] font-medium text-ink-2 shadow-[0_1px_0_#E2E2E2]">{label}</span>
       {done && <span className="absolute top-3 right-3 rounded-full bg-teal px-2.5 py-0.5 text-[12px] font-medium text-white">Practised</span>}
     </div>
     <div className="flex flex-1 flex-col p-4">
-      <h3 className="text-[16.5px] group-hover:text-violet-d">{title}</h3>
+      <h3 className="text-[17px] group-hover:text-violet-d">{title}</h3>
       <p className="mt-1 flex-1 text-[14px] leading-snug text-ink-2">{sub}</p>
-      {meta && <p className="mt-2 text-[12.5px] text-muted">{meta}</p>}
+      {meta && <p className="mt-2 text-[13px] text-muted">{meta}</p>}
     </div>
   </>
 }

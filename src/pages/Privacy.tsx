@@ -1,14 +1,14 @@
 import { Link } from 'react-router-dom'
 import { Logo } from '../components/ui'
 
-const H = ({ children }: { children: string }) => <h2 className="pt-2 text-[19px] text-ink">{children}</h2>
+const H = ({ children }: { children: string }) => <h2 className="pt-2 text-[20px] text-ink">{children}</h2>
 
 export default function Privacy() {
   return (
     <div className="min-h-screen bg-white">
       <div className="mx-auto max-w-2xl px-5 py-8">
         <Link to="/" aria-label="PrepForCase home"><Logo /></Link>
-        <h1 className="mt-8 text-[28px]">Privacy notice</h1>
+        <h1 className="mt-8 text-[28px] leading-[1.1] sm:text-[34px]">Privacy notice</h1>
         <p className="mt-1 text-muted">Last updated 15 November 2026</p>
         <div className="mt-6 space-y-4 text-[15px] leading-[1.7] text-ink-2">
           <p>PrepForCase is a free, personal project run by Vyshak K Iyengar in London, United Kingdom. This notice explains, in plain words, what is collected when you use prepforcase.com, why, and what you can do about it. For any privacy question or request, get in touch through <a href="https://vyshak.me" target="_blank" rel="noopener noreferrer" className="font-medium text-violet-d underline">vyshak.me</a>.</p>

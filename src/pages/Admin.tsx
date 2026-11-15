@@ -20,7 +20,7 @@ function PerkManager() {
   const load = () => backend!.listPerks().then((x) => setPerks(x.sort((a, b) => (a.order ?? 99) - (b.order ?? 99))))
   useEffect(() => { load() }, []) // eslint-disable-line react-hooks/exhaustive-deps
   return (
-    <Section title="Perks" aside={<span className="text-[13.5px] text-muted">Only verified students can see these</span>}>
+    <Section title="Perks" aside={<span className="text-[14px] text-muted">Only verified students can see these</span>}>
       <ul className="divide-y divide-line">
         {perks.map((x) => (
           <li key={x.id} className="flex flex-wrap items-center justify-between gap-2 py-2.5">
@@ -33,7 +33,7 @@ function PerkManager() {
         ))}
       </ul>
       <form className="mt-4 grid gap-3 rounded-lg border border-line p-4 sm:grid-cols-2" onSubmit={async (e) => { e.preventDefault(); await backend!.savePerk({ ...p, id: p.id || uid() }); setP(blank); load() }}>
-        <div className="sm:col-span-2 text-[14.5px] font-semibold text-ink">{p.id ? 'Edit perk' : 'Add a perk'}</div>
+        <div className="sm:col-span-2 text-[15px] font-semibold text-ink">{p.id ? 'Edit perk' : 'Add a perk'}</div>
         <Field label="Title"><input required className={inputCls} value={p.title} onChange={(e) => setP({ ...p, title: e.target.value })} /></Field>
         <Field label="Type"><select className={inputCls} value={p.kind} onChange={(e) => setP({ ...p, kind: e.target.value as Perk['kind'] })}><option value="download">Download</option><option value="code">Discount code</option><option value="link">Link</option></select></Field>
         <div className="sm:col-span-2"><Field label="Description"><input className={inputCls} value={p.description} onChange={(e) => setP({ ...p, description: e.target.value })} /></Field></div>
@@ -73,9 +73,9 @@ function Kpi({ label, value, sub, delta }: { label: string; value: number | stri
       <div className="text-[13px] text-muted">{label}</div>
       <div className="flex items-baseline gap-2">
         <span className="font-serif text-[26px] leading-tight text-ink tabular-nums">{value}</span>
-        {delta !== undefined && delta !== 0 && <span className={`text-[12.5px] font-medium tabular-nums ${delta > 0 ? 'text-good' : 'text-signal-d'}`}>{delta > 0 ? '▲' : '▼'} {Math.abs(delta)}</span>}
+        {delta !== undefined && delta !== 0 && <span className={`text-[13px] font-medium tabular-nums ${delta > 0 ? 'text-good' : 'text-signal-d'}`}>{delta > 0 ? '▲' : '▼'} {Math.abs(delta)}</span>}
       </div>
-      {sub && <div className="text-[12.5px] text-muted">{sub}</div>}
+      {sub && <div className="text-[13px] text-muted">{sub}</div>}
     </div>
   )
 }
@@ -93,7 +93,7 @@ function Columns({ days, values, label }: { days: string[]; values: number[]; la
           </div>
         ))}
       </div>
-      <div className="mt-1 flex justify-between text-[11.5px] text-muted"><span>{days[0].slice(5)}</span><span>peak {max}</span><span>{days[days.length - 1].slice(5)}</span></div>
+      <div className="mt-1 flex justify-between text-[12px] text-muted"><span>{days[0].slice(5)}</span><span>peak {max}</span><span>{days[days.length - 1].slice(5)}</span></div>
     </div>
   )
 }
@@ -119,7 +119,7 @@ function Line({ days, values, label }: { days: string[]; values: number[]; label
           {days[hover].slice(5)}: {values[hover]}
         </div>
       )}
-      <div className="mt-1 flex justify-between text-[11.5px] text-muted"><span>{days[0].slice(5)}</span><span>now {values[values.length - 1]}</span></div>
+      <div className="mt-1 flex justify-between text-[12px] text-muted"><span>{days[0].slice(5)}</span><span>now {values[values.length - 1]}</span></div>
     </div>
   )
 }
@@ -165,7 +165,7 @@ function Retention({ stats }: { stats: UserStats[] }) {
   const shade = (p: number) => p < 0 ? 'transparent' : `color-mix(in oklab, var(--color-teal) ${Math.max(6, p)}%, white)`
   return (
     <div className="overflow-x-auto">
-      <table className="w-full min-w-[560px] border-separate border-spacing-[2px] text-[12.5px]">
+      <table className="w-full min-w-[560px] border-separate border-spacing-[2px] text-[13px]">
         <thead><tr className="text-muted"><th className="text-left font-medium">Week joined</th><th className="text-right font-medium">Users</th>{Array.from({ length: WEEKS }, (_, k) => <th key={k} className="font-medium">W{k}</th>)}</tr></thead>
         <tbody>{rows.map((r) => (
           <tr key={r.label}>
@@ -179,7 +179,7 @@ function Retention({ stats }: { stats: UserStats[] }) {
           </tr>
         ))}</tbody>
       </table>
-      <p className="mt-2 text-[12.5px] text-muted">Each row is the people who signed up that week (Monday start). W1 = active again 7 to 13 days after joining. Darker = more of them came back.</p>
+      <p className="mt-2 text-[13px] text-muted">Each row is the people who signed up that week (Monday start). W1 = active again 7 to 13 days after joining. Darker = more of them came back.</p>
     </div>
   )
 }
@@ -263,14 +263,14 @@ function Analytics({ stats, students, updated }: { stats: UserStats[]; students:
       <div className="mb-5 grid gap-5 lg:grid-cols-3">
         <Section title="Online now">
           {online.length ? <ul className="space-y-2">{online.map((s) => (
-            <li key={s.uid} className="flex items-center justify-between gap-3 text-[14px]"><span className="flex min-w-0 items-center gap-2"><span className="h-2 w-2 shrink-0 rounded-full bg-good" /><span className="truncate text-ink">{s.name}</span></span><span className="shrink-0 text-[12.5px] text-muted">{SECTION[(s.lastPath || '').split('/')[1]] || s.lastPath || ''}</span></li>
+            <li key={s.uid} className="flex items-center justify-between gap-3 text-[14px]"><span className="flex min-w-0 items-center gap-2"><span className="h-2 w-2 shrink-0 rounded-full bg-good" /><span className="truncate text-ink">{s.name}</span></span><span className="shrink-0 text-[13px] text-muted">{SECTION[(s.lastPath || '').split('/')[1]] || s.lastPath || ''}</span></li>
           ))}</ul> : <p className="text-[14px] text-muted">Nobody right now.</p>}
         </Section>
         <Section title="Latest sign-ups" className="lg:col-span-2">
           <ul className="divide-y divide-line">{recent.map((s) => (
             <li key={s.uid} className="flex flex-wrap items-center justify-between gap-x-4 gap-y-0.5 py-2 text-[14px]">
               <span className="min-w-0 truncate"><span className="text-ink">{s.name}</span> <span className="text-muted">{s.email}</span></span>
-              <span className="text-[12.5px] text-muted">{method(s)}{s.source ? ` · from ${s.source}` : ''} · {ago(s.createdAt)}</span>
+              <span className="text-[13px] text-muted">{method(s)}{s.source ? ` · from ${s.source}` : ''} · {ago(s.createdAt)}</span>
             </li>))}</ul>
           {!recent.length && <p className="text-[14px] text-muted">No sign-ups yet.</p>}
         </Section>
@@ -301,8 +301,8 @@ function Analytics({ stats, students, updated }: { stats: UserStats[]; students:
 
       <Section title={`Users (${users.length})`} className="mb-5" aside={<span className="flex gap-2"><input className={`${inputCls} max-w-48 py-1.5`} placeholder="Search name, email, school" value={q} onChange={(e) => setQ(e.target.value)} /><Button variant="secondary" onClick={exportUsers}>Export CSV</Button></span>}>
         <div className="overflow-x-auto">
-          <table className="w-full min-w-[1040px] text-[13.5px]">
-            <thead><tr className="border-b border-line text-left text-[12.5px] text-muted">
+          <table className="w-full min-w-[1040px] text-[14px]">
+            <thead><tr className="border-b border-line text-left text-[13px] text-muted">
               <Th k="name">Name</Th><Th k="method">Sign-in</Th><Th k="createdAt">Joined</Th><Th k="lastActive">Last active</Th>
               <Th k="days" right>Days</Th><Th k="sessions" right>Visits</Th><Th k="minutes" right>Minutes</Th><Th k="lessons" right>Lessons</Th><Th k="cases" right>Cases</Th><Th k="drills" right>Drills</Th><Th k="notes" right>Notes</Th>
               <th className="pl-3 font-medium">Source</th><th className="font-medium">Last page</th>
@@ -353,8 +353,8 @@ function PageViews() {
   return (
     <div className="mb-8">
       <div className="mb-3 flex flex-wrap items-center justify-between gap-3">
-        <h2 className="text-[21px] font-semibold">Page views</h2>
-        <div className="flex gap-1 text-[13.5px]">{[7, 30].map((n) => (
+        <h2 className="text-[22px] font-semibold">Page views</h2>
+        <div className="flex gap-1 text-[14px]">{[7, 30].map((n) => (
           <button key={n} onClick={() => setRange(n)} className={`rounded-md px-3 py-1 ${range === n ? 'bg-ink text-white' : 'text-muted hover:text-ink'}`}>Last {n} days</button>
         ))}</div>
       </div>
@@ -371,7 +371,7 @@ function PageViews() {
         <Section title="Top pages"><HBars rows={pages.slice(0, 15).map((x) => ({ label: label(x.path), v: x.v, of: pages[0]?.v }))} /></Section>
       </div>
       <Section title="Top blog posts"><HBars rows={blog.slice(0, 20).map((x) => ({ label: label(x.path), v: x.v, of: blog[0]?.v }))} empty="No blog views yet." /></Section>
-      <p className="mt-3 text-[13.5px] text-muted">Every page change counts as a view; no personal data is stored. Visitors, countries and referrers are also in Vercel Analytics.</p>
+      <p className="mt-3 text-[14px] text-muted">Every page change counts as a view; no personal data is stored. Visitors, countries and referrers are also in Vercel Analytics.</p>
     </div>
   )
 }
@@ -402,8 +402,8 @@ function VisitorFunnel() {
   return (
     <div className="mb-6">
       <div className="mb-3 flex flex-wrap items-center justify-between gap-3">
-        <h2 className="text-[21px] font-semibold">Visitors who don't sign in</h2>
-        <div className="flex gap-1 text-[13.5px]">{[7, 30].map((n) => (
+        <h2 className="text-[22px] font-semibold">Visitors who don't sign in</h2>
+        <div className="flex gap-1 text-[14px]">{[7, 30].map((n) => (
           <button key={n} onClick={() => setRange(n)} className={`rounded-md px-3 py-1 ${range === n ? 'bg-ink text-white' : 'text-muted hover:text-ink'}`}>Last {n} days</button>
         ))}</div>
       </div>
@@ -435,7 +435,7 @@ function VisitorFunnel() {
         ]} /></Section>
         <Section title="Sign-in errors"><HBars rows={group('err_', 0).map((r) => ({ label: r.label, v: r.v }))} empty="No sign-in errors." /></Section>
       </div>
-      <p className="mt-4 text-[13.5px] text-muted">Plain daily counts, no personal data. Each step counts once per browser tab. Page views, countries and referrers are also in <a href="https://vercel.com/dashboard" target="_blank" rel="noopener noreferrer" className="font-medium text-violet-d hover:underline">Vercel Analytics</a>.</p>
+      <p className="mt-4 text-[14px] text-muted">Plain daily counts, no personal data. Each step counts once per browser tab. Page views, countries and referrers are also in <a href="https://vercel.com/dashboard" target="_blank" rel="noopener noreferrer" className="font-medium text-violet-d hover:underline">Vercel Analytics</a>.</p>
     </div>
   )
 }
@@ -480,7 +480,7 @@ export default function Admin() {
     <>
       <PageHeader title="Admin" intro="Who signs up, how they use PrepForCase, and whether they come back. Updates live. Only you can see this page." />
       <Analytics stats={stats} students={rows} updated={updated} />
-      <div className="mb-3 flex flex-wrap items-center justify-between gap-3"><h2 className="text-[21px] font-semibold">Verified students</h2><Button onClick={exportCsv}>Export students CSV</Button></div>
+      <div className="mb-3 flex flex-wrap items-center justify-between gap-3"><h2 className="text-[22px] font-semibold">Verified students</h2><Button onClick={exportCsv}>Export students CSV</Button></div>
       <dl className="mb-6 flex flex-wrap gap-x-10 gap-y-3">
         <div><dt className="text-[13px] text-muted">Verified students</dt><dd className="font-serif text-[26px] font-semibold text-ink">{rows.length}</dd></div>
         <div><dt className="text-[13px] text-muted">Agreed to marketing</dt><dd className="font-serif text-[26px] font-semibold text-ink">{optIn}</dd></div>
@@ -498,7 +498,7 @@ export default function Admin() {
         <Section title="Students" aside={<input className={`${inputCls} max-w-56 py-1.5`} placeholder="Search" value={q} onChange={(e) => setQ(e.target.value)} />}>
           <div className="overflow-x-auto">
             <table className="w-full min-w-[640px] text-[14px]">
-              <thead><tr className="border-b border-line text-left text-[12.5px] text-muted"><th className="py-2 font-medium">Name</th><th className="font-medium">School</th><th className="font-medium">Programme</th><th className="font-medium">School email</th><th className="font-medium">Marketing</th></tr></thead>
+              <thead><tr className="border-b border-line text-left text-[13px] text-muted"><th className="py-2 font-medium">Name</th><th className="font-medium">School</th><th className="font-medium">Programme</th><th className="font-medium">School email</th><th className="font-medium">Marketing</th></tr></thead>
               <tbody>{shown.map((r) => (
                 <tr key={r.uid} className="border-b border-line last:border-0">
                   <td className="py-2 text-ink">{r.name}</td><td>{r.school}{!r.knownSchool && <span className="ml-1 text-[12px] text-signal-d">check</span>}</td>

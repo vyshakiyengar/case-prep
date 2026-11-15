@@ -33,7 +33,7 @@ function ShareButton({ title }: { title: string }) {
     } catch { /* closed the share sheet */ }
   }
   return (
-    <button type="button" onClick={share} className="inline-flex items-center gap-1.5 rounded-full border border-line px-3 py-1.5 text-[13.5px] font-medium text-ink hover:border-ink/40" aria-live="polite">
+    <button type="button" onClick={share} className="inline-flex items-center gap-1.5 rounded-full border border-line px-3 py-1.5 text-[14px] font-medium text-ink hover:border-ink/40" aria-live="polite">
       <svg aria-hidden viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M4 12v7a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-7M16 6l-4-4-4 4M12 2v13" /></svg>
       {copied ? 'Link copied' : 'Share'}
     </button>
@@ -52,7 +52,7 @@ function ReaderSettings() {
     return () => { document.removeEventListener('mousedown', close); document.removeEventListener('keydown', close) }
   }, [open])
   const themes: { id: Theme; label: string; sw: string }[] = [
-    { id: 'light', label: 'Light', sw: 'bg-[#ffffff] text-[#0F1B33]' }, { id: 'sepia', label: 'Sepia', sw: 'bg-[#F8F1E3] text-[#2B2417]' }, { id: 'dark', label: 'Dark', sw: 'bg-[#15171B] text-[#ECEEF1]' }]
+    { id: 'light', label: 'Light', sw: 'bg-[#ffffff] text-[#121212]' }, { id: 'sepia', label: 'Sepia', sw: 'bg-[#F8F1E3] text-[#2B2417]' }, { id: 'dark', label: 'Dark', sw: 'bg-[#15171B] text-[#EDEDED]' }]
   const step = 'flex h-9 flex-1 items-center justify-center rounded-lg border border-line font-serif text-ink hover:border-ink/40 disabled:opacity-35'
   return (
     <div ref={box} className="relative">
@@ -61,18 +61,18 @@ function ReaderSettings() {
         <span className="text-[12px]">A</span><span>a</span>
       </button>
       {open && <div role="dialog" aria-label="Reading settings" className="absolute right-0 z-20 mt-2 w-64 rounded-xl border border-line bg-white p-4 shadow-[0_18px_40px_-20px_rgba(0,0,0,.45)]">
-        <p className="text-[12.5px] font-medium text-muted">Text size</p>
+        <p className="text-[13px] font-medium text-muted">Text size</p>
         <div className="mt-2 flex gap-2">
           <button type="button" className={`${step} text-[15px]`} disabled={prefs.size === 0} onClick={() => setPrefs({ size: prefs.size - 1 })} aria-label="Smaller text">A−</button>
           <button type="button" className={`${step} text-[20px]`} disabled={prefs.size === SIZES.length - 1} onClick={() => setPrefs({ size: prefs.size + 1 })} aria-label="Larger text">A+</button>
         </div>
         <div className="mt-2 flex justify-center gap-1.5" aria-hidden>{SIZES.map((_, i) => <span key={i} className={`h-1.5 w-1.5 rounded-full ${i === prefs.size ? 'bg-ink' : 'bg-line'}`} />)}</div>
-        <p className="mt-4 text-[12.5px] font-medium text-muted">Page colour</p>
+        <p className="mt-4 text-[13px] font-medium text-muted">Page colour</p>
         <div className="mt-2 grid grid-cols-3 gap-2" role="radiogroup" aria-label="Page colour">
           {themes.map((t) => <button key={t.id} type="button" role="radio" aria-checked={prefs.theme === t.id} onClick={() => setPrefs({ theme: t.id })}
             className={`h-10 rounded-lg border text-[13px] font-medium ${t.sw} ${prefs.theme === t.id ? 'border-teal ring-2 ring-teal/40' : 'border-[#d6d6d6]'}`}>{t.label}</button>)}
         </div>
-        {(prefs.size !== 1 || prefs.theme !== 'light') && <button type="button" onClick={() => setPrefs({ size: 1, theme: 'light' })} className="mt-3 text-[12.5px] text-muted underline underline-offset-2 hover:text-ink">Reset</button>}
+        {(prefs.size !== 1 || prefs.theme !== 'light') && <button type="button" onClick={() => setPrefs({ size: 1, theme: 'light' })} className="mt-3 text-[13px] text-muted underline underline-offset-2 hover:text-ink">Reset</button>}
       </div>}
     </div>
   )
@@ -152,7 +152,7 @@ export default function BlogPost() {
       <ReadingProgress />
       <nav aria-label="Breadcrumb" className="text-[14px] text-muted"><Link to="/blog" className="hover:text-ink">Blog</Link> <span aria-hidden>/</span> <Link to={`/blog/topic/${topic.id}`} className="font-medium text-teal-d hover:text-ink">{topic.name}</Link></nav>
       <h1 className="mt-4 font-serif text-[30px] leading-[1.15] font-semibold tracking-[-0.02em] text-balance text-ink sm:text-[42px]">{meta.title}</h1>
-      <p className="mt-3 font-serif text-[19px] leading-snug text-muted sm:text-[21px]">{meta.description}</p>
+      <p className="mt-3 font-serif text-[20px] leading-snug text-muted sm:text-[22px]">{meta.description}</p>
       <div className="mt-6 flex items-center gap-3 border-y border-line py-4">
         <Link to={AUTHOR.path} aria-label={`About ${AUTHOR.name}`} className="shrink-0"><AuthorPhoto size={44} /></Link>
         <div className="text-[14px] leading-snug">
@@ -172,7 +172,7 @@ export default function BlogPost() {
         <p className="lede mt-9">{post.hook}</p>
         <div ref={bodyRef} className="post mt-[1.15em]" onClick={onClick} dangerouslySetInnerHTML={{ __html: post.body }} />
         {PRACTICE[meta.topic] && <Link to={PRACTICE[meta.topic].to} className="group mt-14 flex items-center justify-between gap-4 rounded-2xl bg-ink p-6 text-white hover:bg-ink/90">
-          <span><span className="block text-[13px] text-white/70">Practise what you just read</span><span className="mt-0.5 block text-[18px] font-semibold">{PRACTICE[meta.topic].t}</span><span className="mt-1 block text-[14.5px] text-white/80">{PRACTICE[meta.topic].d}</span></span>
+          <span><span className="block text-[13px] text-white/70">Practise what you just read</span><span className="mt-0.5 block text-[18px] font-semibold">{PRACTICE[meta.topic].t}</span><span className="mt-1 block text-[15px] text-white/80">{PRACTICE[meta.topic].d}</span></span>
           <span aria-hidden className="shrink-0 rounded-full bg-white px-4 py-2 text-[14px] font-medium text-ink group-hover:bg-teal-l">Start</span>
         </Link>}
         <div className="post mt-8 border-t border-line pt-6 text-[17px]" onClick={onClick}><p><span dangerouslySetInnerHTML={{ __html: post.outro }} /></p></div>
@@ -182,7 +182,7 @@ export default function BlogPost() {
             <p className="text-[13px] text-muted">About the founder</p>
             <p className="mt-0.5 text-[17px] font-semibold text-ink"><Link to={AUTHOR.path} className="hover:underline">{AUTHOR.name}</Link></p>
             <p className="text-[14px] text-muted">{AUTHOR.creds}</p>
-            <p className="mt-2 font-serif text-[16.5px] leading-snug text-ink-2">{AUTHOR.bio}</p>
+            <p className="mt-2 font-serif text-[17px] leading-snug text-ink-2">{AUTHOR.bio}</p>
           </div>
         </aside>
         <section className="mt-14 border-t border-ink pt-6">
@@ -190,7 +190,7 @@ export default function BlogPost() {
           <ul className="mt-2 divide-y divide-line">{post.related.map((s) => POSTS.find((p) => p.slug === s)).filter((p) => !!p).map((p) => (
             <li key={p!.slug}><Link to={`/blog/${p!.slug}`} className="group block py-5">
               <span className="block font-serif text-[20px] leading-snug font-semibold text-ink group-hover:underline">{p!.title}</span>
-              <span className="mt-1.5 line-clamp-2 block font-serif text-[16.5px] leading-snug text-muted">{p!.description}</span>
+              <span className="mt-1.5 line-clamp-2 block font-serif text-[17px] leading-snug text-muted">{p!.description}</span>
               <span className="mt-2 block text-[13px] text-muted">{p!.kind} · {p!.minutes} min read</span>
             </Link></li>
           ))}</ul>

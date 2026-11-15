@@ -84,7 +84,7 @@ const post = (slug: string) => POSTS.find((p) => p.slug === slug)!
 function Meta({ p }: { p: BlogMeta }) {
   const m = useReadMarks()[p.slug]
   return (
-    <p className="mt-2 text-[12.5px] text-[#727272]">{p.kind} · {p.minutes} min read
+    <p className="mt-2 text-[13px] text-[#727272]">{p.kind} · {p.minutes} min read
       {m?.done ? <span className="ml-2 font-medium text-[#0B6F77]"><span aria-hidden>✓ </span>Read</span>
         : m && m.p >= 0.08 ? <span className="ml-2 font-medium text-[#0B6F77]">{Math.round(m.p * 100)}% read</span> : null}
     </p>
@@ -105,7 +105,7 @@ function ContinueReading() {
         <span className="absolute inset-0 grid place-items-center text-[10px] font-semibold text-[#121212]">{pct}%</span>
       </span>
       <span className="min-w-0 flex-1">
-        <span className="block text-[12.5px] font-semibold text-[#0B6F77]">Continue reading</span>
+        <span className="block text-[13px] font-semibold text-[#0B6F77]">Continue reading</span>
         <span className="block truncate font-serif text-[17px] font-semibold text-[#121212] group-hover:underline">{p.title}</span>
       </span>
       <span aria-hidden className="hidden shrink-0 text-[13px] font-semibold text-[#121212] sm:block">Pick up where you left off ›</span>
@@ -255,7 +255,7 @@ export default function Blog() {
               <section aria-labelledby="needs" className="mb-10 border-t-2 border-[#121212] pt-3">
                 <h2 id="needs" className="mb-4 font-serif text-[22px] font-bold text-[#121212]">Find what you need</h2>
                 <ul className="grid gap-x-8 sm:grid-cols-2 lg:grid-cols-4">
-                  {NEEDS.map((n) => <li key={n.q} className="border-b border-[#dfdfdf]"><Link to={n.to} className="group flex items-center justify-between gap-3 py-3 font-serif text-[16.5px] text-[#121212]"><span className="group-hover:underline">{n.q}</span><span aria-hidden className="text-[#999] group-hover:text-[#121212]">›</span></Link></li>)}
+                  {NEEDS.map((n) => <li key={n.q} className="border-b border-[#dfdfdf]"><Link to={n.to} className="group flex items-center justify-between gap-3 py-3 font-serif text-[17px] text-[#121212]"><span className="group-hover:underline">{n.q}</span><span aria-hidden className="text-[#999] group-hover:text-[#121212]">›</span></Link></li>)}
                 </ul>
               </section>
               {TOPICS.map((t) => <Section key={t.id} t={t} />)}

@@ -56,7 +56,7 @@ export default function Casebook() {
   return (
     <>
       <PageHeader title="Casebook" art={<ArtCasebook />} intro={`${cases.length} original cases with worked answers. Do one alone, or give one to a friend.`}
-        action={user ? <span className="text-[14px] text-muted"><b className="font-serif text-[19px] font-normal text-ink">{doneCount}</b> of {cases.length} practised</span> : undefined} />
+        action={user ? <span className="text-[14px] text-muted"><b className="font-serif text-[20px] font-normal text-ink">{doneCount}</b> of {cases.length} practised</span> : undefined} />
 
       <div className="mb-5 space-y-3 rounded-lg border border-line bg-white p-4">
         <div className="flex flex-wrap items-center justify-between gap-3">
@@ -87,17 +87,17 @@ export default function Casebook() {
                 <button onClick={() => markCase(c.slug, !marked.has(c.slug))} aria-pressed={done} aria-label={done ? `${c.title}: practised (click to unmark)` : `Mark ${c.title} as practised`} title={done ? 'Practised. Click to unmark.' : 'Mark as practised'}
                   className={`flex h-8 w-8 items-center justify-center rounded-full border transition-colors sm:h-9 sm:w-9 ${done ? 'border-good bg-good text-white' : 'border-line text-muted hover:border-good hover:text-good'}`}>
                   {done ? <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden><path d="m5 12 5 5 9-10" /></svg>
-                    : <span className="font-serif text-[14.5px] tabular-nums">{c.id}</span>}
+                    : <span className="font-serif text-[15px] tabular-nums">{c.id}</span>}
                 </button>
               ) : <span className="pt-0.5 font-serif text-[17px] text-muted tabular-nums">{c.id}</span>}
               <div className="flex min-w-0 gap-3.5">
                 <SectorTile industry={c.industry} className="mt-0.5 hidden h-[54px] w-[66px] shrink-0 rounded-lg bg-canvas p-1 sm:block" />
                 <div className="min-w-0">
                 <div className="flex flex-wrap items-center gap-x-2.5 gap-y-1">
-                  <h2 className="text-[16.5px]"><Link to={`/casebook/${c.slug}`} className="hover:text-violet-d">{c.title}</Link></h2>
+                  <h2 className="text-[17px]"><Link to={`/casebook/${c.slug}`} className="hover:text-violet-d">{c.title}</Link></h2>
                   <Difficulty d={c.diff as 1 | 2 | 3} />
                 </div>
-                <p className="text-[14.5px] leading-snug text-ink-2">{c.sub}</p>
+                <p className="text-[15px] leading-snug text-ink-2">{c.sub}</p>
                 <div className="mt-1 flex flex-wrap items-center gap-x-4 gap-y-1 text-[13px] text-muted">
                   <span>{c.type}</span><span>{c.industry}</span><span>{c.time}</span>
                 </div>
