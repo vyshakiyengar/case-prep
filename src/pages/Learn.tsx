@@ -21,6 +21,7 @@ import { CaseMap } from '../components/CaseMap'
 import { CORE } from '../content/frameworkTrees'
 import { PAGES, pageTitle } from '../content/coursePages'
 import { NotesBox } from '../components/NotesBox'
+import { VideoPlayer } from '../components/VideoPlayer'
 
 
 function SectionBody({ s }: { s: Lesson['sections'][number] }) {
@@ -236,6 +237,15 @@ export default function Learn() {
         <PageHeader title="The case interview course" art={<ArtCourse />}
           intro={`${LESSONS.length} short lessons in 3 modules, about ${Math.round(totalMinutes / 5) * 5} minutes in all. Each has a worked example, an exercise and a quiz.`}
           action={<LinkButton to={done ? `/learn/${nextLesson.slug}` : '/learn/case-map'}>{done ? 'Continue where I left off' : 'Start the course'}</LinkButton>} />
+      )}
+      {i === 0 && (
+        <section className="mb-6 grid items-center gap-6 lg:grid-cols-[1.5fr_1fr]">
+          <VideoPlayer name="getting-started-v1" title="Getting started: what a case interview is, the six steps of a case, and how this course works" />
+          <div>
+            <h2 className="text-[19px] font-semibold">Start here: an 80-second overview</h2>
+            <p className="mt-1.5 text-[14.5px] leading-relaxed text-ink-2">What a case interview is, the six steps every case follows, how the three modules fit together, and how to practise.</p>
+          </div>
+        </section>
       )}
       {i === 0 && (
         <section className="mb-6 rounded-xl border border-line bg-white p-5">

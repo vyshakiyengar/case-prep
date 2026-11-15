@@ -3,6 +3,7 @@ import { ArtMaths, ArtStructure, ArtCharts, ArtSkills, IndustryCardBody, INDUSTR
 import { CASE_PICKS, DIFF_WORD } from '../content/casePicks'
 import { TryOne } from './Landing'
 import { planFor } from '../content/plans'
+import { VideoPlayer } from '../components/VideoPlayer'
 import { useState } from 'react'
 import { CORE } from '../content/frameworkTrees'
 import { GLOSSARY } from '../content/glossary'
@@ -108,6 +109,17 @@ export default function Home() {
           </li>
         </ol>
       </section>
+
+      {lessonsDone === 0 && (
+        <section className="mb-8 grid items-center gap-6 rounded-xl border border-line bg-white p-4 sm:p-5 lg:grid-cols-[1.3fr_1fr]">
+          <VideoPlayer name="getting-started-v1" title="Getting started with PrepForCase" />
+          <div>
+            <h2 className="text-[21px] font-semibold">New here? Start with this</h2>
+            <p className="mt-1.5 text-[14.5px] leading-relaxed text-ink-2">80 seconds on what a case interview is, the six steps of a case, and how to use the course. Then lesson 1 takes 8 minutes.</p>
+            <Link to="/learn/case-map" className="mt-4 inline-block rounded-lg bg-ink px-4 py-2.5 text-[14.5px] font-medium text-white hover:bg-[#1C2B4A]">Start the course</Link>
+          </div>
+        </section>
+      )}
 
       <div className="mb-8 grid gap-4 xl:grid-cols-[1.15fr_1fr]">
         <CaseOfTheDay />

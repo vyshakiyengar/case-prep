@@ -8,6 +8,7 @@ import { ArtCourse, ArtCasebook, ArtMaths, ArtReference, ArtImprove, IndustryCar
 import { CASE_PICKS, DIFF_WORD } from '../content/casePicks'
 import { LESSONS } from '../content/course'
 import { PLANS } from '../content/plans'
+import { VideoPlayer } from '../components/VideoPlayer'
 
 
 const reducedMotion = () => typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches
@@ -333,7 +334,8 @@ export default function Landing() {
             </p>
             <div className="lp-in mt-9 flex flex-wrap items-center gap-3" style={{ ['--d' as string]: '.45s' }}>
               <Link to="/casebook/coastal-brew" className="lp-cta inline-flex items-center rounded-lg bg-white px-5 py-3 text-[14.5px] font-medium text-ink hover:bg-teal-l">Try a free case<Arrow /></Link>
-              <Link to="/learn" className="rounded-lg border border-white/25 px-5 py-3 text-[14.5px] font-medium text-white hover:border-white/60">Start the course</Link>
+              <a href="#tour" className="inline-flex items-center gap-2 rounded-lg border border-white/25 px-5 py-3 text-[14.5px] font-medium text-white hover:border-white/60">
+                <svg aria-hidden viewBox="0 0 16 16" className="h-3.5 w-3.5 fill-current"><path d="M4 2.5v11l9-5.5z" /></svg>Watch the tour</a>
             </div>
             <dl className="lp-in mt-8 grid max-w-lg grid-cols-3 gap-4 border-t border-white/15 pt-5" style={{ ['--d' as string]: '.55s' }}>
               {[[`${LESSONS.length}`, 'short lessons'], [`${CASE_COUNT}`, 'cases with answers'], ['Free', 'no card, no trial']].map(([n, l]) => (
@@ -350,6 +352,17 @@ export default function Landing() {
         </section>
       </div>
 
+
+      <section id="tour" className="scroll-mt-16 border-b border-line bg-canvas">
+        <div className="mx-auto grid max-w-6xl items-center gap-10 px-5 py-16 sm:px-6 lg:grid-cols-[1fr_1.6fr]">
+          <div>
+            <h2 className="text-[30px]">See it in 30 seconds</h2>
+            <p className="mt-2 max-w-sm text-[15.5px] leading-relaxed text-ink-2">What's inside, how it works, and why it costs nothing. Subtitles are built in, so it works with the sound off.</p>
+            <Link to="/casebook/coastal-brew" className="lp-cta mt-6 inline-flex items-center rounded-lg bg-ink px-4 py-2.5 text-[14.5px] font-medium text-white hover:bg-[#1C2B4A]">Try a free case<Arrow /></Link>
+          </div>
+          <VideoPlayer name="prepforcase-tour-v1" title="A 30-second tour of PrepForCase" autoPlayInView />
+        </div>
+      </section>
 
       <section className="border-b border-line">
         <div className="mx-auto max-w-6xl px-5 py-20 sm:px-6">
