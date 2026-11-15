@@ -7,6 +7,7 @@ import { useStore } from '../../lib/store'
 import { todayIso, uid } from '../../lib/dates'
 import { SIZING, fmtAnswer, fmtStep, parseEstimate, sizingAnswer } from '../../content/sizingDrills'
 import type { SizingQ } from '../../content/sizingDrills'
+import { VideoToggle } from '../../components/VideoPlayer'
 import { DrillCrumbs, Seg } from './shared'
 
 const shuffle = <T,>(a: T[]) => { const b = [...a]; for (let i = b.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [b[i], b[j]] = [b[j], b[i]] } return b }
@@ -46,7 +47,7 @@ export default function SizingPractice() {
   return (
     <>
       <DrillCrumbs here="Market sizing" />
-      <PageHeader title="Market sizing" art={<ArtSizing />} intro="Build an estimate from scratch, then compare your logic with a model answer." />
+      <PageHeader title="Market sizing" art={<ArtSizing />} intro="Build an estimate from scratch, then compare your logic with a model answer." action={<VideoToggle id="sizing-coffee" label="See one done well" />} />
       <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
         <Seg label="Difficulty" value={level} onChange={(x) => { setLevel(x); setN(0); setShown(false); setRaw(''); setPlan('') }}
           items={[{ value: 0, label: 'All' }, { value: 1, label: 'Easy' }, { value: 2, label: 'Medium' }, { value: 3, label: 'Hard' }]} />

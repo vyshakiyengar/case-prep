@@ -21,7 +21,7 @@ import { CaseMap } from '../components/CaseMap'
 import { CORE } from '../content/frameworkTrees'
 import { PAGES, pageTitle } from '../content/coursePages'
 import { NotesBox } from '../components/NotesBox'
-import { VideoPlayer } from '../components/VideoPlayer'
+import { VideoPlayer, VideoToggle } from '../components/VideoPlayer'
 
 
 function SectionBody({ s }: { s: Lesson['sections'][number] }) {
@@ -44,6 +44,7 @@ function LessonChapter({ l, n }: { l: Lesson; n: number }) {
           <p className="text-[13.5px] text-muted">Lesson {n} of {LESSONS.length}, {l.minutes} min{done && <span className="ml-2 font-medium text-teal-d">Completed ✓</span>}</p>
           <h2 className="mt-1 text-[24px] leading-tight font-semibold sm:text-[26px]">{l.title}</h2>
           <p className="mt-1 max-w-2xl text-[15.5px] text-muted">{l.summary}</p>
+          <VideoToggle id={`lesson-${l.slug}`} label="Watch the summary" className="mt-4" />
         </div>
         {LESSON_ART[l.slug] && <div aria-hidden className="mt-3 w-44 shrink-0 sm:-mt-3 sm:w-48">{(() => { const A = LESSON_ART[l.slug]; return <A /> })()}</div>}
       </div>
@@ -240,7 +241,7 @@ export default function Learn() {
       )}
       {i === 0 && (
         <section className="mb-6 grid items-center gap-6 lg:grid-cols-[1.5fr_1fr]">
-          <VideoPlayer name="getting-started-v1" title="Getting started: what a case interview is, the six steps of a case, and how this course works" />
+          <VideoPlayer name="getting-started-v2" title="Getting started: what a case interview is, the six steps of a case, and how this course works" />
           <div>
             <h2 className="text-[19px] font-semibold">Start here: an 80-second overview</h2>
             <p className="mt-1.5 text-[14.5px] leading-relaxed text-ink-2">What a case interview is, the six steps every case follows, how the three modules fit together, and how to practise.</p>

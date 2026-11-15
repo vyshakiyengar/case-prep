@@ -4,6 +4,7 @@ import { playbook } from '../content'
 import { useStore } from '../lib/store'
 import type { Story } from '../lib/types'
 import { uid } from '../lib/dates'
+import { VideoToggle } from '../components/VideoPlayer'
 import { Button, Field, inputCls, LinkButton, PageHeader, Section } from '../components/ui'
 
 function StoryBuilder() {
@@ -55,6 +56,7 @@ export default function Stories() {
     <>
       <PageHeader title="Fit stories" art={<ArtStories />} intro="Build 6 to 8 stories once and reuse them. Rehearse out loud each week."
         action={<LinkButton to="/learn/fit-interview" variant="secondary">Lesson: the fit interview</LinkButton>} />
+      <VideoToggle id="fit-weak-vs-strong" label="A weak answer vs a strong one" className="mb-5" />
       <div className="space-y-5">
         <StoryBuilder />
         <Section title="The questions you'll be asked">

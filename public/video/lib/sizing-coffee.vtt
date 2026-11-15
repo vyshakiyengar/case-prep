@@ -1,0 +1,33 @@
+WEBVTT
+
+1
+00:00:00.600 --> 00:00:03.068
+Market sizing, done step by step.
+
+2
+00:00:03.168 --> 00:00:06.850
+How many cups of coffee do London cafés sell on a weekday?
+
+3
+00:00:07.000 --> 00:00:11.189
+Clarify: cups, one weekday, London
+
+4
+00:00:11.289 --> 00:00:14.619
+9M people in London
+
+5
+00:00:14.719 --> 00:00:17.904
+25% buy from a café on a weekday
+
+6
+00:00:18.004 --> 00:00:20.314
+1.5 cups each
+
+7
+00:00:20.414 --> 00:00:26.090
+9M × 25% × 1.5 ≈ 3.4M cups
+
+8
+00:00:26.240 --> 00:00:35.414
+Then sanity-check it: with about four thousand cafés, that is roughly eight hundred cups each a day. A little high, so you might trim the share.

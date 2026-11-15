@@ -2,6 +2,7 @@ import { ArtGraphs } from '../components/Art'
 import { useEffect, useMemo, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import type { ReactNode } from 'react'
+import { VideoToggle } from '../components/VideoPlayer'
 import { Button, PageHeader, inputCls } from '../components/ui'
 
 type Family = 'Marimekko' | 'Bar Mekko' | 'Waterfall' | 'Bubble' | 'Bar' | 'Bar + Line' | 'Line' | 'Scatter'
@@ -216,6 +217,7 @@ export default function Graphs() {
   return <>
     <PageHeader title="Graph library" art={<ArtGraphs />} intro={`${FAMILIES.length} chart types from case exhibits, with practice data for each.`}
       action={<span className="rounded-lg bg-teal-l px-3 py-2 text-[14px] font-medium text-teal-d">{done.length} of {all.length} practised</span>} />
+      <VideoToggle id="charts-how-to-read" label="How to read any chart" className="mb-5" />
     <div className="mb-6 flex flex-col gap-3 sm:flex-row" role="group" aria-label="How do you want to use the library?">
       <ModeCard active={!browse} onClick={() => setBrowse(false)} title="Practise one at a time"
         body="Read a chart, say the insight in 90 seconds, then check the answer."

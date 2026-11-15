@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react'
 
 import { loadCases } from '../content'
 import type { CaseDef } from '../content'
+import { VideoToggle } from '../components/VideoPlayer'
 import { LinkButton, PageHeader, Section } from '../components/ui'
 
 const STEPS = [
@@ -16,7 +17,7 @@ export default function Interviewer() {
   useEffect(() => { loadCases().then(setCases) }, [])
   return (
     <>
-      <PageHeader title="Interviewer mode" art={<ArtInterviewer />} intro="Give a case to a friend: what to read aloud, what to reveal, and the model answers." />
+      <PageHeader title="Interviewer mode" art={<ArtInterviewer />} intro="Give a case to a friend: what to read aloud, what to reveal, and the model answers." action={<VideoToggle id="interviewer-how-to" label="How to run it" />} />
       <Section title="How to run it" className="mb-6">
         <ol className="grid gap-3 md:grid-cols-3">
           {STEPS.map(([t, d], i) => (

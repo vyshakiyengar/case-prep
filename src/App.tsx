@@ -17,6 +17,7 @@ import VerifySchool from './pages/VerifySchool'
 import Privacy from './pages/Privacy'
 import Terms from './pages/Terms'
 import Learn from './pages/Learn'
+const Videos = lazy(() => import('./pages/Videos'))
 import { ActivityTracker } from './components/ActivityTracker'
 
 const Admin = lazy(() => import('./pages/Admin'))
@@ -77,6 +78,7 @@ export default function App() {
           {/* open to everyone */}
           <Route path="/" element={<Front />} />
           <Route path="/learn" element={<Learn />} />
+          <Route path="/videos" element={<Videos />} />
           <Route path="/learn/:slug" element={<Learn />} />
           <Route path="/perfect-casing" element={<PerfectCasing />} />
           <Route path="/frameworks" element={<FrameworksIndex />} />

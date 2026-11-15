@@ -1,0 +1,29 @@
+WEBVTT
+
+1
+00:00:00.600 --> 00:00:04.144
+A quick trick for case maths: multiplying big numbers.
+
+2
+00:00:04.244 --> 00:00:10.045
+4.5 million customers × $300 a year. Revenue?
+
+3
+00:00:10.195 --> 00:00:13.628
+Split each number into a small number and its zeros.
+
+4
+00:00:13.728 --> 00:00:18.688
+4.5 × 3 = 13.5
+
+5
+00:00:18.788 --> 00:00:21.737
+Zeros: 6 + 2 = 8
+
+6
+00:00:21.837 --> 00:00:27.975
+13.5 × 10⁸ = $1.35 billion
+
+7
+00:00:28.125 --> 00:00:33.865
+Say the method out loud as you go, so the interviewer can follow, and catch you before a slip.

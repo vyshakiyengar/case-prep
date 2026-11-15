@@ -12,6 +12,7 @@ import { ExhibitView, Rich } from '../../components/CaseParts'
 import { DrillChart } from '../../components/DrillChart'
 import { Button, PageHeader, ScorePicker, Section } from '../../components/ui'
 import { Countdown } from '../../components/Timer'
+import { VideoToggle } from '../../components/VideoPlayer'
 import { DrillCrumbs, StartCard, readBest, writeBest, Tally } from './shared'
 
 const SET = 8, SECS = 60
@@ -180,7 +181,7 @@ export default function ChartPractice() {
   return (
     <>
       <DrillCrumbs here="Reading charts" />
-      {mode === null && <PageHeader title="Reading charts" art={<ArtCharts />} intro="Read a chart fast and find the number that matters." />}
+      {mode === null && <PageHeader title="Reading charts" art={<ArtCharts />} intro="Read a chart fast and find the number that matters." action={<VideoToggle id="charts-how-to-read" label="How to read any chart" />} />}
       {mode === null && (
         <>
           <div className="grid max-w-5xl gap-4 md:grid-cols-2">

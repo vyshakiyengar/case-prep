@@ -208,9 +208,9 @@ function HeroVideo() {
   }
   return (
     <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-ink shadow-[0_40px_90px_-40px_rgba(0,0,0,.7)]">
-      <video ref={ref} src="/video/prepforcase-tour-v1.mp4" poster="/video/prepforcase-tour-v1.jpg" playsInline preload="auto"
+      <video ref={ref} src="/video/prepforcase-tour-v2.mp4" poster="/video/prepforcase-tour-v2.jpg" playsInline preload="auto"
         autoPlay={!still} muted={!sound} loop={!sound} controls={sound || still} aria-label="A 30-second tour of PrepForCase" className="block aspect-video w-full">
-        <track kind="captions" src="/video/prepforcase-tour-v1.vtt" srcLang="en" label="English" />
+        <track kind="captions" src="/video/prepforcase-tour-v2.vtt" srcLang="en" label="English" />
       </video>
       {!sound && !still && (
         <button type="button" onClick={withSound} className="absolute top-3 right-3 inline-flex items-center gap-2 rounded-full bg-white/95 px-3.5 py-1.5 text-[13.5px] font-medium text-ink shadow-lg hover:bg-white sm:top-auto sm:right-auto sm:bottom-6 sm:left-6 sm:px-4 sm:py-2 sm:text-[14px]">
@@ -243,6 +243,7 @@ const GROUPS: { t: string; art: (p: { className?: string }) => React.ReactElemen
     { t: 'Perfect casing', d: 'What to say at each of the 10 stages of a case, with a phrase trainer.', to: '/perfect-casing' },
     { t: 'Frameworks', d: '11 core issue trees, with when to use each and what to ask first.', to: '/frameworks' },
     { t: 'Interview skills', d: 'Exercises for thinking clearly and speaking calmly under pressure.', to: '/interview-skills' },
+    { t: 'Videos', d: 'Every lesson and framework in under a minute, with subtitles.', to: '/videos' },
   ] },
   { t: 'Practise cases', art: ArtCasebook, note: `${CASE_COUNT} cases`, items: [
     { t: 'Casebook', d: `${CASE_COUNT} original cases across every industry, each with a full worked answer.`, to: '/casebook' },

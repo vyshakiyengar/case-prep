@@ -6,6 +6,7 @@ import { CORE } from '../content/frameworkTrees'
 import { playbook } from '../content'
 import { GLOSSARY } from '../content/glossary'
 import { Button, PageHeader } from '../components/ui'
+import { VideoToggle } from '../components/VideoPlayer'
 import { useScrollToTarget } from '../components/Learning'
 
 export function CaseTypes() {
@@ -35,6 +36,12 @@ export function Formulas() {
   return (
     <>
       <PageHeader title="Formulas" art={<ArtReference />} intro="The 20 formulas case maths keeps using. Learn them, then test yourself." action={<Button variant="secondary" onClick={() => { setHide((h) => !h); setOpen({}) }}>{hide ? 'Show all formulas' : 'Hide formulas to test myself'}</Button>} />
+      <div className="mb-6 rounded-xl border border-line bg-white p-4 sm:p-5">
+        <h2 className="text-[17px] font-semibold">Case maths tricks, in under a minute each</h2>
+        <div className="mt-3 flex flex-wrap gap-2.5">
+          {[['maths-big-numbers', 'Big numbers'], ['maths-percentages', 'Percentages'], ['maths-breakeven', 'Break-even'], ['maths-growth', 'Growth rates'], ['maths-rule-of-72', 'Rule of 72']].map(([id, l]) => <VideoToggle key={id} id={id} label={l} />)}
+        </div>
+      </div>
       {hide && <p className="mb-3 text-muted">Say each formula out loud, then click Reveal to check.</p>}
       <div className="overflow-hidden rounded-lg border border-line bg-white">
         {playbook.formulas.map((f, i) => (

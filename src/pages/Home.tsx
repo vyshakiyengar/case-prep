@@ -112,7 +112,7 @@ export default function Home() {
 
       {lessonsDone === 0 && (
         <section className="mb-8 grid items-center gap-6 rounded-xl border border-line bg-white p-4 sm:p-5 lg:grid-cols-[1.3fr_1fr]">
-          <VideoPlayer name="getting-started-v1" title="Getting started with PrepForCase" />
+          <VideoPlayer name="getting-started-v2" title="Getting started with PrepForCase" />
           <div>
             <h2 className="text-[21px] font-semibold">New here? Start with this</h2>
             <p className="mt-1.5 text-[14.5px] leading-relaxed text-ink-2">80 seconds on what a case interview is, the six steps of a case, and how to use the course. Then lesson 1 takes 8 minutes.</p>

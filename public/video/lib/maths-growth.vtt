@@ -1,0 +1,29 @@
+WEBVTT
+
+1
+00:00:00.600 --> 00:00:03.600
+A quick trick for case maths: compound growth.
+
+2
+00:00:03.700 --> 00:00:11.022
+Revenue: $100M → $121M in 2 years. Growth per year?
+
+3
+00:00:11.172 --> 00:00:16.244
++21% in total, but it compounds
+
+4
+00:00:16.344 --> 00:00:20.124
+1.1 × 1.1
+
+5
+00:00:20.224 --> 00:00:22.748
+= 1.21
+
+6
+00:00:22.848 --> 00:00:24.922
+10% a year
+
+7
+00:00:25.072 --> 00:00:29.984
+Guess a round rate, test it, and adjust. Interviewers love seeing the check.
