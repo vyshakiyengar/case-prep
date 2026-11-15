@@ -89,7 +89,9 @@ const MENU = 'M4 7h16M4 12h16M4 17h16'
 const CLOSE = 'M6 6l12 12M18 6L6 18'
 const SIGN_IN: Item = { to: '/signin', label: 'Sign in', icon: 'M15 3h4v18h-4M10 17l5-5-5-5M15 12H3' }
 // The four sections in the phone tab bar; everything else lives behind More
-const TABS = (signedIn: boolean): Item[] => [LEARN[0], PRACTISE[0], { to: '/drills', label: 'Drills', icon: DRILLS[0].icon }, signedIn ? PREP[0] : SIGN_IN]
+const TABS = (signedIn: boolean): Item[] => signedIn
+  ? [HOME, LEARN[0], PRACTISE[0], DRILLS[0]]
+  : [LEARN[0], PRACTISE[0], DRILLS[0], SIGN_IN]
 
 /** Phone menu: a panel that slides up from the tab bar with every section, grouped. */
 function MobileSheet({ open, onClose, user, isAdmin }: { open: boolean; onClose: () => void; user: boolean; isAdmin: boolean }) {
@@ -143,6 +145,13 @@ export default function AppShell() {
   const { user, data, error, setError } = useStore()
   const loc = useLocation()
   const [mobileOpen, setMobileOpen] = useState(false)
+  // The expanded sidebar keeps its original 240px width.
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(() => {
+    try { return window.localStorage.getItem('prepforcase-sidebar-compact') === '1' } catch { return false }
+  })
+  useEffect(() => {
+    try { window.localStorage.setItem('prepforcase-sidebar-compact', sidebarCollapsed ? '1' : '0') } catch { /* optional */ }
+  }, [sidebarCollapsed])
   const closeMenu = useCallback(() => setMobileOpen(false), [])
   const isAdmin = useIsAdmin()
   useEffect(() => { if (!loc.hash) window.scrollTo(0, 0); setMobileOpen(false) }, [loc.pathname, loc.hash])
@@ -150,6 +159,9 @@ export default function AppShell() {
   const nav = useNavigate()
   const name = data?.profile?.name || user?.name || ''
   const reader = useReaderPrefs()
+  const compactSidebar = !!user && sidebarCollapsed
+  const mainNav: Item[] = [HOME, LEARN[0], PRACTISE[0], DRILLS[0], ...(user ? [PREP[1]] : [])]
+  const mainRoute = mainNav.some((item) => loc.pathname === item.to || (item.to !== '/' && loc.pathname.startsWith(item.to + '/')))
   // Articles get a calm reading layout: white page, slim top bar, no sidebar or tab bar
   if (/^\/blog\/(?!topic\/)[^/]+$/.test(loc.pathname)) return (
     <div className={`min-h-screen bg-white ${reader.theme === 'light' ? '' : `reader-${reader.theme}`}`} style={{ '--rs': SIZES[reader.size] } as CSSProperties}>
@@ -182,40 +194,86 @@ export default function AppShell() {
     </div>
   )
   return (
-    <div className="min-h-screen lg:pl-60">
-      <aside className="fixed inset-y-0 left-0 z-20 hidden w-60 flex-col overflow-y-auto bg-ink px-4 py-6 lg:flex">
-        <Link to="/" aria-label="PrepForCase: front page" className="px-3"><Logo light height={28} /></Link>
-        <nav aria-label="Main" className="mt-2">
-          <NavGroup title="" items={[HOME]} />
-          <NavGroup title="Learn" items={LEARN} />
-          <NavGroup title="Practise" items={PRACTISE} />
-          <NavGroup title="Drills" items={DRILLS} />
-          <NavGroup title="Reference" items={REFERENCE} />
-          <NavGroup title="My prep" items={isAdmin ? [...PREP, ADMIN] : PREP} />
-          <div className="mt-4 border-t border-white/10 pt-3"><NavGroup title="" items={[BLOG, ABOUT]} /></div>
-        </nav>
+    <div className={'min-h-screen transition-[padding-left] duration-200 ' + (compactSidebar ? 'lg:pl-[76px]' : 'lg:pl-60')}>
+      <aside className={'fixed inset-y-0 left-0 z-20 hidden flex-col overflow-y-auto bg-ink py-6 transition-[width,padding] duration-200 lg:flex ' + (compactSidebar ? 'w-[76px] px-2' : 'w-60 px-4')}>
+        <div className={'flex px-2 ' + (compactSidebar ? 'flex-col items-center gap-5' : 'items-center justify-between gap-2')}>
+          {compactSidebar
+            ? <Link to="/" title="PrepForCase home" aria-label="PrepForCase home" className="grid h-9 w-9 place-items-center rounded-lg bg-white/10 font-serif text-[21px] font-semibold text-white">P</Link>
+            : <Link to="/" aria-label="PrepForCase: front page" className="min-w-0 overflow-hidden"><Logo light height={24} /></Link>}
+          {user && (
+            <button type="button" onClick={() => setSidebarCollapsed((value) => !value)}
+              title={compactSidebar ? 'Expand sidebar' : 'Collapse sidebar'}
+              aria-label={compactSidebar ? 'Expand sidebar' : 'Collapse sidebar'}
+              aria-expanded={!compactSidebar}
+              className="grid h-9 w-9 shrink-0 place-items-center rounded-lg border border-white/10 text-[#C2CCDA] hover:bg-white/10 hover:text-white">
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+                <path d={compactSidebar ? 'M9 18l6-6-6-6' : 'M15 18l-6-6 6-6'} />
+              </svg>
+            </button>
+          )}
+        </div>
+        {compactSidebar ? (
+          <nav aria-label="Main" className="mt-7 space-y-2">
+            {mainNav.map((item) => (
+              <NavLink key={item.to} to={item.to} end={item.end} title={item.label} aria-label={item.label}
+                className={({ isActive }) => 'flex h-11 w-full items-center justify-center rounded-lg transition-colors ' + (isActive ? 'bg-white/[.13] text-white' : 'text-[#B8C2D3] hover:bg-white/[.08] hover:text-white')}>
+                <Icon d={item.icon} />
+              </NavLink>
+            ))}
+            <button type="button" title="Expand to see all tools" aria-label="Expand to see all tools"
+              onClick={() => setSidebarCollapsed(false)}
+              className="flex h-11 w-full items-center justify-center rounded-lg border-t border-white/10 text-[#B8C2D3] hover:bg-white/[.08] hover:text-white">
+              <Icon d={MENU} />
+            </button>
+          </nav>
+        ) : (
+          <nav aria-label="Main" className="mt-5">
+            <NavGroup title="" items={mainNav} />
+            <details key={loc.pathname} defaultOpen={!mainRoute} className="mt-5 border-t border-white/10 pt-3">
+              <summary className="flex cursor-pointer list-none items-center justify-between rounded-lg px-3 py-2 text-[13.5px] font-medium text-[#B8C2D3] hover:bg-white/[.07] hover:text-white [&::-webkit-details-marker]:hidden">
+                <span>More tools</span>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden><path d="m6 9 6 6 6-6" /></svg>
+              </summary>
+              <div className="pb-3">
+                <NavGroup title="Learn more" items={LEARN.slice(1)} />
+                <NavGroup title="Practise more" items={PRACTISE.slice(1)} />
+                <NavGroup title="Specific drills" items={DRILLS.slice(1)} />
+                <NavGroup title="Reference" items={REFERENCE} />
+                {user && <NavGroup title="Your prep" items={[PREP[0], ...PREP.slice(2), ...(isAdmin ? [ADMIN] : [])]} />}
+                <div className="mt-4 border-t border-white/10 pt-2"><NavGroup title="" items={[BLOG, ABOUT]} /></div>
+              </div>
+            </details>
+          </nav>
+        )}
         <div className="mt-auto pt-6">
-          <div className="mb-3 flex gap-4 px-3 text-[12.5px] text-[#8C98AE]">
-            <Link to="/privacy" className="hover:text-white">Privacy</Link>
-            <Link to="/terms" className="hover:text-white">Terms</Link>
-          </div>
-          {user ? (
-            <NavLink to="/settings" className="flex items-center gap-3 rounded-lg border-t border-white/10 px-2 pt-4 pb-1 hover:text-white">
-              <Avatar name={name} photo={user.photoURL} />
-              <span className="min-w-0">
-                <span className="block truncate text-[14px] font-medium text-white">{name}</span>
-                <span className="block text-[12.5px] text-[#8C98AE]">Settings</span>
-              </span>
+          {compactSidebar ? (
+            <NavLink to="/settings" title="Settings" aria-label="Settings" className="flex items-center justify-center rounded-lg border-t border-white/10 pt-4">
+              <Avatar name={name} photo={user?.photoURL} />
             </NavLink>
           ) : (
-            <div className="rounded-lg border border-white/10 p-3.5">
-              <p className="text-[13px] leading-snug text-[#B8C2D3]">Sign in to unlock every lesson and track your progress.</p>
-              <SignInLink className="mt-3 inline-block !bg-white !text-ink hover:!bg-teal-l" />
-            </div>
+            <>
+              <div className="mb-3 flex gap-4 px-3 text-[12.5px] text-[#8C98AE]">
+                <Link to="/privacy" className="hover:text-white">Privacy</Link>
+                <Link to="/terms" className="hover:text-white">Terms</Link>
+              </div>
+              {user ? (
+                <NavLink to="/settings" className="flex items-center gap-3 rounded-lg border-t border-white/10 px-2 pt-4 pb-1 hover:text-white">
+                  <Avatar name={name} photo={user.photoURL} />
+                  <span className="min-w-0">
+                    <span className="block truncate text-[14px] font-medium text-white">{name}</span>
+                    <span className="block text-[12.5px] text-[#8C98AE]">Settings</span>
+                  </span>
+                </NavLink>
+              ) : (
+                <div className="rounded-lg border border-white/10 p-3.5">
+                  <p className="text-[13px] leading-snug text-[#B8C2D3]">Sign in to unlock every lesson and track your progress.</p>
+                  <SignInLink className="mt-3 inline-block !bg-white !text-ink hover:!bg-teal-l" />
+                </div>
+              )}
+            </>
           )}
         </div>
       </aside>
-
       <header className="sticky top-0 z-20 flex items-center justify-between border-b border-line/80 bg-white/85 px-4 py-2 backdrop-blur-xl lg:hidden">
         <Link to="/" aria-label="PrepForCase: front page"><Logo height={24} /></Link>
         <div className="flex items-center gap-3">
