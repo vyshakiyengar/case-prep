@@ -162,6 +162,8 @@ export default function AppShell() {
   const compactSidebar = !!user && sidebarCollapsed
   const mainNav: Item[] = [HOME, LEARN[0], PRACTISE[0], DRILLS[0], ...(user ? [PREP[1]] : [])]
   const mainRoute = mainNav.some((item) => loc.pathname === item.to || (item.to !== '/' && loc.pathname.startsWith(item.to + '/')))
+  const [moreOpen, setMoreOpen] = useState(false)
+  useEffect(() => { setMoreOpen(!mainRoute) }, [loc.pathname])
   // Articles get a calm reading layout: white page, slim top bar, no sidebar or tab bar
   if (/^\/blog\/(?!topic\/)[^/]+$/.test(loc.pathname)) return (
     <div className={`min-h-screen bg-white ${reader.theme === 'light' ? '' : `reader-${reader.theme}`}`} style={{ '--rs': SIZES[reader.size] } as CSSProperties}>
@@ -229,7 +231,7 @@ export default function AppShell() {
         ) : (
           <nav aria-label="Main" className="mt-5">
             <NavGroup title="" items={mainNav} />
-            <details key={loc.pathname} defaultOpen={!mainRoute} className="mt-5 border-t border-white/10 pt-3">
+            <details key={loc.pathname} open={moreOpen} onToggle={(event) => setMoreOpen(event.currentTarget.open)} className="mt-5 border-t border-white/10 pt-3">
               <summary className="flex cursor-pointer list-none items-center justify-between rounded-lg px-3 py-2 text-[13.5px] font-medium text-[#B8C2D3] hover:bg-white/[.07] hover:text-white [&::-webkit-details-marker]:hidden">
                 <span>More tools</span>
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden><path d="m6 9 6 6 6-6" /></svg>
