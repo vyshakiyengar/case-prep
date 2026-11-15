@@ -20,7 +20,7 @@ export const routes = [
     body: `<p><a href="/blog">PrepForCase blog</a></p><h1>${esc(t.head)}</h1><ul>${byTopic(t.id).map((p) => li(`/blog/${p.slug}`, p.title, p.description)).join('')}</ul>` })),
   ...(cases as unknown as C[]).map((c) => ({ path: `/casebook/${c.slug}`, ...caseMeta(c), caseId: c.id })),
   ...LESSONS.map((l, i) => ({ path: `/learn/${l.slug}`, ...lessonMeta(l, i + 1), body: `<h1>${esc(l.title)}</h1><p>${esc(l.summary)}</p>${l.sections.map((s) => `<h2>${esc(s.h)}</h2>${s.body}`).join('')}` })),
-  ...blog.posts.map((p) => ({ path: `/blog/${p.slug}`, title: `${p.title} · PrepForCase`, description: p.description, image: `${SITE}/og/home.jpg`, type: 'article', blog: p.slug })),
+  ...blog.posts.map((p) => ({ path: `/blog/${p.slug}`, title: `${p.title} · PrepForCase`, description: p.description, image: `${SITE}/og/blog-${p.slug}.jpg`, type: 'article', blog: p.slug })),
 ]
 export { SITE }
 export const indexInSync = caseIndex.length === cases.length && caseIndex.every((c, i) => c.slug === (cases as unknown as C[])[i].slug && c.title === (cases as unknown as C[])[i].title)

@@ -5,6 +5,7 @@ import { LESSONS } from '../../src/content/course'
 import cases from '../../src/content/cases.json'
 import { PAGES } from '../../src/lib/seo'
 import { WORDMARK } from '../../src/components/brand'
+import blog from '../../src/content/blogIndex.json'
 
 const DIFF = { 1: 'Easy', 2: 'Medium', 3: 'Hard' } as Record<number, string>
 const LESSON_ART: Record<string, keyof typeof Art> = {
@@ -14,14 +15,18 @@ const LESSON_ART: Record<string, keyof typeof Art> = {
 }
 const PAGE_ART: Record<string, keyof typeof Art> = {
   home: 'ArtCourse', casebook: 'ArtCasebook', learn: 'ArtCourse', frameworks: 'ArtFrameworks', 'perfect-casing': 'ArtInterviewer', glossary: 'ArtGlossary',
-  formulas: 'ArtReference', 'case-types': 'ArtFrameworks', drills: 'ArtPractise', 'drills-maths': 'ArtMaths', 'drills-structure': 'ArtStructure',
+  blog: 'ArtReference', 'author-vyshak-iyengar': 'ArtStories', formulas: 'ArtReference', 'case-types': 'ArtFrameworks', drills: 'ArtPractise', 'drills-maths': 'ArtMaths', 'drills-structure': 'ArtStructure',
   'drills-charts': 'ArtCharts', 'drills-sizing': 'ArtSizing', 'interview-formats': 'ArtInterviewer', 'interview-skills': 'ArtSkills', graphs: 'ArtGraphs', interviewer: 'ArtInterviewer',
+}
+const BLOG_ART: Record<string, keyof typeof Art> = {
+  start: 'ArtCourse', stages: 'ArtInterviewer', frameworks: 'ArtFrameworks', concepts: 'ArtThink', industries: 'ArtBusiness', careers: 'ArtCasebook',
+  resources: 'ArtReference', practice: 'ArtStructure', maths: 'ArtMaths', sizing: 'ArtSizing', fit: 'ArtStories',
 }
 const logo = () => { const u = WORDMARK.underline; return `<svg viewBox="${WORDMARK.viewBox}" height="34" width="173" style="align-self:flex-start"><path d="${WORDMARK.d}" fill="#14213D"/><rect x="${u.x}" y="${u.y}" width="${u.w}" height="${u.h}" fill="#0E9AA7"/></svg>` }
 const esc = (s: string) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;')
 
 function card(chips: string[], title: string, sub: string, art: string) {
-  const size = title.length > 34 ? 58 : title.length > 22 ? 66 : 76
+  const size = title.length > 70 ? 46 : title.length > 52 ? 50 : title.length > 34 ? 58 : title.length > 22 ? 66 : 76
   return `<div class="og"><div class="l">${logo()}<div class="chips">${chips.map((c) => `<span>${esc(c)}</span>`).join('')}</div>
     <h1 style="font-size:${size}px">${esc(title)}</h1><p>${esc(sub)}</p><div class="foot">Free at <b>prepforcase.com</b></div></div>
     <div class="r">${art}</div></div>`
@@ -36,6 +41,11 @@ export const cards: { name: string; html: string }[] = [
     const name = p.slice(1).replace(/\//g, '-')
     const t = m.title.split(' · ')[0].split(':')[0]
     return { name, html: card(['Free case interview prep'], t, m.description.length > 120 ? `${m.description.slice(0, m.description.lastIndexOf(' ', 118))}…` : m.description, A(PAGE_ART[name] ?? 'ArtCourse')) }
+  }),
+  ...blog.posts.map((p) => {
+    const t = blog.topics.find((x) => x.id === p.topic)!
+    const sub = p.description.length > 110 ? `${p.description.slice(0, p.description.lastIndexOf(' ', 108))}…` : p.description
+    return { name: `blog-${p.slug}`, html: card([t.name, `${p.minutes} min read`], p.title, sub, A(BLOG_ART[p.topic] ?? 'ArtCourse')) }
   }),
   { name: 'home', html: card(['Free case interview prep'], 'Learn the case interview. Then practise it 102 times.', 'A course, 11 frameworks, 102 cases with worked answers, and daily drills.', A('ArtCourse')) },
 ]

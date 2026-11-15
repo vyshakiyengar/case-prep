@@ -12,7 +12,7 @@ export const PAGES: Record<string, Meta> = {
   '/learn': { title: 'The case interview course · PrepForCase', description: 'Eleven short lessons on how consultants solve cases: the opening, structuring, case maths, charts, market sizing, brainstorming and the recommendation.', image: IMG('learn') },
   '/frameworks': { title: 'Case interview frameworks: 11 core issue trees · PrepForCase', description: 'Eleven core frameworks that cover most consulting cases, drawn as issue trees, with when to use each and what to ask first.', image: IMG('frameworks') },
   '/perfect-casing': { title: 'Perfect casing: what to say at every stage of a case · PrepForCase', description: 'The moves and phrases of a strong case interview, stage by stage, with a phrase trainer.', image: IMG('perfect-casing') },
-  '/blog': { title: 'Case interview blog: 203 free guides · PrepForCase', description: 'Free articles on case interviews: how cases work, frameworks, case maths, market sizing with worked answers, structuring practice and the fit interview.', image: IMG('home') },
+  '/blog': { title: 'Case interview blog: 203 free guides · PrepForCase', description: 'Free articles on case interviews: how cases work, frameworks, case maths, market sizing with worked answers, structuring practice and the fit interview.', image: IMG('blog') },
   '/glossary': { title: 'Consulting glossary in plain English · PrepForCase', description: 'Business terms you meet in case interviews, explained in plain English with an example each.', image: IMG('glossary') },
   '/formulas': { title: 'Case interview formulas · PrepForCase', description: 'The formulas that come up again and again in case maths: profit, margin, break-even, CAGR, payback and more.', image: IMG('formulas') },
   '/case-types': { title: 'The 17 types of case interview · PrepForCase', description: 'Every kind of case you can get, with the question to ask first, the skeleton structure and the usual trap.', image: IMG('case-types') },
@@ -25,7 +25,7 @@ export const PAGES: Record<string, Meta> = {
   '/interview-skills': { title: 'Interview skills: thinking and speaking · PrepForCase', description: 'Practical exercises for thinking clearly, speaking calmly and sounding commercial in a case interview.', image: IMG('interview-skills') },
   '/graphs': { title: 'Graph library: 64 case interview charts · PrepForCase', description: 'The chart types you meet in case exhibits, each with practice data and the insight to look for.', image: IMG('graphs') },
   '/interviewer': { title: 'Interviewer mode: give a case to a friend · PrepForCase', description: 'Run a case for a friend with the script, the facts to give when asked, and what a strong answer looks like.', image: IMG('interviewer') },
-  '/author/vyshak-iyengar': { title: 'Vyshak K Iyengar, Founder of PrepForCase', description: 'Vyshak K Iyengar founded PrepForCase, free case interview prep. London Business School MBA, formerly BCG, Accenture Strategy and Meta.', image: IMG('home') },
+  '/author/vyshak-iyengar': { title: 'Vyshak K Iyengar, Founder of PrepForCase', description: 'Vyshak K Iyengar founded PrepForCase, free case interview prep. London Business School MBA, formerly BCG, Accenture Strategy and Meta.', image: IMG('author-vyshak-iyengar') },
   '/about': { title: 'About PrepForCase · Vyshak K Iyengar', description: 'Why PrepForCase exists, who made it, and how the content is checked.', image: IMG('home') },
 }
 

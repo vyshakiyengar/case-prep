@@ -173,7 +173,7 @@ export default function AppShell() {
         <nav aria-label="Footer" className="flex flex-wrap justify-center gap-x-6 gap-y-2">
           <Link to="/blog" className="hover:text-ink">All articles</Link><Link to="/learn" className="hover:text-ink">Free course</Link>
           <Link to="/casebook" className="hover:text-ink">Casebook</Link><Link to="/drills" className="hover:text-ink">Drills</Link>
-          <Link to="/privacy" className="hover:text-ink">Privacy</Link>
+          <Link to="/about" className="hover:text-ink">About</Link><Link to="/privacy" className="hover:text-ink">Privacy</Link><Link to="/terms" className="hover:text-ink">Terms</Link>
         </nav>
       </footer>
     </div>

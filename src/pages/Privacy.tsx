@@ -9,7 +9,7 @@ export default function Privacy() {
       <div className="mx-auto max-w-2xl px-5 py-8">
         <Link to="/" aria-label="PrepForCase home"><Logo /></Link>
         <h1 className="mt-8 text-[28px]">Privacy notice</h1>
-        <p className="mt-1 text-muted">Last updated 13 November 2026</p>
+        <p className="mt-1 text-muted">Last updated 15 November 2026</p>
         <div className="mt-6 space-y-4 text-[15px] leading-[1.7] text-ink-2">
           <p>PrepForCase is a free, personal project run by Vyshak K Iyengar in London, United Kingdom. This notice explains, in plain words, what is collected when you use prepforcase.com, why, and what you can do about it. For any privacy question or request, get in touch through <a href="https://vyshak.me" target="_blank" rel="noopener noreferrer" className="font-medium text-violet-d underline">vyshak.me</a>.</p>
 
@@ -19,7 +19,7 @@ export default function Privacy() {
             <li><b className="font-medium text-ink">What you save.</b> Your tracker, case log, drill scores, stories, notes, course progress and dates you enter.</li>
             <li><b className="font-medium text-ink">Usage records, once you're signed in.</b> A record linked to your account: your name and sign-in email, how you signed in, your school email domain (if you use one), the date you joined, the days you were active, number of visits, minutes of active use, how often you open each section, the last page you viewed, lessons done, your interview date (if you enter one), and how many cases, drills, stories, notes, practised casebook cases, phrase-trainer cards and tracker days you have. Also whether you used a phone or computer, your time zone, and the site that sent you here on your first visit (for example a search engine or LinkedIn). These are used to see which parts of the site help people. The text of your notes, cases and stories is never included.</li>
             <li><b className="font-medium text-ink">Student details.</b> If you confirm a school email: the address, school, and (if you give them) your programme and graduation year.</li>
-            <li><b className="font-medium text-ink">Anonymous page statistics.</b> Vercel Web Analytics counts page views without cookies and without identifying you. The site also keeps daily totals of a few steps (for example: a visit, where it came from such as Instagram or Google, phone or computer, seeing a sign-in prompt, choosing a way to sign in, and whether sign-in worked). These are plain counts with no name, ID or address attached.</li>
+            <li><b className="font-medium text-ink">Anonymous page statistics.</b> Vercel Web Analytics counts page views without cookies and without identifying you. The site also keeps daily totals of a few steps (for example: a visit, where it came from such as Instagram or Google, phone or computer, seeing a sign-in prompt, choosing a way to sign in, and whether sign-in worked), and how many times each page was viewed that day. These are plain counts with no name, ID or address attached.</li>
           </ul>
 
           <H>Why, and on what legal basis</H>
