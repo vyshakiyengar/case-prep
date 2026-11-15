@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { PageHeader } from '../components/ui'
 import { VideoPlayer } from '../components/VideoPlayer'
 import { VIDEOS, VIDEO_GROUPS, fmtSecs } from '../content/videos'
@@ -12,6 +12,22 @@ const GROUPS: { t: string; items: Item[] }[] = [
   { t: 'Start here', items: START },
   ...VIDEO_GROUPS.map((g) => ({ t: g, items: VIDEOS.filter((v) => v.group === g).map((v) => ({ name: `lib/${v.id}`, title: v.title, secs: v.secs })) })),
 ]
+
+/** A tile that plays its video silently on a loop while it is on screen (a still picture for reduced motion). */
+function TileVideo({ name }: { name: string }) {
+  const ref = useRef<HTMLVideoElement>(null)
+  useEffect(() => {
+    const v = ref.current
+    if (!v || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
+    if (!('IntersectionObserver' in window)) { v.play().catch(() => {}); return }
+    const io = new IntersectionObserver(([e]) => {
+      if (e.isIntersecting) { v.preload = 'auto'; v.play().catch(() => {}) } else v.pause()
+    }, { rootMargin: '200px 0px' })
+    io.observe(v)
+    return () => io.disconnect()
+  }, [])
+  return <video ref={ref} src={`/video/${name}.mp4`} poster={`/video/${name}.jpg`} muted loop playsInline preload="none" aria-hidden tabIndex={-1} className="pointer-events-none h-full w-full object-cover" />
+}
 
 export default function Videos() {
   const [cur, setCur] = useState<Item>(START[0])
@@ -35,7 +51,7 @@ export default function Videos() {
               <button key={v.name} type="button" onClick={() => { setCur(v); setPlay(true); window.scrollTo({ top: 0, behavior: 'smooth' }) }}
                 className={`group overflow-hidden rounded-xl border bg-white text-left transition-[border-color,transform] hover:-translate-y-0.5 hover:border-ink/40 motion-reduce:hover:translate-y-0 ${cur.name === v.name ? 'border-teal' : 'border-line'}`}>
                 <span className="relative block aspect-video bg-ink">
-                  <img src={`/video/${v.name}.jpg`} alt="" loading="lazy" decoding="async" className="h-full w-full object-cover" />
+                  <TileVideo name={v.name} />
                   <span className="absolute right-2 bottom-2 rounded bg-ink/85 px-1.5 py-0.5 text-[12px] font-medium text-white">{fmtSecs(v.secs)}</span>
                 </span>
                 <span className="block px-3.5 py-3 text-[14.5px] leading-snug font-medium text-ink group-hover:text-violet-d">{v.title}</span>
