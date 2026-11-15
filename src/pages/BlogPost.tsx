@@ -2,6 +2,21 @@ import { useEffect, useState, type MouseEvent } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import { POSTS, TOPICS, PostCard } from './Blog'
 
+/** Where to practise what each topic teaches: the article leads into the tools. */
+const PRACTICE: Record<string, { to: string; t: string; d: string }> = {
+  start: { to: '/learn', t: 'Start the free course', d: 'Eleven short lessons, each with an exercise and a quiz.' },
+  stages: { to: '/perfect-casing', t: 'Practise each stage with flashcards', d: 'What to do and say at every stage of a case.' },
+  frameworks: { to: '/drills/structure', t: 'Practise structuring against the clock', d: 'Over 100 prompts with model structures and a two-minute timer.' },
+  concepts: { to: '/casebook', t: 'Use it in a real case', d: '102 practice cases with worked answers.' },
+  industries: { to: '/casebook', t: 'Try a case in this industry', d: 'The casebook covers every major industry, with worked answers.' },
+  careers: { to: '/casebook', t: 'Start practising cases today', d: '102 free cases, each with an interviewer script so a friend can run it.' },
+  resources: { to: '/casebook', t: 'Practise with free cases', d: '102 cases with worked answers. No sign-up needed to start.' },
+  practice: { to: '/drills/structure', t: 'Keep going in the structuring drill', d: 'Timed prompts and model answers.' },
+  maths: { to: '/drills/maths', t: 'Drill case maths', d: 'Ten-minute sets of percentages, growth, break-even and big numbers.' },
+  sizing: { to: '/drills/sizing', t: 'Try a sizing question yourself', d: 'Build an estimate step by step and compare with a model answer.' },
+  fit: { to: '/stories', t: 'Build your fit stories', d: 'Write and save six to eight stories you can reuse.' },
+}
+
 type Full = { slug: string; title: string; description: string; topic: string; kind: string; minutes: number; hook: string; body: string; outro: string; related: string[] }
 
 export default function BlogPost() {
@@ -39,7 +54,7 @@ export default function BlogPost() {
   const next = inTopic[i + 1] ?? inTopic[0]
   return (
     <article className="mx-auto max-w-[44rem] pb-10">
-      <nav aria-label="Breadcrumb" className="text-[14px] text-muted"><Link to="/blog" className="hover:text-ink">Blog</Link> <span aria-hidden>/</span> <Link to={`/blog?topic=${topic.id}`} className="hover:text-ink">{topic.name}</Link></nav>
+      <nav aria-label="Breadcrumb" className="text-[14px] text-muted"><Link to="/blog" className="hover:text-ink">Blog</Link> <span aria-hidden>/</span> <Link to={`/blog/topic/${topic.id}`} className="hover:text-ink">{topic.name}</Link></nav>
       <h1 className="mt-3 font-serif text-[26px] leading-[1.2] text-balance text-ink sm:text-[34px]">{meta.title}</h1>
       <p className="mt-3 text-[14px] text-muted">{meta.kind}, {meta.minutes} min read. Free, no sign-in.</p>
       {failed && <p className="mt-8 rounded-lg bg-white p-4 text-ink-2">This article didn't load. Check your connection and <button type="button" onClick={() => location.reload()} className="text-violet-d underline">try again</button>.</p>}
@@ -47,11 +62,15 @@ export default function BlogPost() {
       {post && <>
         <p className="mt-7 text-[19px] leading-relaxed text-ink">{post.hook}</p>
         <div className="post mt-6" onClick={onClick} dangerouslySetInnerHTML={{ __html: post.body }} />
-        <div className="post mt-10 rounded-xl border border-line bg-white p-5" onClick={onClick}><p><b>One last thing.</b> <span dangerouslySetInnerHTML={{ __html: post.outro }} /></p></div>
+        {PRACTICE[meta.topic] && <Link to={PRACTICE[meta.topic].to} className="group mt-10 flex items-center justify-between gap-4 rounded-xl bg-ink p-5 text-white hover:bg-ink/90">
+          <span><span className="block text-[13px] text-white/70">Practise what you just read</span><span className="mt-0.5 block text-[18px] font-semibold">{PRACTICE[meta.topic].t}</span><span className="mt-1 block text-[14.5px] text-white/80">{PRACTICE[meta.topic].d}</span></span>
+          <span aria-hidden className="shrink-0 rounded-full bg-white px-4 py-2 text-[14px] font-medium text-ink group-hover:bg-teal-l">Start</span>
+        </Link>}
+        <div className="post mt-6 rounded-xl border border-line bg-white p-5" onClick={onClick}><p><b>One last thing.</b> <span dangerouslySetInnerHTML={{ __html: post.outro }} /></p></div>
         <section className="mt-12">
           <h2 className="mb-3 text-[20px] font-semibold">Read next</h2>
           <div className="grid gap-4 sm:grid-cols-2">{post.related.map((s) => POSTS.find((p) => p.slug === s)).filter((p) => !!p).map((p) => <PostCard key={p!.slug} p={p!} />)}</div>
-          <p className="mt-6 text-[15px] text-ink-2">More in <Link to={`/blog?topic=${topic.id}`} className="font-medium text-violet-d underline">{topic.name}</Link>{next && next.slug !== slug && <>, or carry on with <Link to={`/blog/${next.slug}`} className="font-medium text-violet-d underline">{next.title}</Link></>}.</p>
+          <p className="mt-6 text-[15px] text-ink-2">More in <Link to={`/blog/topic/${topic.id}`} className="font-medium text-violet-d underline">{topic.name}</Link>{next && next.slug !== slug && <>, or carry on with <Link to={`/blog/${next.slug}`} className="font-medium text-violet-d underline">{next.title}</Link></>}.</p>
         </section>
       </>}
     </article>

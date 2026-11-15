@@ -82,6 +82,7 @@ export default function App() {
           <Route path="/learn" element={<Learn />} />
           <Route path="/videos" element={<Videos />} />
           <Route path="/blog" element={<Blog />} />
+          <Route path="/blog/topic/:topic" element={<Blog />} />
           <Route path="/blog/:slug" element={<BlogPost />} />
           <Route path="/learn/:slug" element={<Learn />} />
           <Route path="/perfect-casing" element={<PerfectCasing />} />

@@ -1,5 +1,5 @@
-import { useMemo, useState } from 'react'
-import { Link, useSearchParams } from 'react-router-dom'
+import { useEffect, useMemo, useState } from 'react'
+import { Link, useNavigate, useParams, useSearchParams } from 'react-router-dom'
 import blog from '../content/blogIndex.json'
 
 export type BlogMeta = (typeof blog.posts)[number]
@@ -31,8 +31,12 @@ export function PostCard({ p, big = false }: { p: BlogMeta; big?: boolean }) {
 
 export default function Blog() {
   const [params, setParams] = useSearchParams()
+  const nav = useNavigate()
+  const { topic: hub } = useParams()
   const q = params.get('q') ?? ''
-  const topic = params.get('topic') ?? ''
+  const topic = hub ?? params.get('topic') ?? ''
+  const hubTopic = TOPICS.find((t) => t.id === topic)
+  useEffect(() => { document.title = hubTopic ? `${hubTopic.head} · PrepForCase blog` : 'The PrepForCase blog · PrepForCase' }, [hubTopic])
   const [shown, setShown] = useState<Record<string, number>>({})
   const results = useMemo(() => search(q), [q])
   const set = (k: string, v: string) => { const n = new URLSearchParams(params); if (v) n.set(k, v); else n.delete(k); setParams(n, { replace: true }) }
@@ -40,8 +44,9 @@ export default function Blog() {
   return (
     <div className="mx-auto max-w-5xl">
       <header className="mb-6">
-        <h1 className="font-serif text-[34px] leading-tight sm:text-[42px]">The PrepForCase blog</h1>
-        <p className="mt-2 max-w-2xl text-[17px] text-ink-2">{POSTS.length} free articles on case interviews and consulting careers: how cases work, frameworks, maths, market sizing, industries, firms and their interviews, and the fit interview. No sign-in, no paywall.</p>
+        {hubTopic && <nav aria-label="Breadcrumb" className="mb-2 text-[14px] text-muted"><Link to="/blog" className="hover:text-ink">Blog</Link> <span aria-hidden>/</span> {hubTopic.name}</nav>}
+        <h1 className="font-serif text-[34px] leading-tight sm:text-[42px]">{hubTopic ? hubTopic.head : 'The PrepForCase blog'}</h1>
+        <p className="mt-2 max-w-2xl text-[17px] text-ink-2">{hubTopic ? `${POSTS.filter((p) => p.topic === hubTopic.id).length} free articles in ${hubTopic.name.toLowerCase()}. No sign-in, no paywall.` : <>{POSTS.length} free articles on case interviews and consulting careers: how cases work, frameworks, maths, market sizing, industries, firms and their interviews, and the fit interview. No sign-in, no paywall.</>}</p>
       </header>
 
       <div className="sticky top-0 z-10 -mx-4 mb-6 bg-canvas/95 px-4 py-3 backdrop-blur sm:mx-0 sm:px-0">
@@ -54,7 +59,7 @@ export default function Blog() {
         {!q && <div className="mt-3 flex gap-2 overflow-x-auto pb-1" role="group" aria-label="Filter by topic">
           {[{ id: '', name: 'All topics' }, ...TOPICS].map((t) => {
             const n = t.id ? POSTS.filter((p) => p.topic === t.id).length : POSTS.length
-            return <button key={t.id} type="button" aria-pressed={topic === t.id} onClick={() => set('topic', t.id)}
+            return <button key={t.id} type="button" aria-pressed={topic === t.id} onClick={() => nav(t.id ? `/blog/topic/${t.id}` : '/blog')}
               className={`shrink-0 rounded-full border px-3.5 py-1.5 text-[14px] font-medium ${topic === t.id ? 'border-ink bg-ink text-white' : 'border-line bg-white text-ink hover:border-ink/40'}`}>{t.name} <span className={topic === t.id ? 'text-white/70' : 'text-muted'}>{n}</span></button>
           })}
         </div>}
@@ -77,8 +82,8 @@ export default function Blog() {
             return (
               <section key={t.id} id={t.id} className="mb-10 scroll-mt-32">
                 <div className="mb-3 flex items-baseline justify-between gap-3">
-                  <h2 className="text-[20px] font-semibold">{t.head} <span className="text-[15px] font-normal text-muted">{list.length}</span></h2>
-                  {!topic && <button type="button" onClick={() => set('topic', t.id)} className="shrink-0 text-[14px] font-medium text-violet-d hover:underline">See all {list.length}</button>}
+                  {!topic && <h2 className="text-[20px] font-semibold">{t.head} <span className="text-[15px] font-normal text-muted">{list.length}</span></h2>}
+                  {!topic && <Link to={`/blog/topic/${t.id}`} className="shrink-0 text-[14px] font-medium text-violet-d hover:underline">See all {list.length}</Link>}
                 </div>
                 <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">{list.slice(0, n).map((p) => <PostCard key={p.slug} p={p} />)}</div>
                 {n < list.length && <button type="button" onClick={() => setShown((s) => ({ ...s, [t.id]: list.length }))} className="mt-4 rounded-full border border-line bg-white px-4 py-2 text-[14px] font-medium hover:border-ink/40">Show {list.length - n} more</button>}
