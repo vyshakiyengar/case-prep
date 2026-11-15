@@ -41,7 +41,7 @@ export default function Blog() {
     <div className="mx-auto max-w-5xl">
       <header className="mb-6">
         <h1 className="font-serif text-[34px] leading-tight sm:text-[42px]">The PrepForCase blog</h1>
-        <p className="mt-2 max-w-2xl text-[17px] text-ink-2">{POSTS.length} free articles on case interviews: how cases work, frameworks, maths, market sizing, practice questions and the fit interview. No sign-in, no paywall.</p>
+        <p className="mt-2 max-w-2xl text-[17px] text-ink-2">{POSTS.length} free articles on case interviews and consulting careers: how cases work, frameworks, maths, market sizing, industries, firms and their interviews, and the fit interview. No sign-in, no paywall.</p>
       </header>
 
       <div className="sticky top-0 z-10 -mx-4 mb-6 bg-canvas/95 px-4 py-3 backdrop-blur sm:mx-0 sm:px-0">
