@@ -25,7 +25,7 @@ export const PAGES: Record<string, Meta> = {
   '/interview-skills': { title: 'Interview skills: thinking and speaking · PrepForCase', description: 'Practical exercises for thinking clearly, speaking calmly and sounding commercial in a case interview.', image: IMG('interview-skills') },
   '/graphs': { title: 'Graph library: 64 case interview charts · PrepForCase', description: 'The chart types you meet in case exhibits, each with practice data and the insight to look for.', image: IMG('graphs') },
   '/interviewer': { title: 'Interviewer mode: give a case to a friend · PrepForCase', description: 'Run a case for a friend with the script, the facts to give when asked, and what a strong answer looks like.', image: IMG('interviewer') },
-  '/author/vyshak-iyengar': { title: 'Vyshak K Iyengar, Founder of PrepForCase', description: 'Vyshak K Iyengar founded PrepForCase, free case interview prep. London Business School MBA, formerly BCG, Accenture Strategy and Meta.', image: IMG('author-vyshak-iyengar') },
+  '/author/vyshak-iyengar': { title: 'Vyshak K Iyengar, Founder of PrepForCase', description: 'Vyshak K Iyengar founded PrepForCase, free case interview prep. London Business School MBA who cracked BCG\'s case interviews, formerly Accenture Strategy and Meta.', image: IMG('author-vyshak-iyengar') },
   '/about': { title: 'About PrepForCase · Vyshak K Iyengar', description: 'Why PrepForCase exists, who made it, and how the content is checked.', image: IMG('home') },
 }
 
