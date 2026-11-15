@@ -19,6 +19,24 @@ const PRACTICE: Record<string, { to: string; t: string; d: string }> = {
 
 type Full = { slug: string; title: string; description: string; topic: string; kind: string; minutes: number; hook: string; body: string; outro: string; related: string[] }
 
+/** Share on phones (the system share sheet), copy the link elsewhere. */
+function ShareButton({ title }: { title: string }) {
+  const [copied, setCopied] = useState(false)
+  const share = async () => {
+    const url = location.href.split('#')[0]
+    try {
+      if (navigator.share) { await navigator.share({ title, url }); return }
+      await navigator.clipboard.writeText(url); setCopied(true); setTimeout(() => setCopied(false), 2000)
+    } catch { /* closed the share sheet */ }
+  }
+  return (
+    <button type="button" onClick={share} className="ml-auto inline-flex items-center gap-1.5 rounded-full border border-line px-3 py-1.5 text-[13.5px] font-medium text-ink hover:border-ink/40" aria-live="polite">
+      <svg aria-hidden viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M4 12v7a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-7M16 6l-4-4-4 4M12 2v13" /></svg>
+      {copied ? 'Link copied' : 'Share'}
+    </button>
+  )
+}
+
 /** A thin bar across the top that fills as you read. */
 function ReadingProgress() {
   const [p, setP] = useState(0)
@@ -72,6 +90,7 @@ export default function BlogPost() {
           <p className="font-medium text-ink">PrepForCase</p>
           <p className="text-muted">{meta.kind} · {meta.minutes} min read · Free, no sign-in</p>
         </div>
+        <ShareButton title={meta.title} />
       </div>
       {failed && <p className="mt-8 rounded-lg bg-white p-4 text-ink-2">This article didn't load. Check your connection and <button type="button" onClick={() => location.reload()} className="text-violet-d underline">try again</button>.</p>}
       {!post && !failed && <div className="mt-10 space-y-3" aria-busy><div className="h-5 w-full animate-pulse rounded bg-line" /><div className="h-5 w-5/6 animate-pulse rounded bg-line" /><div className="h-5 w-4/6 animate-pulse rounded bg-line" /></div>}

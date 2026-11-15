@@ -148,6 +148,31 @@ export default function AppShell() {
   useEffect(() => { if (!loc.hash) window.scrollTo(0, 0); setMobileOpen(false) }, [loc.pathname, loc.hash])
   useEffect(() => { const m = PAGES[loc.pathname]; if (m) document.title = m.title }, [loc.pathname])
   const name = data?.profile?.name || user?.name || ''
+  // Articles get a calm reading layout: white page, slim top bar, no sidebar or tab bar
+  if (/^\/blog\/(?!topic\/)[^/]+$/.test(loc.pathname)) return (
+    <div className="min-h-screen bg-white">
+      <header className="sticky top-0 z-30 border-b border-line/70 bg-white/90 backdrop-blur">
+        <div className="mx-auto flex h-14 max-w-5xl items-center justify-between gap-4 px-5">
+          <div className="flex items-center gap-5">
+            <Link to="/" aria-label="PrepForCase: front page"><Logo height={22} /></Link>
+            <Link to="/blog" className="text-[14.5px] font-medium text-muted hover:text-ink">Blog</Link>
+          </div>
+          <div className="flex items-center gap-4 text-[14.5px]">
+            <Link to="/casebook" className="hidden font-medium text-muted hover:text-ink sm:inline">Practice cases</Link>
+            {user ? <NavLink to="/settings" aria-label="Settings"><Avatar name={name} photo={user.photoURL} /></NavLink> : <Link to="/learn" className="rounded-full bg-ink px-4 py-1.5 font-medium text-white hover:bg-ink/90">Start free</Link>}
+          </div>
+        </div>
+      </header>
+      <main className="px-5 pt-8 pb-16 sm:pt-12"><Outlet /></main>
+      <footer className="border-t border-line py-8 text-center text-[13.5px] text-muted">
+        <nav aria-label="Footer" className="flex flex-wrap justify-center gap-x-6 gap-y-2">
+          <Link to="/blog" className="hover:text-ink">All articles</Link><Link to="/learn" className="hover:text-ink">Free course</Link>
+          <Link to="/casebook" className="hover:text-ink">Casebook</Link><Link to="/drills" className="hover:text-ink">Drills</Link>
+          <Link to="/privacy" className="hover:text-ink">Privacy</Link>
+        </nav>
+      </footer>
+    </div>
+  )
   return (
     <div className="min-h-screen lg:pl-60">
       <aside className="fixed inset-y-0 left-0 z-20 hidden w-60 flex-col overflow-y-auto bg-ink px-4 py-6 lg:flex">
